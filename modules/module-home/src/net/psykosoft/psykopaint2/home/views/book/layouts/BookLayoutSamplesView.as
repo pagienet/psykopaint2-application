@@ -1,5 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.book.layouts
 {
+	import away3d.core.managers.Stage3DProxy;
+
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
 	
@@ -8,22 +10,25 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 	
 	import net.psykosoft.psykopaint2.core.models.FileSourceImageProxy;
 	import net.psykosoft.psykopaint2.core.models.SourceImageCollection;
-	
+	import net.psykosoft.psykopaint2.core.models.SourceImageProxy;
+
+	import org.osflash.signals.Signal;
+
 	public class BookLayoutSamplesView extends BookLayoutAbstractView
 	{
+		public var imageSelected : Signal = new Signal(SourceImageProxy);
+
 		public static const COLUMNS:int=2;
 		public static const ROWS:int=3;
 		
 		private var _data:SourceImageCollection;
 		private var _pageThumbnailViews:Vector.<BookLayoutSampleThumbView>;
-		
-		private var _pageIndex:int;
-		
-		
-		public function BookLayoutSamplesView()
+		private var _stage3DProxy:Stage3DProxy;
+
+		public function BookLayoutSamplesView(stage3DProxy:Stage3DProxy)
 		{
+			_stage3DProxy = stage3DProxy;
 			_pageThumbnailViews = new Vector.<BookLayoutSampleThumbView>(LENGTH);
-			
 		}
 		
 		public function setData(data:SourceImageCollection):void{
@@ -39,8 +44,8 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 				//CREATE
 				if(_pageThumbnailViews[i]==null){
 					
-					currentPageThumbnailView = new BookLayoutSampleThumbView();
-					currentPageThumbnailView.setData(currentSourceImageProxy);
+					currentPageThumbnailView = new BookLayoutSampleThumbView(_stage3DProxy);
+					currentPageThumbnailView.imageProxy = currentSourceImageProxy;
 					_pageThumbnailViews[i]=currentPageThumbnailView;
 					this.addChild(currentPageThumbnailView);
 					currentPageThumbnailView.addEventListener(MouseEvent3D.CLICK,onClickDownThumbnail);
@@ -48,7 +53,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 				//UPDATE
 					//trace("update thumbnail:: "+i)
 					currentPageThumbnailView = _pageThumbnailViews[i] ;
-					currentPageThumbnailView.setData(currentSourceImageProxy);
+					currentPageThumbnailView.imageProxy = currentSourceImageProxy;
 					
 				}
 				
@@ -66,31 +71,38 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		
 		protected function onClickDownThumbnail(event:MouseEvent3D):void
 		{
+			var thumb : BookLayoutSampleThumbView = BookLayoutSampleThumbView(event.target);
 			TweenLite.to(ObjectContainer3D(event.target),0.25,{ease:Expo.easeOut,y:5,rotationX:2,onComplete:function():void{
 				TweenLite.to(ObjectContainer3D(event.target),0.25,{ease:Expo.easeOut,y:0,rotationX:0});
 			}});
-			
+
+			imageSelected.dispatch(thumb.imageProxy);
 		}		
 		
 		override public function dispose():void
 		{
 			_data = null;
+
+			imageSelected.removeAll();
+
 			//trace("BookLayoutSamplesView::dispose");
 			for (var i:int = 0; i < _pageThumbnailViews.length; i++) 
 			{
-				_pageThumbnailViews[i].removeEventListener(MouseEvent3D.MOUSE_DOWN,onClickDownThumbnail);
-				_pageThumbnailViews[i].dispose();
-				if(_pageThumbnailViews[i].parent) _pageThumbnailViews[i].parent.removeChild(_pageThumbnailViews[i]);
-				
-				_pageThumbnailViews[i]=null;
+				if (_pageThumbnailViews[i]) {
+					_pageThumbnailViews[i].removeEventListener(MouseEvent3D.MOUSE_DOWN, onClickDownThumbnail);
+					_pageThumbnailViews[i].dispose();
+					if (_pageThumbnailViews[i].parent) _pageThumbnailViews[i].parent.removeChild(_pageThumbnailViews[i]);
+
+					_pageThumbnailViews[i] = null;
+				}
 			}
-			_pageThumbnailViews = new Vector.<BookLayoutSampleThumbView>();
+			_pageThumbnailViews = new Vector.<BookLayoutSampleThumbView>(LENGTH);
 
 			super.dispose();
 		}
 		
 		static public  function get LENGTH():int{
-			return  COLUMNS*ROWS;
+			return COLUMNS*ROWS;
 		}
 	}
 }

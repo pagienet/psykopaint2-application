@@ -6,8 +6,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import net.psykosoft.psykopaint2.base.utils.misc.executeNextFrame;
 
-	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
-
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 
 	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
@@ -16,12 +14,9 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.core.services.CameraRollService;
 	import net.psykosoft.psykopaint2.core.services.SampleImageService;
 	import net.psykosoft.psykopaint2.core.services.SourceImageService;
-	import net.psykosoft.psykopaint2.book.signals.RequestOpenBookSignal;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleDestroyedSignal;
-	import net.psykosoft.psykopaint2.book.signals.NotifySourceImageSelectedFromBookSignal;
-	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
@@ -39,17 +34,17 @@ package net.psykosoft.psykopaint2.book.views.book
 		[Inject]
 		public var stage3dProxy:Stage3DProxy;
 
-		[Inject]
-		public var notifySourceImageSelectedFromBookSignal:NotifySourceImageSelectedFromBookSignal;
+//		[Inject]
+//		public var notifySourceImageSelectedFromBookSignal:NotifySourceImageSelectedFromBookSignal;
 
-		[Inject]
-		public var notifyGalleryImageSelected:NotifyGalleryImageSelectedFromBookSignal;
+//		[Inject]
+//		public var notifyGalleryImageSelected:NotifyGalleryImageSelectedFromBookSignal;
 
 		[Inject]
 		public var notifyBookModuleDestroyedSignal:NotifyBookModuleDestroyedSignal;
 
-		[Inject]
-		public var requestOpenBookSignal:RequestOpenBookSignal;
+//		[Inject]
+//		public var requestOpenBookSignal:RequestOpenBookSignal;
 
 		[Inject]
 		public var cameraRollService:CameraRollService;
@@ -66,8 +61,8 @@ package net.psykosoft.psykopaint2.book.views.book
 		[Inject]
 		public var requestNavigationStateChange:RequestNavigationStateChangeSignal;
 
-		[Inject]
-		public var requestDestroyBookModuleSignal:RequestDestroyBookModuleSignal;
+//		[Inject]
+//		public var requestDestroyBookModuleSignal:RequestDestroyBookModuleSignal;
 
 		private var _currentGalleryType:int = -1;
 		private var _sourceType:String;
@@ -89,14 +84,14 @@ package net.psykosoft.psykopaint2.book.views.book
 			super.initialize();
 
 			requestSetBookOffScreenRatioSignal.add(view.setHiddenOffScreenRatio);
-			requestDestroyBookModuleSignal.add(onRequestDestroyBook);
+//			requestDestroyBookModuleSignal.add(onRequestDestroyBook);
 			view.imageSelectedSignal.add(onImageSelected);
 			view.galleryImageSelectedSignal.add(onGalleryImageSelected);
 			view.onGalleryCollectionRequestedSignal.add(onGalleryCollectionRequest);
 			view.onImageCollectionRequestedSignal.add(fetchImageCollection);
 			view.bookHiddenSignal.add(onBookHidden);
 			view.bookShownSignal.add(onBookShown);
-			requestOpenBookSignal.add(onRequestOpenBookSignal);
+//			requestOpenBookSignal.add(onRequestOpenBookSignal);
 			GpuRenderManager.addRenderingStep(view.renderScene, GpuRenderingStepType.NORMAL);
 		}
 
@@ -104,14 +99,14 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			super.destroy();
 			requestSetBookOffScreenRatioSignal.remove(view.setHiddenOffScreenRatio);
-			requestDestroyBookModuleSignal.remove(onRequestDestroyBook);
+//			requestDestroyBookModuleSignal.remove(onRequestDestroyBook);
 			view.imageSelectedSignal.remove(onImageSelected);
 			view.galleryImageSelectedSignal.remove(onGalleryImageSelected);
 			view.onGalleryCollectionRequestedSignal.remove(onGalleryCollectionRequest);
 			view.onImageCollectionRequestedSignal.remove(fetchImageCollection);
 			view.bookHiddenSignal.remove(onBookHidden);
 			view.bookShownSignal.remove(onBookShown);
-			requestOpenBookSignal.remove(onRequestOpenBookSignal);
+//			requestOpenBookSignal.remove(onRequestOpenBookSignal);
 			GpuRenderManager.removeRenderingStep(view.renderScene, GpuRenderingStepType.NORMAL);
 		}
 
@@ -171,12 +166,12 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onImageSelected(selectedBmd:BitmapData):void
 		{
-			notifySourceImageSelectedFromBookSignal.dispatch(selectedBmd);
+//			notifySourceImageSelectedFromBookSignal.dispatch(selectedBmd);
 		}
 
 		private function onGalleryImageSelected(selectedGalleryImage:GalleryImageProxy):void
 		{
-			notifyGalleryImageSelected.dispatch(selectedGalleryImage);
+//			notifyGalleryImageSelected.dispatch(selectedGalleryImage);
 			view.transitionToHiddenMode();
 		}
 
@@ -210,8 +205,8 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			_currentGalleryType = collection.type;
 
-			if (collection.type != _currentGalleryType && collection.images.length > 0)
-				notifyGalleryImageSelected.dispatch(collection.images[0]);
+//			if (collection.type != _currentGalleryType && collection.images.length > 0)
+//				notifyGalleryImageSelected.dispatch(collection.images[0]);
 		}
 
 		private function onFetchImagesFailure(statusCode:int):void

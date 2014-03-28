@@ -21,8 +21,8 @@ package away3d.hacks
 
 	public class PaintingMaterialPass extends MaterialPassBase
 	{
-		private var _albedoTexture : Texture2DBase;
-		private var _normalSpecularTexture : Texture2DBase;
+		private var _albedoTexture : RectTextureBase;
+		private var _normalSpecularTexture : RectTextureBase;
 		private var _vertexData : Vector.<Number>;
 		private var _fragmentData : Vector.<Number>;
 		private var _matrix : Matrix3D;
@@ -121,12 +121,12 @@ package away3d.hacks
 			_stencilCompareMode = stencilCompareMode;
 		}
 
-		public function get albedoTexture() : Texture2DBase
+		public function get albedoTexture() : RectTextureBase
 		{
 			return _albedoTexture;
 		}
 
-		public function set albedoTexture(value : Texture2DBase) : void
+		public function set albedoTexture(value : RectTextureBase) : void
 		{
 			if (Boolean(_albedoTexture) != Boolean(value))
 				invalidateShaderProgram();
@@ -134,12 +134,12 @@ package away3d.hacks
 			_albedoTexture = value;
 		}
 
-		public function get normalSpecularTexture() : Texture2DBase
+		public function get normalSpecularTexture() : RectTextureBase
 		{
 			return _normalSpecularTexture;
 		}
 
-		public function set normalSpecularTexture(value : Texture2DBase) : void
+		public function set normalSpecularTexture(value : RectTextureBase) : void
 		{
 			_normalSpecularTexture = value;
 		}

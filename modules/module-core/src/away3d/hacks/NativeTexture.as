@@ -8,9 +8,9 @@ package away3d.hacks
 
 	public class NativeTexture extends Texture2DBase
 	{
-		private var _texture : Texture;
+		private var _texture : TextureBase;
 
-		public function NativeTexture(texture : Texture)
+		public function NativeTexture(texture : TextureBase)
 		{
 			super();
 			_texture = texture;
@@ -28,7 +28,7 @@ package away3d.hacks
 			_texture.dispose();
 		}
 
-		public function get texture() : Texture
+		public function get texture() : TextureBase
 		{
 			return _texture;
 		}

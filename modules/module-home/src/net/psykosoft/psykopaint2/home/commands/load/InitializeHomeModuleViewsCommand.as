@@ -20,12 +20,10 @@ package net.psykosoft.psykopaint2.home.commands.load
 		public var notifyHomeViewSceneReadySignal:NotifyHomeViewSceneReadySignal;
 
 		private var _homeRootView:HomeRootView;
-		private var _time:uint;
 
 		override public function execute():void {
 
 			trace( this, "execute()" );
-			_time = getTimer();
 
 			notifyHomeViewSceneReadySignal.addOnce( onHomeViewsReady );
 			_homeRootView = new HomeRootView();
@@ -33,8 +31,7 @@ package net.psykosoft.psykopaint2.home.commands.load
 		}
 
 		private function onHomeViewsReady():void {
-			dispatchComplete( true );
-			ConsoleView.instance.log( this, "done - " + String( getTimer() - _time ) );
+			dispatchComplete(true);
 		}
 	}
 }

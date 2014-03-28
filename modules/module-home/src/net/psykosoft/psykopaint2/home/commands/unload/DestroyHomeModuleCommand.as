@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.home.commands.unload
 			add( DisposePaintingDataCommand 	         );
 			add( RemoveHomeModuleDisplayCommand          );
 			add( DisconnectHomeModuleShakeAndBakeCommand );
+			add( DestroyBookCommand );
 
 			registerCompleteCallback( onMacroComplete );
 		}

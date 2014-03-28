@@ -199,9 +199,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 			if (_currentNavigationState == NavigationStateType.GALLERY_SHARE ||
 				_currentNavigationState == NavigationStateType.CAPTURE_IMAGE ||
+				_currentNavigationState == NavigationStateType.PICK_SAMPLE_IMAGE ||
 				_currentNavigationState == NavigationStateType.PICK_USER_IMAGE_IOS ||
 				_currentNavigationState == NavigationStateType.PICK_USER_IMAGE_DESKTOP ||
-				_currentNavigationState == NavigationStateType.CROP 
+				_currentNavigationState == NavigationStateType.CROP
 			)
 				view.scrollingEnabled = false;
 			else

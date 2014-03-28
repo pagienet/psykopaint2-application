@@ -1,14 +1,6 @@
 package net.psykosoft.psykopaint2.book.config
 {
 
-	import net.psykosoft.psykopaint2.book.commands.SetUpBookModuleCommand;
-	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleDestroyedSignal;
-	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
-	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelectedFromBookSignal;
-	import net.psykosoft.psykopaint2.book.signals.RequestOpenBookSignal;
-	import net.psykosoft.psykopaint2.book.signals.NotifySourceImageSelectedFromBookSignal;
-	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
-	import net.psykosoft.psykopaint2.book.signals.RequestSetUpBookModuleSignal;
 	import net.psykosoft.psykopaint2.book.views.book.BookView;
 	import net.psykosoft.psykopaint2.book.views.book.BookViewMediator;
 
@@ -76,12 +68,12 @@ package net.psykosoft.psykopaint2.book.config
 
 		private function mapSignals() : void
 		{
-			_injector.map(NotifyBookModuleSetUpSignal).asSingleton();
-			_injector.map(NotifyBookModuleDestroyedSignal).asSingleton();
-			_injector.map(NotifySourceImageSelectedFromBookSignal).asSingleton();
-			_injector.map(NotifyGalleryImageSelectedFromBookSignal).asSingleton();
-			_injector.map(RequestOpenBookSignal).asSingleton();
-			_injector.map(RequestDestroyBookModuleSignal).asSingleton();
+//			_injector.map(NotifyBookModuleSetUpSignal).asSingleton();
+//			_injector.map(NotifyBookModuleDestroyedSignal).asSingleton();
+//			_injector.map(NotifySourceImageSelectedFromBookSignal).asSingleton();
+//			_injector.map(NotifyGalleryImageSelectedFromBookSignal).asSingleton();
+//			_injector.map(RequestOpenBookSignal).asSingleton();
+//			_injector.map(RequestDestroyBookModuleSignal).asSingleton();
 		}
 
 		// -----------------------
@@ -90,7 +82,7 @@ package net.psykosoft.psykopaint2.book.config
 
 		private function mapCommands() : void
 		{
-			_commandMap.map(RequestSetUpBookModuleSignal).toCommand(SetUpBookModuleCommand);
+//			_commandMap.map(RequestSetUpBookModuleSignal).toCommand(SetUpBookModuleCommand);
 		}
 
 		// -----------------------

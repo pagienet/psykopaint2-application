@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 	import flash.display3D.Program3D;
 	import flash.display3D.VertexBuffer3D;
 	import flash.display3D.textures.Texture;
+	import flash.display3D.textures.TextureBase;
 	import flash.geom.Matrix3D;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
@@ -27,7 +28,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 		protected var _quadVertices : VertexBuffer3D;
 		protected var _quadIndices : IndexBuffer3D;
 		
-		public function execute(mesh : Mesh, sourceTexture:Texture, target : BitmapData, context3D:Context3D) : BitmapData
+		public function execute(mesh : Mesh, sourceTexture:TextureBase, target : BitmapData, context3D:Context3D) : BitmapData
 		{
 			context3D.setRenderToBackBuffer();
 			context3D.clear();
@@ -71,7 +72,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 			
 		}
 
-		protected function copy(mesh : Mesh,sourceTexture:Texture, context3D : Context3D) : void
+		protected function copy(mesh : Mesh,sourceTexture:TextureBase, context3D : Context3D) : void
 		{
 			_context3D = context3D;
 			if (!_copyProgram) initProgram();
@@ -82,7 +83,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 				-1.0, -1.0, 0.0,0.0,
 				1.0, -1.0, 0.0,0.0,
 				1.0, 1.0, 0.0,0.0,
-				-1.0, 1.0, 0.0,0.0]
+				-1.0, 1.0, 0.0,0.0];
 			
 			
 			var sg:ISubGeometry = mesh.geometry.subGeometries[0];

@@ -12,22 +12,22 @@ package away3d.hacks
 			addPass(_pass = new PaintingMaterialPass());
 		}
 
-		public function get albedoTexture() : Texture2DBase
+		public function get albedoTexture() : RectTextureBase
 		{
 			return _pass.albedoTexture;
 		}
 
-		public function set albedoTexture(value : Texture2DBase) : void
+		public function set albedoTexture(value : RectTextureBase) : void
 		{
 			_pass.albedoTexture = value;
 		}
 
-		public function get normalSpecularTexture() : Texture2DBase
+		public function get normalSpecularTexture() : RectTextureBase
 		{
 			return _pass.normalSpecularTexture;
 		}
 
-		public function set normalSpecularTexture(value : Texture2DBase) : void
+		public function set normalSpecularTexture(value : RectTextureBase) : void
 		{
 			_pass.normalSpecularTexture = value;
 		}

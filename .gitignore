@@ -29,3 +29,13 @@ modules/module-core/.flexLibProperties
 modules/module-home/.flexLibProperties
 
 certificates/
+
+/modules/module-app/bin
+
+/modules/module-book/bin
+
+/modules/module-core/bin
+
+/modules/module-home/bin
+
+/modules/module-paint/bin

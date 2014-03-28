@@ -41,7 +41,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				default:*/
 //			}
 
-			if (id == GalleryBrowseSubNavView.ID_YOURS && !loggedInUser.isLoggedIn())
+			if ((id == GalleryBrowseSubNavView.ID_YOURS || id ==  NavigationStateType.GALLERY_BROWSE_FOLLOWING) && !loggedInUser.isLoggedIn())
 				requestShowPopUpSignal.dispatch(PopUpType.LOGIN);
 			else
 				requestNavigationStateChange(_navigationStateTypeMap[id]);

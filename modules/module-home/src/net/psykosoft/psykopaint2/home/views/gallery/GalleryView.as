@@ -6,9 +6,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.events.Object3DEvent;
+	import away3d.hacks.BitmapRectTexture;
+	import away3d.hacks.ByteArrayRectTexture;
 	import away3d.hacks.MaskingMethod;
 	import away3d.hacks.PaintingMaterial;
 	import away3d.hacks.StencilMethod;
+	import away3d.hacks.TrackedBitmapRectTexture;
 	import away3d.hacks.TrackedBitmapTexture;
 	import away3d.lights.LightBase;
 	import away3d.materials.ColorMaterial;
@@ -48,6 +51,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	public class GalleryView extends Sprite
 	{
 		public static const CAMERA_FAR_POSITION:Vector3D = new Vector3D(-814, -40.14, 450);
+		public static var CAMERA_NEAR_POSITION:Vector3D = null;
 
 		private static const PAINTING_OFFSET:Number = 831;
 		private static const PAINTING_SPACING:Number = 250;
@@ -95,8 +99,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _paintingOccluder:Mesh;
 
 		private var _highQualityMaterial:PaintingMaterial;
-		private var _highQualityNormalSpecularTexture:ByteArrayTexture;
-		private var _highQualityColorTexture:BitmapTexture;
+		private var _highQualityNormalSpecularTexture:ByteArrayRectTexture;
+		private var _highQualityColorTexture:BitmapRectTexture;
 		private var _showHighQuality:Boolean;
 		private var _loadingHQ:Boolean;
 		private var _dragStartX:Number;
@@ -185,8 +189,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function initHighQualityMaterial():void
 		{
-			_highQualityColorTexture = new TrackedBitmapTexture(null);
-			_highQualityNormalSpecularTexture = new ByteArrayTexture(null, 0, 0);
+			_highQualityColorTexture = new TrackedBitmapRectTexture(null);
+			_highQualityNormalSpecularTexture = new ByteArrayRectTexture(null, 0, 0);
 
 			_highQualityMaterial = new PaintingMaterial();
 			_highQualityMaterial.lightPicker = new StaticLightPicker([_light]);
@@ -205,7 +209,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function initOccluder():void
 		{
 			var occluderGeometry:PlaneGeometry = new PlaneGeometry(500, 200, 1, 1, false);
-			var occluderMaterial:ColorMaterial = new ColorMaterial();
+			var occluderMaterial:ColorMaterial = new ColorMaterial(0xff00ff);
 			var maskingMethod:MaskingMethod = new MaskingMethod();
 			maskingMethod.disableAll();
 			var stencilMethod:StencilMethod = new StencilMethod();
@@ -218,7 +222,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_paintingOccluder = new Mesh(occluderGeometry, occluderMaterial);
 			_paintingOccluder.x = -300;
 			_paintingOccluder.y = PAINTING_Y;
-			_paintingOccluder.z = PAINTING_Z - 100;
+			_paintingOccluder.z = PAINTING_Z + 100;
 			_paintingOccluder.rotationY = 180;
 			_view.scene.addChild(_paintingOccluder);
 		}
@@ -226,7 +230,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		public function initInteraction():void
 		{
 			_swipeController ||= new GrabThrowController(stage);
-			_cameraZoomController ||= new GalleryCameraZoomController(stage, _view.camera, PAINTING_WIDTH, PAINTING_Z, CAMERA_FAR_POSITION, calculateCameraNearPosition());
+
+			if (CAMERA_NEAR_POSITION == null) {
+				CAMERA_NEAR_POSITION = calculateCameraNearPosition();
+			}
+
+			_cameraZoomController ||= new GalleryCameraZoomController(stage, _view.camera, PAINTING_WIDTH, PAINTING_Z, CAMERA_FAR_POSITION, CAMERA_NEAR_POSITION);
 
 			_swipeController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted, false, 0, true);
 			_swipeController.start(10000, true);
@@ -433,9 +442,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function initLoadingTexture():void
 		{
-			var bitmapData:BitmapData = new TrackedBitmapData(16, 16);
-			bitmapData.perlinNoise(4, 4, 8, 6, false, true, 7, true);
-
+			var bitmapData:BitmapData = new TrackedBitmapData(16, 16, false, 0x808080);
 			_loadingTexture = new BitmapTexture(bitmapData);
 			_loadingTexture.getTextureForStage3D(_stage3DProxy);
 			bitmapData.dispose();
@@ -664,16 +671,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onSurfaceDataComplete(galleryVO:PaintingGalleryVO):void
 		{
-			var width:Number = TextureUtils.getBestPowerOf2(galleryVO.colorData.width);
-			var height:Number = TextureUtils.getBestPowerOf2(galleryVO.colorData.height);
-			var legalBitmap:BitmapData = new TrackedBitmapData(width, height, false);
-			legalBitmap.copyPixels(galleryVO.colorData, galleryVO.colorData.rect, new Point());
-
-			_highQualityColorTexture.bitmapData = legalBitmap;
+			_highQualityColorTexture.bitmapData = galleryVO.colorData;
 			_highQualityColorTexture.getTextureForStage3D(_stage3DProxy);
-			legalBitmap.dispose();
 
-			galleryVO.normalSpecularData.length = width * height * 4;
 			_highQualityNormalSpecularTexture.setByteArray(galleryVO.normalSpecularData, width, height);
 			_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
 

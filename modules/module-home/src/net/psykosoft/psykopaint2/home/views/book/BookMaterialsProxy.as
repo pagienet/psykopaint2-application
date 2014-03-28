@@ -78,11 +78,12 @@ package net.psykosoft.psykopaint2.home.views.book
 				
 				for (var i:int = 0; i < _assetsURLs.length; i++) 
 				{
+					trace (_assetsURLs[i].url);
 					//IF ASSET IS ATF
-					if(_assetsURLs[i].url.indexOf(".atf")){
-						_fileLoader.loadBinary(_assetsURLs[i].url, onImageLoadedComplete, onError, _assetsURLs[i]);
+					if(_assetsURLs[i].url.indexOf(".atf") > -1){
+						_fileLoader.loadBinary(_assetsURLs[i].url, onATFLoadComplete, onError, _assetsURLs[i]);
 					}else{
-						_fileLoader.loadImage(_assetsURLs[i].url, onImageLoadedComplete, onError, _assetsURLs[i]);
+						_fileLoader.loadImage(_assetsURLs[i].url, onBitmapLoadComplete, onError, _assetsURLs[i]);
 					}
 				}
 			}else {
@@ -111,59 +112,68 @@ package net.psykosoft.psykopaint2.home.views.book
 		}
 		
 		
-		private static function onImageLoadedComplete( e:AssetLoadedEvent):void
-		{	
-			
-			var currentAssetURLObj:Object = e.customData;
+		private static function onATFLoadComplete( e:AssetLoadedEvent):void
+		{
 			var assetIndex:int = _assetsURLs.indexOf(e.customData);
 			//e.customData.index;
 			//trace("BookMaterialsProxy::onImageLoadedComplete assetIndex ="+assetIndex);
-			
+
 			//CREATE THE TEXTURE
-			if(e.customData.url.indexOf(".atf")!=-1){
-				var texture : ATFTexture = new TrackedATFTexture(ByteArray(e.data));
-				_textureMaterials.push( new TextureMaterial(texture));
-			}else {
-				var bmd:BitmapData = (Bitmap(e.data).bitmapData);
-				if (currentAssetURLObj.storeBmd==true){ 
-					_bitmapDatas.push(bmd);
-					trace("STore bmd for "+ currentAssetURLObj.id);
-				}
-				var newTexture:BitmapTexture = new TrackedBitmapTexture(TextureUtil.autoResizePowerOf2(bmd));
-				//var newTextureMaterial:TextureMaterial = new TextureMaterial(Cast.bitmapTexture(newTexture));
-				var newTextureMaterial:TextureMaterial = new TextureMaterial((newTexture));
-				
-				//SET ALPHA BLENDING FOR ALL TEXTURE THAT ARE PNGs //OTHERWISE USE JPG MOFO!!!
-				if(currentAssetURLObj.url.indexOf(".png")!=-1){
-					newTextureMaterial.alphaBlending = true;
-				}
-				_textureMaterials.push(newTextureMaterial );
-				
-			}
-			
+			var texture : ATFTexture = new TrackedATFTexture(ByteArray(e.data));
+			_textureMaterials.push( new TextureMaterial(texture));
+
 			//WHEN LAST ASSET IS LOADED LAUNCH THE COMPLETE FUNCTION
-			if(assetIndex==_assetsURLs.length-1){
-				_alreadyLoaded = true;
-				_onComplete.call();
-			}
-			
-			
+			completeIfLastAsset(assetIndex);
 		}
-		
-		
+
+		private static function onBitmapLoadComplete( e:AssetLoadedEvent):void
+		{
+			var currentAssetURLObj:Object = e.customData;
+			var assetIndex:int = _assetsURLs.indexOf(currentAssetURLObj);
+			//e.customData.index;
+			//trace("BookMaterialsProxy::onImageLoadedComplete assetIndex ="+assetIndex);
+
+			//CREATE THE TEXTURE
+			var bmd:BitmapData = BitmapData(e.data);
+			if (currentAssetURLObj.storeBmd==true){
+				_bitmapDatas.push(bmd);
+				trace("STore bmd for "+ currentAssetURLObj.id);
+			}
+			var newTexture:BitmapTexture = new TrackedBitmapTexture(TextureUtil.autoResizePowerOf2(bmd));
+			//var newTextureMaterial:TextureMaterial = new TextureMaterial(Cast.bitmapTexture(newTexture));
+			var newTextureMaterial:TextureMaterial = new TextureMaterial((newTexture));
+
+			//SET ALPHA BLENDING FOR ALL TEXTURE THAT ARE PNGs //OTHERWISE USE JPG MOFO!!!
+			if(currentAssetURLObj.url.indexOf(".png")!=-1){
+				newTextureMaterial.alphaBlending = true;
+			}
+			_textureMaterials.push(newTextureMaterial );
+
+			//WHEN LAST ASSET IS LOADED LAUNCH THE COMPLETE FUNCTION
+			completeIfLastAsset(assetIndex);
+		}
+
 		public static function getBitmapDataById(id:String):BitmapData{
-			
+
 			var currentBitmapData:BitmapData;
-			for (var i:int = 0; i < _assetsURLs.length; i++) 
+			for (var i:int = 0; i < _assetsURLs.length; i++)
 			{
 				if(id==_assetsURLs[i].id){
 					currentBitmapData = _bitmapDatas[i];
 				}
 			}
 			return currentBitmapData;
-			
+
 		}
-		
+
+		private static function completeIfLastAsset(assetIndex:int):void
+		{
+			if (assetIndex == _assetsURLs.length - 1) {
+				_alreadyLoaded = true;
+				_onComplete.call();
+			}
+		}
+
 		
 		
 		public static function getTextureMaterialById(id:String):TextureMaterial{
