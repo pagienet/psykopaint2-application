@@ -4,24 +4,17 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 
 	import flash.display.BitmapData;
 	import flash.events.Event;
-	import flash.utils.ByteArray;
 
 	import away3d.containers.ObjectContainer3D;
 	import away3d.core.base.Geometry;
 	import away3d.entities.Mesh;
-	import away3d.events.MouseEvent3D;
-	import away3d.hacks.TrackedATFTexture;
 	import away3d.hacks.TrackedBitmapTexture;
 	import away3d.materials.TextureMaterial;
-	import away3d.primitives.PlaneGeometry;
-	import away3d.textures.BitmapTexture;
-	import away3d.textures.Texture2DBase;
-	import away3d.utils.Cast;
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
-	import net.psykosoft.psykopaint2.core.models.FileGalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.ImageThumbnailSize;
+	import net.psykosoft.psykopaint2.home.views.book.BookGeometryProxy;
 	import net.psykosoft.psykopaint2.home.views.book.BookMaterialsProxy;
 
 	public class BookLayoutGalleryThumbView extends ObjectContainer3D
@@ -34,7 +27,6 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		private var _imageProxy:GalleryImageProxy;
 
 		//THUMBNAIL
-		private var _thumbGeometry:PlaneGeometry;
 		private var _thumbMesh:Mesh;
 		private var _thumbMaterial:TextureMaterial;
 		//private var _thumbTexture:Texture2DBase;
@@ -47,47 +39,54 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		private var _commentMesh:Mesh;
 		private var _likeMesh:Mesh;
 		private var _onComplete:Function;
+
 		private var _stage3DProxy:Stage3DProxy;
 
 
 		public function BookLayoutGalleryThumbView(stage3DProxy:Stage3DProxy)
 		{
-			//THIS IS THE CLASS WHERE WE ADD THE THUMBNAIL WITH SHADOWS
 			_stage3DProxy = stage3DProxy;
-			_thumbGeometry = new PlaneGeometry(_width, _height, 1, 1, true, true);
-			_thumbMesh = new Mesh(_thumbGeometry, BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.THUMBNAIL_LOADING));
-			_thumbTexture = new TrackedBitmapTexture(null, false);
-			addChild(_thumbMesh);
-			_thumbMesh.y = 1;
 
+			// TODO: Merge all geometries into one Mesh?
+			var cardGeom : Geometry = BookGeometryProxy.getGeometryById(BookGeometryProxy.CARD_GEOMETRY);
+
+			_thumbMesh = new Mesh(cardGeom, BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.THUMBNAIL_LOADING));
+			_thumbMesh.scaleX = _width;
+			_thumbMesh.scaleZ = _height;
+			_thumbMesh.y = 1;
+			_thumbMesh.mouseEnabled = true;
+			addChild(_thumbMesh);
+
+			_thumbTexture = new TrackedBitmapTexture(null, false);
 			_thumbMaterial = new TextureMaterial(_thumbTexture, true, false, false);
 
 			//ADDING MOUSE ENABLING ON THIS ASSET HERE SO IT CAN DISPATCH TO PARENT
-			_thumbMesh.mouseEnabled = true;
 
-			var newGeometry:Geometry = new PlaneGeometry(64, 25, 1, 1, true, true);
-			_shadowMesh = new Mesh(newGeometry, BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.THUMBNAIL_SHADOW));
-
-			addChild(_shadowMesh);
+			_shadowMesh = new Mesh(cardGeom, BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.THUMBNAIL_SHADOW));
+			_shadowMesh.scaleX = 64;
+			_shadowMesh.scaleZ = 25;
 			//_shadowMesh.y=3;
 			_shadowMesh.z = -18;
+			addChild(_shadowMesh);
 
 
 			//COMMENT ICON
-			var commentPlaneGeometry:PlaneGeometry = new PlaneGeometry(5, 5, 1, 1, true, true);
-			_commentMesh = new Mesh(commentPlaneGeometry, BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.ICON_COMMENT));
+			_commentMesh = new Mesh(cardGeom, BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.ICON_COMMENT));
+			_commentMesh.scaleX = 5;
+			_commentMesh.scaleZ = 5;
+			_commentMesh.x = 10;
 			_commentMesh.y = 2;
 			_commentMesh.z = -25;
-			_commentMesh.x = 10;
-			this.addChild(_commentMesh);
+			addChild(_commentMesh);
 
 			//LIKE ICON
-			var likePlaneGeometry:PlaneGeometry = new PlaneGeometry(5, 5, 1, 1, true, true);
-			_likeMesh = new Mesh(likePlaneGeometry, BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.ICON_HEART));
+			_likeMesh = new Mesh(cardGeom, BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.ICON_HEART));
+			_commentMesh.scaleX = 5;
+			_commentMesh.scaleZ = 5;
+			_likeMesh.x = 25;
 			_likeMesh.y = 3;
 			_likeMesh.z = -25;
-			_likeMesh.x = 25;
-			this.addChild(_likeMesh);
+			addChild(_likeMesh);
 		}
 
 		public function get height():Number
@@ -137,7 +136,6 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			_thumbMesh = null;
 			_thumbTexture = null;
 			_thumbMaterial = null;
-			_thumbGeometry = null;
 			_shadowMesh = null;
 			_onComplete = null;
 

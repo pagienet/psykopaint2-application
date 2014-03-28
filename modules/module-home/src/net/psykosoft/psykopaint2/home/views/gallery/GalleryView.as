@@ -206,7 +206,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function initOccluder():void
 		{
 			var occluderGeometry:PlaneGeometry = new PlaneGeometry(500, 200, 1, 1, false);
-			var occluderMaterial:ColorMaterial = new ColorMaterial();
+			var occluderMaterial:ColorMaterial = new ColorMaterial(0xff00ff);
 			var maskingMethod:MaskingMethod = new MaskingMethod();
 			maskingMethod.disableAll();
 			var stencilMethod:StencilMethod = new StencilMethod();
@@ -219,7 +219,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_paintingOccluder = new Mesh(occluderGeometry, occluderMaterial);
 			_paintingOccluder.x = -300;
 			_paintingOccluder.y = PAINTING_Y;
-			_paintingOccluder.z = PAINTING_Z - 100;
+			_paintingOccluder.z = PAINTING_Z + 100;
 			_paintingOccluder.rotationY = 180;
 			_view.scene.addChild(_paintingOccluder);
 		}
@@ -439,9 +439,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function initLoadingTexture():void
 		{
-			var bitmapData:BitmapData = new TrackedBitmapData(16, 16);
-			bitmapData.perlinNoise(4, 4, 8, 6, false, true, 7, true);
-
+			var bitmapData:BitmapData = new TrackedBitmapData(16, 16, false, 0x808080);
 			_loadingTexture = new BitmapTexture(bitmapData);
 			_loadingTexture.getTextureForStage3D(_stage3DProxy);
 			bitmapData.dispose();

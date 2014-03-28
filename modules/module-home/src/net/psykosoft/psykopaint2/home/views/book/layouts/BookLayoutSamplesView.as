@@ -1,5 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.book.layouts
 {
+	import away3d.core.managers.Stage3DProxy;
+
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
 	
@@ -21,9 +23,11 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		
 		private var _data:SourceImageCollection;
 		private var _pageThumbnailViews:Vector.<BookLayoutSampleThumbView>;
-		
-		public function BookLayoutSamplesView()
+		private var _stage3DProxy:Stage3DProxy;
+
+		public function BookLayoutSamplesView(stage3DProxy:Stage3DProxy)
 		{
+			_stage3DProxy = stage3DProxy;
 			_pageThumbnailViews = new Vector.<BookLayoutSampleThumbView>(LENGTH);
 		}
 		
@@ -40,7 +44,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 				//CREATE
 				if(_pageThumbnailViews[i]==null){
 					
-					currentPageThumbnailView = new BookLayoutSampleThumbView();
+					currentPageThumbnailView = new BookLayoutSampleThumbView(_stage3DProxy);
 					currentPageThumbnailView.imageProxy = currentSourceImageProxy;
 					_pageThumbnailViews[i]=currentPageThumbnailView;
 					this.addChild(currentPageThumbnailView);
