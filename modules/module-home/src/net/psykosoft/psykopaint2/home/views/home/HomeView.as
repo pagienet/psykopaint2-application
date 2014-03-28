@@ -168,8 +168,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.rethrowEvents = false;
 			_view.width = stage.stageWidth;
 			_view.height = stage.stageHeight;
-			_view.camera.lens.far = 50000;
-			addChild( _view );
+			_view.camera.lens.far = 2000;
+			stage.addChildAt( _view, 0 );
 			//PerspectiveLens( _view.camera.lens ).fieldOfView = 70;
 		}
 
@@ -228,6 +228,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_atelier.dispose();
 			_light.dispose();
 			_view.dispose();
+			_view.parent.removeChild(_view);
 			_cameraController.stop();
 			_cameraController.activePositionChanged.remove(onActivePositionChanged);
 			_atelier = null;
