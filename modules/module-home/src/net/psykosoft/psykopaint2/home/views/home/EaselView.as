@@ -235,6 +235,12 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function setContent(paintingVO : PaintingInfoVO, animateIn : Boolean = false, onUploadComplete : Function = null) : void
 		{
+			if (cropModeIsActive) {
+				// uv coords need to be reset
+				_canvas.geometry.dispose();
+				_canvas.geometry = new PlaneGeometry(CANVAS_WIDTH, CANVAS_WIDTH*aspectRatio, 1, 1, false);
+			}
+
 			cropModeIsActive = false;
 			
 			if (paintingVO && paintingVO.id == _paintingID && paintingVO.id != PaintingInfoVO.DEFAULT_VO_ID)
