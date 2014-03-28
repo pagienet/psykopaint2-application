@@ -3,14 +3,16 @@ package away3d.hacks
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.textures.Texture2DBase;
 
+	import flash.display3D.textures.RectangleTexture;
+
 	import flash.display3D.textures.Texture;
 	import flash.display3D.textures.TextureBase;
 
-	public class NativeTexture extends Texture2DBase
+	public class NativeRectTexture extends RectTextureBase
 	{
-		private var _texture : TextureBase;
+		private var _texture : RectangleTexture;
 
-		public function NativeTexture(texture : TextureBase)
+		public function NativeRectTexture(texture : RectangleTexture)
 		{
 			super();
 			_texture = texture;
@@ -28,7 +30,7 @@ package away3d.hacks
 			_texture.dispose();
 		}
 
-		public function get texture() : TextureBase
+		public function get texture() : RectangleTexture
 		{
 			return _texture;
 		}

@@ -6,9 +6,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.events.Object3DEvent;
+	import away3d.hacks.BitmapRectTexture;
+	import away3d.hacks.ByteArrayRectTexture;
 	import away3d.hacks.MaskingMethod;
 	import away3d.hacks.PaintingMaterial;
 	import away3d.hacks.StencilMethod;
+	import away3d.hacks.TrackedBitmapRectTexture;
 	import away3d.hacks.TrackedBitmapTexture;
 	import away3d.lights.LightBase;
 	import away3d.materials.ColorMaterial;
@@ -96,8 +99,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _paintingOccluder:Mesh;
 
 		private var _highQualityMaterial:PaintingMaterial;
-		private var _highQualityNormalSpecularTexture:ByteArrayTexture;
-		private var _highQualityColorTexture:BitmapTexture;
+		private var _highQualityNormalSpecularTexture:ByteArrayRectTexture;
+		private var _highQualityColorTexture:BitmapRectTexture;
 		private var _showHighQuality:Boolean;
 		private var _loadingHQ:Boolean;
 		private var _dragStartX:Number;
@@ -186,8 +189,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function initHighQualityMaterial():void
 		{
-			_highQualityColorTexture = new TrackedBitmapTexture(null);
-			_highQualityNormalSpecularTexture = new ByteArrayTexture(null, 0, 0);
+			_highQualityColorTexture = new TrackedBitmapRectTexture(null);
+			_highQualityNormalSpecularTexture = new ByteArrayRectTexture(null, 0, 0);
 
 			_highQualityMaterial = new PaintingMaterial();
 			_highQualityMaterial.lightPicker = new StaticLightPicker([_light]);
@@ -668,16 +671,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onSurfaceDataComplete(galleryVO:PaintingGalleryVO):void
 		{
-			var width:Number = TextureUtils.getBestPowerOf2(galleryVO.colorData.width);
-			var height:Number = TextureUtils.getBestPowerOf2(galleryVO.colorData.height);
-			var legalBitmap:BitmapData = new TrackedBitmapData(width, height, false);
-			legalBitmap.copyPixels(galleryVO.colorData, galleryVO.colorData.rect, new Point());
-
-			_highQualityColorTexture.bitmapData = legalBitmap;
+			_highQualityColorTexture.bitmapData = galleryVO.colorData;
 			_highQualityColorTexture.getTextureForStage3D(_stage3DProxy);
-			legalBitmap.dispose();
 
-			galleryVO.normalSpecularData.length = width * height * 4;
 			_highQualityNormalSpecularTexture.setByteArray(galleryVO.normalSpecularData, width, height);
 			_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
 

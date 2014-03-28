@@ -1,15 +1,16 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
+	import away3d.hacks.NativeRectTexture;
+
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Quad;
 	
 	import flash.display.BitmapData;
-	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
-	import flash.display3D.textures.Texture;
+	import flash.display3D.textures.RectangleTexture;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
@@ -24,7 +25,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.entities.Mesh;
 	import away3d.events.Object3DEvent;
 	import away3d.events.Stage3DEvent;
-	import away3d.hacks.NativeTexture;
 	import away3d.hacks.PaintingMaterial;
 	import away3d.lights.LightBase;
 	import away3d.materials.lightpickers.LightPickerBase;
@@ -32,7 +32,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.primitives.PlaneGeometry;
 	
 	import net.psykosoft.psykopaint2.base.utils.gpu.CopyMeshToBitmapDataUtil;
-	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.CameraRollImageOrientation;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
@@ -52,8 +51,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private var _canvas : Mesh;
 		private var _material : PaintingMaterial;
-		private var _diffuseTexture : NativeTexture;
-		private var _normalSpecularTexture : NativeTexture;
+		private var _diffuseTexture : NativeRectTexture;
+		private var _normalSpecularTexture : NativeRectTexture;
 		private var _context3D : Context3D;
 		private var _textureWidth : int;
 		private var _textureHeight : int;
@@ -192,7 +191,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 			aspectRatio = CoreSettings.STAGE_HEIGHT/CoreSettings.STAGE_WIDTH;
 			var geom : Geometry = new PlaneGeometry(CANVAS_WIDTH, CANVAS_WIDTH*aspectRatio, 1, 1, false);
-			geom.scaleUV(1, aspectRatio);
 			_canvas = new Mesh(geom);
 			_canvas.material = _material;
 			_canvas.rotationY = 180;
@@ -220,7 +218,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function get easelRect() : Rectangle
 		{
-			var aspectRatio : Number = CoreSettings.STAGE_HEIGHT/CoreSettings.STAGE_WIDTH;
 			var halfWidth : Number = CANVAS_WIDTH*.5;
 			var halfHeight : Number = CANVAS_WIDTH*aspectRatio*.5;
 			var vectorTopLeft : Vector3D = _canvas.scenePosition.clone();
@@ -313,7 +310,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function areTexturesInvalid(paintingVO : PaintingInfoVO) : Boolean
 		{
-			return !_diffuseTexture || _textureWidth != TextureUtil.getNextPowerOfTwo(paintingVO.width) || _textureHeight != TextureUtil.getNextPowerOfTwo(paintingVO.height);
+			return !_diffuseTexture || _textureWidth != paintingVO.width || _textureHeight != paintingVO.height;
 		}
 
 		private function updateTextures(paintingVO : PaintingInfoVO) : void
@@ -326,7 +323,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			uploadByteArray(paintingVO.normalSpecularPreviewData, _normalSpecularTexture.texture);
 		}
 
-		private function uploadByteArray(data : ByteArray, target : Texture) : void
+		private function uploadByteArray(data : ByteArray, target : RectangleTexture) : void
 		{
 			var oldLen : int = data.length;
 			data.length = _textureWidth * _textureHeight * 4;
@@ -336,14 +333,13 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function initTextures(paintingVO : PaintingInfoVO) : void
 		{
-			_textureWidth = TextureUtil.getNextPowerOfTwo(paintingVO.width);
-			_textureHeight = TextureUtil.getNextPowerOfTwo(paintingVO.height);
+			_textureWidth = paintingVO.width;
+			_textureHeight = paintingVO.height;
+			var diffuse : RectangleTexture = _context3D.createRectangleTexture(_textureWidth, _textureHeight, Context3DTextureFormat.BGRA, false);
+			var normalSpecular : RectangleTexture = _context3D.createRectangleTexture(_textureWidth, _textureHeight, Context3DTextureFormat.BGRA, false);
 
-			var diffuse : Texture = _context3D.createTexture(_textureWidth, _textureHeight, Context3DTextureFormat.BGRA, false);
-			var normalSpecular : Texture = _context3D.createTexture(_textureWidth, _textureHeight, Context3DTextureFormat.BGRA, false);
-
-			_diffuseTexture = new NativeTexture(diffuse);
-			_normalSpecularTexture = new NativeTexture(normalSpecular);
+			_diffuseTexture = new NativeRectTexture(diffuse);
+			_normalSpecularTexture = new NativeRectTexture(normalSpecular);
 			_material.albedoTexture = _diffuseTexture;
 			_material.normalSpecularTexture = _normalSpecularTexture;
 		}
@@ -560,21 +556,19 @@ package net.psykosoft.psykopaint2.home.views.home
 		
 		private function initTexturesFromBitmapData(bitmapData:BitmapData) : void
 		{
-			_textureWidth = TextureUtil.getNextPowerOfTwo(bitmapData.width);
-			_textureHeight = TextureUtil.getNextPowerOfTwo(bitmapData.height);
+			_textureWidth = bitmapData.width;
+			_textureHeight = bitmapData.height;
+			var diffuse : RectangleTexture = _context3D.createRectangleTexture(_textureWidth, _textureHeight, Context3DTextureFormat.BGRA, false);
+			var normalSpecular : RectangleTexture = _context3D.createRectangleTexture(1, 1, Context3DTextureFormat.BGRA, false);
 			
-			var diffuse : Texture = _context3D.createTexture(_textureWidth, _textureHeight, Context3DTextureFormat.BGRA, false);
-			var normalSpecular : Texture = _context3D.createTexture(1, 1, Context3DTextureFormat.BGRA, false);
-			
-			_diffuseTexture = new NativeTexture(diffuse);
-			_normalSpecularTexture = new NativeTexture(normalSpecular);
+			_diffuseTexture = new NativeRectTexture(diffuse);
+			_normalSpecularTexture = new NativeRectTexture(normalSpecular);
 			_material.albedoTexture = _diffuseTexture;
 			_material.normalSpecularTexture = _normalSpecularTexture;
 		}
 		
 		private function updateTexturesFromBitmapData(bitmapData:BitmapData) : void
 		{
-		
 			_diffuseTexture.texture.uploadFromBitmapData(bitmapData);
 			_normalSpecularTexture.texture.uploadFromBitmapData(new BitmapData(1,1,false,0x808080));
 		}
