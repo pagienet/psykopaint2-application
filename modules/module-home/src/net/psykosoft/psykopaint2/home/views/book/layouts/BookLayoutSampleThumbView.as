@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 {
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.hacks.BookThumbTextureMaterial;
+	import away3d.hacks.TrackedBitmapRectTexture;
 
 	import flash.display.BitmapData;
 	import flash.events.Event;
@@ -40,7 +41,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		//LOADING ASSET
 		private var EVENT_LOADED:String = "EVENT_LOADED";
 
-		private var _thumbTexture:TrackedBitmapTexture;
+		private var _thumbTexture:TrackedBitmapRectTexture;
 		private var _stage3DProxy:Stage3DProxy;
 		
 		
@@ -65,7 +66,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			_shadowMesh.z = -18;
 			addChild(_shadowMesh);
 
-			_thumbTexture = new TrackedBitmapTexture(null, false);
+			_thumbTexture = new TrackedBitmapRectTexture(null);
 			_thumbMaterial = new BookThumbTextureMaterial(_thumbTexture);
 		}
 		
@@ -90,12 +91,9 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		}
 		
 		override public function dispose():void{
-			
-			//trace("BookThumbnailView::dispose "+FileSourceImageProxy(_imageProxy).id);
 			_imageProxy.cancelLoading();
 			_imageProxy = null;
 		
-			/*//IF ASSET HAVEN'T FINISHED LOADING THE THOSE GUYS WILL STILL BE NULL */
 			_thumbMaterial.dispose();
 			_thumbTexture.dispose();
 
@@ -120,9 +118,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		
 		private function onThumbnailLoaded(file : Object):void
 		{
-			var sourceBmd:BitmapData = BitmapData(file);
-			var bitmapData:BitmapData = TextureUtil.ensurePowerOf2ByScaling(BitmapData(file));
-			sourceBmd.dispose();
+			var bitmapData:BitmapData = BitmapData(file);
 			_thumbTexture.bitmapData = bitmapData;
 			_thumbTexture.getTextureForStage3D(_stage3DProxy);
 			_thumbMesh.material = _thumbMaterial;

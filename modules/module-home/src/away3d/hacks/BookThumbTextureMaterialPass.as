@@ -5,7 +5,7 @@ package away3d.hacks
 	import away3d.core.base.IRenderable;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.materials.passes.MaterialPassBase;
-	import away3d.textures.Texture2DBase;
+	import away3d.textures.TextureProxyBase;
 
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
@@ -15,10 +15,10 @@ package away3d.hacks
 
 	public class BookThumbTextureMaterialPass extends MaterialPassBase
 	{
-		private var _texture : Texture2DBase;
+		private var _texture : TextureProxyBase;
 		private var _matrix : Matrix3D;
 
-		public function BookThumbTextureMaterialPass(texture : Texture2DBase)
+		public function BookThumbTextureMaterialPass(texture : TextureProxyBase)
 		{
 			_matrix = new Matrix3D();
 			_texture = texture;
@@ -26,12 +26,12 @@ package away3d.hacks
 			_numUsedStreams = 2;
 		}
 
-		public function get texture() : Texture2DBase
+		public function get texture() : TextureProxyBase
 		{
 			return _texture;
 		}
 
-		public function set texture(value : Texture2DBase) : void
+		public function set texture(value : TextureProxyBase) : void
 		{
 			_texture = value;
 		}

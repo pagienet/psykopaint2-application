@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 {
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.hacks.BookThumbTextureMaterial;
+	import away3d.hacks.TrackedBitmapRectTexture;
 
 	import flash.display.BitmapData;
 	import flash.events.Event;
@@ -35,7 +36,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		private var _shadowMesh:Mesh;
 
 		//LOADING IMAGE
-		private var _thumbTexture:TrackedBitmapTexture;
+		private var _thumbTexture:TrackedBitmapRectTexture;
 		private var _commentMesh:Mesh;
 		private var _likeMesh:Mesh;
 		private var _onComplete:Function;
@@ -57,7 +58,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			_thumbMesh.mouseEnabled = true;
 			addChild(_thumbMesh);
 
-			_thumbTexture = new TrackedBitmapTexture(null, false);
+			_thumbTexture = new TrackedBitmapRectTexture(null);
 			_thumbMaterial = new BookThumbTextureMaterial(_thumbTexture);
 
 			//ADDING MOUSE ENABLING ON THIS ASSET HERE SO IT CAN DISPATCH TO PARENT
@@ -151,9 +152,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 
 		private function onThumbnailLoaded(file:Object):void
 		{
-			var sourceBmd:BitmapData = BitmapData(file);
-			var bitmapData:BitmapData = TextureUtil.ensurePowerOf2ByScaling(BitmapData(file));
-			sourceBmd.dispose();
+			var bitmapData:BitmapData = BitmapData(file);
 			_thumbTexture.bitmapData = bitmapData;
 			_thumbTexture.getTextureForStage3D(_stage3DProxy);
 			_thumbMesh.material = _thumbMaterial;
