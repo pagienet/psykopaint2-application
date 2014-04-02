@@ -54,7 +54,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function processPoint( point : SamplePoint) : void
 		{
-			var uvScale:Number = 1 / _canvasModel.textureWidth;
+			var uvScale:Number = 1 / _canvasModel.width;
 			
 			
 			var minSize:Number = _maxBrushRenderSize * param_sizeFactor.lowerRangeValue;

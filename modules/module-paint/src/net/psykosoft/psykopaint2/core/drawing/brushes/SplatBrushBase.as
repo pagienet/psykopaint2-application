@@ -5,7 +5,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.Context3DStencilAction;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedRectTexture;
+
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapIntrinsicsStrategy;
@@ -21,7 +23,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public static const PARAMETER_N_STROKE_ALPHA:String = "Stroke Alpha";
 		public var param_strokeAlpha:PsykoParameter;
 		
-		private var _incrementalWorkerTexture:TrackedTexture;
+		private var _incrementalWorkerTexture:TrackedRectTexture;
 		
 		public function SplatBrushBase(drawNormalsOrSpecular : Boolean)
 		{
@@ -91,7 +93,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context.setRenderToTexture(_canvasModel.fullSizeBackBuffer, false)
 			_context.clear(0, 0, 0, 0);
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			CopyTexture.copy(_incrementalWorkerTexture.texture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+			CopyTexture.copy(_incrementalWorkerTexture.texture, _context);
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 
 			drawBrushColor();
@@ -109,7 +111,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context.setBlendFactors(param_blendMode.stringValue, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 
 			//CopyTexture.copy(_incrementalWorkerTexture.texture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
-			CopyTextureWithAlpha.copy(_incrementalWorkerTexture.texture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio,param_strokeAlpha.numberValue);
+			CopyTextureWithAlpha.copy(_incrementalWorkerTexture.texture, _context, param_strokeAlpha.numberValue);
 			
 		}
 
@@ -120,7 +122,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context.clear();
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			CopyTexture.copy(_canvasModel.normalSpecularMap, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+			CopyTexture.copy(_canvasModel.normalSpecularMap, _context);
 			drawBrushNormalsAndSpecular();
 
 			_canvasModel.swapNormalSpecularLayer();

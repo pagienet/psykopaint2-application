@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.display.Stage;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
+	import flash.display3D.textures.RectangleTexture;
 	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -91,7 +92,8 @@ package net.psykosoft.psykopaint2.core.io
 		{
 			_context3D = _canvas.stage3D.context3D;
 
-			_sourceRect = new Rectangle(0, 0, _canvas.usedTextureWidthRatio, _canvas.usedTextureHeightRatio);
+			// TODO: sourceRect & destRect are no longer necessary, we can just copy textures
+			_sourceRect = new Rectangle(0, 0, 1, 1);
 			_destRect = new Rectangle(0, 0, 1, 1);
 
 			_output = new ByteArray();
@@ -214,7 +216,7 @@ package net.psykosoft.psykopaint2.core.io
 			dispatchEvent(new CanvasSerializationEvent(CanvasSerializationEvent.COMPLETE, _output));
 		}
 
-		private function saveLayerNoAlpha(layer : Texture) : void
+		private function saveLayerNoAlpha(layer : RectangleTexture) : void
 		{
 			var context3D : Context3D = _canvas.stage3D.context3D;
 			var bitmapData : BitmapData = new TrackedBitmapData(_canvas.width, _canvas.height, false);
@@ -264,7 +266,7 @@ package net.psykosoft.psykopaint2.core.io
 			ApplicationDomain.currentDomain.domainMemory = tmp;
 		}
 
-		private function extractChannels(layer : Texture, copier : CopySubTextureChannels) : void
+		private function extractChannels(layer : RectangleTexture, copier : CopySubTextureChannels) : void
 		{
 			_context3D.setRenderToBackBuffer();
 			_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);

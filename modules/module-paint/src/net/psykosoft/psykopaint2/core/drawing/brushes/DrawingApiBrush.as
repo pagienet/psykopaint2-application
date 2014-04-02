@@ -325,7 +325,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 
-			CopyTexture.copy(_canvasModel.colorTexture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+			CopyTexture.copy(_canvasModel.colorTexture, _context);
 
 			_context.setBlendFactors(param_blendMode.stringValue, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 
@@ -341,7 +341,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context.clear();
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			CopyTexture.copy(_canvasModel.normalSpecularMap, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+			CopyTexture.copy(_canvasModel.normalSpecularMap, _context);
 			drawBrushNormalsAndSpecular();
 
 			_canvasModel.swapNormalSpecularLayer();

@@ -21,7 +21,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.UncoloredSprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterDamageBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
@@ -42,7 +41,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		protected static function init():void
 		{
 			registerBrush( BrushType.WATER_COLOR, WaterColorBrush );
-			registerBrush( BrushType.WATER_DAMAGE, WaterDamageBrush );
 			registerBrush( BrushType.SPRAY_CAN, SprayCanBrush );
 			registerBrush( BrushType.UNCOLORED_SPRAY_CAN, UncoloredSprayCanBrush );
 			registerBrush( BrushType.DELAUNAY, DelaunayBrush );

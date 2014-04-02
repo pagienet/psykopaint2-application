@@ -10,8 +10,9 @@ package net.psykosoft.psykopaint2.crop.views.crop
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedRectTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
+	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 	
 	
@@ -21,7 +22,7 @@ package net.psykosoft.psykopaint2.crop.views.crop
 		private var _baseTextureSize:int;
 		private var _canvasWidth:int;
 		private var _canvasHeight:int;
-		private var _background : RefCountedTexture;
+		private var _background : RefCountedRectTexture;
 		private var _sourceMap:BitmapData;
 		
 		public function CropView() {
@@ -49,20 +50,18 @@ package net.psykosoft.psykopaint2.crop.views.crop
 				context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 				context3D.setDepthTest(false, Context3DCompareMode.ALWAYS);
 
-				var widthRatio : Number = CoreSettings.STAGE_WIDTH/TextureUtils.getBestPowerOf2(CoreSettings.STAGE_WIDTH);
-				var heightRatio : Number = CoreSettings.STAGE_HEIGHT/TextureUtils.getBestPowerOf2(CoreSettings.STAGE_HEIGHT);
-				CopySubTexture.copy(_background.texture, new Rectangle(0, 0, widthRatio, heightRatio), new Rectangle(0, 0, 1, 1), context3D);
+				CopyTexture.copy(_background.texture, context3D);
 //				CopyTexture.copy(_background.texture, context3D, widthRatio, heightRatio);
 				context3D.setDepthTest(true, Context3DCompareMode.LESS);
 			}
 		}
 
-		public function get background() : RefCountedTexture
+		public function get background() : RefCountedRectTexture
 		{
 			return _background;
 		}
 
-		public function set background(background : RefCountedTexture) : void
+		public function set background(background : RefCountedRectTexture) : void
 		{
 			if (_background) _background.dispose();
 			_background = background;

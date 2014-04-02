@@ -7,18 +7,18 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 	{
 		public static const PROMISE_FULFILLED : String = "promiseFulfilled";
 
-		private var _texture : RefCountedTexture;
+		private var _texture : RefCountedRectTexture;
 
 		public function SnapshotPromise()
 		{
 		}
 
-		public function get texture() : RefCountedTexture
+		public function get texture() : RefCountedRectTexture
 		{
 			return _texture;
 		}
 
-		public function set texture(value : RefCountedTexture) : void
+		public function set texture(value : RefCountedRectTexture) : void
 		{
 			_texture = value;
 			value.addRefCount();

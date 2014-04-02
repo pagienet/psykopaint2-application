@@ -61,8 +61,8 @@ package net.psykosoft.psykopaint2.paint.utils
 
 			_props[8] = 0; 	// uv coords
 			_props[9] = 0;
-			_props[12] = canvas.usedTextureWidthRatio;
-			_props[13] = canvas.usedTextureHeightRatio;
+			_props[12] = 1;
+			_props[13] = 1;
 			
 			_fragmentShaderData[1] = 1;
 			_fragmentShaderData[2] = sourceTextureAlpha;

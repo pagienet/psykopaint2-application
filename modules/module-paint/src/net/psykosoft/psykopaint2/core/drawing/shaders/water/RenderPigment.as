@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 	import flash.display3D.Context3DClearMask;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.textures.Texture;
+	import flash.display3D.textures.TextureBase;
 	import flash.geom.Point;
 
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
@@ -34,7 +35,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 					"mul oc, ft1, ft0.y\n";
 		}
 
-		public function execute(stroke : SimulationMesh, pigment : Texture, color : Texture) : void
+		public function execute(stroke : SimulationMesh, pigment : TextureBase, color : TextureBase) : void
 		{
 			_context.setTextureAt(0, pigment);
 			_context.setTextureAt(1, color);

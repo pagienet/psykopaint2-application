@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import com.adobe.utils.AGALMiniAssembler;
 
 	import flash.display3D.Context3D;
+	import flash.display3D.Context3DBufferUsage;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
 	import flash.display3D.IndexBuffer3D;
@@ -78,6 +79,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_fastBuffer = FastBufferManager.getFastBuffer(topologyIndexType, createIndices);
 
 			initPoisson();
+		}
+
+		public function init(context3d : Context3D) : void
+		{
+			_currentNumElementsPerVertex = numElementsPerVertex;
+			_currentTopology = topologyIndexType;
+			initInProgressVertexBuffer(context3d);
+			initInProgressIndexBuffer(context3d);
+
+			assembleShaderPrograms(context3d);
 		}
 
 		private function initPoisson() : void
@@ -203,10 +214,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			return false;
 		}
 
-		public function assembleShaderPrograms(context3d : Context3D) : void
+		private function assembleShaderPrograms(context3d : Context3D) : void
 		{
 			if (!_normalSpecularPrograms[_programKey])
 				updateNormalSpecularProgram(context3d);
+
 			if (!_colorPrograms[_programKey])
 				updateColorProgram(context3d);
 		}
@@ -267,7 +279,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if (_inProgressVertexBuffer) _inProgressVertexBuffer.dispose();
 			// if you ever get an error here it means that the reserved memory by the fast buffer is not big enough.
 			// currently the maximum amount of elements per vertex assumed is 16.
-			_inProgressVertexBuffer = context3d.createVertexBuffer(65535, numElementsPerVertex);
+			_inProgressVertexBuffer = context3d.createVertexBuffer(65535, numElementsPerVertex, Context3DBufferUsage.DYNAMIC_DRAW);
 			// initialize with garbage
 			_fastBuffer.uploadVerticesToBuffer(_inProgressVertexBuffer, 0, 0, 65535);
 		}
@@ -490,15 +502,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_normalSpecularVertexData[0] = 1/512;
 			_normalSpecularVertexData[1] = 1/512;
 			
-			_normalSpecularVertexData[8] = 1/canvas.textureWidth;
-			_normalSpecularVertexData[9] = 1/canvas.textureHeight;
+			_normalSpecularVertexData[8] = 1/canvas.width;
+			_normalSpecularVertexData[9] = 1/canvas.height;
 			
 			_normalSpecularVertexData[12] = glossiness;
 			_normalSpecularVertexData[13] = bumpiness;
 			_normalSpecularVertexData[14] = shininess;
 			_normalSpecularVertexData[15] = influence;
 
-			_normalSpecularFragmentData[4] = (canvas.height-1)/canvas.textureHeight;
+			_normalSpecularFragmentData[4] = (canvas.height-1)/canvas.height;
 
 			context3d.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _normalSpecularVertexData, 4);
 			context3d.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _normalSpecularFragmentData, _numFragmentRegisters);

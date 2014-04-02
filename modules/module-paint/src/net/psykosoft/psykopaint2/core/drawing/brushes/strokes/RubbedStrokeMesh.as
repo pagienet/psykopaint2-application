@@ -169,8 +169,8 @@ import flash.display3D.Context3DVertexBufferFormat;
 
 			var vertexBuffer : VertexBuffer3D = getVertexBuffer(context3d);
 
-            _vertexData[0] = 1/canvas.textureWidth;
-            _vertexData[1] = 1/canvas.textureHeight;
+            _vertexData[0] = 1/canvas.width;
+            _vertexData[1] = 1/canvas.height;
 
 			context3d.setProgram(getColorProgram(context3d));
 			context3d.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _vertexData, 1);

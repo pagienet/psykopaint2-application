@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 
 	import flash.display.Stage;
 	import flash.display.Stage3D;
+	import flash.display3D.Context3DProfile;
 	import flash.events.Event;
 	
 	import away3d.core.managers.Stage3DManager;
@@ -33,7 +34,7 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 			trace( this, "execute()" );
 
 			var stage3dManager:Stage3DManager = Stage3DManager.getInstance( stage );
-			_stage3dProxy = stage3dManager.getFreeStage3DProxy();
+			_stage3dProxy = stage3dManager.getFreeStage3DProxy(false, Context3DProfile.BASELINE_EXTENDED);
 			_stage3dProxy.width = 1024 * CoreSettings.GLOBAL_SCALING;
 			_stage3dProxy.height = 768 * CoreSettings.GLOBAL_SCALING;
 			_stage3d = _stage3dProxy.stage3D;

@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.textures.Texture;
+	import flash.display3D.textures.TextureBase;
 	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
@@ -23,7 +24,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 		{
 			super(context);
 			_canvas = canvas;
-			_vertexProps = Vector.<Number>([1/canvas.textureWidth, 1/canvas.textureHeight, 0, 0]);
+			_vertexProps = Vector.<Number>([1/canvas.width, 1/canvas.height, 0, 0]);
 			_fragmentProps = Vector.<Number>([0.5, 2, 0, 0, 0, 0, 0, 0]);
 		}
 
@@ -66,9 +67,9 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 					"mov oc, ft0";
 		}
 
-		public function execute(gravity : Vector3D, stroke : SimulationMesh, velocityDensity : Texture, slopeMap : Texture, target : Texture) : void
+		public function execute(gravity : Vector3D, stroke : SimulationMesh, velocityDensity : TextureBase, slopeMap : TextureBase, target : TextureBase) : void
 		{
-			_context.setRenderToTexture(target, false);
+			_context.setRenderToTexture(target);
 			_context.setTextureAt(0, velocityDensity);
 			_context.setTextureAt(1, slopeMap);
 			_fragmentProps[4] = -gravity.x*_gravityStrength;

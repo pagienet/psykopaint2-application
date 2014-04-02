@@ -3,11 +3,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 	import com.adobe.utils.AGALMiniAssembler;
 
 	import flash.display3D.Context3D;
-	import flash.display3D.Context3DClearMask;
-	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.Context3DProgramType;
-	import flash.display3D.Context3DStencilAction;
-	import flash.display3D.Context3DTriangleFace;
 	import flash.display3D.Program3D;
 
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
@@ -27,16 +23,10 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			initProgram(context);
 		}
 
-		protected function render(stroke : SimulationMesh, stencil : Boolean = true) : void
+		protected function render(stroke : SimulationMesh) : void
 		{
 			_context.setProgram(_program);
-
-			if (stencil) {
-				_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE);
-				_context.setStencilReferenceValue(0);
-			}
 			stroke.drawMesh(_context, SimulationRibbonMesh.CANVAS_TEXTURE_UVS, -1, _useColor);
-			_context.setStencilActions();
 		}
 
 		protected function initProgram(context : Context3D) : void

@@ -206,8 +206,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if (_numIndices < 3) return;
 
 			var bounds : Rectangle = getBounds();
-			var ratioX : Number = canvas.textureWidth / _bakedTexture.width;
-			var ratioY : Number = canvas.textureHeight / _bakedTexture.height;
+			var ratioX : Number = canvas.width / _bakedTexture.width;
+			var ratioY : Number = canvas.height / _bakedTexture.height;
 			var sourceRect : Rectangle = new Rectangle(0, 0, bounds.width * ratioX, bounds.height * ratioY);
 
 			if (_subtractiveBlending) {

@@ -14,12 +14,12 @@ package net.psykosoft.psykopaint2.core.rendering
 		}
 
 		// use a static method because this is so universally used. (still bleh, tho)
-		public static function copy(source : TextureBase, context3D : Context3D, width : Number = 1, height : Number = 1, alpha:Number = 1) : void
+		public static function copy(source : TextureBase, context3D : Context3D, alpha:Number = 1) : void
 		{
 			if (!_instance)
 				throw new Error("CopyTextureWithAlpha::init must be called first!");
 			_instance.copyAlpha = alpha;
-			_instance.draw(source, context3D, width, height);
+			_instance.draw(source, context3D);
 		}
 		
 		public static function init(context3D : Context3D) : void
@@ -41,14 +41,14 @@ package net.psykosoft.psykopaint2.core.rendering
 			
 		}
 		
-		override public function draw(source : TextureBase, context3D : Context3D, width : Number, height : Number) : void
+		override public function draw(source : TextureBase, context3D : Context3D) : void
 		{
 			init(context3D);
 			
-			_vertexShaderData[4] = width*2;
-			_vertexShaderData[5] = height*2;
-			_vertexShaderData[8] = width;
-			_vertexShaderData[9] = height;
+			_vertexShaderData[4] = 2;
+			_vertexShaderData[5] = 2;
+			_vertexShaderData[8] = 1;
+			_vertexShaderData[9] = 1;
 			
 			_context3D.setProgram(_program);
 			_context3D.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _vertexShaderData, 4);

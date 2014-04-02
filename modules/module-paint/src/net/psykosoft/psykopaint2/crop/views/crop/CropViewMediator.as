@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.crop.views.crop
 	
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedRectTexture;
 	
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleSwipeGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleTransformGestureSignal;
@@ -98,7 +98,7 @@ package net.psykosoft.psykopaint2.crop.views.crop
 		private function onRequestDestroyCropModule() : void
 		{}
 
-		private function onSetCropBackgroundSignal(texture : RefCountedTexture) : void
+		private function onSetCropBackgroundSignal(texture : RefCountedRectTexture) : void
 		{
 			view.background = texture;
 		}

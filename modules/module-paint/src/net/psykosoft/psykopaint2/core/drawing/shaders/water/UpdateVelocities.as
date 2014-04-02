@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.textures.Texture;
+	import flash.display3D.textures.TextureBase;
 
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
 
@@ -27,9 +28,9 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 			_canvas = canvas;
 
 			_vertexProps = Vector.<Number>([
-				4/canvas.textureWidth, 4/canvas.textureHeight, 0, 0,	// texelSize
-				2/canvas.textureWidth, -1/canvas.textureHeight, 0, 0,
-				-4/canvas.textureWidth, 4/canvas.textureHeight, 0, 0
+				4/canvas.width, 4/canvas.height, 0, 0,	// texelSize
+				2/canvas.width, -1/canvas.height, 0, 0,
+				-4/canvas.width, 4/canvas.height, 0, 0
 			]);
 
 			_fragmentProps = Vector.<Number>([
@@ -61,9 +62,9 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 			return EmbedUtils.StringFromEmbed(Shader);
 		}
 
-		public function execute(stroke : SimulationMesh, velocityDensity : Texture, target : Texture, dt : Number = 1, waterViscosity : Number = .1, waterDrag : Number = .01) : void
+		public function execute(stroke : SimulationMesh, velocityDensity : TextureBase, target : TextureBase, dt : Number = 1, waterViscosity : Number = .1, waterDrag : Number = .01) : void
 		{
-			_context.setRenderToTexture(target, true);
+			_context.setRenderToTexture(target);
 			_context.setTextureAt(0, velocityDensity);
 			_context.clear(.5, .5, 0, 1);
 			_fragmentProps[0] = waterViscosity;

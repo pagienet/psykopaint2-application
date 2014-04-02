@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.app.states
 
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedRectTexture;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
@@ -68,7 +68,7 @@ package net.psykosoft.psykopaint2.app.states
 			requestCreateCanvasBackgroundSignal.dispatch();
 		}
 
-		private function onCanvasBackgroundSet(background : RefCountedTexture) : void
+		private function onCanvasBackgroundSet(background : RefCountedRectTexture) : void
 		{
 			notifyCanvasZoomedToDefaultViewSignal.addOnce( onZoomComplete );
 			requestZoomCanvasToDefaultViewSignal.dispatch();

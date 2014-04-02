@@ -123,13 +123,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function drawColor():void
 		{
-			_context.setRenderToTexture(_canvasModel.fullSizeBackBuffer, true);
+			_context.setRenderToTexture(_canvasModel.fullSizeBackBuffer);
 			_context.clear();
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 
 			_snapshot.drawColor();
-			_context.setStencilActions();
 
 			_context.setBlendFactors(param_blendMode.stringValue, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 
@@ -141,17 +140,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		override protected function drawNormalsAndSpecular():void
 		{
 			_context.setDepthTest(false, Context3DCompareMode.ALWAYS);
-			_context.setRenderToTexture(_canvasModel.fullSizeBackBuffer, true);
+			_context.setRenderToTexture(_canvasModel.fullSizeBackBuffer);
 			_context.clear();
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			_context.setStencilReferenceValue(1);
-			_context.setStencilActions("frontAndBack", "always", Context3DStencilAction.SET, Context3DStencilAction.SET, Context3DStencilAction.SET);
 			_snapshot.drawNormalsSpecular();
-			_context.setStencilReferenceValue(0);
-			_context.setStencilActions("frontAndBack", Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP);
-			if (isStrokeInProgress) CopyTexture.copy(_canvasModel.normalSpecularMap, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
-			_context.setStencilActions();
 			drawBrushNormalsAndSpecular();
 
 			_canvasModel.swapNormalSpecularLayer();

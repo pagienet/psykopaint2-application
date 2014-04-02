@@ -42,6 +42,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		private var _scale : Number;
 		private var _offsetX : Number;
 		private var _offsetY : Number;
+		private var unitRect:Rectangle = new Rectangle(0, 0, 1, 1);
 
 		public function LightingRenderer(lightingModel : LightingModel, context3d : Context3D)
 		{
@@ -128,7 +129,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			_context3d.setRenderToTexture(canvas.fullSizeBackBuffer);
 			_context3d.clear(0, 0, 0, 0);
 
-			renderLighting(0, 0, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio, canvas);
+			renderLighting(0, 0, 1, 1, canvas);
 
 			_context3d.setRenderToBackBuffer();
 			_context3d.clear(0, 0, 0, 0);
@@ -140,9 +141,8 @@ package net.psykosoft.psykopaint2.core.rendering
 		{
 			var scale : Number = _renderRect.height / canvas.height;
 			var offsetX : Number = (1 - scale) * .5;
-			var sourceRect : Rectangle = new Rectangle(0, 0, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio);
 			var destRect : Rectangle = new Rectangle(offsetX, 0, scale, scale);
-			CopySubTexture.copy(canvas.fullSizeBackBuffer, sourceRect, destRect, _context3d);
+			CopySubTexture.copy(canvas.fullSizeBackBuffer, unitRect, destRect, _context3d);
 		}
 
 		private function renderLighting(offsetX : Number, offsetY : Number, widthRatio : Number, heightRatio : Number, canvas : CanvasModel) : void
@@ -185,26 +185,23 @@ package net.psykosoft.psykopaint2.core.rendering
 			_globalVertexData[4] = offsetX * 2 - 1;
 			_globalVertexData[5] = -(offsetY * 2 - 1);
 
-			_globalVertexData[8] = canvas.usedTextureWidthRatio;
-			_globalVertexData[9] = canvas.usedTextureHeightRatio;
+			_globalVertexData[8] = 1;
+			_globalVertexData[9] = 1;
 		}
 
 		private function updateGlobalFragmentData(canvas : CanvasModel) : void
 		{
-			var textureRatioX : Number = canvas.usedTextureWidthRatio;
-			var textureRatioY : Number = canvas.usedTextureHeightRatio;
-
-			_globalVertexData[20] = 1 / canvas.textureWidth;
-			_globalVertexData[21] = 1 / canvas.textureHeight;
+			_globalVertexData[20] = 1 / canvas.width;
+			_globalVertexData[21] = 1 / canvas.height;
 
 			// light position
-			_globalVertexData[12] = (_lightingModel.lightPosition.x + 1) * .5 * textureRatioX;
-			_globalVertexData[13] = (-_lightingModel.lightPosition.y + 1) * .5 * textureRatioY;
+			_globalVertexData[12] = (_lightingModel.lightPosition.x + 1) * .5;
+			_globalVertexData[13] = (-_lightingModel.lightPosition.y + 1) * .5;
 			_globalVertexData[14] = _lightingModel.lightPosition.z * .5;
 
 			// eye position in uv space
-			_globalVertexData[16] = (_lightingModel.eyePosition.x + 1) * .5 * textureRatioX;
-			_globalVertexData[17] = (-_lightingModel.eyePosition.y + 1) * .5 * textureRatioY;
+			_globalVertexData[16] = (_lightingModel.eyePosition.x + 1) * .5;
+			_globalVertexData[17] = (-_lightingModel.eyePosition.y + 1) * .5;
 			_globalVertexData[18] = _lightingModel.eyePosition.z * .5;
 		}
 

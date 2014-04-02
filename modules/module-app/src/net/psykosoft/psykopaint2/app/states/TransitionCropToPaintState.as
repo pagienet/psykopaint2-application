@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedRectTexture;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
@@ -68,7 +68,7 @@ package net.psykosoft.psykopaint2.app.states
 		public var notifyHomeModuleDestroyedSignal:NotifyHomeModuleDestroyedSignal;
 
 		private var _croppedBitmapData : BitmapData;
-		private var _background : RefCountedTexture;
+		private var _background : RefCountedRectTexture;
 		private var _surfaceData:SurfaceDataVO;
 
 		public function TransitionCropToPaintState()
@@ -86,7 +86,7 @@ package net.psykosoft.psykopaint2.app.states
 		override ns_state_machine function activate(data : Object = null) : void
 		{
 			_croppedBitmapData = BitmapData(data.bitmapData);
-			_background = RefCountedTexture(data.background);
+			_background = RefCountedRectTexture(data.background);
 
 			notifySurfaceLoadedSignal.addOnce(onSurfaceLoaded);
 			requestLoadSurfaceSignal.dispatch(0);

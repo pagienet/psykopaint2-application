@@ -76,8 +76,8 @@ package net.psykosoft.psykopaint2.paint.utils
 
 			_props[8] = 0; 	// uv coords
 			_props[9] = 0;
-			_props[12] = canvas.usedTextureWidthRatio;
-			_props[13] = canvas.usedTextureHeightRatio;
+			_props[12] = 1;
+			_props[13] = 1;
 
 			_context3D.setProgram(_copyProgram);
 			_context3D.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _props, 4);

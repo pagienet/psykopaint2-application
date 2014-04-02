@@ -31,17 +31,8 @@ package net.psykosoft.psykopaint2.core.io
 			// TODO: Simply do not do this by allowing pyramid map not to exist
 				canvas.setSourceBitmapData(null);
 
-			var oldLength : int = paintingData.colorData.length;
-			var newLength : int = canvas.textureWidth * canvas.textureHeight * 4;
-
-			paintingData.colorData.length = newLength;
-			canvas.colorTexture.uploadFromByteArray(paintingData.colorData, 0, 0);
-			paintingData.colorData.length = oldLength;
-
-			oldLength = paintingData.normalSpecularData.length;
-			paintingData.normalSpecularData.length = newLength;
-			canvas.normalSpecularMap.uploadFromByteArray(paintingData.normalSpecularData, 0, 0);
-			paintingData.normalSpecularData.length = oldLength;
+			canvas.colorTexture.uploadFromByteArray(paintingData.colorData, 0);
+			canvas.normalSpecularMap.uploadFromByteArray(paintingData.normalSpecularData, 0);
 
 			canvas.setNormalSpecularOriginal(paintingData.normalSpecularOriginal);
 			canvas.setColorBackgroundOriginal(paintingData.colorBackgroundOriginal);

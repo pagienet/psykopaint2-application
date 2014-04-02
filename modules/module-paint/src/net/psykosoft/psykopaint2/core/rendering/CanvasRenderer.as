@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.core.rendering
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedRectTexture;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
@@ -57,9 +57,10 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private var _context3D : Context3D;
 		private var _lightingRenderer : LightingRenderer;
-		private var _background : RefCountedTexture;
+		private var _background : RefCountedRectTexture;
 		private var _backgroundBaseRect : Rectangle;
 		private var _renderRect : Rectangle;
+		private var unitRect:Rectangle = new Rectangle(0, 0, 1, 1);
 
 		public function CanvasRenderer()
 		{
@@ -99,7 +100,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			requestSetCanvasBackgroundSignal.add(onSetCanvasBackground);
 		}
 
-		private function onSetCanvasBackground(texture : RefCountedTexture, rect : Rectangle) : void
+		private function onSetCanvasBackground(texture : RefCountedRectTexture, rect : Rectangle) : void
 		{
 			disposeBackground();
 			_background = texture;
@@ -165,10 +166,7 @@ package net.psykosoft.psykopaint2.core.rendering
 				_lightingRenderer.render(canvas);
 			}
 			else {
-				// todo: if rendering source, add the source to be copied
-				var sourceRect : Rectangle = new Rectangle(0, 0, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio);
-				var destRect : Rectangle = new Rectangle(0, 0, 1, 1);
-				CopySubTexture.copy(canvas.colorTexture, sourceRect, destRect, _context3D);
+				CopyTexture.copy(canvas.colorTexture, _context3D);
 			}
 
 			renderBackground();
@@ -181,7 +179,7 @@ package net.psykosoft.psykopaint2.core.rendering
 				_context3D.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP);
 				_context3D.setStencilReferenceValue(0);
 				_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-				CopySubTexture.copy(_background.texture, new Rectangle(0, 0, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio), backgroundRect, _context3D);
+				CopySubTexture.copy(_background.texture, unitRect, backgroundRect, _context3D);
 			}
 		}
 

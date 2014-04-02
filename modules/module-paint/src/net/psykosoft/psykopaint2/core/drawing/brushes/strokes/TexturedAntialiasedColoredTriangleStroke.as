@@ -12,9 +12,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	
 	public class TexturedAntialiasedColoredTriangleStroke extends TriangleStroke
 	{
-		private var postProcessProgramUploaded:Boolean;
-		private var postProcessProgram:Program3D;
-		
 		public function TexturedAntialiasedColoredTriangleStroke()
 		{
 			super();
@@ -100,8 +97,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_normalSpecularVertexData[0] = 1/512;
 			_normalSpecularVertexData[1] = 1/512;
 			
-			_normalSpecularVertexData[8] = 1/canvas.textureWidth;
-			_normalSpecularVertexData[9] = 1/canvas.textureHeight;
+			_normalSpecularVertexData[8] = 1/canvas.width;
+			_normalSpecularVertexData[9] = 1/canvas.height;
 			
 			_normalSpecularVertexData[12] = glossiness;
 			_normalSpecularVertexData[13] = bumpiness;
