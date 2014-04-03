@@ -4,8 +4,10 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.Context3DTextureFormat;
+	import flash.display3D.textures.RectangleTexture;
 	import flash.display3D.textures.Texture;
 	import flash.display3D.textures.TextureBase;
+	import flash.geom.Rectangle;
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedRectTexture;
@@ -77,6 +79,16 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 			canvas.swapNormalSpecularLayer();	// move current state to back buffer (not allowed to directly set color layer
 			_normalSpecularTexture = canvas.swapFullSized(_normalSpecularTexture);	// swap with back buffer
 			canvas.swapNormalSpecularLayer();
+		}
+
+		public function get colorTexture() : TextureBase
+		{
+			return _colorTexture.texture;
+		}
+
+		public function get normalSpecularTexture() : TextureBase
+		{
+			return _normalSpecularTexture.texture;
 		}
 	}
 }

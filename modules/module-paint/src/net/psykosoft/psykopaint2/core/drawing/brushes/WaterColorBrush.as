@@ -327,8 +327,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context.setDepthTest(false, Context3DCompareMode.ALWAYS);
 
 			addPaintToSimulation();
-
-			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			applySlope();
 			updateVelocities();
 			relaxDivergence();
@@ -426,12 +424,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function drawBrushColor() : void
 		{
-//			CopyTexture.copy(_velocityPressureField, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
-//			CopyTexture.copy(_pigmentDensityField, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+//			CopyTexture.copy(_velocityPressureField.texture, _context);
+//			CopyTexture.copy(_pigmentDensityField.texture, _context);
 //			CopyTexture.copy(_pigmentColorField.texture, context3d);
 
-			if (param_paintMode.intValue == PAINT_MODE_COLOR)
-				_renderPigmentColor.execute(simulationMesh, _pigmentDensityField.texture, _pigmentColorField.texture);
+			if (param_paintMode.intValue == PAINT_MODE_COLOR) {
+				_renderPigmentColor.execute(simulationMesh, _pigmentDensityField.texture, _pigmentColorField.texture, _snapshot.colorTexture);
+			}
 			else {
 				_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 				_renderPigmentDamage.execute(simulationMesh, _pigmentColorField.texture);

@@ -130,7 +130,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			_snapshot.drawColor();
 
-			_context.setBlendFactors(param_blendMode.stringValue, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+			// blend mode is unsupported!
+//			_context.setBlendFactors(param_blendMode.stringValue, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 
 			drawBrushColor();
 

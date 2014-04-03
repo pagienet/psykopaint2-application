@@ -50,7 +50,6 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 		{
 			_context.setRenderToTexture(backBuffer);
 			_context.clear(0, 0, 0, 0);
-			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			CopyTexture.copy(pigment, _context);
 			_context.setTextureAt(0, velocityDensity);
 			_context.setTextureAt(1, pigment);
