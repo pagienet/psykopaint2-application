@@ -66,16 +66,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			var oy:Number = appendVO.quadOffsetRatio * (-sin1 - sin2);
 			
 			data[0]  = pnx - cos1 + ox;
-			data[1]  = pny - sin1 + oy;
+			data[1]  = pny - (sin1 + oy) * 1.333333;
 			
 			data[8]  = pnx + cos2 + ox;
-			data[9]  = pny + sin2 + oy;
+			data[9]  = pny + (sin2 + oy)  * 1.333333;
 			
 			data[16] = pnx + cos1 + ox;
-			data[17] = pny + sin1 + oy;
+			data[17] = pny + (sin1 + oy) * 1.333333;
 			
 			data[24] = pnx - cos2 + ox;
-			data[25] = pny - sin2 + oy;
+			data[25] = pny - (sin2 + oy) * 1.333333;
 			
 			data[2]  = data[26] = uvBounds.left;
 			data[3]  = data[11] = uvBounds.top;
