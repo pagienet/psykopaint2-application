@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		public static const NO_EMAIL:String = "Hep. Why don't you try to put an email in there?";
 		public static const NO_FIRST_NAME:String = "Come on, everyone has a first name. What's yours?";
 		public static const NO_LAST_NAME:String = "Come on, everyone has a last name. What's yours?";
-		public static const NO_PHOTO:String = "Care to share your beauty with us?";
+		public static const NO_PHOTO:String = "Let's get you a profile picture.";
 		public static const PASSWORD_6_CHARS_MIN:String = "For safety reasons, passwords need at least 6 characters.";
 		public static const ALREADY_REGISTERED:String = "There's already an account registered with this address buddy";
 		public static const NOT_REGISTERED:String = "Your email is not registered yet. You might check the syntax or click register button";
