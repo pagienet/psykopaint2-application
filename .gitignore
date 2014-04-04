@@ -39,3 +39,4 @@ certificates/
 /modules/module-home/bin
 
 /modules/module-paint/bin
+*.db
