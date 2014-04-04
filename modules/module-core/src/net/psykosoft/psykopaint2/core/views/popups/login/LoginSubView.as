@@ -49,11 +49,18 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			passwordInput.behavesAsPassword( true );
 
-			emailInput.enterPressedSignal.add( onEmailInputEnterPressed );
+			emailInput.setChainedTextField(passwordInput);
 			passwordInput.enterPressedSignal.add( onPasswordInputEnterPressed );
+
+			emailInput.focusedOutSignal.add( onEmailInputFocusOut );
 
 			loginBtn.addEventListener( MouseEvent.CLICK, onLoginBtnClick );
 			forgotButton.addEventListener( MouseEvent.CLICK, onForgotBtnClick );
+		}
+
+		private function onEmailInputFocusOut():void {
+			clearAllSatelliteMessages();
+			validateEmailFormat();
 		}
 
 		public function dispose():void {
@@ -61,7 +68,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			loginBtn.removeEventListener( MouseEvent.CLICK, onLoginBtnClick );
 			forgotButton.removeEventListener( MouseEvent.CLICK, onForgotBtnClick );
 
-			emailInput.enterPressedSignal.remove( onEmailInputEnterPressed );
 			passwordInput.enterPressedSignal.remove( onPasswordInputEnterPressed );
 
 			emailInput.dispose();
@@ -152,10 +158,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		private function onPasswordInputEnterPressed():void {
 			login();
-		}
-
-		private function onEmailInputEnterPressed():void {
-			passwordInput.focusIn();
 		}
 
 		private function onLoginBtnClick( event:MouseEvent ):void {

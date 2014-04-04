@@ -68,6 +68,11 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			firstNameTf.setChainedTextField(lastNameTf);
 			lastNameTf.enterPressedSignal.add( onLastNameInputEnterPressed );
 
+			emailTf.focusedOutSignal.add( onEmailFocusOut );
+			passwordTf.focusedOutSignal.add( onPasswordFocusOut );
+			firstNameTf.focusedOutSignal.add( onFirstNameFocusOut );
+			lastNameTf.focusedOutSignal.add( onLastNameFocusOut );
+
 			cameraHit.alpha = 0;
 			folderHit.alpha = 0;
 			photoContour.visible = false;
@@ -90,6 +95,11 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			lastNameTf.enterPressedSignal.remove( onLastNameInputEnterPressed );
 
+			emailTf.focusedOutSignal.remove( onEmailFocusOut );
+			passwordTf.focusedOutSignal.remove( onPasswordFocusOut );
+			firstNameTf.focusedOutSignal.remove( onFirstNameFocusOut );
+			lastNameTf.focusedOutSignal.remove( onLastNameFocusOut );
+
 			signupBtn.dispose();
 			emailTf.dispose();
 			passwordTf.dispose();
@@ -103,6 +113,26 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			if( _photoLarge ) _photoLarge.dispose();
 
 			_photoRetrieved = false;
+		}
+
+		private function onLastNameFocusOut():void {
+			clearAllSatelliteMessages();
+			validateLastNameFormat();
+		}
+
+		private function onFirstNameFocusOut():void {
+			clearAllSatelliteMessages();
+			validateFirstNameFormat();
+		}
+
+		private function onPasswordFocusOut():void {
+			clearAllSatelliteMessages();
+			validatePasswordFormat();
+		}
+
+		private function onEmailFocusOut():void {
+			clearAllSatelliteMessages();
+			validateEmailFormat();
 		}
 
 		// -----------------------

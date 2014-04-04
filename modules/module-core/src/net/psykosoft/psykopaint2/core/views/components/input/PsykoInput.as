@@ -29,6 +29,7 @@ package net.psykosoft.psykopaint2.core.views.components.input
 		private var _behavesAsPassword:Boolean;
 
 		public var enterPressedSignal:Signal;
+		public var focusedOutSignal:Signal;
 
 		private const _defaultTextColor:uint = 0x646464;
 		private const _activeTextColor:uint = 0x000000;
@@ -37,6 +38,7 @@ package net.psykosoft.psykopaint2.core.views.components.input
 			super();
 
 			enterPressedSignal = new Signal();
+			focusedOutSignal = new Signal();
 
 			selBlue.mouseEnabled = selBlue.mouseChildren = false;
 
@@ -187,6 +189,8 @@ package net.psykosoft.psykopaint2.core.views.components.input
 			showCancelButton( false );
 
 			showNoHighlight();
+
+			focusedOutSignal.dispatch();
 		}
 
 		private function onTfClick( event:MouseEvent ):void {
