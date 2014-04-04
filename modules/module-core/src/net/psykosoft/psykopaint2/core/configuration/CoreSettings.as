@@ -72,6 +72,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		public static var NAME:String = "";
 		public static var STAGE_WIDTH:Number = 1024; // Doubled dynamically if on retina iPad.
 		public static var STAGE_HEIGHT:Number = 768;
+		public static var ASPECT_RATIO:Number = 1.33333;
 		public static var STAGE:Stage;
 		public static var DISPLAY_ROOT:Sprite;
 

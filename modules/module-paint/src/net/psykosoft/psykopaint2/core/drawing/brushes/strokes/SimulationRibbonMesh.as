@@ -5,7 +5,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import flash.display3D.VertexBuffer3D;
 	import flash.display3D.textures.TextureBase;
 	import flash.geom.Rectangle;
-	
+
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.BlendSubTextureCMYK;
@@ -155,9 +157,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if (_numVertices >= MAX_VERTICES) return;
 
 			var colorsRGBA:Vector.<Number> =  appendVO.point.colorsRGBA;
-			var halfSize : Number = appendVO.size * .5;
-			var vx : Number = x + normalX * halfSize;
-			var vy : Number = y + normalY * halfSize;
+			var halfSizeX : Number = appendVO.size * .5;
+			var halfSizeY : Number = halfSizeX * CoreSettings.ASPECT_RATIO;
+			var vx : Number = x + normalX * halfSizeX;
+			var vy : Number = y + normalY * halfSizeY;
 			if (vx > _maxX) _maxX = vx;
 			else if (vx < _minX) _minX = vx;
 			if (vy > _maxY) _maxY = vy;
@@ -173,8 +176,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_tmpData[8] = vx * .5 + .5;
 			_tmpData[9] = .5 - vy * .5;
 
-			vx = appendVO.point.normalX - normalX * halfSize;
-			vy = appendVO.point.normalY - normalY * halfSize;
+			vx = appendVO.point.normalX - normalX * halfSizeX;
+			vy = appendVO.point.normalY - normalY * halfSizeY;
 			if (vx > _maxX) _maxX = vx;
 			else if (vx < _minX) _minX = vx;
 			if (vy > _maxY) _maxY = vy;
