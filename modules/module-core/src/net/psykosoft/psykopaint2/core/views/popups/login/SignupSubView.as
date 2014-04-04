@@ -48,6 +48,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		private const LARGE_PHOTO_SIZE:int = 200;
 		private const SMALL_PHOTO_SIZE:int = 200;
+		private const CONTENT_Y_OFFSET:int = -25;
 
 		public var canRequestSignUp:Boolean = true;
 
@@ -80,6 +81,18 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			cameraHit.addEventListener( MouseEvent.CLICK, onCameraHitClick );
 			folderHit.addEventListener( MouseEvent.CLICK, onFolderHitClick );
 			signupBtn.addEventListener( MouseEvent.CLICK, onSignupBtnClick );
+
+			// Offset a little so that fields that get covered by the virtual keyboard
+			// are partly visible.
+			emailTf.y += CONTENT_Y_OFFSET;
+			passwordTf.y += CONTENT_Y_OFFSET;
+			firstNameTf.y += CONTENT_Y_OFFSET;
+			lastNameTf.y += CONTENT_Y_OFFSET;
+			signupBtn.y += CONTENT_Y_OFFSET;
+			cameraHit.y += CONTENT_Y_OFFSET;
+			folderHit.y += CONTENT_Y_OFFSET;
+			photoHolder.y += CONTENT_Y_OFFSET;
+			photoContour.y += CONTENT_Y_OFFSET;
 		}
 
 		public function dispose():void {
