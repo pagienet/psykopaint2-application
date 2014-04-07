@@ -359,7 +359,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			if ( enabled )
 			{
-				brushEngine.param_blendModeSource.index = 3;
+				brushEngine.param_blendModeSource.index = 1;
 				brushEngine.param_blendModeTarget.index = 3;
 				
 				bumpDecorator.param_bumpInfluence.numberValue = 1;

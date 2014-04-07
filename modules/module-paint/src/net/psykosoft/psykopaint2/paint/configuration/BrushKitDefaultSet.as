@@ -18,9 +18,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			new BrushKit_BristleBrush(),
 			new BrushKit_Pencil(),
 			new BrushKit_WaterColor(),
-			new BrushKit_Paintgun(),
-			new BrushKit_Eraser()
-			
+			new BrushKit_Paintgun()
 		]);
 		
 		/*
