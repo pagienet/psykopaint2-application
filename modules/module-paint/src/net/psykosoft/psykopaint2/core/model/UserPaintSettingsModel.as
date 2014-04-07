@@ -236,6 +236,7 @@ package net.psykosoft.psykopaint2.core.model
 			{
 				_eraserMode = value;
 				notifyEraserModeChangedSignal.dispatch( _eraserMode );
+				if ( _eraserMode ) setColorMode( PaintMode.ERASER_MODE, true )
 			}
 		}
 		
