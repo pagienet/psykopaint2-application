@@ -1,9 +1,12 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
+	import com.quasimondo.geom.ColorMatrix;
+	
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.filters.ColorMatrixFilter;
 	import flash.geom.ColorTransform;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
@@ -22,7 +25,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public var colorOverlay5:Sprite;
 		public var colorOverlay6:Sprite;
 		public var colorOverlay7:Sprite;
-		public var colorOverlay8:Sprite;
+		public var eraser:Sprite;
 		public var currentColor:Sprite;
 		public var autoColorSwatch:Sprite;
 		public var currentColorSwatch:Sprite;
@@ -41,7 +44,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var dummyColorTransform:ColorTransform;
 		private var triggerSourcePreviewTimeoutID:int;
 		
-		
+		private var desaturate:ColorMatrixFilter = new ColorMatrixFilter([0.333,0.3333,0.3333,0,0,0.333,0.3333,0.3333,0,0,0.333,0.3333,0.3333,0,0,0,0,0,1,0]);
 		
 		public function ColorPalette( )
 		{
@@ -56,8 +59,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 			_stage = stage;
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			
-			swatches = Vector.<Sprite>([colorOverlay0,colorOverlay1,colorOverlay2,colorOverlay3,colorOverlay8,
-										colorOverlay4,colorOverlay5,colorOverlay6,colorOverlay7,currentColor,
+			swatches = Vector.<Sprite>([colorOverlay0,colorOverlay1,colorOverlay2,colorOverlay3,colorOverlay7,
+										eraser,colorOverlay4,colorOverlay5,colorOverlay6,currentColor,
 			]);
 			
 			for ( var i:int = 0; i < swatches.length; i++ )
@@ -100,9 +103,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 			if ( userPaintSettings.hasSourceImage )
 			{
 				swatches[4] = autoColorSwatch;
-				colorOverlay8.visible = false;
+				colorOverlay7.visible = false;
 			} else {
-				swatches[4] = colorOverlay8;
+				swatches[4] = colorOverlay7;
 				autoColorSwatch.visible = false;
 				userPaintSettings.setCurrentColor(palettes[0][0]); 
 				
@@ -115,9 +118,14 @@ package net.psykosoft.psykopaint2.paint.views.color
 			selectedPaletteIndex = index;
 			for ( var i:int = 0; i < swatches.length; i++ )
 			{
-				var t:ColorTransform = swatches[i].transform.colorTransform; 
-				t.color = 0xff000000 | palettes[index][i];
-				swatches[i].transform.colorTransform = t;
+				if ( i != 5 )
+				{
+					var t:ColorTransform = swatches[i].transform.colorTransform; 
+					t.color = 0xff000000 | palettes[index][i];
+					swatches[i].transform.colorTransform = t;
+				} else {
+					swatches[i].filters = [desaturate];
+				}
 			}
 		}
 		
@@ -142,6 +150,12 @@ package net.psykosoft.psykopaint2.paint.views.color
 					paletteSelector.y = swatches[index].y+37;
 					_selectedColor = userPaintSettings.currentColor;
 					sendModeSignal = true;
+				} else if ( swatches[index] == eraser){
+					paletteSelector.x = swatches[index].x + 32;
+					paletteSelector.y = swatches[index].y+37;
+					_selectedColor = 0;
+					
+					sendModeSignal = true;
 				} else if ( swatches[index] == currentColor){
 					paletteSelector.x = swatches[index].x-2;
 					paletteSelector.y = swatches[index].y+3;
@@ -159,7 +173,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 				userPaintSettings.setColorMode( autoColor ? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE, sendModeSignal );
 				userPaintSettings.setCurrentColor(_selectedColor, sendColorSignal);
 				userPaintSettings.eraserMode = (index == 5);
-				
+				eraser.filters = index == 5 ? [] : [desaturate];
 			} else {
 				userPaintSettings.selectedSwatchIndex = index;
 			}
@@ -191,7 +205,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		public function set selectedColor(argb:uint):void
 		{
-			if ( userPaintSettings.selectedSwatchIndex != -1 && !autoColor )
+			if ( userPaintSettings.selectedSwatchIndex != -1 && !autoColor && userPaintSettings.selectedSwatchIndex != 5)
 			{
 				dummyColorTransform.color = _selectedColor = argb;
 				swatches[userPaintSettings.selectedSwatchIndex].transform.colorTransform = dummyColorTransform;
@@ -201,9 +215,12 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		public function changeSwatchColor(swatch:Sprite, color:uint):void
 		{
-			dummyColorTransform.color = color;
-			swatch.transform.colorTransform = dummyColorTransform;
-			palettes[selectedPaletteIndex][getSwatchIndex(swatch)] = color;
+			if ( swatch != eraser )
+			{
+				dummyColorTransform.color = color;
+				swatch.transform.colorTransform = dummyColorTransform;
+				palettes[selectedPaletteIndex][getSwatchIndex(swatch)] = color;
+			}
 		}
 		
 		public function get currentPalette():Vector.<uint>

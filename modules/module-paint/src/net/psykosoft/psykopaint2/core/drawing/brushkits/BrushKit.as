@@ -287,7 +287,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		public function setEraserMode( enabled:Boolean ):void
 		{
-			//override this
+			if ( enabled )
+			{
+				brushEngine.param_blendModeSource.index = 1;
+				brushEngine.param_blendModeTarget.index = 3;
+			} else {
+				brushEngine.param_blendModeSource.index = 0; 
+				brushEngine.param_blendModeTarget.index = 3;
+			}
 		}
 	}
 }
