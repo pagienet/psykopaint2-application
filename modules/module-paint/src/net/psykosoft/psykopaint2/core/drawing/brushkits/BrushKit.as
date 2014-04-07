@@ -11,14 +11,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.ClassicPsykoBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.DelaunayBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.DrawingApiBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.RibbonBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.ShatterBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SketchBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.UncoloredSprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
