@@ -60,6 +60,15 @@ package net.psykosoft.psykopaint2.core.views.base
 //			input.x = 400;
 //			input.y = 200;
 //			addChild( input );
+//			var input1:PsykoInput = new PsykoInput();
+//			input1.defaultText = "email1";
+//			input1.x = 400;
+//			input1.y = 400;
+//			addChild( input1 );
+//			input.setChainedTextField(input1);
+//			setTimeout( function():void {
+//				input.focusIn();
+//			}, 1000 );
 
 			// To test errors view.
 //			setTimeout( function():void {

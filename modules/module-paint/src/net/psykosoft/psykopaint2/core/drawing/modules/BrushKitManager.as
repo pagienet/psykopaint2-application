@@ -44,6 +44,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyEraserModeChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyShowPipetteSignal;
 	import net.psykosoft.psykopaint2.paint.utils.CopyColorAndSourceToBitmapDataUtil;
@@ -117,6 +118,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		[Inject]
 		public var notifyTogglePaintingEnableSignal:NotifyTogglePaintingEnableSignal;
 		
+		[Inject]
+		public var notifyEraserModeChangedSignal:NotifyEraserModeChangedSignal;
+		
 	
 		private var _view : DisplayObject;
 		private var _active : Boolean;
@@ -153,6 +157,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			notifyColorStyleChangedSignal.add( onColorStyleChanged );
 			notifyNavigationToggledSignal.add( onNavigationToggled );
 			notifyTogglePaintingEnableSignal.add( onToggleEnablePainting );
+			notifyEraserModeChangedSignal.add( onEraserModeChanged );
 			_navigationIsVisible = true;
 		}
 		
@@ -169,6 +174,14 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					_activeBrushKit.brushEngine.pathManager.activate( _view, canvasModel, renderer );
 				else
 					_activeBrushKit.brushEngine.pathManager.deactivate();
+			}
+		}
+		
+		private function onEraserModeChanged( enable:Boolean ):void
+		{
+			if ( _activeBrushKit )
+			{
+				_activeBrushKit.setEraserMode( enable );
 			}
 		}
 		

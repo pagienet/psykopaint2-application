@@ -8,9 +8,12 @@ package net.psykosoft.psykopaint2.core.views.components.input
 	import flash.events.FocusEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	import flash.ui.Keyboard;
+	import flash.utils.Timer;
+	import flash.utils.setTimeout;
 
 	import org.osflash.signals.Signal;
 
@@ -26,6 +29,7 @@ package net.psykosoft.psykopaint2.core.views.components.input
 		private var _behavesAsPassword:Boolean;
 
 		public var enterPressedSignal:Signal;
+		public var focusedOutSignal:Signal;
 
 		private const _defaultTextColor:uint = 0x646464;
 		private const _activeTextColor:uint = 0x000000;
@@ -34,6 +38,7 @@ package net.psykosoft.psykopaint2.core.views.components.input
 			super();
 
 			enterPressedSignal = new Signal();
+			focusedOutSignal = new Signal();
 
 			selBlue.mouseEnabled = selBlue.mouseChildren = false;
 
@@ -50,6 +55,11 @@ package net.psykosoft.psykopaint2.core.views.components.input
 		}
 
 		public function dispose():void {
+			_chainedTf = null;
+			if(_focusTimer) {
+				_focusTimer.removeEventListener( TimerEvent.TIMER_COMPLETE, onFocusTimerComplete );
+				_focusTimer = null;
+			}
 			if( tf.hasEventListener( MouseEvent.CLICK ) ) tf.removeEventListener( MouseEvent.CLICK, onTfClick );
 			if( tf.hasEventListener( FocusEvent.FOCUS_OUT ) ) tf.removeEventListener( FocusEvent.FOCUS_OUT, onTfFocusOut );
 			if( tf.hasEventListener( Event.CHANGE ) ) tf.removeEventListener( Event.CHANGE, onTfChange );
@@ -116,6 +126,26 @@ package net.psykosoft.psykopaint2.core.views.components.input
 			// Gain focus and place cursor at last character.
 			stage.focus = tf;
 			tf.setSelection( tf.text.length, tf.text.length );
+
+			tf.requestSoftKeyboard();
+		}
+
+		private var _chainedTf:PsykoInput;
+		public function setChainedTextField(tf:PsykoInput):void {
+			  _chainedTf = tf;
+		}
+
+		private var _focusTimer:Timer;
+		private function doChain():void {
+			// Need a time out because in ipad dismissing the keyboard and assigning it at the same
+			// time causes focusIn() to be missed
+			_focusTimer = new Timer(1, 1);
+			_focusTimer.addEventListener( TimerEvent.TIMER_COMPLETE, onFocusTimerComplete );
+			_focusTimer.start();
+		}
+
+		private function onFocusTimerComplete( event:TimerEvent ):void {
+			_chainedTf.focusIn();
 		}
 
 		// -----------------------
@@ -132,7 +162,11 @@ package net.psykosoft.psykopaint2.core.views.components.input
 		}
 
 		private function onTfKeyDown( event:KeyboardEvent ):void {
-			if( event.keyCode == Keyboard.ENTER ) enterPressedSignal.dispatch();
+//			trace("PsykoInput - key pressed: " + event.keyCode);
+			if( event.keyCode == Keyboard.ENTER ) {
+				enterPressedSignal.dispatch();
+				if(_chainedTf) doChain();
+			}
 		}
 
 		private function onTfChange( event:Event ):void {
@@ -155,6 +189,8 @@ package net.psykosoft.psykopaint2.core.views.components.input
 			showCancelButton( false );
 
 			showNoHighlight();
+
+			focusedOutSignal.dispatch();
 		}
 
 		private function onTfClick( event:MouseEvent ):void {

@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.model
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.paint.configuration.ColorStylePresets;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyEraserModeChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 
 	public class UserPaintSettingsModel
@@ -18,24 +19,34 @@ package net.psykosoft.psykopaint2.core.model
 		public var notifyPickedColorChangedSignal:NotifyPickedColorChangedSignal;
 		
 		[Inject]
+		public var notifyEraserModeChangedSignal:NotifyEraserModeChangedSignal;
+		
+		
+		[Inject]
 		public var canvasModel:CanvasModel;
 		
-		private var _colorPalettes:Vector.<Vector.<uint>>;
-		private var _currentColor:uint;
-		private var _colorMode:int;
+		
 		public var hasSourceImage:Boolean;
 		public var current_r:Number;
 		public var current_g:Number;
 		public var current_b:Number;
 		public var selectedSwatchIndex:int;
-		private var _currentHSV:HSV;
+		
 		public var pipetteIsEmpty:Boolean;
 		public var colorStyleParameter:PsykoParameter;
 		public var styleBlendParameter:PsykoParameter;
 		public var previewMixtureParameter:PsykoParameter;
 		public var styleMatrices:Vector.<Vector.<Number>>;
-		private var initialized:Boolean;
+		
 		public var isContinuedPainting:Boolean;
+		
+		
+		private var initialized:Boolean;
+		private var _colorPalettes:Vector.<Vector.<uint>>;
+		private var _currentColor:uint;
+		private var _colorMode:int;
+		private var _eraserMode:Boolean;
+		private var _currentHSV:HSV;
 		
 		public function UserPaintSettingsModel()
 		{
@@ -217,6 +228,20 @@ package net.psykosoft.psykopaint2.core.model
 		public function get colorMode():int
 		{
 			return _colorMode;
+		}
+		
+		public function set eraserMode( value:Boolean ):void
+		{
+			if ( _eraserMode != value )
+			{
+				_eraserMode = value;
+				notifyEraserModeChangedSignal.dispatch( _eraserMode );
+			}
+		}
+		
+		public function get eraserMode():Boolean
+		{
+			return _eraserMode;
 		}
 		
 		public function set hue( value:Number ):void

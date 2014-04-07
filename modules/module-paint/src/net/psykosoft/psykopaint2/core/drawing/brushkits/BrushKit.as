@@ -41,13 +41,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			registerBrush( BrushType.WATER_COLOR, WaterColorBrush );
 			registerBrush( BrushType.SPRAY_CAN, SprayCanBrush );
-			registerBrush( BrushType.UNCOLORED_SPRAY_CAN, UncoloredSprayCanBrush );
-			registerBrush( BrushType.DELAUNAY, DelaunayBrush );
-			registerBrush( BrushType.SHATTER, ShatterBrush );
-			registerBrush( BrushType.RIBBON, RibbonBrush );
 			registerBrush( BrushType.SKETCH, SketchBrush );
-			registerBrush( BrushType.BLOB, DrawingApiBrush );
-			registerBrush( BrushType.CLASSIC_PSYKO, ClassicPsykoBrush );
+			//registerBrush( BrushType.UNCOLORED_SPRAY_CAN, UncoloredSprayCanBrush );
+			//registerBrush( BrushType.DELAUNAY, DelaunayBrush );
+			//registerBrush( BrushType.SHATTER, ShatterBrush );
+			//registerBrush( BrushType.RIBBON, RibbonBrush );
+			
+			//registerBrush( BrushType.BLOB, DrawingApiBrush );
+			//registerBrush( BrushType.CLASSIC_PSYKO, ClassicPsykoBrush );
 			_initialized = true;
 		}
 		
@@ -279,6 +280,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		public function get strokeInProgress():Boolean
 		{
 			return _brushEngine.pathManager.strokeInProgress;
+		}
+		
+		public function setEraserMode( enabled:Boolean ):void
+		{
+			//override this
 		}
 	}
 }

@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.actions.CanvasSnapShot;
@@ -44,6 +44,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public static const PARAMETER_N_QUAD_OFFSET_RATIO:String = "Stroke Attachment Ratio";
 		public static const PARAMETER_N_CURVATURE_INFLUENCE:String = "Curvature Size Influence";
 
+		private static const blendModes3D:Array = [Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO, 
+												   Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA,
+												   Context3DBlendFactor.DESTINATION_ALPHA, Context3DBlendFactor.ONE_MINUS_DESTINATION_ALPHA, 
+												   Context3DBlendFactor.SOURCE_COLOR, Context3DBlendFactor.ONE_MINUS_SOURCE_COLOR,
+												   Context3DBlendFactor.DESTINATION_COLOR, Context3DBlendFactor.ONE_MINUS_DESTINATION_COLOR];
 		protected const _brushScalingFactor:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1;
 		protected var _maxBrushRenderSize:Number;
 
@@ -71,7 +76,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public var param_bumpiness:PsykoParameter;
 		public var param_bumpInfluence:PsykoParameter;
 		public var param_shapes:PsykoParameter;
-		public var param_blendMode:PsykoParameter;
+		public var param_blendModeSource:PsykoParameter;
+		public var param_blendModeTarget:PsykoParameter;
 		public var param_quadOffsetRatio:PsykoParameter;
 		public var param_curvatureSizeInfluence:PsykoParameter;
 
@@ -97,9 +103,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			param_glossiness = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_GLOSSINESS, 0.4, 0.01, 1);
 			param_bumpiness = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS, 1, 0, 1);
 			param_bumpInfluence = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_BUMP_INFLUENCE, 0.6, 0, 1);
-			param_blendMode = new PsykoParameter(PsykoParameter.StringListParameter, PARAMETER_SL_BLEND_MODE, 0, [Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO, Context3DBlendFactor.SOURCE_ALPHA]);
+			param_blendModeSource = new PsykoParameter(PsykoParameter.StringListParameter, PARAMETER_SL_BLEND_MODE, 0, blendModes3D);
+			param_blendModeTarget = new PsykoParameter(PsykoParameter.StringListParameter, PARAMETER_SL_BLEND_MODE, 3, blendModes3D);
 
-			_parameters.push(param_shapes, param_sizeFactor, param_blendMode, param_quadOffsetRatio);
+			_parameters.push(param_shapes, param_sizeFactor, param_blendModeSource, param_blendModeTarget, param_quadOffsetRatio);
 			if (drawNormalsOrSpecular)
 				_parameters.push(param_shininess, param_glossiness, param_bumpiness, param_bumpInfluence);
 

@@ -354,5 +354,29 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			return points;
 		}
+		
+		override public function setEraserMode(enabled:Boolean):void
+		{
+			if ( enabled )
+			{
+				brushEngine.param_blendModeSource.index = 3;
+				brushEngine.param_blendModeTarget.index = 3;
+				
+				bumpDecorator.param_bumpInfluence.numberValue = 1;
+				
+				bumpDecorator.param_bumpiness.numberValue = 0;
+				bumpDecorator.param_bumpinessRange.numberValue = 0;
+				
+			} else {
+				brushEngine.param_blendModeSource.index = 0; 
+				brushEngine.param_blendModeTarget.index = 3;
+				
+				var intensity:Number = param_intensity.numberValue;
+				bumpDecorator.param_bumpInfluence.numberValue = 1;
+				
+				bumpDecorator.param_bumpiness.numberValue = 0.7 * intensity;
+				bumpDecorator.param_bumpinessRange.numberValue = 0.2 * intensity;
+			}
+		}
 	}
 }

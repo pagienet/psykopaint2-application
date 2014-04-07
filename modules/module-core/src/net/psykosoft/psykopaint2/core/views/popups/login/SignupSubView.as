@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.base.utils.misc.MathUtil;
@@ -62,10 +63,15 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			firstNameTf.defaultText = "first name";
 			lastNameTf.defaultText = "last name";
 
-			emailTf.enterPressedSignal.add( onEmailInputEnterPressed );
-			passwordTf.enterPressedSignal.add( onPasswordInputEnterPressed );
-			firstNameTf.enterPressedSignal.add( onFirstNameInputEnterPressed );
+			emailTf.setChainedTextField(passwordTf);
+			passwordTf.setChainedTextField(firstNameTf);
+			firstNameTf.setChainedTextField(lastNameTf);
 			lastNameTf.enterPressedSignal.add( onLastNameInputEnterPressed );
+
+			emailTf.focusedOutSignal.add( onEmailFocusOut );
+			passwordTf.focusedOutSignal.add( onPasswordFocusOut );
+			firstNameTf.focusedOutSignal.add( onFirstNameFocusOut );
+			lastNameTf.focusedOutSignal.add( onLastNameFocusOut );
 
 			cameraHit.alpha = 0;
 			folderHit.alpha = 0;
@@ -87,10 +93,12 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			folderHit.removeEventListener( MouseEvent.CLICK, onFolderHitClick );
 			signupBtn.removeEventListener( MouseEvent.CLICK, onSignupBtnClick );
 
-			emailTf.enterPressedSignal.remove( onEmailInputEnterPressed );
-			passwordTf.enterPressedSignal.remove( onPasswordInputEnterPressed );
-			firstNameTf.enterPressedSignal.remove( onFirstNameInputEnterPressed );
 			lastNameTf.enterPressedSignal.remove( onLastNameInputEnterPressed );
+
+			emailTf.focusedOutSignal.remove( onEmailFocusOut );
+			passwordTf.focusedOutSignal.remove( onPasswordFocusOut );
+			firstNameTf.focusedOutSignal.remove( onFirstNameFocusOut );
+			lastNameTf.focusedOutSignal.remove( onLastNameFocusOut );
 
 			signupBtn.dispose();
 			emailTf.dispose();
@@ -105,6 +113,26 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			if( _photoLarge ) _photoLarge.dispose();
 
 			_photoRetrieved = false;
+		}
+
+		private function onLastNameFocusOut():void {
+			clearAllSatelliteMessages();
+			validateLastNameFormat();
+		}
+
+		private function onFirstNameFocusOut():void {
+			clearAllSatelliteMessages();
+			validateFirstNameFormat();
+		}
+
+		private function onPasswordFocusOut():void {
+			clearAllSatelliteMessages();
+			validatePasswordFormat();
+		}
+
+		private function onEmailFocusOut():void {
+			clearAllSatelliteMessages();
+			validateEmailFormat();
 		}
 
 		// -----------------------
@@ -266,18 +294,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		private function onLastNameInputEnterPressed():void {
 			register();
-		}
-
-		private function onFirstNameInputEnterPressed():void {
-			lastNameTf.focusIn();
-		}
-
-		private function onPasswordInputEnterPressed():void {
-			firstNameTf.focusIn();
-		}
-
-		private function onEmailInputEnterPressed():void {
-			passwordTf.focusIn();
 		}
 
 		// -----------------------
