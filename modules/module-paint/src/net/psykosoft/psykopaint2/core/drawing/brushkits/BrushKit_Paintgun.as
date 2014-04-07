@@ -49,6 +49,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var forceRotationAngle:Number;
 		private var rotationCenterX:Number;
 		private var rotationCenterY:Number;
+		private var eraserMode:Boolean;
 		
 		public function BrushKit_Paintgun()
 		{
@@ -271,10 +272,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			//colorDecorator.param_brushOpacity.numberValue = intensity;
 			(brushEngine as SprayCanBrush).param_strokeAlpha.numberValue = param_intensity.numberValue;
 			
-			bumpDecorator.param_bumpInfluence.numberValue = 0.4;
 			
-			bumpDecorator.param_bumpiness.numberValue = 0.5 * intensity;
-			bumpDecorator.param_bumpinessRange.numberValue = 0.1;
+			
+			
+			if ( !eraserMode )
+			{
+				bumpDecorator.param_bumpInfluence.numberValue = 0.4;
+				bumpDecorator.param_bumpiness.numberValue = 0.5 * intensity;
+				bumpDecorator.param_bumpinessRange.numberValue = 0.1;
+			}
+			
 			
 			
 			switch ( param_style.index )
@@ -304,6 +311,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_shininess.numberValue = 0.1 + 0.2 * intensity;
 					break;
 			}
+			
+			
+			if ( eraserMode )
+			{
+				bumpDecorator.param_bumpInfluence.numberValue = 1 - intensity;
+				bumpDecorator.param_bumpiness.numberValue = 0;
+				bumpDecorator.param_bumpinessRange.numberValue = 0;
+				
+			}
 		}
 		
 		protected function processPoints(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
@@ -323,6 +339,20 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			}
 			
 			return points;
+		}
+		
+		override public function setEraserMode( enabled:Boolean ):void
+		{
+			eraserMode = enabled;
+			if ( enabled )
+			{
+				brushEngine.param_blendModeSource.index = 1;
+				brushEngine.param_blendModeTarget.index = 3;
+			} else {
+				brushEngine.param_blendModeSource.index = 0; 
+				brushEngine.param_blendModeTarget.index = 3;
+			}
+			onIntensityChanged(null);
 		}
 	}
 }

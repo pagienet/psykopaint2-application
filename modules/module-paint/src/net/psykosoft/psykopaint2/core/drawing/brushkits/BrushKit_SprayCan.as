@@ -42,6 +42,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var colorDecorator:ColorDecorator;
 		private var gridDecorator:GridDecorator;
 		private var callbackDecorator:CallbackDecorator;
+		private var eraserMode:Boolean;
 		
 		public function BrushKit_SprayCan()
 		{
@@ -51,6 +52,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		override protected function init( xml:XML ):void
 		{
 			if (!_initialized ) BrushKit.init();
+			
 			
 			name = "Spray cans";
 			
@@ -140,6 +142,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping.addParameter(param_intensity);
 			
 			(brushEngine as SprayCanBrush).param_strokeAlpha.numberValue = param_intensity.numberValue;
+			
+			eraserMode = false; 
+			
+			
 			onStyleChanged(null);
 		}
 		
@@ -331,11 +337,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			//colorDecorator.param_brushOpacity.numberValue = intensity;
 			(brushEngine as SprayCanBrush).param_strokeAlpha.numberValue = param_intensity.numberValue;
 			
-			bumpDecorator.param_bumpInfluence.numberValue = 1;
-			
-			bumpDecorator.param_bumpiness.numberValue = - 0.7 * intensity;
-			bumpDecorator.param_bumpinessRange.numberValue = 0.2 * intensity;
-			
+			if ( !eraserMode )
+			{
+				bumpDecorator.param_bumpInfluence.numberValue = 1;
+				bumpDecorator.param_bumpiness.numberValue = 0.7 * intensity;
+				bumpDecorator.param_bumpinessRange.numberValue = 0.2 * intensity;
+			} else {
+				bumpDecorator.param_bumpInfluence.numberValue = 1 - intensity;
+				bumpDecorator.param_bumpiness.numberValue = 0;
+				bumpDecorator.param_bumpinessRange.numberValue = 0;
+				
+			}
 			bumpDecorator.param_glossiness.numberValue = 0.3 + 0.2 * intensity;
 			bumpDecorator.param_shininess.numberValue = 0.1 + 0.2 * intensity;
 		}
@@ -357,20 +369,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		override public function setEraserMode( enabled:Boolean ):void
 		{
-			var intensity:Number = param_intensity.numberValue;
-			
+			eraserMode = enabled;
 			if ( enabled )
 			{
 				brushEngine.param_blendModeSource.index = 1;
 				brushEngine.param_blendModeTarget.index = 3;
-				bumpDecorator.param_bumpiness.numberValue = 0;
-				bumpDecorator.param_bumpinessRange.numberValue = 0;
 			} else {
 				brushEngine.param_blendModeSource.index = 0; 
 				brushEngine.param_blendModeTarget.index = 3;
-				bumpDecorator.param_bumpiness.numberValue = 0.7 * intensity;
-				bumpDecorator.param_bumpinessRange.numberValue = 0.2 * intensity;
 			}
+			onIntensityChanged(null);
 		}
 	}
 }
