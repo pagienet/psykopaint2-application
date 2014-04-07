@@ -101,12 +101,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			for (var i : int = 0; i < NUM_POISSON_SAMPLES; ++i) {
 				_normalSpecularFragmentData[fragmentIndex] = points[pointIndex] * rangeX;
 				_normalSpecularFragmentData[fragmentIndex + 1] = points[pointIndex + 1] * rangeY;
-				_normalSpecularFragmentData[fragmentIndex + 2] = 0.0;
-				_normalSpecularFragmentData[fragmentIndex + 3] = 0.0;
-				fragmentIndex += 4;
+				fragmentIndex += 2;
 				pointIndex += 2;
 			}
 			_numFragmentRegisters = Math.ceil(fragmentIndex/4);
+			// expand if necessary
+			_normalSpecularFragmentData.length = _numFragmentRegisters * 4;
 		}
 
 		public function finalize() : Boolean
@@ -351,12 +351,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			// store original to blend against later
 			code += "tex ft6, v3, fs1 <2d, clamp, linear, nomip>\n" +
 					"sub ft6.xy, ft6.xy, fc0.x\n" +	// - .5
-					"mul ft6.xy, ft6.xy, v4.w\n" +
+					"mul ft6.xy, ft6.xy, v4.w\n" +	// v4.w contains the amount of flattening of the original
 					"add ft6.xy, ft6.xy, fc0.x\n";	// + .5
 
 			for (i = 0; i < NUM_POISSON_SAMPLES; ++i) {
-				code += "mul ft5.xy, " + registers[i] + ", ft1.x\n";
-				code += "add ft7, v3, ft5.xy\n" +
+				code += "mul ft5.xy, " + registers[i] + ", ft1.x\n" +
+						"add ft7, v3, ft5.xy\n" +
 						"tex ft7, ft7, fs1 <2d, clamp, linear, nomip>\n";
 
 				if (i == 0)
@@ -367,16 +367,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			// instead of doing - .5 for every sample, do it once for the total
 			code += "sub ft3.xy, ft3.xy, fc0.w\n";	// - (NUM_POISSON_SAMPLES+1) *.5
 
-			code += "mul ft3, ft3, fc0.y\n" +		// 1/(NUM_POISSON_SAMPLES + 1)
+			code += "mul ft3, ft3, fc0.y\n" +		// 1/(NUM_POISSON_SAMPLES + 1) -> average out
 					"add ft0.xy, ft0.xy, ft3.xy\n" +
 					"add ft0.xy, ft0.xy, fc0.x\n";	// + .5
+
+			// ft0.xy now contains blurred map + new map
 
 					// set specular
 			code +=	"mul ft0.z, ft1.y, v4.z\n" +
 					"mov ft0.w, v4.x\n";
 
 			// lerp based on height, not really robust
-			
 			code += "sub ft0, ft0, ft6\n" +
 					"mul ft1.x, ft1.x, fc0.z\n" +	// brush height * 50
 					"sat ft1.x, ft1.x\n" +
