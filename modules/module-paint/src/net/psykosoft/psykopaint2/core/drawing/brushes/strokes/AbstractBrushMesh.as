@@ -365,12 +365,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 					"mov ft0.w, v4.x\n";
 
 			// lerp based on height, not really robust
+			
 			code += "sub ft0, ft0, ft6\n" +
 					"mul ft1.x, ft1.x, fc0.z\n" +
 					"sat ft1.x, ft1.x\n" +
 					"mul ft0, ft0, ft1.x\n" +
 					"add ft0, ft0, ft6\n";
-
+			
 			code +=	"mov oc, ft0";
 
 			return code;

@@ -153,10 +153,12 @@ package net.psykosoft.psykopaint2.paint.views.color
 					_selectedColor = palettes[selectedPaletteIndex][index];
 					sendColorSignal = true;
 				}
+				
 				userPaintSettings.selectedSwatchIndex = index;
 				
 				userPaintSettings.setColorMode( autoColor ? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE, sendModeSignal );
 				userPaintSettings.setCurrentColor(_selectedColor, sendColorSignal);
+				userPaintSettings.eraserMode = (index == 5);
 				
 			} else {
 				userPaintSettings.selectedSwatchIndex = index;

@@ -93,7 +93,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			CopyTexture.copy(_incrementalWorkerTexture.texture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
-
+			
 			drawBrushColor();
 
 			_incrementalWorkerTexture = _canvasModel.swapFullSized(_incrementalWorkerTexture);
@@ -106,7 +106,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_snapshot.drawColor();
 			_context.setStencilActions();
 
-			_context.setBlendFactors(param_blendMode.stringValue, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+			_context.setBlendFactors(param_blendModeSource.stringValue, param_blendModeTarget.stringValue);
+			//_context.setBlendFactors(Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 
 			//CopyTexture.copy(_incrementalWorkerTexture.texture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 			CopyTextureWithAlpha.copy(_incrementalWorkerTexture.texture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio,param_strokeAlpha.numberValue);
@@ -121,6 +122,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			CopyTexture.copy(_canvasModel.normalSpecularMap, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+			
 			drawBrushNormalsAndSpecular();
 
 			_canvasModel.swapNormalSpecularLayer();
