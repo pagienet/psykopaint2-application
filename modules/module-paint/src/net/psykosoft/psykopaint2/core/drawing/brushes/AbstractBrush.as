@@ -170,6 +170,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			if (_brushShape == brushShape) return;
 			//if (_brushShape) _brushShape.dispose();
 			_brushShape = brushShape;
+			// hack in creation of texture at this point
+			_brushShape.texture;
 			_shapeVariations = _brushShape.variationFactors;
 			_appendVO.uvBounds.width = _shapeVariations[2];
 			_appendVO.uvBounds.height = _shapeVariations[3];
@@ -190,8 +192,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function activate(view:DisplayObject, context:Context3D, canvasModel:CanvasModel, renderer:CanvasRenderer, paintSettingsModel:UserPaintSettingsModel):void
 		{
 			_brushMesh = createBrushMesh();
+			_brushMesh.init(context);
 			// the purpose of this is to avoid a bit of the delay when drawing the very first time
-			_brushMesh.assembleShaderPrograms(context);
 			brushShape = brushShapeLibrary.getBrushShape(param_shapes.stringValue);
 
 			_view = view;
@@ -227,11 +229,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			if (_brushShape) _brushShape.update();
 			_brushMesh.clear();
 
-			// sorry, but this was interfering with color transfer so I moved it into the activation method
-			//_colorStrategy ||= createColorStrategy();
-
-			_canvasScaleW = 2.0 / _canvasModel.textureWidth;	// 0 - 1
-			_canvasScaleH = 2.0 / _canvasModel.textureHeight;	// 0 - 1
+			_canvasScaleW = 2.0 / _canvasModel.width;	// 0 - 1
+			_canvasScaleH = 2.0 / _canvasModel.height;	// 0 - 1
 			_bounds.setEmpty();
 
 			_firstPoint = true;
@@ -241,11 +240,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			var len:uint = points.length;
 
-			for (var i:int = 0; i < len; i++) {
-				var point:SamplePoint = points[i];
-				point.normalizeXY(_canvasScaleW, _canvasScaleH);
-				processPoint(point);
-			}
+			for (var i:int = 0; i < len; i++)
+				processPoint(points[i]);
 
 			if (_firstPoint) {
 				_firstPoint = false;
@@ -309,7 +305,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		protected function processPoint(point:SamplePoint):void
 		{
-			addStrokePoint(point, _brushShape.actualSize * _canvasScaleW, _brushShape.rotationRange);
+			addStrokePoint(point, _brushShape.actualSize, _brushShape.rotationRange);
 		}
 
 		protected function addStrokePoint(point:SamplePoint, size:Number, rotationRange:Number):void

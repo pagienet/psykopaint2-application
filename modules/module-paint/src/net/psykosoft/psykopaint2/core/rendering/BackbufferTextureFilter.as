@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			_quadIndices.uploadFromVector(new <uint>[0, 1, 2, 0, 2, 3], 0, 6);
 		}
 		
-		override public function draw(source : TextureBase, context3D : Context3D, width : Number, height : Number) : void
+		override public function draw(source : TextureBase, context3D : Context3D) : void
 		{
 			if (context3D != _context3D) {
 				this.dispose();

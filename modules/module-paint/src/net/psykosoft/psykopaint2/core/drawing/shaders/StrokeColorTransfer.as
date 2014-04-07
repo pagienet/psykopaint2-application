@@ -84,7 +84,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			);
 		}
 
-		public function execute(stroke : SimulationRibbonMesh, source : TextureBase, target : TextureBase, brushTexture : TextureBase, textureRatioX : Number, textureRatioY : Number) : void
+		public function execute(stroke : SimulationRibbonMesh, source : TextureBase, target : TextureBase, brushTexture : TextureBase) : void
 		{
 			var triOffset : int = _triOffset <= WaterColorBrush.OVERLAP_PREVENTION_TRI_COUNT? 0 : _triOffset-WaterColorBrush.OVERLAP_PREVENTION_TRI_COUNT;
 			var stationaryEnd : int = stroke.numTriangles - stroke.stationaryTriangleCount;
@@ -92,10 +92,10 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			// nothing new
 			if (triOffset == stroke.numTriangles) return;
 
-			_context.setRenderToTexture(target, true);
+			_context.setRenderToTexture(target, false);
 			_context.clear(1, 1, 1, 1);
 
-			CopyTexture.copy(source, _context, textureRatioX, textureRatioY);
+			CopyTexture.copy(source, _context);
 
 			_context.setProgram(_program);
 			_context.setTextureAt(0, brushTexture);

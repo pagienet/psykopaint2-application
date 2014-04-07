@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 	import flash.display.Stage;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
+	import flash.display3D.textures.RectangleTexture;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Point;
 	import flash.utils.getTimer;
@@ -87,27 +88,17 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 		private function createSnapshot() : void
 		{
 			// TODO: Go back to render to texture approach, this is allocating a lot of memory
-
-			var snapshotWidth : int = TextureUtil.getNextPowerOfTwo(CoreSettings.STAGE_WIDTH);
-			var snapshotHeight : int = TextureUtil.getNextPowerOfTwo(CoreSettings.STAGE_HEIGHT);
-			trace ("Generating snapshot with size: " + snapshotWidth + ", " + snapshotHeight);
 			var croppedBitmapData : BitmapData = new TrackedBitmapData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, false, 0);
 			stage3DProxy.context3D.drawToBitmapData(croppedBitmapData);
 
-
-			var largeBitmapData : BitmapData = new TrackedBitmapData(snapshotWidth, snapshotHeight, false, 0);
-			largeBitmapData.copyPixels(croppedBitmapData, croppedBitmapData.rect, new Point());
-
+			var texture : RectangleTexture = stage3DProxy.context3D.createRectangleTexture(croppedBitmapData.width, croppedBitmapData.height, Context3DTextureFormat.BGRA, false);
+			var snapshot : RefCountedRectTexture = new RefCountedRectTexture(texture);
+			snapshot.texture.uploadFromBitmapData(croppedBitmapData);
 			croppedBitmapData.dispose();
-
-			var texture : Texture = stage3DProxy.context3D.createTexture(snapshotWidth, snapshotHeight, Context3DTextureFormat.BGRA, false);
-			var snapshot : RefCountedTexture = new RefCountedTexture(texture);
-			snapshot.texture.uploadFromBitmapData(largeBitmapData);
-			largeBitmapData.dispose();
 			fulfillPromises(snapshot);
 		}
 
-		private function fulfillPromises(snapshot : RefCountedTexture) : void
+		private function fulfillPromises(snapshot : RefCountedRectTexture) : void
 		{
 			var len : int = _promises.length;
 

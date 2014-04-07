@@ -27,7 +27,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 		{
 			super(context);
 			_canvas = canvas;
-			_vertexProps = Vector.<Number>([2/canvas.textureWidth, 2/canvas.textureHeight, 0, 0]);
+			_vertexProps = Vector.<Number>([2/canvas.width, 2/canvas.height, 0, 0]);
 			_fragmentProps = Vector.<Number>([0, 0, 0, 0, -0.5, 0, -0, 0, 0, 0, 0, 0]);
 		}
 
@@ -46,12 +46,11 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 			return EmbedUtils.StringFromEmbed(Shader);
 		}
 
-		public function execute(stroke : SimulationRibbonMesh, pigment : Texture, velocityDensity : Texture, backBuffer : Texture, width : Number, height : Number, pigmentFlow : Number) : void
+		public function execute(stroke : SimulationRibbonMesh, pigment : Texture, velocityDensity : Texture, backBuffer : Texture, pigmentFlow : Number) : void
 		{
-			_context.setRenderToTexture(backBuffer, true);
+			_context.setRenderToTexture(backBuffer);
 			_context.clear(0, 0, 0, 0);
-			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			CopyTexture.copy(pigment, _context, width, height);
+			CopyTexture.copy(pigment, _context);
 			_context.setTextureAt(0, velocityDensity);
 			_context.setTextureAt(1, pigment);
 			_fragmentProps[0] = 2 * pigmentFlow;

@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.textures.Texture;
+	import flash.display3D.textures.TextureBase;
 
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
 
@@ -38,9 +39,9 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 			return EmbedUtils.StringFromEmbed(Shader);
 		}
 
-		public function execute(stroke : SimulationMesh, pigment : Texture, backBuffer : Texture, pigmentGranulation : Number, pigmentDensity : Number, pigmentStaining : Number) : void
+		public function execute(stroke : SimulationMesh, pigment : TextureBase, backBuffer : TextureBase, pigmentGranulation : Number, pigmentDensity : Number, pigmentStaining : Number) : void
 		{
-			_context.setRenderToTexture(backBuffer, true);
+			_context.setRenderToTexture(backBuffer);
 			_context.setTextureAt(0, pigment);
 			_context.setTextureAt(1, _canvas.normalSpecularMap);
 			_context.clear();

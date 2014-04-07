@@ -1,6 +1,6 @@
 package net.psykosoft.psykopaint2.crop.signals
 {
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedRectTexture;
 
 	import org.osflash.signals.Signal;
 
@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.crop.signals
 	{
 		public function RequestSetCropBackgroundSignal()
 		{
-			super(RefCountedTexture);
+			super(RefCountedRectTexture);
 		}
 	}
 }

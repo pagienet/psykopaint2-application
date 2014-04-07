@@ -66,7 +66,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpiness.numberValue = 0;
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-			brushEngine.param_shapes.stringList = Vector.<String>(["inksplats","splats","spray","vectorsplat","crayon","paintbrush","sumi","paint1","paint1","paint1","paint1"]);
+			brushEngine.param_shapes.stringList = Vector.<String>(["inksplats","splats","spray","vectorsplat","crayon","paintbrush","sumi","paint1","basic","basic","basic"]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -129,7 +129,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["splat","sketch","sketch","sketch","sketch","sketch","sketch","sketch","sketch","sketch","sketch"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["splat","sketch","sketch","sketch","sketch","sketch","sketch","sketch","basic","basic","basic"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -319,7 +319,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			for ( var i:int = 0; i < points.length; i++ )
 			{
 				var p:SamplePoint = points[i];
-				p.angle = Math.atan2(rotationCenterY -p.y ,rotationCenterX - p.x) +  forceRotationAngle;
+				p.angle = Math.PI*0.5;// Math.atan2(rotationCenterY -p.y ,rotationCenterX - p.x) +  forceRotationAngle;
 			}
 			
 			return points;

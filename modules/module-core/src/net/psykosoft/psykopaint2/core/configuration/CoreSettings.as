@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		public static const SHOW_BLOCKER:Boolean = false; /*false on release*/
 
 		// Console gpu debugging.
-		public static const STAGE_3D_ERROR_CHECKING:Boolean = true; /*false on release*/
+		public static const STAGE_3D_ERROR_CHECKING:Boolean = false; /*false on release*/
 		public static const DEBUG_RENDER_SEQUENCE:Boolean = false; /*false on release*/
 
 		public static const DEBUG_AGAL:Boolean = false; /*false on release*/
@@ -72,6 +72,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		public static var NAME:String = "";
 		public static var STAGE_WIDTH:Number = 1024; // Doubled dynamically if on retina iPad.
 		public static var STAGE_HEIGHT:Number = 768;
+		public static var ASPECT_RATIO:Number = 1.33333;
 		public static var STAGE:Stage;
 		public static var DISPLAY_ROOT:Sprite;
 

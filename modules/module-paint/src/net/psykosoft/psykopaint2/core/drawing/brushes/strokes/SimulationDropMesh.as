@@ -7,7 +7,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import flash.display3D.VertexBuffer3D;
 	import flash.display3D.textures.TextureBase;
 	import flash.geom.Rectangle;
-	
+
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.BlendSubTextureCMYK;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
@@ -61,14 +63,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if (_numVertices >= MAX_VERTICES) return;
 
 			var colorsRGBA:Vector.<Number> =  appendVO.point.colorsRGBA;
-			var halfSize : Number = appendVO.size * appendVO.point.size * .5;
-			var centerX : Number = appendVO.point.normalX;
-			var centerY : Number = appendVO.point.normalY;
 
-			if (centerX + halfSize > _maxX) _maxX = centerX + halfSize;
-			else if (centerX - halfSize < _minX) _minX = centerX - halfSize;
-			if (centerY + halfSize > _maxY) _maxY = centerY + halfSize;
-			else if (centerY - halfSize < _minY) _minY = centerY - halfSize;
+			var ndcScaleX : Number = 2.0 / CoreSettings.STAGE_WIDTH;
+			var ndcScaleY : Number = 2.0 / CoreSettings.STAGE_HEIGHT;
+			var centerX : Number = appendVO.point.x * ndcScaleX - 1.0;
+			var centerY : Number = -(appendVO.point.y * ndcScaleY - 1.0);
+			var halfSizeX : Number = appendVO.size * appendVO.point.size * .5 * ndcScaleX;
+			var halfSizeY : Number = appendVO.size * appendVO.point.size * .5 * ndcScaleY;
+
+			if (centerX + halfSizeX > _maxX) _maxX = centerX + halfSizeX;
+			else if (centerX - halfSizeX < _minX) _minX = centerX - halfSizeX;
+			if (centerY + halfSizeY > _maxY) _maxY = centerY + halfSizeY;
+			else if (centerY - halfSizeY < _minY) _minY = centerY - halfSizeY;
 
 			var index : int = 0;
 
@@ -89,8 +95,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			index += 10;
 
 			for (var i : int = 0; i < NUM_SEGMENTS; ++i) {
-				var x : Number = centerX + Math.cos(angle)*halfSize;
-				var y : Number = centerY + Math.sin(angle)*halfSize;
+				var x : Number = centerX + Math.cos(angle)*halfSizeX;
+				var y : Number = centerY + Math.sin(angle)*halfSizeY;
 
 				_tmpData[index] = x;
 				_tmpData[uint(index + 1)] = y;
@@ -122,8 +128,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if (_numIndices < 6) return;
 
 			var bounds : Rectangle = getBounds();
-			var ratioX : Number = canvas.textureWidth / _bakedTexture.width;
-			var ratioY : Number = canvas.textureHeight / _bakedTexture.height;
+			var ratioX : Number = canvas.width / _bakedTexture.width;
+			var ratioY : Number = canvas.height / _bakedTexture.height;
 			var sourceRect : Rectangle = new Rectangle(0, 0, bounds.width * ratioX, bounds.height * ratioY);
 
 			if (_subtractiveBlending) {

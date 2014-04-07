@@ -5,23 +5,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.geom.Matrix;
-	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.ClassicPsykoBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.DelaunayBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.DrawingApiBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.RibbonBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.ShatterBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SketchBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.UncoloredSprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterDamageBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
@@ -42,7 +34,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		protected static function init():void
 		{
 			registerBrush( BrushType.WATER_COLOR, WaterColorBrush );
-			registerBrush( BrushType.WATER_DAMAGE, WaterDamageBrush );
 			registerBrush( BrushType.SPRAY_CAN, SprayCanBrush );
 			registerBrush( BrushType.SKETCH, SketchBrush );
 			//registerBrush( BrushType.UNCOLORED_SPRAY_CAN, UncoloredSprayCanBrush );

@@ -69,20 +69,24 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			if (_useTexture) {
 				vertexCode =
 					"mov op, va0\n" +
-					"mov v0, va1\n";
+					"mov v0, va1\n" +
+					"mov v1, va3\n";
 
 				fragmentCode =
 					"tex ft0, v0, fs0 <2d, clamp, linear, mipnone>\n" +
+					"tex ft2, v1, fs1 <2d, clamp, linear, mipnone>\n" +
 					"mov ft1, fc0.yzww\n" +	// 0
 					"mov ft1." + _targetChannel + ", ft0.w\n" +
-					"mov oc, ft1";
+					"add oc, ft1, ft2";
 			}
 			else {
-				vertexCode = "mov op, va0\n";
+				vertexCode = "mov op, va0\n" +
+							 "mov v0, va1\n";
 				fragmentCode =
+					"tex ft1, v0, fs1 <2d, clamp, linear, mipnone>\n" +
 					"mov ft0, fc0.yzww\n" +	// 0
 					"mov ft0." + _targetChannel + ", fc0.x\n" +
-					"mov oc, ft0";
+					"add oc, ft0, ft1";
 			}
 
 			_program.upload(	new AGALMiniAssembler().assemble(Context3DProgramType.VERTEX, vertexCode),
@@ -90,49 +94,33 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			);
 		}
 
-		public function execute(stroke : SimulationMesh, source : TextureBase, target : TextureBase, brushTexture : TextureBase, textureRatioX : Number, textureRatioY : Number) : void
+		public function execute(stroke : SimulationMesh, source : TextureBase, target : TextureBase, brushTexture : TextureBase) : void
 		{
-//			var triOffset : int = _triOffset <= WaterColorBrush.OVERLAP_PREVENTION_TRI_COUNT? 0 : _triOffset - WaterColorBrush.OVERLAP_PREVENTION_TRI_COUNT;
 			var triOffset : int = _triOffset;
 			var stationaryEnd : int = stroke.numTriangles - stroke.stationaryTriangleCount;
 			if (triOffset > stationaryEnd) triOffset = stationaryEnd;
 			// nothing new
 			if (triOffset == stroke.numTriangles) return;
 
-			_context.setRenderToTexture(target, true);
+			_context.setRenderToTexture(target);
 			_context.clear();
-			CopyTexture.copy(source, _context, textureRatioX, textureRatioY);
+			CopyTexture.copy(source, _context);
 			_context.setProgram(_program);
-			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE);
 			_context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentConstants, 1);
+
+			_context.setTextureAt(1, source);
 
 			if (_useTexture) {
 				_context.setTextureAt(0, brushTexture);
-//				drawWithoutOverlap(stroke, SimulationMesh.BRUSH_TEXTURE_UVS, triOffset);
-				stroke.drawMesh(_context, SimulationRibbonMesh.BRUSH_TEXTURE_UVS, -1, false, triOffset);
+				stroke.drawMesh(_context, SimulationRibbonMesh.BRUSH_TEXTURE_UVS | SimulationRibbonMesh.CANVAS_TEXTURE_UVS, -1, false, triOffset);
 				_context.setTextureAt(0, null);
 			}
 			else {
-//				drawWithoutOverlap(stroke, SimulationMesh.NO_UVS, triOffset);
-				stroke.drawMesh(_context, SimulationRibbonMesh.NO_UVS, -1, false, triOffset);
+				stroke.drawMesh(_context, SimulationRibbonMesh.CANVAS_TEXTURE_UVS, -1, false, triOffset);
 			}
 
-			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-//			_context.setStencilActions();
+			_context.setTextureAt(1, null);
 			_triOffset = stroke.numTriangles;
-		}
-
-		private function drawWithoutOverlap(stroke : SimulationRibbonMesh, uvMode : int, offset : int) : void
-		{
-			if (offset > 0) {
-				_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE);
-				_context.setStencilReferenceValue(0);
-				_context.setColorMask(false, false, false, false);
-				stroke.drawMesh(_context, uvMode, WaterColorBrush.OVERLAP_PREVENTION_TRI_COUNT, false, offset);
-				_context.setColorMask(true, true, true, true);
-			}
-
-			stroke.drawMesh(_context, uvMode, -1, false, offset);
 		}
 	}
 }

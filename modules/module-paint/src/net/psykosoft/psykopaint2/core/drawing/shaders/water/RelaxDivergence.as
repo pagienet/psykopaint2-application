@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 	import flash.display3D.Context3DStencilAction;
 	import flash.display3D.Context3DTriangleFace;
 	import flash.display3D.textures.Texture;
+	import flash.display3D.textures.TextureBase;
 
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
 
@@ -32,7 +33,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 
 			// canvas dimensions *2 because we're using a half-sized buffer (texels are bigger)
 			_vertexProps = Vector.<Number>([
-						4/canvas.textureWidth, -4/canvas.textureHeight, 0, 0
+						4/canvas.width, -4/canvas.height, 0, 0
 					]);
 			_fragmentProps = Vector.<Number>([.1, 2, 0, 0]);
 		}
@@ -56,9 +57,9 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 			return EmbedUtils.StringFromEmbed(Shader);
 		}
 
-		public function execute(stroke : SimulationMesh, velocityDensity : Texture, target : Texture) : void
+		public function execute(stroke : SimulationMesh, velocityDensity : TextureBase, target : TextureBase) : void
 		{
-			_context.setRenderToTexture(target, true);
+			_context.setRenderToTexture(target);
 			_context.setTextureAt(0, velocityDensity);
 			_context.clear(.5, .5, 0, 1);
 			render(stroke);

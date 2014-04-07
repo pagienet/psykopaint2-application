@@ -62,10 +62,10 @@ package net.psykosoft.psykopaint2.core.rendering
 			_fragmentShaderData[34] = blendFactor;
 		}
 
-		override public function draw(source : TextureBase, context3D : Context3D, width : Number, height : Number) : void
+		override public function draw(source : TextureBase, context3D : Context3D) : void
 		{
 			context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentShaderData, 10);
-			super.draw(source, context3D, width, height);
+			super.draw(source, context3D);
 		}
 	}
 }

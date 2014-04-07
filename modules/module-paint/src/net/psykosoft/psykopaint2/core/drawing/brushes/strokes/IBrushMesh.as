@@ -12,6 +12,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		// call when stroke is finished, returns true or false depending if brush was actually valid
 		function finalize() : Boolean;
 
+		function init(context3d : Context3D) : void;
+
 		function get numTriangles() : int;
 
 		function getBounds() : Rectangle;
@@ -26,6 +28,5 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		function clear() : void;
 
 		function drawNormalsAndSpecular(context3d : Context3D, canvas : CanvasModel, shininess : Number, glossiness : Number, bumpiness : Number, influence : Number) : void;
-		function assembleShaderPrograms(context3d : Context3D ) : void;
 	}
 }

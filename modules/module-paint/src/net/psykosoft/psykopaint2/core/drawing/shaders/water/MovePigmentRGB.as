@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.textures.Texture;
+	import flash.display3D.textures.TextureBase;
 
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
 
@@ -23,8 +24,8 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 		{
 			super(context);
 			_canvas = canvas;
-			_vertextProps = Vector.<Number>([2/canvas.textureWidth, 2/canvas.textureHeight, 0, 0]);
-			_fragmentProps = Vector.<Number>([.5, 2, 1, 0, 1/canvas.textureWidth/scale, 1/canvas.textureHeight/scale, 0, 0]);
+			_vertextProps = Vector.<Number>([2/canvas.width, 2/canvas.height, 0, 0]);
+			_fragmentProps = Vector.<Number>([.5, 2, 1, 0, 1/canvas.width/scale, 1/canvas.height/scale, 0, 0]);
 		}
 
 		override protected function getVertexProgram() : String
@@ -58,14 +59,14 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 					"mov oc, ft0"
 		}
 
-		public function execute(stroke : SimulationMesh, pigment : Texture, target : Texture, velocityDensity : Texture, flow : Number, bleaching : Number, textureRatioX : Number, textureRatioY : Number) : void
+		public function execute(stroke : SimulationMesh, pigment : TextureBase, target : TextureBase, velocityDensity : TextureBase, flow : Number, bleaching : Number) : void
 		{
 			_fragmentProps[2] = bleaching;
-			_fragmentProps[4] = 2*flow/_canvas.textureWidth;
-			_fragmentProps[5] = 2*flow/_canvas.textureHeight;
-			_context.setRenderToTexture(target, true);
+			_fragmentProps[4] = 2*flow/_canvas.width;
+			_fragmentProps[5] = 2*flow/_canvas.height;
+			_context.setRenderToTexture(target);
 			_context.clear();
-			CopyTexture.copy(pigment, _context, textureRatioX, textureRatioY);
+			CopyTexture.copy(pigment, _context);
 			_context.setTextureAt(0, velocityDensity);
 			_context.setTextureAt(1, pigment);
 			_context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _vertextProps, 1);

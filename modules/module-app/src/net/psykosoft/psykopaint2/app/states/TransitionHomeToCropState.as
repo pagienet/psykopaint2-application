@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.app.states
 
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedRectTexture;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
@@ -34,9 +34,10 @@ package net.psykosoft.psykopaint2.app.states
 
 		[Inject]
 		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
+
 		private var _bitmapData : BitmapData;
 		private var _orientation : int;
-		private var _background : RefCountedTexture;
+		private var _background : RefCountedRectTexture;
 
 		public function TransitionHomeToCropState()
 		{
@@ -53,7 +54,7 @@ package net.psykosoft.psykopaint2.app.states
 			requestCreateCropBackgroundSignal.dispatch();
 		}
 
-		private function onBackgroundSet(background : RefCountedTexture) : void
+		private function onBackgroundSet(background : RefCountedRectTexture) : void
 		{
 			if (_background) _background.dispose();
 			_background = background.newReference();

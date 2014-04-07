@@ -3,9 +3,11 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3D;
+	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DClearMask;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.textures.Texture;
+	import flash.display3D.textures.TextureBase;
 	import flash.geom.Point;
 
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
@@ -29,20 +31,29 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 
 		override protected function getFragmentProgram() : String
 		{
+			// something wrong with blending:
 			return 	"tex ft0, v0, fs0 <2d,linear,clamp>	\n" +
 					"tex ft1, v0, fs1 <2d,linear,clamp>	\n" +
-					"mul oc, ft1, ft0.y\n";
+					"tex ft2, v0, fs2 <2d,linear,clamp>	\n" +
+
+					// "mul oc, ft1, ft0.y\n";
+
+					"sub ft3, ft1, ft2\n" +
+					"mul ft3, ft3, ft0.y\n" +
+					"add oc, ft2, ft3";
 		}
 
-		public function execute(stroke : SimulationMesh, pigment : Texture, color : Texture) : void
+		public function execute(stroke : SimulationMesh, pigment : TextureBase, color : TextureBase, canvas : TextureBase) : void
 		{
+			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			_context.setTextureAt(0, pigment);
 			_context.setTextureAt(1, color);
+			_context.setTextureAt(2, canvas);
 			_context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentProps, 1);
-			_context.clear(0, 0, 0, 0, 0, 0, Context3DClearMask.STENCIL);
 			render(stroke);
 			_context.setTextureAt(0, null);
 			_context.setTextureAt(1, null);
+			_context.setTextureAt(2, null);
 		}
 	}
 }

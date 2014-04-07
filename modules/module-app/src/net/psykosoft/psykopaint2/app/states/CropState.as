@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.utils.io.CameraRollImageOrientation;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedRectTexture;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
@@ -35,7 +35,7 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var transitionCropToHomeState : TransitionCropToHomeState;
 
-		private var _background : RefCountedTexture;
+		private var _background : RefCountedRectTexture;
 
 		public function CropState()
 		{
@@ -50,7 +50,7 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			
 			var bitmapData : BitmapData = BitmapData(data.bitmapData);
-			_background = RefCountedTexture(data.background);
+			_background = RefCountedRectTexture(data.background);
 
 			requestCancelCropSignal.add(onRequestCancelCropSignal);
 			requestOpenCroppedBitmapDataSignal.add(onRequestOpenCroppedBitmapData);

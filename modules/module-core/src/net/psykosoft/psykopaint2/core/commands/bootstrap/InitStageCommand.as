@@ -37,6 +37,7 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 
 			CoreSettings.STAGE_WIDTH = stage.stageWidth;
 			CoreSettings.STAGE_HEIGHT = stage.stageHeight;
+			CoreSettings.ASPECT_RATIO = CoreSettings.STAGE_WIDTH / CoreSettings.STAGE_HEIGHT;
 
 			injector.map( Stage ).toValue( stage );
 		}

@@ -81,14 +81,14 @@ package net.psykosoft.psykopaint2.core.rendering
 			if (!_quadVertices) initGeometry();
 		}
 
-		public function draw(source : TextureBase, context3D : Context3D, width : Number, height : Number) : void
+		public function draw(source : TextureBase, context3D : Context3D) : void
 		{
 			init(context3D);
 
-			_vertexShaderData[4] = width*2;
-			_vertexShaderData[5] = height*2;
-			_vertexShaderData[8] = width;
-			_vertexShaderData[9] = height;
+			_vertexShaderData[4] = 2;
+			_vertexShaderData[5] = 2;
+			_vertexShaderData[8] = 1;
+			_vertexShaderData[9] = 1;
 
 			_context3D.setProgram(_program);
 			_context3D.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _vertexShaderData, 4);
