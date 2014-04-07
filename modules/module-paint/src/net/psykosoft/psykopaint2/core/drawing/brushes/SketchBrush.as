@@ -103,7 +103,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_appendVO.uvBounds.x = int(rng.getNumber(0, _shapeVariations[0])) * _shapeVariations[2];
 			_appendVO.uvBounds.y = int(rng.getNumber(0, _shapeVariations[1])) * _shapeVariations[3];
 			//_appendVO.size = rsize * _canvasScaleW; 
-			_appendVO.size = _maxBrushRenderSize * rsize * _canvasScaleW; 
+			_appendVO.size = _maxBrushRenderSize * rsize;
 			_appendVO.point = point;
 			_brushMesh.append(_appendVO);
 		}

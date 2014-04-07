@@ -10,8 +10,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		public var angle:Number;
 		public var colorsRGBA:Vector.<Number>;
 		public var bumpFactors:Vector.<Number>;
-		public var normalX:Number;
-		public var normalY:Number;
 		public var size:Number;
 		public var pressure:Number;
 		public var penButtonState:int;
@@ -66,12 +64,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			}
 			
 			return this;
-		}
-		
-		public function normalizeXY( scaleW:Number, scaleH:Number ):void
-		{
-			normalX = x * scaleW - 1.0;
-			normalY = -(y * scaleH - 1.0);
 		}
 		
 		public function getClone():SamplePoint

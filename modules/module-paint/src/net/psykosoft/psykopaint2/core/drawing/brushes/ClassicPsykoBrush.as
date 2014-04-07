@@ -44,13 +44,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.RenderTextureBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.DrawingApiMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureMorphingSplatMesh;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureSplatMesh;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TexturedAntialiasedColoredTriangleStroke;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TexturedTriangleStroke;
-	import net.psykosoft.psykopaint2.core.drawing.data.DelaunayMetaData;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
@@ -230,10 +224,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				drawMatrix.ty = -bds.y + 1;
 				_appendVO.diagonalAngle = Math.atan2(bds.height,bds.width);
 				_appendVO.diagonalLength = Math.sqrt(bds.width*bds.width+bds.height*bds.height); 
-				_appendVO.size = _canvasScaleW; 
+				_appendVO.size = 1.0;
 				_appendVO.point.x = bds.x -1 + bds.width * 0.5
 				_appendVO.point.y = bds.y -1 + bds.height * 0.5;
-				_appendVO.point.normalizeXY(_canvasScaleW,_canvasScaleH);
 				_appendVO.uvBounds.width  = (bds.width + 1) / _brushShape.size;
 				_appendVO.uvBounds.height = (bds.height +1) / _brushShape.size;
 					

@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.geom.Matrix;
-	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;

@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import flash.display3D.textures.TextureBase;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-	
+
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.intrinsics.FastBuffer;
@@ -27,8 +27,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 		override public function append( appendVO:StrokeAppendVO ):void
 		{
+			// TODO: Rewrite and optimize knowing appendVO now only contains screen-space coords
 			//check for maximum vertex count
-			if ( _numVertices >= 65531 ) return;
+			/*if ( _numVertices >= 65531 ) return;
 			
 			var uvBounds:Rectangle = appendVO.uvBounds;
 			var baseAngle:Number = appendVO.diagonalAngle; //Math.atan2(uvBounds.height,uvBounds.width);
@@ -88,6 +89,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 			invalidateBuffers();
 			invalidateBounds();
+			*/
 		}
 
 		override public function drawColor(context3d : Context3D, canvas : CanvasModel, source : TextureBase = null) : void

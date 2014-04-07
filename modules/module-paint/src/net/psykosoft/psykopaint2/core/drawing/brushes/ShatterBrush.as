@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.geom.Rectangle;
 	
 	import de.popforge.math.LCG;
-	
+
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.FlatColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
@@ -89,13 +89,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			var sin1s : Number =  -halfSize*Math.sin(baseAngle + rotationSource);
 			var cos2s : Number =   halfSize*Math.cos(- baseAngle + rotationSource);
 			var sin2s : Number =  -halfSize*Math.sin( -baseAngle + rotationSource);
-			
+
+			// TODO: Reimplement NOT using normalX and normalY etc
+			// also, uv coords can be implemented more efficiently
+			/*
 			var xBrush:Number = point.normalX;
 			var yBrush:Number = point.normalY;
 			var brushAngle:Number =  point.angle + rng.getNumber( -0.05, 0.05 ) * Math.PI;
 			var xSource:Number = 0.5 * (point.normalX + 1) + Math.cos(brushAngle) * point.size * uvScale;
 			var ySource:Number = 0.5 * (-point.normalY + 1) + Math.sin(brushAngle) * point.size * uvScale;
-			
+
 			var data:Vector.<Number> = _appendVO.verticesAndUV;
 			data[0] = xBrush - cos1;
 			data[1] = yBrush - sin1;
@@ -136,14 +139,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 			
 			_appendVO.point = point;
-			/*
-			point.colorsRGBA[3] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
-			point.colorsRGBA[7] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
-			point.colorsRGBA[11] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
-			point.colorsRGBA[15] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
-			*/
 			_brushMesh.append( _appendVO );
-			
+			*/
 			
 		}
 		

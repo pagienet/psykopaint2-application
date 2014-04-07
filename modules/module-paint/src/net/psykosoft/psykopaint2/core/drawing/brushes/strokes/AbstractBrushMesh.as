@@ -346,12 +346,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 					"sub ft0.y, ft1.x, ft3.x\n" +
 
 					"mul ft0.xy, ft0.xy, v4.y\n"; 	// bumpiness
+													// ft0.xy contains bumpiness from brush
 
 			// store original to blend against later
 			code += "tex ft6, v3, fs1 <2d, clamp, linear, nomip>\n" +
-					"sub ft6.xy, ft6.xy, fc0.x\n" +
+					"sub ft6.xy, ft6.xy, fc0.x\n" +	// - .5
 					"mul ft6.xy, ft6.xy, v4.w\n" +
-					"add ft6.xy, ft6.xy, fc0.x\n";
+					"add ft6.xy, ft6.xy, fc0.x\n";	// + .5
 
 			for (i = 0; i < NUM_POISSON_SAMPLES; ++i) {
 				code += "mul ft5.xy, " + registers[i] + ", ft1.x\n";
@@ -364,11 +365,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 					code += "add ft3, ft3, ft7\n";
 			}
 			// instead of doing - .5 for every sample, do it once for the total
-			code += "sub ft3.xy, ft3.xy, fc0.w\n";
+			code += "sub ft3.xy, ft3.xy, fc0.w\n";	// - (NUM_POISSON_SAMPLES+1) *.5
 
-			code += "mul ft3, ft3, fc0.y\n" +
+			code += "mul ft3, ft3, fc0.y\n" +		// 1/(NUM_POISSON_SAMPLES + 1)
 					"add ft0.xy, ft0.xy, ft3.xy\n" +
-					"add ft0.xy, ft0.xy, fc0.x\n";
+					"add ft0.xy, ft0.xy, fc0.x\n";	// + .5
 
 					// set specular
 			code +=	"mul ft0.z, ft1.y, v4.z\n" +
@@ -376,7 +377,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 			// lerp based on height, not really robust
 			code += "sub ft0, ft0, ft6\n" +
-					"mul ft1.x, ft1.x, fc0.z\n" +
+					"mul ft1.x, ft1.x, fc0.z\n" +	// brush height * 50
 					"sat ft1.x, ft1.x\n" +
 					"mul ft0, ft0, ft1.x\n" +
 					"add ft0, ft0, ft6\n";

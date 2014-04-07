@@ -33,8 +33,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 		override public function append( appendVO:StrokeAppendVO ) : void
 		{
+			// TODO: Rewrite and optimize knowing appendVO now only contains screen-space coords
 			//check for maximum vertex count
-			if (_numVertices >= 65531) return;
+			/*if (_numVertices >= 65531) return;
 			
 			var uvBounds:Rectangle = appendVO.uvBounds;
 			var baseAngle : Number = appendVO.diagonalAngle;
@@ -90,7 +91,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_numIndices += 6;
 
 			invalidateBuffers();
-			invalidateBounds();
+			invalidateBounds();*/
 		}
 
 		override public function drawColor(context3d : Context3D, canvas : CanvasModel, source : TextureBase = null) : void

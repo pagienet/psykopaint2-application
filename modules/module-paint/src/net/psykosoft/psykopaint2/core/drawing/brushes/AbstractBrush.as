@@ -233,11 +233,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			var len:uint = points.length;
 
-			for (var i:int = 0; i < len; i++) {
-				var point:SamplePoint = points[i];
-				point.normalizeXY(_canvasScaleW, _canvasScaleH);
-				processPoint(point);
-			}
+			for (var i:int = 0; i < len; i++)
+				processPoint(points[i]);
 
 			if (_firstPoint) {
 				_firstPoint = false;
@@ -301,7 +298,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		protected function processPoint(point:SamplePoint):void
 		{
-			addStrokePoint(point, _brushShape.actualSize * _canvasScaleW, _brushShape.rotationRange);
+			addStrokePoint(point, _brushShape.actualSize, _brushShape.rotationRange);
 		}
 
 		protected function addStrokePoint(point:SamplePoint, size:Number, rotationRange:Number):void

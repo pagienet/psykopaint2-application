@@ -63,10 +63,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if (_numVertices >= MAX_VERTICES) return;
 
 			var colorsRGBA:Vector.<Number> =  appendVO.point.colorsRGBA;
-			var halfSizeX : Number = appendVO.size * appendVO.point.size * .5;
-			var halfSizeY : Number = halfSizeX * CoreSettings.ASPECT_RATIO;
-			var centerX : Number = appendVO.point.normalX;
-			var centerY : Number = appendVO.point.normalY;
+
+			var ndcScaleX : Number = 2.0 / CoreSettings.STAGE_WIDTH;
+			var ndcScaleY : Number = 2.0 / CoreSettings.STAGE_HEIGHT;
+			var centerX : Number = appendVO.point.x * ndcScaleX - 1.0;
+			var centerY : Number = -(appendVO.point.y * ndcScaleY - 1.0);
+			var halfSizeX : Number = appendVO.size * appendVO.point.size * .5 * ndcScaleX;
+			var halfSizeY : Number = appendVO.size * appendVO.point.size * .5 * ndcScaleY;
 
 			if (centerX + halfSizeX > _maxX) _maxX = centerX + halfSizeX;
 			else if (centerX - halfSizeX < _minX) _minX = centerX - halfSizeX;

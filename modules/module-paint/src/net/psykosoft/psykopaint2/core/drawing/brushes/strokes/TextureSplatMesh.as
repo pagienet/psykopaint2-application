@@ -5,7 +5,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import flash.display3D.VertexBuffer3D;
 	import flash.display3D.textures.TextureBase;
 	import flash.geom.Rectangle;
-	
+
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.intrinsics.FastBuffer;
@@ -34,54 +36,66 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			var baseAngle:Number = appendVO.diagonalAngle; //Math.atan2(uvBounds.height,uvBounds.width);
 			var halfSize : Number = appendVO.size * appendVO.diagonalLength * 0.5;//appendVO.size * Math.SQRT1_2;
 			var angle : Number = appendVO.point.angle;
-			var cos1 : Number =   halfSize * Math.cos(  baseAngle + angle);
-			var sin1 : Number =  -halfSize * Math.sin(  baseAngle + angle);
-			var cos2 : Number =   halfSize * Math.cos( -baseAngle + angle);
-			var sin2 : Number =  -halfSize * Math.sin( -baseAngle + angle);
-			
-			
-			
-			
+			var cos1 : Number = halfSize * Math.cos(  baseAngle + angle);
+			var sin1 : Number = halfSize * Math.sin(  baseAngle + angle);
+			var cos2 : Number = halfSize * Math.cos( -baseAngle + angle);
+			var sin2 : Number = halfSize * Math.sin( -baseAngle + angle);
+
 			var point:SamplePoint = appendVO.point;
-			var pnx:Number = point.normalX;
-			var pny:Number = point.normalY;
-			
-			var v : Number;
-			var m:Number = Math.max( cos1, -cos1, cos2, -cos2 );
-			if ((v = pnx + m) > _maxX) _maxX = v;
-			if ((v = pnx - m) < _minX) _minX = v;
-			m = Math.max( sin1, -sin1, sin2, -sin2 );
-			if ((v = pny + m) > _maxY) _maxY = v;
-			if ((v = pny - m) < _minY) _minY = v;
+			var pnx:Number = point.x;
+			var pny:Number = point.y;
 			
 			var data:Vector.<Number> = _tmpData;
-			/*
-			data[0]  = pnx - cos1;
-			data[1]  = pny - sin1;
-			data[8]  = pnx + cos2;
-			data[9]  = pny + sin2;
-			data[16] = pnx + cos1;
-			data[17] = pny + sin1;
-			data[24] = pnx - cos2;
-			data[25] = pny - sin2;
-			*/
+
 			var ox:Number = appendVO.quadOffsetRatio * (-cos1 - cos2);
 			var oy:Number = appendVO.quadOffsetRatio * (-sin1 - sin2);
 			
-			var fx:Number = 1;
-			var fy:Number = 1.3333;
-			
-			data[0]  = pnx - (cos1 + ox) * fx;
-			data[1]  = pny - (sin1 + oy) * fy
-			
-			data[8]  = pnx + (cos2 + ox) * fx;
-			data[9]  = pny + (sin2 + oy) * fy;
-			
-			data[16] = pnx + (cos1 + ox) * fx;
-			data[17] = pny + (sin1 + oy) * fy;
-			
-			data[24] = pnx - (cos2 + ox) * fx;
-			data[25] = pny - (sin2 + oy) * fy;
+			var ndcScaleX:Number = 2/CoreSettings.STAGE_WIDTH;
+			var ndcScaleY:Number = 2/CoreSettings.STAGE_HEIGHT;
+
+			var vx : Number = (pnx - cos1 + ox) * ndcScaleX - 1.0;
+			var vy : Number = -((pny - sin1 + oy) * ndcScaleY - 1.0);
+
+			if (vx < _minX) _minX = vx;
+			if (vx > _maxX) _maxX = vx;
+			if (vy < _minY) _minY = vy;
+			if (vy > _maxY) _maxY = vy;
+
+			data[0]  = vx;
+			data[1]  = vy;
+
+			vx = (pnx + cos2 + ox) * ndcScaleX - 1.0;
+			vy = -((pny + sin2 + oy) * ndcScaleY - 1.0);
+
+			if (vx < _minX) _minX = vx;
+			if (vx > _maxX) _maxX = vx;
+			if (vy < _minY) _minY = vy;
+			if (vy > _maxY) _maxY = vy;
+
+			data[8] = vx;
+			data[9] = vy;
+
+			vx = (pnx + cos1 + ox) * ndcScaleX - 1.0;
+			vy = -((pny + sin1 + oy) * ndcScaleY - 1.0);
+
+			if (vx < _minX) _minX = vx;
+			if (vx > _maxX) _maxX = vx;
+			if (vy < _minY) _minY = vy;
+			if (vy > _maxY) _maxY = vy;
+
+			data[16] = vx;
+			data[17] = vy;
+
+			vx = (pnx - cos2 + ox) * ndcScaleX - 1.0;
+			vy = -((pny - sin2 + oy) * ndcScaleY - 1.0);
+
+			if (vx < _minX) _minX = vx;
+			if (vx > _maxX) _maxX = vx;
+			if (vy < _minY) _minY = vy;
+			if (vy > _maxY) _maxY = vy;
+
+			data[24] = vx;
+			data[25] = vy;
 			
 			data[2]  = data[26] = uvBounds.left;
 			data[3]  = data[11] = uvBounds.top;

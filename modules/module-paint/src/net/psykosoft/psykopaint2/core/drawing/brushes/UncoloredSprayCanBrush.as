@@ -80,7 +80,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			_brushShape.getClosestColorMatchYUV(point.colorsRGBA, _appendVO.uvBounds, 0.06, _yuvMatchingWeights);
 			
-			_appendVO.size = rsize * _canvasScaleW;
+			_appendVO.size = rsize;
 			_appendVO.point = point;
 			_brushMesh.append(_appendVO);
 		}

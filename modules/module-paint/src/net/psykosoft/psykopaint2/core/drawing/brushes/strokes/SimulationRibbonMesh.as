@@ -75,8 +75,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			var point:SamplePoint = appendVO.point;
 			if (_numVertices == 0) {
 				// make it draw a full turn for starters at the starting pos
-				_prevX = point.normalX;
-				_prevY = point.normalY;
+				_prevX = point.x;
+				_prevY = point.y;
 				normalX = 0;
 				normalY = 1;
 				_prevNormalX = 0;
@@ -84,8 +84,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 				// first should include "beginning" of stroke
 			}
 			else {
-				normalX = point.normalY - _prevY;
-				normalY = _prevX - point.normalX;
+				normalX = point.y - _prevY;
+				normalY = _prevX - point.x;
 				var invNorm : Number = Math.sqrt(normalX * normalX + normalY * normalY);
 
 				if (invNorm < 0.0001)
@@ -105,10 +105,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 				appendConnection(_prevNormalX, _prevNormalY, normalX, normalY, appendVO, numSegments);
 			}
 
-			appendSegment(point.normalX, point.normalY, appendVO, normalX, normalY);
+			appendSegment(point.x, point.y, appendVO, normalX, normalY);
 
-			_prevX = point.normalX;
-			_prevY = point.normalY;
+			_prevX = point.x;
+			_prevY = point.y;
 			_prevNormalX = normalX;
 			_prevNormalY = normalY;
 			_prevAppendVO = appendVO;
@@ -156,11 +156,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		{
 			if (_numVertices >= MAX_VERTICES) return;
 
+			var ndcScaleX : Number = 2.0 / CoreSettings.STAGE_WIDTH;
+			var ndcScaleY : Number = 2.0 / CoreSettings.STAGE_HEIGHT;
 			var colorsRGBA:Vector.<Number> =  appendVO.point.colorsRGBA;
-			var halfSizeX : Number = appendVO.size * .5;
-			var halfSizeY : Number = halfSizeX * CoreSettings.ASPECT_RATIO;
-			var vx : Number = x + normalX * halfSizeX;
-			var vy : Number = y + normalY * halfSizeY;
+			var halfSize : Number = appendVO.size * .5;
+			var vx : Number = x + normalX * halfSize;
+			var vy : Number = y + normalY * halfSize;
+			vx = vx*ndcScaleX - 1.0;
+			vy = -(vy*ndcScaleY - 1.0);
 			if (vx > _maxX) _maxX = vx;
 			else if (vx < _minX) _minX = vx;
 			if (vy > _maxY) _maxY = vy;
@@ -176,8 +179,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_tmpData[8] = vx * .5 + .5;
 			_tmpData[9] = .5 - vy * .5;
 
-			vx = appendVO.point.normalX - normalX * halfSizeX;
-			vy = appendVO.point.normalY - normalY * halfSizeY;
+			vx = appendVO.point.x - normalX * halfSize;
+			vy = appendVO.point.y - normalY * halfSize;
+			vx = vx*ndcScaleX - 1.0;
+			vy = -(vy*ndcScaleY - 1.0);
 			if (vx > _maxX) _maxX = vx;
 			else if (vx < _minX) _minX = vx;
 			if (vy > _maxY) _maxY = vy;
