@@ -39,6 +39,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			var cos2 : Number =   halfSize * Math.cos( -baseAngle + angle);
 			var sin2 : Number =  -halfSize * Math.sin( -baseAngle + angle);
 			
+			
+			
+			
 			var point:SamplePoint = appendVO.point;
 			var pnx:Number = point.normalX;
 			var pny:Number = point.normalY;
@@ -65,17 +68,20 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			var ox:Number = appendVO.quadOffsetRatio * (-cos1 - cos2);
 			var oy:Number = appendVO.quadOffsetRatio * (-sin1 - sin2);
 			
-			data[0]  = pnx - cos1 + ox;
-			data[1]  = pny - (sin1 + oy) * 1.333333;
+			var fx:Number = 1;
+			var fy:Number = 1.3333;
 			
-			data[8]  = pnx + cos2 + ox;
-			data[9]  = pny + (sin2 + oy)  * 1.333333;
+			data[0]  = pnx - (cos1 + ox) * fx;
+			data[1]  = pny - (sin1 + oy) * fy
 			
-			data[16] = pnx + cos1 + ox;
-			data[17] = pny + (sin1 + oy) * 1.333333;
+			data[8]  = pnx + (cos2 + ox) * fx;
+			data[9]  = pny + (sin2 + oy) * fy;
 			
-			data[24] = pnx - cos2 + ox;
-			data[25] = pny - (sin2 + oy) * 1.333333;
+			data[16] = pnx + (cos1 + ox) * fx;
+			data[17] = pny + (sin1 + oy) * fy;
+			
+			data[24] = pnx - (cos2 + ox) * fx;
+			data[25] = pny - (sin2 + oy) * fy;
 			
 			data[2]  = data[26] = uvBounds.left;
 			data[3]  = data[11] = uvBounds.top;
