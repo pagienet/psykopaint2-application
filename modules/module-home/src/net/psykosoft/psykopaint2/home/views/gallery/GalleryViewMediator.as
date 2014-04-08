@@ -57,6 +57,16 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			requestActiveImage(GalleryType.MOST_RECENT, 0);
 		}
 
+		override public function destroy() : void
+		{
+			super.destroy();
+			activePaintingModel.onUpdate.remove(onActivePaintingUpdate);
+			notifyStateChangeSignal.remove(onStateChangeSignal);
+			view.requestImageCollection.remove(requestImageCollection);
+			view.requestActiveImageSignal.remove(requestActiveImage);
+			view.dispose();
+		}
+
 		private function onRequestActiveImage(source : int, index : int) : void
 		{
 			internalUpdate = true;
@@ -123,14 +133,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			notifyGalleryZoomRatioSignal.dispatch(ratio);
 			requestNavigationToggleSignal.dispatch(ratio > .9? -1 : 1);
-		}
-
-		override public function destroy() : void
-		{
-			super.destroy();
-			view.requestImageCollection.remove(requestImageCollection);
-			view.requestActiveImageSignal.remove(requestActiveImage);
-			view.dispose();
 		}
 
 		private function requestImageCollection(source : int, index : int, amount : int) : void
