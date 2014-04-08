@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.core.services
 			var date:Date = new Date();
 			var cacheAnnihilator:String = "?t=" + String( date.getTime() ) + Math.round( 1000 * Math.random() );
 			var xmlLoader : XMLLoader = new XMLLoader();
-			xmlLoader.loadAsset("/book-packaged/samples/samples_thumbs.xml" + cacheAnnihilator, onXMLLoaded);
+			xmlLoader.loadAsset("/home-packaged/samples/samples_thumbs.xml" + cacheAnnihilator, onXMLLoaded);
 		}
 
 		private function onXMLLoaded(xml : XML) : void

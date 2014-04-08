@@ -3,9 +3,9 @@
 <Thumbnails>
 
     <path>
-        <lowRes>/book-packaged/samples/thumbs_lowres/</lowRes>
-        <highRes>/book-packaged/samples/thumbs/</highRes>
-        <originals>/book-packaged/samples/fullsize/</originals>
+        <lowRes>/home-packaged/samples/thumbs_lowres/</lowRes>
+        <highRes>/home-packaged/samples/thumbs/</highRes>
+        <originals>/home-packaged/samples/fullsize/</originals>
     </path>
     
     <images>

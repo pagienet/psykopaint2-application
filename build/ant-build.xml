@@ -11,7 +11,6 @@
 	<property name="module-home-out" value="${HomeOutputPath}"/>
 	<property name="module-paint-out" value="${PaintOutputPath}"/>
 	<property name="module-core-out" value="${CoreOutputPath}"/>
-	<property name="module-book-out" value="${BookOutputPath}"/>
 	<property name="desktop-window-width" value="${DesktopWindowWidth}"/>
 	<property name="desktop-window-height" value="${DesktopWindowHeight}"/>
 	<xmlproperty file="../modules/common/assets/packaged/common-packaged/app-data.xml" collapseAttributes="true"/>
@@ -24,7 +23,6 @@
 	<target name="module-home" depends="update-version, set-desktop-dimensions, move-packaged-assets-home"/>
 	<target name="module-paint" depends="update-version, set-desktop-dimensions, move-packaged-assets-paint"/>
 	<target name="module-core" depends="update-version, set-desktop-dimensions, move-packaged-assets-core"/>
-	<target name="module-book" depends="update-version, set-desktop-dimensions, move-packaged-assets-book"/>
 
 	<!-- ******************** -->
 	<!-- extensions -->
@@ -80,26 +78,7 @@
 		<copy todir="${module-app-out}/paint-packaged">
 			<fileset dir="../modules/module-paint/assets/packaged/paint-packaged"/>
 		</copy>
-		<copy todir="${module-app-out}/book-packaged">
-			<fileset dir="../modules/module-book/assets/packaged/book-packaged"/>
-		</copy>
 		<copy todir="${module-app-out}/core-packaged">
-			<fileset dir="../modules/module-core/assets/packaged/core-packaged"/>
-		</copy>
-	</target>
-
-	<!-- ******************** -->
-	<!-- module-book -->
-	<!-- ******************** -->
-
-	<target name="move-packaged-assets-book">
-		<copy todir="${module-book-out}/common-packaged">
-			<fileset dir="../modules/common/assets/packaged/common-packaged"/>
-		</copy>
-		<copy todir="${module-book-out}/book-packaged">
-			<fileset dir="../modules/module-book/assets/packaged/book-packaged"/>
-		</copy>
-		<copy todir="${module-book-out}/core-packaged">
 			<fileset dir="../modules/module-core/assets/packaged/core-packaged"/>
 		</copy>
 	</target>

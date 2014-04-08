@@ -58,15 +58,13 @@ package net.psykosoft.psykopaint2.home.views.book
 			_bitmapDatas = new Vector.<BitmapData>();
 			
 			_assetsURLs= [];
-			_assetsURLs.push({id:RING,url:"book-packaged/images/book/rings.jpg"});
-			_assetsURLs.push({id:PAGE_PAPER,url:"book-packaged/images/page/paperbook2.jpg"});
+			_assetsURLs.push({id:RING,url:"home-packaged/images/book/rings.jpg"});
+			_assetsURLs.push({id:PAGE_PAPER,url:"home-packaged/images/page/paperbook2.jpg"});
 			_assetsURLs.push({id:THUMBNAIL_LOADING,url:"home-packaged/away3d/book/loadingThumbnail.png"});
-			_assetsURLs.push({id:THUMBNAIL_SHADOW,url:"book-packaged/images/page/pict_shadow.png"});
-			_assetsURLs.push({id:ICON_COMMENT,url:"book-packaged/images/layouts/comment.png",storeBmd:true});
-			_assetsURLs.push({id:ICON_HEART,url:"book-packaged/images/layouts/heart.png",storeBmd:true});
-			_assetsURLs.push({id:ICON_PAINTINGMODE,url:"book-packaged/images/layouts/painting.png",storeBmd:true});
-			
-			
+			_assetsURLs.push({id:THUMBNAIL_SHADOW,url:"home-packaged/images/page/pict_shadow.png"});
+			_assetsURLs.push({id:ICON_COMMENT,url:"home-packaged/images/layouts/comment.png",storeBmd:true});
+			_assetsURLs.push({id:ICON_HEART,url:"home-packaged/images/layouts/heart.png",storeBmd:true});
+			_assetsURLs.push({id:ICON_PAINTINGMODE,url:"home-packaged/images/layouts/painting.png",storeBmd:true});
 		}
 		
 		
@@ -138,7 +136,9 @@ package net.psykosoft.psykopaint2.home.views.book
 			//CREATE THE TEXTURE
 			var bmd:BitmapData = BitmapData(e.data);
 			if (currentAssetURLObj.storeBmd==true){
-				_bitmapDatas.push(bmd);
+				if (_bitmapDatas.length <= assetIndex)
+					_bitmapDatas.length = assetIndex+1;
+				_bitmapDatas[assetIndex] = bmd;
 				trace("STore bmd for "+ currentAssetURLObj.id);
 			}
 			var newTexture:BitmapTexture = new TrackedBitmapTexture(TextureUtil.autoResizePowerOf2(bmd));
