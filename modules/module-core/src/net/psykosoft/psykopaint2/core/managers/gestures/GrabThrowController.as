@@ -48,7 +48,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		public function start(priority : int = 0, exclusive : Boolean = false) : void
 		{
-			
+
 			if (!_started) {
 				_exclusive = exclusive;
 				_touchID = -1;

@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public static const BG_TYPE_ROPE:String = "rope";
 		public static const BG_TYPE_WOOD:String = "wood";
 		public static const BG_TYPE_WOOD_LOW:String = "wood1";
+		private var _type:String;
 
 		public function NavigationBg() {
 			super();
@@ -17,7 +18,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			stop();
 		}
 
+		public function getBgType():String
+		{
+			return _type;
+		}
+
 		public function setBgType( type:String ):void {
+			_type = type;
 			gotoAndStop( type );
 			if ( type == BG_TYPE_WOOD || type == BG_TYPE_WOOD_LOW)
 			{

@@ -82,7 +82,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			disposeSubNavigation();
 
 			// Defaults to rope bg.
-			//setBgType( NavigationBg.BG_TYPE_ROPE );
+			setBgType( NavigationBg.BG_TYPE_ROPE );
 
 			// Reset.
 			leftBtnSide.visible = false;

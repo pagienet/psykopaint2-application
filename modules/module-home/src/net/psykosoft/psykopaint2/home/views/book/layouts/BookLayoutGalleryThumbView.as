@@ -95,7 +95,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			bitmapData.draw(heartBitmapData, matrix);
 
 			textField = generateTextField(_imageProxy.numLikes.toString());
-			matrix.tx -= textField.width + 5;
+			matrix.tx -= textField.width + 3;
 			bitmapData.draw(textField, matrix);
 
 			return bitmapData;

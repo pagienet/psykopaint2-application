@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 {
 
 	import net.psykosoft.psykopaint2.core.commands.ClearCanvasCommand;
-	import net.psykosoft.psykopaint2.core.commands.SavePaintingToServerCommand;
+	import net.psykosoft.psykopaint2.paint.commands.saving.SavePaintingToServerCommand;
 	import net.psykosoft.psykopaint2.core.commands.UndoCanvasActionCommand;
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;

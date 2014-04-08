@@ -1,5 +1,7 @@
-package net.psykosoft.psykopaint2.core.commands
+package net.psykosoft.psykopaint2.paint.commands.saving
 {
+	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
+
 	import flash.display.BitmapData;
 	import flash.display.JPEGEncoderOptions;
 
@@ -18,6 +20,11 @@ package net.psykosoft.psykopaint2.core.commands
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerSucceededSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
+	import net.psykosoft.psykopaint2.core.views.popups.base.Jokes;
+	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 
 	public class SavePaintingToServerCommand
 	{
@@ -48,12 +55,25 @@ package net.psykosoft.psykopaint2.core.commands
 		[Inject]
 		public var notifySaveToServerFailedSignal : NotifySaveToServerFailedSignal;
 
+		[Inject]
+		public var requestShowPopUpSignal : RequestShowPopUpSignal;
+
+		[Inject]
+		public var requestHidePopUpSignal : RequestHidePopUpSignal;
+
+		[Inject]
+		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
+
 		private var _paintingData : PaintingDataVO;
 		private var _compositeData : ByteArray;
+
 
 		public function execute():void
 		{
 			notifySaveToServerStartedSignal.dispatch();
+			requestShowPopUpSignal.dispatch( PopUpType.MESSAGE );
+			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
+			requestUpdateMessagePopUpSignal.dispatch( "Publishing...", randomJoke );
 
 			// dispatch notify started signal
 			var canvasExporter:CanvasPublisher = new CanvasPublisher( stage, ioAne );
@@ -87,16 +107,21 @@ package net.psykosoft.psykopaint2.core.commands
 
 			if (data["status_code"] != 1) {
 				notifySaveToServerFailedSignal.dispatch(data["status_code"], data["status_reason"] != null ? data["status_reason"] : "unknown reason");
+				trace ("Publish unsuccesful with error code: " + data["status_code"]);
 				return;
 			}
-			else
+			else {
+				trace ("Publish successful");
+				requestHidePopUpSignal.dispatch();
 				notifySaveToServerSucceededSignal.dispatch();
+			}
 		}
 
 		private function onPublishFail(data : Object) : void
 		{
 			cleanUp();
 			notifySaveToServerFailedSignal.dispatch(data["status_code"], "CALL_FAILED");
+			trace ("Publish unsuccesful: call failed");
 		}
 
 		private function cleanUp() : void

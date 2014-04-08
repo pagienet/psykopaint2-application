@@ -5,14 +5,17 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
+	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSavePaintingToServerSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestClosePaintViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
@@ -34,6 +37,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var paintingModel:PaintingModel;
+
+		[Inject]
+		public var loggedInUserProxy : LoggedInUserProxy;
 		
 		[Inject]
 		public var userPaintSettingModel:UserPaintSettingsModel;
@@ -52,6 +58,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestHidePopUpSignal:RequestHidePopUpSignal;
+
+		[Inject]
+		public var showPopUpSignal:RequestShowPopUpSignal;
 
 		private var _time:uint;
 
@@ -72,57 +81,32 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			switch( id ) {
 
 				case CanvasSubNavView.ID_SAVE:
-				{
-					requestClosePaintViewSignal.dispatch( true);
+					requestClosePaintViewSignal.dispatch(true);
 					break;
-				}
 
 				case CanvasSubNavView.ID_DISCARD:
-				{
-					/*
-					if( paintingModel.activePaintingId != PaintingInfoVO.DEFAULT_VO_ID && paintingModel.activePaintingId != "" ) {
-						requestPaintingDeletionSignal.dispatch( paintingModel.activePaintingId );
-					}
-					*/
-					requestClosePaintViewSignal.dispatch( false);
+					requestClosePaintViewSignal.dispatch(false);
 					break;
-				}
 
 				case CanvasSubNavView.ID_CLEAR:
-				{
 					requestClearCanvasSignal.dispatch();
 					break;
-				}
-					
 
 				case CanvasSubNavView.ID_DOWNLOAD:
-				{
 					requestCanvasExportSignal.dispatch();
 					break;
-				}
-					
-				case CanvasSubNavView.ID_PUBLISH:
-				{
-					requestSavePaintingToServerSignal.dispatch();
-					break;
-				}
-/*
-				case CanvasSubNavView.ID_SAVE:
-				{
-					_time = getTimer();
-					ConsoleView.instance.log( this, "saving..." );
-					ConsoleView.instance.logMemory();
 
-					notifyPaintingSavedSignal.addOnce( onPaintingSaved );
-					requestPaintingSaveSignal.dispatch();
+				case CanvasSubNavView.ID_PUBLISH:
+					if (loggedInUserProxy.isLoggedIn()) {
+						requestSavePaintingToServerSignal.dispatch();
+					}
+					else {
+						showPopUpSignal.dispatch(PopUpType.LOGIN);
+					}
 					break;
-				}
-*/
 				case CanvasSubNavView.ID_PICK_A_BRUSH:
-				{
 					requestNavigationStateChange( NavigationStateType.PAINT_SELECT_BRUSH );
 					break;
-				}
 			}
 		}
 
