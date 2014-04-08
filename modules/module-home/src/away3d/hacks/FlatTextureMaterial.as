@@ -7,13 +7,13 @@ package away3d.hacks
 
 	use namespace arcane;
 
-	public class BookThumbTextureMaterial extends MaterialBase
+	public class FlatTextureMaterial extends MaterialBase
 	{
-		private var _pass : BookThumbTextureMaterialPass;
+		private var _pass : FlatTextureMaterialPass;
 
-		public function BookThumbTextureMaterial(texture : TextureProxyBase)
+		public function FlatTextureMaterial(texture : TextureProxyBase)
 		{
-			_pass = new BookThumbTextureMaterialPass(texture);
+			_pass = new FlatTextureMaterialPass(texture);
 			addPass(_pass);
 		}
 
@@ -25,6 +25,13 @@ package away3d.hacks
 		public function set texture(value : TextureProxyBase) : void
 		{
 			_pass.texture = value;
+		}
+
+
+		override public function set blendMode(value:String):void
+		{
+			super.blendMode = value;
+			_pass.setBlendMode(value);
 		}
 	}
 }

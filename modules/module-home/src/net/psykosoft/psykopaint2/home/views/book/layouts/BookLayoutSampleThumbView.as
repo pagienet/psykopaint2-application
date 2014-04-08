@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.book.layouts
 {
 	import away3d.core.managers.Stage3DProxy;
-	import away3d.hacks.BookThumbTextureMaterial;
+	import away3d.hacks.FlatTextureMaterial;
 	import away3d.hacks.TrackedBitmapRectTexture;
 
 	import flash.display.BitmapData;
@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		
 		//THUMBNAIL
 		private var _thumbMesh:Mesh;
-		private var _thumbMaterial:BookThumbTextureMaterial;
+		private var _thumbMaterial:FlatTextureMaterial;
 		
 		//SHADOW
 		private var _shadowTextureMaterial:TextureMaterial
@@ -67,7 +67,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			addChild(_shadowMesh);
 
 			_thumbTexture = new TrackedBitmapRectTexture(null);
-			_thumbMaterial = new BookThumbTextureMaterial(_thumbTexture);
+			_thumbMaterial = new FlatTextureMaterial(_thumbTexture);
 		}
 		
 		public function get height():Number

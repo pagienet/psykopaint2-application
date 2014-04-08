@@ -13,12 +13,12 @@ package away3d.hacks
 
 	use namespace arcane;
 
-	public class BookThumbTextureMaterialPass extends MaterialPassBase
+	public class FlatTextureMaterialPass extends MaterialPassBase
 	{
 		private var _texture : TextureProxyBase;
 		private var _matrix : Matrix3D;
 
-		public function BookThumbTextureMaterialPass(texture : TextureProxyBase)
+		public function FlatTextureMaterialPass(texture : TextureProxyBase)
 		{
 			_matrix = new Matrix3D();
 			_texture = texture;

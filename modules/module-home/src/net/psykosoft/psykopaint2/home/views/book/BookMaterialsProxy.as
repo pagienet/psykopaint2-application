@@ -190,47 +190,8 @@ package net.psykosoft.psykopaint2.home.views.book
 			return textureMaterial;
 			
 		}
-		
-		
-		public static function fromTextToBitmapData(value:String):BitmapData{
-			
-			var textFormat:TextFormat = PsykoFonts.BookFontSmall;
-			textFormat.color = 0x333333;
-			textFormat.size = 20;
-			textFormat.align = TextFieldAutoSize.LEFT;
-			
-			var textfield:TextField = new TextField();
-			textfield.antiAliasType = AntiAliasType.ADVANCED;
-			textfield.embedFonts = true;
-			//textfield.border=true;
-			textfield.background=true;
-			//textfield.borderColor= 0x445555
-			textfield.autoSize = TextFieldAutoSize.LEFT;
-			//textfield.height = 20;
-			textfield.defaultTextFormat = textFormat;
-			textfield.text = String(value);
-			
-			return  TextureUtil.displayObjectToBitmapData(textfield);
-			
-		}
-		
-		
-		public static function fromTextToMesh(value:String):Mesh{
-			
-			var bmd:BitmapData = fromTextToBitmapData(value);
-			var size:Point = new Point(bmd.width,bmd.height);
-			bmd = TextureUtil.autoResizePowerOf2(bmd);
-			var newTextureMaterial:TextureMaterial = new TextureMaterial(Cast.bitmapTexture(bmd));
-			newTextureMaterial.alphaBlending=true;
-			var newTextGeometry:PlaneGeometry  = new PlaneGeometry(size.x,size.y,1,1,true,false); 
-			var mesh:Mesh = new Mesh(newTextGeometry,newTextureMaterial);
-			
-			return  mesh;
-			
-		}
-		
-		
-		
+
+
 		////DRAFT FOR LATER IF I'm MOTIVATED TO MAKE AN ATLAS PARSER
 		public function parseAtlasXml(animID:String, textureWidth:uint, textureHeight:uint, atlasXml:XML) : SpriteSheetAnimationSet
 		{
