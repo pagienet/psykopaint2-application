@@ -96,7 +96,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private var _paintingOccluder:Mesh;
 
-		private var _highQualityMaterial:PaintingMaterial;
+		// static hack to prevent render reordering
+		private static var _occluderMaterial:ColorMaterial;
+		private static var _highQualityMaterial:PaintingMaterial;
+
 		private var _highQualityNormalSpecularTexture:ByteArrayRectTexture;
 		private var _highQualityColorTexture:BitmapRectTexture;
 		private var _showHighQuality:Boolean;
@@ -176,7 +179,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function showHighQualityMaterial():void
 		{
-			if (!_highQualityMaterial)
+			if (!_highQualityColorTexture)
 				initHighQualityMaterial();
 
 			if (_activeImageProxy) {
@@ -190,7 +193,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_highQualityColorTexture = new TrackedBitmapRectTexture(null);
 			_highQualityNormalSpecularTexture = new ByteArrayRectTexture(null, 0, 0);
 
-			_highQualityMaterial = new PaintingMaterial();
+			if (!_highQualityMaterial)
+				_highQualityMaterial = new PaintingMaterial();
+
 			_highQualityMaterial.lightPicker = new StaticLightPicker([_light]);
 			_highQualityMaterial.albedoTexture = _highQualityColorTexture;
 			_highQualityMaterial.normalSpecularTexture = _highQualityNormalSpecularTexture;
@@ -207,17 +212,20 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function initOccluder():void
 		{
 			var occluderGeometry:PlaneGeometry = new PlaneGeometry(500, 200, 1, 1, false);
-			var occluderMaterial:ColorMaterial = new ColorMaterial(0xff00ff);
-			var maskingMethod:MaskingMethod = new MaskingMethod();
-			maskingMethod.disableAll();
-			var stencilMethod:StencilMethod = new StencilMethod();
-			stencilMethod.referenceValue = 40;
-			stencilMethod.actionDepthAndStencilPass = Context3DStencilAction.SET;
-			stencilMethod.actionDepthFail = Context3DStencilAction.SET;
-			stencilMethod.actionDepthPassStencilFail = Context3DStencilAction.SET;
-			occluderMaterial.addMethod(maskingMethod);
-			occluderMaterial.addMethod(stencilMethod);
-			_paintingOccluder = new Mesh(occluderGeometry, occluderMaterial);
+
+			if (!_occluderMaterial) {
+				_occluderMaterial = new ColorMaterial(0xff00ff);
+				var maskingMethod:MaskingMethod = new MaskingMethod();
+				maskingMethod.disableAll();
+				var stencilMethod:StencilMethod = new StencilMethod();
+				stencilMethod.referenceValue = 40;
+				stencilMethod.actionDepthAndStencilPass = Context3DStencilAction.SET;
+				stencilMethod.actionDepthFail = Context3DStencilAction.SET;
+				stencilMethod.actionDepthPassStencilFail = Context3DStencilAction.SET;
+				_occluderMaterial.addMethod(maskingMethod);
+				_occluderMaterial.addMethod(stencilMethod);
+			}
+			_paintingOccluder = new Mesh(occluderGeometry, _occluderMaterial);
 			_paintingOccluder.x = -300;
 			_paintingOccluder.y = PAINTING_Y;
 			_paintingOccluder.z = PAINTING_Z + 100;
@@ -600,7 +608,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.clear();
 			_paintingGeometry.dispose();
 			_loadingTexture.dispose();
-			if ( _paintingOccluder.material )_paintingOccluder.material.dispose();
 			if ( _paintingOccluder.geometry )_paintingOccluder.geometry.dispose();
 			_paintingOccluder.dispose();
 			disposeHighQualityMaterial();
@@ -615,11 +622,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function disposeHighQualityMaterial():void
 		{
 			if ( _activeImageProxy ) _activeImageProxy.cancelLoading();
-			if (_highQualityMaterial) {
-				_highQualityMaterial.dispose();
+			if (_highQualityColorTexture) {
 				_highQualityColorTexture.dispose();
 				_highQualityNormalSpecularTexture.dispose();
-				_highQualityMaterial = null;
 				_highQualityColorTexture = null;
 				_highQualityNormalSpecularTexture = null;
 			}

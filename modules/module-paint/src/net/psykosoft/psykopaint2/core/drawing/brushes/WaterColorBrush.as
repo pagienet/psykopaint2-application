@@ -11,7 +11,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedRectTexture;
 
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapIntrinsicsStrategy;
@@ -22,7 +21,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationRibbonMesh;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.SinglePigmentBlotTransfer;
-	import net.psykosoft.psykopaint2.core.drawing.shaders.StrokeColorTransfer;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.ApplySlope;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.MovePigment;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.MovePigmentCMYA;
@@ -65,7 +63,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private var _pigmentColorField : TrackedRectTexture;
 
 		private var _addPigmentToPigmentDensity : SinglePigmentBlotTransfer;
-		private var _addPigmentToPigmentColor : StrokeColorTransfer;
 		private var _addPigmentToPressure : SinglePigmentBlotTransfer;
 		private var _addWetness : SinglePigmentBlotTransfer;
 
@@ -182,7 +179,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			// todo: if "connection" was added previously, force last N segments to add water
 			_addPigmentToPigmentDensity = new SinglePigmentBlotTransfer(_canvasModel.stage3D.context3D, SinglePigmentBlotTransfer.TARGET_X, true);
-			_addPigmentToPigmentColor = new StrokeColorTransfer(_canvasModel.stage3D.context3D);
 			if (_wetBrush) {
 				_addWetness = new SinglePigmentBlotTransfer(_canvasModel.stage3D.context3D, "w", false);
 				_addPigmentToPressure = new SinglePigmentBlotTransfer(_canvasModel.stage3D.context3D, SinglePigmentBlotTransfer.TARGET_Z);
@@ -230,7 +226,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				_renderPigmentDamage.dispose();
 				_addPigmentToPressure.dispose();
 				_addPigmentToPigmentDensity.dispose();
-				_addPigmentToPigmentColor.dispose();
 				_velocityPressureField = null;
 				_velocityPressureFieldBackBuffer = null;
 				_pigmentDensityField = null;
@@ -238,7 +233,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				_applySlope = null;
 				_addPigmentToPressure = null;
 				_addPigmentToPigmentDensity = null;
-				_addPigmentToPigmentColor = null;
 				_updateVelocities = null;
 				_relaxDivergence = null;
 				_movePigment = null;
@@ -317,7 +311,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context.setRenderToBackBuffer();
 
 			_addPigmentToPigmentDensity.reset();
-			_addPigmentToPigmentColor.reset();
 			_addPigmentToPressure.reset();
 			if (_addWetness) _addWetness.reset();
 		}
@@ -346,9 +339,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				_addPigmentToPigmentDensity.execute(simulationMesh, _pigmentDensityField.texture, _halfSizedBackBuffer.texture, _brushShape.texture);
 				_pigmentDensityField = swapHalfSized(_pigmentDensityField);
 			}
-
-//			_addPigmentToPigmentColor.execute(SimulationMesh(_brushMesh), _pigmentColorField, _canvasModel.halfSizeBackBuffer, null, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
-//			_pigmentColorField = _canvasModel.swapHalfSized(_pigmentColorField);
 
 			if (_addWetness) {
 				_addWetness.execute(simulationMesh, _velocityPressureField.texture, _velocityPressureFieldBackBuffer.texture, null);

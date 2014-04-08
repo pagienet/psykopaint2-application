@@ -170,6 +170,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			}
 
 			renderBackground();
+			_context3D.setStencilActions();
 		}
 
 		private function renderBackground() : void
