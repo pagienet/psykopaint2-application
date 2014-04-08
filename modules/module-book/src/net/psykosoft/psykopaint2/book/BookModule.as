@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.book
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 
 	public class BookModule extends ModuleBase
-	{
+	{  
 		private var _coreModule : CoreModule;
 		private var _moduleSetUp : Boolean = true;
 

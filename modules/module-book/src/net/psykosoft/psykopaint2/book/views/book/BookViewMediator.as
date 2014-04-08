@@ -55,8 +55,8 @@ package net.psykosoft.psykopaint2.book.views.book
 		[Inject]
 		public var galleryService:GalleryService;
 
-		[Inject]
-		public var requestSetBookOffScreenRatioSignal:RequestSetBookOffScreenRatioSignal;
+		//[Inject]
+		//public var requestSetBookOffScreenRatioSignal:RequestSetBookOffScreenRatioSignal;
 
 		[Inject]
 		public var requestNavigationStateChange:RequestNavigationStateChangeSignal;
@@ -83,7 +83,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			super.initialize();
 
-			requestSetBookOffScreenRatioSignal.add(view.setHiddenOffScreenRatio);
+			//requestSetBookOffScreenRatioSignal.add(view.setHiddenOffScreenRatio);
 //			requestDestroyBookModuleSignal.add(onRequestDestroyBook);
 			view.imageSelectedSignal.add(onImageSelected);
 			view.galleryImageSelectedSignal.add(onGalleryImageSelected);
@@ -98,7 +98,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		override public function destroy():void
 		{
 			super.destroy();
-			requestSetBookOffScreenRatioSignal.remove(view.setHiddenOffScreenRatio);
+			//requestSetBookOffScreenRatioSignal.remove(view.setHiddenOffScreenRatio);
 //			requestDestroyBookModuleSignal.remove(onRequestDestroyBook);
 			view.imageSelectedSignal.remove(onImageSelected);
 			view.galleryImageSelectedSignal.remove(onGalleryImageSelected);

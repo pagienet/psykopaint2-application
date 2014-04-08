@@ -111,7 +111,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			super.onSetup();
 			createCenterButton(ID_LOVE, ID_LOVE, ButtonIconType.LOVE);
-			createCenterButton(ID_COMMENT, ID_COMMENT, ButtonIconType.COMMENT);
+			//createCenterButton(ID_COMMENT, ID_COMMENT, ButtonIconType.COMMENT);
 			createCenterButton(ID_SHARE, ID_SHARE, ButtonIconType.SHARE);
 			
 			validateCenterButtons();

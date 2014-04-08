@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.book
 {
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.geom.Point;
 	import flash.text.AntiAliasType;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -11,9 +11,11 @@ package net.psykosoft.psykopaint2.home.views.book
 	import away3d.animators.SpriteSheetAnimationSet;
 	import away3d.animators.data.SpriteSheetAnimationFrame;
 	import away3d.animators.nodes.SpriteSheetClipNode;
+	import away3d.entities.Mesh;
 	import away3d.hacks.TrackedATFTexture;
 	import away3d.hacks.TrackedBitmapTexture;
 	import away3d.materials.TextureMaterial;
+	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.ATFTexture;
 	import away3d.textures.BitmapTexture;
 	import away3d.utils.Cast;
@@ -194,14 +196,17 @@ package net.psykosoft.psykopaint2.home.views.book
 			
 			var textFormat:TextFormat = PsykoFonts.BookFontSmall;
 			textFormat.color = 0x333333;
-			textFormat.size = 15;
+			textFormat.size = 20;
 			textFormat.align = TextFieldAutoSize.LEFT;
 			
 			var textfield:TextField = new TextField();
 			textfield.antiAliasType = AntiAliasType.ADVANCED;
 			textfield.embedFonts = true;
-			textfield.width = 20;
-			textfield.height = 15;
+			//textfield.border=true;
+			textfield.background=true;
+			//textfield.borderColor= 0x445555
+			textfield.autoSize = TextFieldAutoSize.LEFT;
+			//textfield.height = 20;
 			textfield.defaultTextFormat = textFormat;
 			textfield.text = String(value);
 			
@@ -209,6 +214,20 @@ package net.psykosoft.psykopaint2.home.views.book
 			
 		}
 		
+		
+		public static function fromTextToMesh(value:String):Mesh{
+			
+			var bmd:BitmapData = fromTextToBitmapData(value);
+			var size:Point = new Point(bmd.width,bmd.height);
+			bmd = TextureUtil.autoResizePowerOf2(bmd);
+			var newTextureMaterial:TextureMaterial = new TextureMaterial(Cast.bitmapTexture(bmd));
+			newTextureMaterial.alphaBlending=true;
+			var newTextGeometry:PlaneGeometry  = new PlaneGeometry(size.x,size.y,1,1,true,false); 
+			var mesh:Mesh = new Mesh(newTextGeometry,newTextureMaterial);
+			
+			return  mesh;
+			
+		}
 		
 		
 		
