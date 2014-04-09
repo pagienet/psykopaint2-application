@@ -46,25 +46,31 @@ package net.psykosoft.psykopaint2.home.views.settings
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
 
-				case SettingsSubNavView.ID_WALLPAPER: {
+				case SettingsSubNavView.ID_WALLPAPER:
 					requestNavigationStateChange( NavigationStateType.SETTINGS_WALLPAPER );
 					break;
-				}
 
-				case SettingsSubNavView.ID_LOGIN: {
-					trace( this, "login clicked" );
-					if( loggedInUserProxy.isLoggedIn() ) {
-						view.enableButtonWithId( SettingsSubNavView.ID_LOGIN, false );
-						trace( this, "logging out" );
-						// no need to check for success, is implicit in onChange
-						loggedInUserProxy.logOut(null, onLogOutFailed);
-					}
-					else {
-						trace( this, "logging in" );
-						requestShowPopUpSignal.dispatch( PopUpType.LOGIN );
-					}
+				case SettingsSubNavView.ID_LOGIN:
+					handleLogInClicked();
 					break;
-				}
+
+				case SettingsSubNavView.ID_NOTIFICATION_SETTINGS:
+					requestShowPopUpSignal.dispatch(PopUpType.NOTIFICATION_SETTINGS);
+					break;
+			}
+		}
+
+		private function handleLogInClicked():void
+		{
+			if (loggedInUserProxy.isLoggedIn()) {
+				view.enableButtonWithId(SettingsSubNavView.ID_LOGIN, false);
+				trace(this, "logging out");
+				// no need to check for success, is implicit in onChange
+				loggedInUserProxy.logOut(null, onLogOutFailed);
+			}
+			else {
+				trace(this, "logging in");
+				requestShowPopUpSignal.dispatch(PopUpType.LOGIN);
 			}
 		}
 

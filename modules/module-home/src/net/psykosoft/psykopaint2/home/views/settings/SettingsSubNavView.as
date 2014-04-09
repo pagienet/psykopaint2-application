@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 		public static const ID_WALLPAPER:String = "Wallpaper";
 		public static const ID_LOGIN:String = "Login";
 		public static const ID_LOGOUT:String = "Logout";
+		public static const ID_NOTIFICATION_SETTINGS:String = "Notifications";
 
 		public function SettingsSubNavView() {
 			super();
@@ -21,6 +22,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 		override protected function onSetup():void {
 			createCenterButton( ID_WALLPAPER, ID_WALLPAPER,ButtonIconType.WALLPAPER );
 			createCenterButton( ID_LOGIN, ID_LOGIN,ButtonIconType.LOGIN );
+			createCenterButton( ID_NOTIFICATION_SETTINGS, ID_NOTIFICATION_SETTINGS, ButtonIconType.NOTIFICATIONS );
 			validateCenterButtons();
 		}
 

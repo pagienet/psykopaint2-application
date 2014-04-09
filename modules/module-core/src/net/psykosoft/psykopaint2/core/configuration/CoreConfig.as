@@ -101,6 +101,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.views.popups.login.LoginPopUpViewMediator;
 	import net.psykosoft.psykopaint2.core.views.popups.messages.MessagePopUpView;
 	import net.psykosoft.psykopaint2.core.views.popups.messages.MessagePopUpViewMediator;
+	import net.psykosoft.psykopaint2.core.views.popups.notifications.NotificationSettingsView;
+	import net.psykosoft.psykopaint2.core.views.popups.notifications.NotificationSettingsViewMediator;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketViewMediator;
 	import net.psykosoft.psykopaint2.core.views.splash.SplashView;
@@ -282,6 +284,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_mediatorMap.map( PopUpManagerView ).toMediator( PopUpManagerViewMediator );
 			_mediatorMap.map( MessagePopUpView ).toMediator( MessagePopUpViewMediator );
 			_mediatorMap.map( LoginPopUpView ).toMediator( LoginPopUpViewMediator );
+			_mediatorMap.map( NotificationSettingsView ).toMediator( NotificationSettingsViewMediator );
 			_mediatorMap.map( DebugView ).toMediator( DebugViewMediator );
 			_mediatorMap.map( ErrorsView ).toMediator( ErrorsViewMediator );
 			_mediatorMap.map( VideoView ).toMediator( VideoViewMediator );
