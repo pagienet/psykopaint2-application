@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
+
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButtonAlt;
 
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.CheckBox;
@@ -16,11 +18,9 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 	{
 		// Declared in Flash.
 		public var bg:Sprite;
-		public var lovedCheckbox:CheckBox;
-		public var commentCheckbox:CheckBox;
-		public var replyCheckbox:CheckBox;
-		public var rightSide:Sprite;
-		private var _rightButton:IconButtonAlt;
+		public var checkbox:CheckBox;
+		public var leftSide:Sprite;
+		private var _backButton:IconButtonAlt;
 
 		public var popUpWantsToCloseSignal:Signal = new Signal();
 
@@ -28,25 +28,23 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 		{
 			super();
 			initUI();
-			_rightButton = rightSide.getChildByName( "btn" ) as IconButtonAlt;
-			_rightButton.addEventListener( MouseEvent.CLICK, onRightBtnClick );
-			_rightButton.labelText = "OK";
-			_rightButton.iconType = "continue";
+			_backButton = leftSide.getChildByName( "btn" ) as IconButtonAlt;
+			_backButton.addEventListener( MouseEvent.CLICK, onBackButtonClicked );
+			_backButton.labelText = "OK";
+			_backButton.iconType = ButtonIconType.BACK;
 		}
 
 		private function initUI():void
 		{
-			lovedCheckbox = createCheckbox(670, 254);
-			commentCheckbox = createCheckbox(670, 385);
-			replyCheckbox = createCheckbox(670, 515);
+			checkbox = createCheckbox(670, 254);
 		}
 
 		override protected function onDisabled():void
 		{
-			_rightButton.removeEventListener(MouseEvent.CLICK, onRightBtnClick);
+			_backButton.removeEventListener(MouseEvent.CLICK, onBackButtonClicked);
 		}
 
-		private function onRightBtnClick( event:MouseEvent ):void {
+		private function onBackButtonClicked( event:MouseEvent ):void {
 			popUpWantsToCloseSignal.dispatch();
 		}
 
