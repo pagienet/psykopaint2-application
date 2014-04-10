@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:176e4f05925b60a67f4661f140caca71$ -->
+<TextureAtlas imagePath="samples.png">
+    <SubTexture name="anemone" x="1210" y="910" width="300" height="225"/>
+    <SubTexture name="angkor" x="908" y="910" width="300" height="225"/>
+    <SubTexture name="architecture" x="606" y="1818" width="300" height="225"/>
+    <SubTexture name="artTools" x="606" y="1591" width="300" height="225"/>
+    <SubTexture name="athens" x="606" y="1364" width="300" height="225"/>
+    <SubTexture name="autumnroad" x="606" y="1137" width="300" height="225"/>
+    <SubTexture name="autumntree" x="606" y="910" width="300" height="225"/>
+    <SubTexture name="breakfast" x="1512" y="683" width="300" height="225"/>
+    <SubTexture name="cat" x="1210" y="683" width="300" height="225"/>
+    <SubTexture name="child" x="908" y="683" width="300" height="225"/>
+    <SubTexture name="daisy" x="606" y="683" width="300" height="225"/>
+    <SubTexture name="desertTree" x="1512" y="456" width="300" height="225"/>
+    <SubTexture name="dog" x="1210" y="456" width="300" height="225"/>
+    <SubTexture name="eagle" x="908" y="456" width="300" height="225"/>
+    <SubTexture name="eye" x="606" y="456" width="300" height="225"/>
+    <SubTexture name="field" x="304" y="1818" width="300" height="225"/>
+    <SubTexture name="fishingBoat" x="304" y="1591" width="300" height="225"/>
+    <SubTexture name="flowers" x="304" y="1364" width="300" height="225"/>
+    <SubTexture name="goat" x="304" y="1137" width="300" height="225"/>
+    <SubTexture name="gradient" x="304" y="910" width="300" height="225"/>
+    <SubTexture name="horse" x="304" y="683" width="300" height="225"/>
+    <SubTexture name="locomotive" x="304" y="456" width="300" height="225"/>
+    <SubTexture name="mask" x="1512" y="229" width="300" height="225"/>
+    <SubTexture name="paintTools" x="1210" y="229" width="300" height="225"/>
+    <SubTexture name="park" x="908" y="229" width="300" height="225"/>
+    <SubTexture name="parktrees" x="606" y="229" width="300" height="225"/>
+    <SubTexture name="parrot" x="304" y="229" width="300" height="225"/>
+    <SubTexture name="peacock" x="2" y="1818" width="300" height="225"/>
+    <SubTexture name="rockIsland" x="2" y="1591" width="300" height="225"/>
+    <SubTexture name="roses" x="2" y="1364" width="300" height="225"/>
+    <SubTexture name="scoobidoos" x="2" y="1137" width="300" height="225"/>
+    <SubTexture name="seaside" x="2" y="910" width="300" height="225"/>
+    <SubTexture name="snake" x="2" y="683" width="300" height="225"/>
+    <SubTexture name="squirrel" x="2" y="456" width="300" height="225"/>
+    <SubTexture name="stairs" x="2" y="229" width="300" height="225"/>
+    <SubTexture name="summer" x="1512" y="2" width="300" height="225"/>
+    <SubTexture name="sunset" x="1210" y="2" width="300" height="225"/>
+    <SubTexture name="temple" x="908" y="2" width="300" height="225"/>
+    <SubTexture name="theatre" x="606" y="2" width="300" height="225"/>
+    <SubTexture name="vegetables" x="304" y="2" width="300" height="225"/>
+    <SubTexture name="zebra" x="2" y="2" width="300" height="225"/>
+</TextureAtlas>
