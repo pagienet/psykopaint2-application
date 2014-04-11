@@ -163,18 +163,18 @@ package net.psykosoft.psykopaint2.base.ui.components
 			addEventListener( MouseEvent.MOUSE_DOWN, onThisMouseDown );
 		}
 
-		private function onStageMouseUp( event:MouseEvent ):void {
-			if( hasEventListener( MouseEvent.MOUSE_UP ) ) {
+		protected function onStageMouseUp( event:MouseEvent ):void {
+			//if( hasEventListener( MouseEvent.MOUSE_UP ) ) {
 				stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-			}
-			scaleIcon( 1 );
+			//}
+			//scaleIcon( 1 );
 		}
 
-		private function onThisMouseDown( event:MouseEvent ):void {
-			if( !hasEventListener( MouseEvent.MOUSE_UP ) ) {
+		protected function onThisMouseDown( event:MouseEvent ):void {
+			//if( !hasEventListener( MouseEvent.MOUSE_UP ) ) {
 				stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-			}
-			scaleIcon( 0.98 );
+			//}
+			//scaleIcon( 0.98 );
 		}
 
 		public function get enabled():Boolean {

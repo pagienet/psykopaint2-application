@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	
 	import net.psykosoft.psykopaint2.base.ui.components.BackgroundLabel;
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
@@ -11,7 +12,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 	{
 		// Declared in Flash.
 		public var label:Sprite;
-		public var icon:MovieClip;
+		public var icon:IconButtonPaperFold;
 		public var pinMc:Sprite;
 		
 		public function IconButton() {
@@ -23,13 +24,24 @@ package net.psykosoft.psykopaint2.core.views.components.button
 
 			bgLabel.rotation = Math.random()*4-2;
 			bgLabel.randomizeLabelColor();
-			
 		}
 		
 		override public function set labelText(value:String):void{
 			super.labelText = value;
 			pinMc.x = label.x - label.width/2 +14;
 		}
+		
+		
+		override protected function onStageMouseUp( event:MouseEvent ):void {
+			super.onStageMouseUp(event);
+			icon.fold=true;
+		}
+		
+		override protected function onThisMouseDown( event:MouseEvent ):void {
+			super.onThisMouseDown(event);
+			icon.fold=false;
+		}
+		
 		
 		override protected function updateSelected():void {
 			var label:BackgroundLabel = _label as BackgroundLabel;

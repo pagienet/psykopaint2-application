@@ -2,18 +2,18 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 {
 
 	import com.greensock.plugins.ColorMatrixFilterPlugin;
+	import com.greensock.plugins.FramePlugin;
 	import com.greensock.plugins.TweenPlugin;
-
+	
 	import flash.display.Stage;
-
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
-
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.KeyDebuggingManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.MemoryWarningManager;
-
+	
 	import robotlegs.bender.bundles.mvcs.Command;
 
 	public class InitManagersCommand extends Command
@@ -58,7 +58,7 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 
 			// Tweens.
 			// Used to color button labels.
-			TweenPlugin.activate( [ ColorMatrixFilterPlugin ] );
+			TweenPlugin.activate( [ ColorMatrixFilterPlugin ,FramePlugin]);
 
 		}
 	}
