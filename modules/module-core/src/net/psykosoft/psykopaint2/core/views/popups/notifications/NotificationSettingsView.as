@@ -22,7 +22,8 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 		public var leftSide:Sprite;
 		private var _backButton:IconButtonAlt;
 
-		public var popUpWantsToCloseSignal:Signal = new Signal();
+		public const popUpWantsToCloseSignal:Signal = new Signal();
+		public const settingsChangedSignal:Signal = new Signal();
 
 		public function NotificationSettingsView()
 		{
@@ -60,7 +61,7 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 
 		private function onSettingsChange(event:Event):void
 		{
-			// dispatch new state and send to server
+			settingsChangedSignal.dispatch();
 		}
 	}
 }

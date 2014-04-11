@@ -33,6 +33,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.services.ANECameraRollService;
 	import net.psykosoft.psykopaint2.core.services.CameraRollService;
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
+	import net.psykosoft.psykopaint2.core.services.PushNotificationService;
 	import net.psykosoft.psykopaint2.core.services.SampleImageService;
 	import net.psykosoft.psykopaint2.core.services.XMLSampleImageService;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
@@ -205,7 +206,9 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map(GalleryService).toSingleton(AMFGalleryService);
 			_injector.map(CameraRollService).toSingleton(ANECameraRollService);
 			_injector.map(SampleImageService).toSingleton(XMLSampleImageService);
-		
+
+			_injector.map(PushNotificationService).asSingleton();
+
 		}
 
 		// -----------------------
