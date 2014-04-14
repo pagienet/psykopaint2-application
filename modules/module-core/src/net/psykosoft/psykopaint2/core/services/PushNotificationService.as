@@ -10,7 +10,6 @@ package net.psykosoft.psykopaint2.core.services
 	import flash.net.URLRequest;
 	import flash.net.URLRequestDefaults;
 	import flash.net.URLRequestMethod;
-	import flash.net.URLVariables;
 	import flash.notifications.NotificationStyle;
 	import flash.notifications.RemoteNotifier;
 	import flash.notifications.RemoteNotifierSubscribeOptions;
@@ -29,8 +28,8 @@ package net.psykosoft.psykopaint2.core.services
 
 		private static const PROVIDER_HOST_NAME : String = "go.urbanairship.com";
 		private static const PROVIDER_TOKEN_URL : String = "https://" + PROVIDER_HOST_NAME + "/api/device_tokens/";
-		private static const APP_KEY : String = "IowU3jExSaSB7Qgf6MzptQ";
-		private static const APP_SECRET : String = "Fg-KLSLdSg2zxB493hXTSQ";
+		private static const APP_KEY : String = "TBIsu8fQTYea2qRbEQLrQw";
+		private static const APP_SECRET : String = "X2Ula0ROQFWSCOXlpZ9hEw";
 
 		private var _remoteNotifier : RemoteNotifier;
 		private var _supportsNotifications : Boolean;
@@ -132,7 +131,7 @@ package net.psykosoft.psykopaint2.core.services
 			var data : String = "";
 
 			if (loggedInUserProxy.isLoggedIn()) {
-				data = "?alies=UID_" + loggedInUserProxy.userID;
+				data = "?alias=UID_" + loggedInUserProxy.userID;
 			}
 
 			var urlRequest : URLRequest = new URLRequest(PROVIDER_TOKEN_URL + event.tokenId + data);
@@ -169,7 +168,7 @@ package net.psykosoft.psykopaint2.core.services
 		private function onLoadComplete(event:Event):void
 		{
 			removeListeners(URLLoader(event.target));
-			trace ("Logged in to notification provider.");
+			trace ("Logged in to notification provider. Response: " + URLLoader(event.target).data);
 		}
 
 		private function onNotificationReceived(event:RemoteNotificationEvent):void
