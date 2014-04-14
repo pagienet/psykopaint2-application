@@ -1,5 +1,6 @@
 package net.psykosoft.psykopaint2.core.services
 {
+	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.RemoteNotificationEvent;
@@ -12,19 +13,51 @@ package net.psykosoft.psykopaint2.core.services
 	import flash.notifications.RemoteNotifier;
 	import flash.notifications.RemoteNotifierSubscribeOptions;
 
+	import org.osflash.signals.Signal;
+
 	public class PushNotificationService
 	{
-		private static var PROVIDER_HOST_NAME : String = "go.urbanairship.com";
-		private static var PROVIDER_TOKEN_URL : String = "https://" + PROVIDER_HOST_NAME + "/api/device_tokens/";
-		private static var APP_KEY : String = "IowU3jExSaSB7Qgf6MzptQ";
-		private static var APP_SECRET : String = "Fg-KLSLdSg2zxB493hXTSQ";
+		[Inject]
+		public var stage : Stage;
+
+		private static const PROVIDER_HOST_NAME : String = "go.urbanairship.com";
+		private static const PROVIDER_TOKEN_URL : String = "https://" + PROVIDER_HOST_NAME + "/api/device_tokens/";
+		private static const APP_KEY : String = "IowU3jExSaSB7Qgf6MzptQ";
+		private static const APP_SECRET : String = "Fg-KLSLdSg2zxB493hXTSQ";
 
 		private var _remoteNotifier : RemoteNotifier;
 		private var _supportsNotifications : Boolean;
+		private var _subscribed:Boolean;
+		private var _subsribeOptions:RemoteNotifierSubscribeOptions;
+
+		public const subscriptionFailed : Signal = new Signal();
 
 		public function PushNotificationService()
 		{
+		}
+
+		[PostConstruct]
+		public function init() : void
+		{
+			_remoteNotifier = new RemoteNotifier();
+			_remoteNotifier.addEventListener(RemoteNotificationEvent.TOKEN, onRemoteNotificationToken);
+			_remoteNotifier.addEventListener(RemoteNotificationEvent.NOTIFICATION, onNotificationReceived);
+			_remoteNotifier.addEventListener(StatusEvent.STATUS, onStatus);
+			_subsribeOptions = new RemoteNotifierSubscribeOptions();
+			var preferredStyles : Vector.<String> = new Vector.<String>();
+			preferredStyles.push(NotificationStyle.ALERT, NotificationStyle.BADGE, NotificationStyle.SOUND);
+			_subsribeOptions.notificationStyles = preferredStyles;
+
 			checkSupport();
+
+			stage.addEventListener(Event.ACTIVATE, onActivate);
+		}
+
+		// Apple's recommendation: subscribe on activate
+		private function onActivate(event:Event):void
+		{
+			if (_subscribed)
+				subscribe();
 		}
 
 		public function get supportsNotifications():Boolean
@@ -44,33 +77,24 @@ package net.psykosoft.psykopaint2.core.services
 
 		public function subscribe():void
 		{
-			if (!_supportsNotifications)
+			_subscribed = true;
+			_remoteNotifier.subscribe(_subsribeOptions);
+		}
+
+		public function unsubscribe() : void
+		{
+			if (!_supportsNotifications || !_subscribed)
 				return;
 
-			_remoteNotifier = new RemoteNotifier();
-			_remoteNotifier.addEventListener(RemoteNotificationEvent.TOKEN, onRemoteNotificationToken);
-			_remoteNotifier.addEventListener(StatusEvent.STATUS, onStatus);
+			_subscribed = false;
 
-			var options : RemoteNotifierSubscribeOptions = new RemoteNotifierSubscribeOptions();
-			options.notificationStyles = Vector.<String>([ NotificationStyle.ALERT, NotificationStyle.BADGE, NotificationStyle.SOUND ]);
-
-			_remoteNotifier.subscribe(options);
+			_remoteNotifier.unsubscribe();
 		}
 
 		private function onStatus(event:StatusEvent):void
 		{
 			trace("Notification status:\nEvent Level" + event.level +"\nEvent code " + event.code);
-		}
-
-		public function unsubscribe() : void
-		{
-			if (!_supportsNotifications || !_remoteNotifier)
-				return;
-
-			_remoteNotifier.removeEventListener(RemoteNotificationEvent.TOKEN, onRemoteNotificationToken);
-			_remoteNotifier.removeEventListener(StatusEvent.STATUS, onStatus);
-			_remoteNotifier.unsubscribe();
-			_remoteNotifier = null;
+			subscriptionFailed.dispatch();
 		}
 
 		private function onRemoteNotificationToken(event:RemoteNotificationEvent):void
@@ -105,12 +129,15 @@ package net.psykosoft.psykopaint2.core.services
 		{
 			removeListeners(URLLoader(event.target));
 			trace ("Logged in to notification provider.");
-			_remoteNotifier.addEventListener(RemoteNotificationEvent.NOTIFICATION, onNotificationReceived);
 		}
 
 		private function onNotificationReceived(event:RemoteNotificationEvent):void
 		{
-			trace ("Received notification: " + event.data);
+			trace ("Received notification: ");
+
+			for (var field:String in event.data) {
+				trace(field + ":  " + event.data[field]);
+			}
 		}
 	}
 }

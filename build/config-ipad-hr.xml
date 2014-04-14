@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <application xmlns="http://ns.adobe.com/air/application/4.0">
-    <id>com.psykosoft.psykopaint</id>
+    <id>com.psykopaint.app</id>
     <filename>Psykopaint2</filename>
     <name>Pp2-0.7.40</name>
     <versionNumber>0.7.40</versionNumber>
@@ -27,6 +27,12 @@
 			<string>UIStatusBarStyleLightContent</string>
             ]]>
         </InfoAdditions>
+		<Entitlements>
+            <![CDATA[ 
+            <key>aps-environment</key> 
+            <string>production</string> 
+            ]]> 
+        </Entitlements>
         <requestedDisplayResolution>high</requestedDisplayResolution>
     </iPhone>
     <extensions>

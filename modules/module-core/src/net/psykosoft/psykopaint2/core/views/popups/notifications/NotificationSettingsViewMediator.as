@@ -23,8 +23,17 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 		{
 			super.initialize();
 			registerView(view);
+			pushNotificationService.subscriptionFailed.add(onSubscriptionFailed);
 			view.popUpWantsToCloseSignal.add(onRequestClose);
 			view.settingsChangedSignal.add(onSettingsChanged);
+		}
+
+		override public function destroy():void
+		{
+			super.destroy();
+			pushNotificationService.subscriptionFailed.remove(onSubscriptionFailed);
+			view.popUpWantsToCloseSignal.remove(onRequestClose);
+			view.settingsChangedSignal.remove(onSettingsChanged);
 		}
 
 		private function onSettingsChanged():void
@@ -35,10 +44,9 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 				pushNotificationService.unsubscribe();
 		}
 
-		override public function destroy():void
+		private function onSubscriptionFailed():void
 		{
-			super.destroy();
-			view.popUpWantsToCloseSignal.remove(onRequestClose);
+			view.checkbox.selected = false;
 		}
 
 		private function onRequestClose():void
