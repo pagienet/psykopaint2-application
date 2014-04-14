@@ -165,7 +165,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		protected function onStageMouseUp( event:MouseEvent ):void {
 			//if( hasEventListener( MouseEvent.MOUSE_UP ) ) {
-				stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			_stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			//}
 			//scaleIcon( 1 );
 		}

@@ -10,9 +10,12 @@ package net.psykosoft.psykopaint2.core.services
 	import flash.net.URLRequest;
 	import flash.net.URLRequestDefaults;
 	import flash.net.URLRequestMethod;
+	import flash.net.URLVariables;
 	import flash.notifications.NotificationStyle;
 	import flash.notifications.RemoteNotifier;
 	import flash.notifications.RemoteNotifierSubscribeOptions;
+
+	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 
 	import org.osflash.signals.Signal;
 
@@ -20,6 +23,9 @@ package net.psykosoft.psykopaint2.core.services
 	{
 		[Inject]
 		public var stage : Stage;
+
+		[Inject]
+		public var loggedInUserProxy : LoggedInUserProxy;
 
 		private static const PROVIDER_HOST_NAME : String = "go.urbanairship.com";
 		private static const PROVIDER_TOKEN_URL : String = "https://" + PROVIDER_HOST_NAME + "/api/device_tokens/";
@@ -41,6 +47,7 @@ package net.psykosoft.psykopaint2.core.services
 		[PostConstruct]
 		public function init() : void
 		{
+			loggedInUserProxy.onChange.add(onLoggedInUserChanged);
 			_sharedObject = SharedObject.getLocal("notificationSettings");
 
 			_remoteNotifier = new RemoteNotifier();
@@ -58,6 +65,12 @@ package net.psykosoft.psykopaint2.core.services
 			checkSupport();
 
 			stage.addEventListener(Event.ACTIVATE, onActivate);
+		}
+
+		private function onLoggedInUserChanged():void
+		{
+			if (isSubscribed)
+				subscribe();
 		}
 
 		public function get isSubscribed():Boolean
@@ -116,8 +129,20 @@ package net.psykosoft.psykopaint2.core.services
 		private function onRemoteNotificationToken(event:RemoteNotificationEvent):void
 		{
 			trace ("Push notification token received: " + event.tokenId);
-			var urlRequest : URLRequest = new URLRequest(PROVIDER_TOKEN_URL + event.tokenId);
+			var data : String = "";
 
+			if (loggedInUserProxy.isLoggedIn()) {
+				data = "?alies=UID_" + loggedInUserProxy.userID;
+			}
+
+			var urlRequest : URLRequest = new URLRequest(PROVIDER_TOKEN_URL + event.tokenId + data);
+			/*var data : URLVariables = new URLVariables();
+
+			if (loggedInUserProxy.isLoggedIn()) {
+				data.alias = "UID_" + loggedInUserProxy.userID;
+			}
+
+			urlRequest.data = data;*/
 			urlRequest.authenticate = true;
 			urlRequest.method = URLRequestMethod.PUT;
 			URLRequestDefaults.setLoginCredentialsForHost(PROVIDER_HOST_NAME, APP_KEY, APP_SECRET);
