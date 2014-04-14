@@ -132,7 +132,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function onZoomUpdate(ratio : Number) : void
 		{
 			notifyGalleryZoomRatioSignal.dispatch(ratio);
-			requestNavigationToggleSignal.dispatch(ratio > .9? -1 : 1);
+			requestNavigationToggleSignal.dispatch(ratio > .9? -1 : 1, true);
 		}
 
 		private function requestImageCollection(source : int, index : int, amount : int) : void

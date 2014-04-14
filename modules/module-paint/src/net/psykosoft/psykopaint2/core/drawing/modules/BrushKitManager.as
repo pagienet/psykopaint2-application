@@ -431,16 +431,16 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private function revealHiddenNavigation() : void
 		{
-			requestNavigationToggleSignal.dispatch(1);
+			requestNavigationToggleSignal.dispatch(1,true);
 			_navigationWasHiddenByPainting = false;
 		}
 		
 		protected function onPaintOverNavCheck(event:Event):void
 		{
-			if ( _view.mouseY > 550 )
+			if (_canvasMatrix.a > 0.74 && _view.mouseY > 550 )
 			{
 			
-				requestNavigationToggleSignal.dispatch(-1);
+				requestNavigationToggleSignal.dispatch(-1,false);
 				_view.removeEventListener(Event.ENTER_FRAME, onPaintOverNavCheck );
 				_navigationWasHiddenByPainting = true;
 			}

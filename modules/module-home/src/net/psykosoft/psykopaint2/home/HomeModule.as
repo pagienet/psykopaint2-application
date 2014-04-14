@@ -97,7 +97,7 @@ package net.psykosoft.psykopaint2.home
 		{
 //			_coreModule.injector.getInstance(RequestHideSplashScreenSignal).dispatch();
 			// TODO: this probably needs to be moved to some activation command
-			_coreModule.injector.getInstance(RequestNavigationToggleSignal).dispatch(1);
+			_coreModule.injector.getInstance(RequestNavigationToggleSignal).dispatch(1, true);
 			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.HOME);
 		}
 

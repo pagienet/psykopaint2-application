@@ -67,7 +67,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onViewPositionChanged(position : Number):void
 		{
-			notifyNavigationPositionChangedSignal.dispatch( position );
+			if ( _autoCenter ) notifyNavigationPositionChangedSignal.dispatch( position );
 		}
 
 		private function onViewHiding():void {
@@ -88,7 +88,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			notifyNavigationToggledSignal.dispatch( true );
 		}
 
-		private function onToggleRequest( value:int ):void {
+		private function onToggleRequest( value:int, autoCenter:Boolean ):void {
+			_autoCenter = autoCenter;
 			if( value == 1 ) view.panel.show();
 			else if( value == -1 ) view.panel.hide();
 			else view.panel.toggle();
@@ -105,6 +106,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private const ACCEPT_TAP_GESTURES_FOR_SHOW_HIDE:Boolean = true;
 		private const ALWAYS_SHOW_HIDE:Boolean = false;
+		private var _autoCenter:Boolean = true;
 
 		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
 
