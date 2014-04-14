@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.base.utils.images
 
 	public class BitmapDataUtils
 	{
-		static public function aspectRatioMatches( map:BitmapData, targetRatio : Number, errorMargin : Number = .007 ) : Boolean
+		static public function aspectRatioMatches( map:BitmapData, targetRatio : Number, errorMargin : Number = .036 ) : Boolean
 		{
 			return Math.abs(map.width/map.height - targetRatio) < errorMargin;
 		}
