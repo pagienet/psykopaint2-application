@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.services
 	import flash.events.IOErrorEvent;
 	import flash.events.RemoteNotificationEvent;
 	import flash.events.StatusEvent;
+	import flash.net.SharedObject;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestDefaults;
@@ -27,10 +28,11 @@ package net.psykosoft.psykopaint2.core.services
 
 		private var _remoteNotifier : RemoteNotifier;
 		private var _supportsNotifications : Boolean;
-		private var _subscribed:Boolean;
 		private var _subsribeOptions:RemoteNotifierSubscribeOptions;
+		private var _sharedObject:SharedObject;
 
 		public const subscriptionFailed : Signal = new Signal();
+
 
 		public function PushNotificationService()
 		{
@@ -39,6 +41,8 @@ package net.psykosoft.psykopaint2.core.services
 		[PostConstruct]
 		public function init() : void
 		{
+			_sharedObject = SharedObject.getLocal("notificationSettings");
+
 			_remoteNotifier = new RemoteNotifier();
 			_remoteNotifier.addEventListener(RemoteNotificationEvent.TOKEN, onRemoteNotificationToken);
 			_remoteNotifier.addEventListener(RemoteNotificationEvent.NOTIFICATION, onNotificationReceived);
@@ -48,15 +52,23 @@ package net.psykosoft.psykopaint2.core.services
 			preferredStyles.push(NotificationStyle.ALERT, NotificationStyle.BADGE, NotificationStyle.SOUND);
 			_subsribeOptions.notificationStyles = preferredStyles;
 
+			if (isSubscribed)
+				subscribe();
+
 			checkSupport();
 
 			stage.addEventListener(Event.ACTIVATE, onActivate);
 		}
 
+		public function get isSubscribed():Boolean
+		{
+			return _sharedObject.data.isSubscribed;
+		}
+
 		// Apple's recommendation: subscribe on activate
 		private function onActivate(event:Event):void
 		{
-			if (_subscribed)
+			if (isSubscribed)
 				subscribe();
 		}
 
@@ -77,16 +89,18 @@ package net.psykosoft.psykopaint2.core.services
 
 		public function subscribe():void
 		{
-			_subscribed = true;
+			_sharedObject.data.isSubscribed = true;
+			_sharedObject.flush();
 			_remoteNotifier.subscribe(_subsribeOptions);
 		}
 
 		public function unsubscribe() : void
 		{
-			if (!_supportsNotifications || !_subscribed)
+			if (!_supportsNotifications || !isSubscribed)
 				return;
 
-			_subscribed = false;
+			_sharedObject.data.isSubscribed = false;
+			_sharedObject.flush();
 
 			_remoteNotifier.unsubscribe();
 		}
@@ -94,6 +108,8 @@ package net.psykosoft.psykopaint2.core.services
 		private function onStatus(event:StatusEvent):void
 		{
 			trace("Notification status:\nEvent Level" + event.level +"\nEvent code " + event.code);
+			_sharedObject.data.isSubscribed = false;
+			_sharedObject.flush();
 			subscriptionFailed.dispatch();
 		}
 

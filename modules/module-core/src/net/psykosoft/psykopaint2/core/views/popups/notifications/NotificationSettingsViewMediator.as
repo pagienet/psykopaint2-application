@@ -26,6 +26,7 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 			pushNotificationService.subscriptionFailed.add(onSubscriptionFailed);
 			view.popUpWantsToCloseSignal.add(onRequestClose);
 			view.settingsChangedSignal.add(onSettingsChanged);
+			view.checkbox.selected = pushNotificationService.isSubscribed;
 		}
 
 		override public function destroy():void
