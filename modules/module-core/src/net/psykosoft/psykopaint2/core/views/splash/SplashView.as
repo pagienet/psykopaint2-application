@@ -16,9 +16,9 @@ package net.psykosoft.psykopaint2.core.views.splash
 	public class SplashView extends Sprite
 	{
 		// TODO: embed lower res on non retina?
-		[Embed(source="../../../../../../../../../modules/module-core/assets/embedded/images/launch/ipad-hr/Default-Landscape@2x.png")]
+		[Embed(source="../../../../../../../../../modules/module-core/assets/embedded/images/launch/ipad-hr/Default-Landscape2x.png")]
 		public static var SplashImageAsset:Class;
-
+		
 		[Embed(source="../../../../../../../../../modules/module-core/assets/packaged/core-packaged/swf/quotes.swf", symbol="quotes")]
 		private var QuotesAsset:Class;
 
