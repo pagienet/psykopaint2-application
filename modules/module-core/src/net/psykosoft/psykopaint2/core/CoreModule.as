@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.configuration.CoreConfig;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.services.PushNotificationService;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCoreModuleBootstrapSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFrameUpdateSignal;
@@ -75,6 +76,9 @@ package net.psykosoft.psykopaint2.core
 			// Request bootstrap.
 			_coreConfig.injector.getInstance( NotifyCoreModuleBootstrapCompleteSignal ).add( onBootstrapComplete );
 			_coreConfig.injector.getInstance( RequestCoreModuleBootstrapSignal ).dispatch();
+
+			// make sure it exists on startup
+			_coreConfig.injector.getInstance( PushNotificationService );
 		}
 
 		private function onBootstrapComplete():void {

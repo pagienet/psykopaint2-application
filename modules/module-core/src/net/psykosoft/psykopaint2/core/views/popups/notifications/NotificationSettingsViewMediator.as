@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.views.popups.notifications
 {
-	import net.psykosoft.psykopaint2.core.services.PushNotificationService;
+	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
+	import net.psykosoft.psykopaint2.core.models.NotificationSubscriptionType;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
@@ -13,7 +14,7 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 		public var requestHidePopUpSignal:RequestHidePopUpSignal;
 
 		[Inject]
-		public var pushNotificationService : PushNotificationService;
+		public var loggedInUserProxy : LoggedInUserProxy;
 
 		public function NotificationSettingsViewMediator()
 		{
@@ -23,31 +24,49 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 		{
 			super.initialize();
 			registerView(view);
-			pushNotificationService.subscriptionFailed.add(onSubscriptionFailed);
+			loggedInUserProxy.onChange.add(onUserChange);
 			view.popUpWantsToCloseSignal.add(onRequestClose);
 			view.settingsChangedSignal.add(onSettingsChanged);
-			view.checkbox.selected = pushNotificationService.isSubscribed;
+			updateUI();
 		}
 
 		override public function destroy():void
 		{
 			super.destroy();
-			pushNotificationService.subscriptionFailed.remove(onSubscriptionFailed);
+			loggedInUserProxy.onChange.remove(onUserChange);
 			view.popUpWantsToCloseSignal.remove(onRequestClose);
 			view.settingsChangedSignal.remove(onSettingsChanged);
 		}
 
-		private function onSettingsChanged():void
+		private function onUserChange():void
 		{
-			if (view.checkbox.selected)
-				pushNotificationService.subscribe();
-			else
-				pushNotificationService.unsubscribe();
+			updateUI();
+		}
+
+		private function onSettingsChanged(type : int, value : Boolean):void
+		{
+			enableUI(false);
+			loggedInUserProxy.subscribeNotification(type, value, onSubscriptionSuccess, onSubscriptionFailed);
+		}
+
+		private function onSubscriptionSuccess():void
+		{
+			enableUI(true);
+		}
+
+		private function enableUI(value : Boolean):void
+		{
+			view.likesCheckbox.enabled = value;
 		}
 
 		private function onSubscriptionFailed():void
 		{
-			view.checkbox.selected = false;
+			updateUI();
+		}
+
+		private function updateUI():void
+		{
+			view.likesCheckbox.selected = loggedInUserProxy.hasNotificationSubscription(NotificationSubscriptionType.FAVORITE_PAINTING);
 		}
 
 		private function onRequestClose():void

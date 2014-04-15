@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 
+	import net.psykosoft.psykopaint2.core.models.NotificationSubscriptionType;
+
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButtonAlt;
@@ -18,12 +20,12 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 	{
 		// Declared in Flash.
 		public var bg:Sprite;
-		public var checkbox:CheckBox;
+		public var likesCheckbox:CheckBox;
 		public var leftSide:Sprite;
 		private var _backButton:IconButtonAlt;
 
 		public const popUpWantsToCloseSignal:Signal = new Signal();
-		public const settingsChangedSignal:Signal = new Signal();
+		public const settingsChangedSignal:Signal = new Signal(int, Boolean);	// notification type, subscribed or not
 
 		public function NotificationSettingsView()
 		{
@@ -37,7 +39,7 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 
 		private function initUI():void
 		{
-			checkbox = createCheckbox(670, 254);
+			likesCheckbox = createCheckbox(670, 254, onLikeChanged);
 		}
 
 		override protected function onDisabled():void
@@ -49,19 +51,19 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 			popUpWantsToCloseSignal.dispatch();
 		}
 
-		private function createCheckbox(x : Number, y : Number):CheckBox
+		private function createCheckbox(x : Number, y : Number, callBack : Function):CheckBox
 		{
 			var checkbox : CheckBox = new CheckBox();
 			checkbox.x = x;
 			checkbox.y = y;
-			checkbox.addEventListener(Event.CHANGE, onSettingsChange);
+			checkbox.addEventListener(Event.CHANGE, callBack);
 			addChild(checkbox);
 			return checkbox;
 		}
 
-		private function onSettingsChange(event:Event):void
+		private function onLikeChanged(event:Event):void
 		{
-			settingsChangedSignal.dispatch();
+			settingsChangedSignal.dispatch(NotificationSubscriptionType.FAVORITE_PAINTING, likesCheckbox.selected);
 		}
 	}
 }

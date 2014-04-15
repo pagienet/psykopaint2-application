@@ -114,7 +114,7 @@ package net.psykosoft.psykopaint2.core.services
 							);
 		}
 
-		public function passwordReset( email:String, onSuccess:Function, onFail:Function ):void {
+		public function requestResetPassword( email:String, onSuccess:Function, onFail:Function ):void {
 			_connection.call( "Main/passwordReset", new Responder( onSuccess, onFail ), email );
 		}
 
@@ -161,8 +161,14 @@ package net.psykosoft.psykopaint2.core.services
 			return MD5.hash(email + MD5.hash(password));
 		}
 
-		public function setProfileImage( sessionId:String, imageBytes:ByteArray, thumbnailBytes:ByteArray ):void {
+		public function setProfileImage(sessionId:String, imageBytes:ByteArray, thumbnailBytes:ByteArray) : void
+		{
 			_connection.call( "Main/setProfileImage", null, sessionId, imageBytes, thumbnailBytes );
+		}
+
+		public function updateSubscription(sessionID:String, type:int, subscribe:Boolean, onSuccess:Function, onFail:Function):void
+		{
+			_connection.call( "Main/subscribeNotification", new Responder(onSuccess, onFail), sessionID, type, subscribe );
 		}
 	}
 }
