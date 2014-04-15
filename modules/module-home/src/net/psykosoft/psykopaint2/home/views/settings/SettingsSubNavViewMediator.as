@@ -55,9 +55,17 @@ package net.psykosoft.psykopaint2.home.views.settings
 					break;
 
 				case SettingsSubNavView.ID_NOTIFICATION_SETTINGS:
-					requestShowPopUpSignal.dispatch(PopUpType.NOTIFICATION_SETTINGS);
+					handleNotificationsClicked();
 					break;
 			}
+		}
+
+		private function handleNotificationsClicked():void
+		{
+			if (loggedInUserProxy.isLoggedIn())
+				requestShowPopUpSignal.dispatch(PopUpType.NOTIFICATION_SETTINGS);
+			else
+				requestShowPopUpSignal.dispatch(PopUpType.LOGIN);
 		}
 
 		private function handleLogInClicked():void
