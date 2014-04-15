@@ -26,10 +26,6 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			bgLabel.randomizeLabelColor();
 		}
 		
-		override public function set labelText(value:String):void{
-			super.labelText = value;
-			pinMc.x = label.x - label.width/2 +14;
-		}
 		
 		
 		override protected function onStageMouseUp( event:MouseEvent ):void {
@@ -40,6 +36,11 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		override protected function onThisMouseDown( event:MouseEvent ):void {
 			super.onThisMouseDown(event);
 			icon.fold=false;
+		}
+		
+		override public function set labelText(value:String):void{
+			super.labelText = value;
+			pinMc.x = label.x - label.width/2 +14;
 		}
 		
 		
