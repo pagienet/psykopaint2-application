@@ -26,10 +26,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public function setBgType( type:String ):void {
 			_type = type;
 			gotoAndStop( type );
-			if ( type == BG_TYPE_WOOD || type == BG_TYPE_WOOD_LOW)
+			/*if ( type == BG_TYPE_WOOD || type == BG_TYPE_WOOD_LOW)
 			{
 				((getChildAt(0) as Sprite).getChildByName("woodBgShadow") as Sprite).mouseEnabled = false;
-			}
+			}*/
 		}
 	}
 }

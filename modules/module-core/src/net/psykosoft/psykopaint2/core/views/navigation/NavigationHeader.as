@@ -19,7 +19,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		public function setTitle( value:String ):void {
-
+			
+			visible = false;
+			/* MATHIEU: BYPASS THAT, DON'T NEED IT
 			TweenLite.killTweensOf( bg );
 			y = lowerEdge + bg.height;
 
@@ -40,7 +42,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			bg.width = tf.width + 50;
 			bg.x = -bg.width / 2 + 5;
 
-			animateHeaderIn();
+			animateHeaderIn();*/
 		}
 
 		private function animateHeaderIn():void {
