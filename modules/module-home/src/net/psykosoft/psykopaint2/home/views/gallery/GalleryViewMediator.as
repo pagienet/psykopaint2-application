@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.NetworkFailureGalleryImageProxy;
-	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;

@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
@@ -65,7 +66,14 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function updateMenu() : void
 		{
 			updateLoveButton();
+			updateShareButton();
 			updateUserProfileButton();
+		}
+
+		private function updateShareButton():void
+		{
+			var painting : GalleryImageProxy = activePaintingModel.painting;
+			view.enableButtonWithId(GalleryPaintingSubNavView.ID_SHARE, painting.collectionType != GalleryType.NONE);
 		}
 
 		private function updateUserProfileButton():void
@@ -73,7 +81,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			var painting : GalleryImageProxy = activePaintingModel.painting;
 			if (painting) {
 				view.setUserProfile(painting.userName, painting.userThumbnailURL);
-				view.getRightButton().visible = true;
+				view.getRightButton().visible = painting.collectionType != GalleryType.NONE;
 			}
 			else {
 				view.getRightButton().visible = false;
@@ -85,7 +93,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			var painting : GalleryImageProxy = activePaintingModel.painting;
 
 			if (painting) {
-				view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, true);
+				view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, painting.collectionType != GalleryType.NONE);
 				var label : String = !loggedInUser.isLoggedIn() || (!painting.isFavorited && painting.userID != loggedInUser.userID)? "LOVE" : "UNLOVE";
 				view.relabelButtonWithId(GalleryPaintingSubNavView.ID_LOVE, label, null);
 			}
