@@ -41,6 +41,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
 	import net.psykosoft.psykopaint2.home.model.GalleryImageCache;
 
@@ -118,6 +119,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
 			_imageCache.loadingComplete.add(onThumbnailLoadingComplete);
 			_container = new ObjectContainer3D();
+			_container.x = -PAINTING_OFFSET;
 			_container.y = PAINTING_Y;
 			_container.z = PAINTING_Z;
 			_container.rotationY = 180;
@@ -368,7 +370,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function mousePosInFocusedPainting():Boolean
 		{
-			var painting:Mesh = _paintings[_activeImageProxy.index];
+			// _activeImageProxy can be null for error message 'paintings'
+			var index : int = _activeImageProxy? _activeImageProxy.index : 0;
+			var painting:Mesh = _paintings[index];
 			var paintingPosition:Vector3D = _view.camera.project(painting.scenePosition);
 			var matrix:Vector.<Number> = _view.camera.lens.matrix.rawData;
 			var z:Number = _view.camera.z - PAINTING_Z;
@@ -533,6 +537,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_lowQualityMaterials.length = _numPaintings;
 			updateVisibility();
 			_imageCache.replaceCollection(collection);
+			_activeImageProxy = null;
 
 			_minSwipe = -PAINTING_OFFSET;
 			_maxSwipe = -(PAINTING_OFFSET - (_numPaintings - 1) * PAINTING_SPACING);
@@ -547,7 +552,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			var i:int;
 
 			if (visibleStart < 0) visibleStart = 0;
+			if (visibleStart >= _numPaintings) visibleStart = _numPaintings;
 			if (visibleEnd >= _numPaintings) visibleEnd = _numPaintings;
+
 
 			for (i = _visibleStartIndex; i < visibleStart; ++i) {
 				if (_paintings[i]) {
