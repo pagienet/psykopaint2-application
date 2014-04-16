@@ -48,7 +48,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		public function start(priority : int = 0, exclusive : Boolean = false) : void
 		{
-
 			if (!_started) {
 				_exclusive = exclusive;
 				_touchID = -1;
@@ -81,7 +80,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function onMouseDown(event : MouseEvent) : void
 		{
-			
 			if (beginGrabThrow(event.stageX, event.stageY)) {
 				if (_exclusive) event.stopImmediatePropagation();
 				_stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove, false, _priority);

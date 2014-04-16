@@ -537,7 +537,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_lowQualityMaterials.length = _numPaintings;
 			updateVisibility();
 			_imageCache.replaceCollection(collection);
-			_activeImageProxy = null;
+
+			if (collection.type == GalleryType.NONE)
+				_activeImageProxy = null;
 
 			_minSwipe = -PAINTING_OFFSET;
 			_maxSwipe = -(PAINTING_OFFSET - (_numPaintings - 1) * PAINTING_SPACING);
