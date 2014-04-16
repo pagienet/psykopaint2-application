@@ -10,7 +10,6 @@ package net.psykosoft.psykopaint2.core.views.components.button
 	{
 		public var paperFoldMc:MovieClip;
 		private var _folded:Boolean = true;
-		private var _paperFoldMcInitX:Number;
 		
 		public function IconButtonPaperFold()
 		{
@@ -19,25 +18,11 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			this.mouseChildren = false;
 			this.mouseEnabled = false;
 			
-			this.addEventListener(Event.ADDED_TO_STAGE,onAdded);
 		}
-		
-		protected function onAdded(event:Event):void
-		{
-			
-			//if(!_paperFoldMcInitX){
-				//_paperFoldMcInitX = paperFoldMc.x;
-			//}
-		}		
-		
 		
 		public  function set fold(value:Boolean):void{
 			
 			
-			//if(!_paperFoldMcInitX){
-				//_paperFoldMcInitX = paperFoldMc.x;
-			//}
-				
 			trace("fold = "+value);
 			if(value==true){
 				_folded = true;
