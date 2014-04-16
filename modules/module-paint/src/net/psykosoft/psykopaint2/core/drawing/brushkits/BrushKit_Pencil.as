@@ -21,6 +21,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 	public class BrushKit_Pencil extends BrushKit
 	{
+		
+		private static const STYLE_DEFAULT:int=0;
+		private static const STYLE_PENCIL_SKETCH:int=1;
+		private static const STYLE_AUTO_GRID:int = 2;
+		private static const STYLE_SPRAY:int = 3;
+		//private static const STYLE_ROUGH_SQUARE:int = 1;
+		
+		
 		private var sizeDecorator:SizeDecorator;
 		private var colorDecorator:ColorDecorator;
 		private var spawnDecorator:SpawnDecorator;
@@ -28,6 +36,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var param_precision:PsykoParameter;
 		private var param_intensity:PsykoParameter;
 		private var gridDecorator:GridDecorator;
+		
 		
 		public function BrushKit_Pencil()
 		{
@@ -45,7 +54,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			(brushEngine as SketchBrush).param_surfaceRelief.numberValue = 0.2;
 			brushEngine.param_bumpiness.numberValue = 0;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.25;
-			brushEngine.param_shapes.stringList = Vector.<String>(["pencilSketch"]);
+			brushEngine.param_shapes.stringList = Vector.<String>(["pencilSketch","line","line","noisy"]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -100,7 +109,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["paint1","basic"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["pencil","Sketch","grid pen","Sprayper"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -119,14 +128,118 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function onStyleChanged(event:Event):void
 		{
-			gridDecorator.active = (param_style.index == 1);
-			sizeDecorator.param_mappingFactor.numberValue = (param_style.index == 0 ? 0.2 : 0.4);
+			onPrecisionChanged(null);
+			onIntensityChanged(null);
 		}
 		
 		protected function onPrecisionChanged(event:Event):void
 		{
 			var precision:Number = param_precision.numberValue;
-			spawnDecorator.param_maxOffset.numberValue = 1 + 23* precision;
+			
+			//ASSIGN SAME INDEX FOR SHAPE AS STYLE
+			brushEngine.param_shapes.index = param_style.index;
+			
+			//RESET DEFAULT SETTINGS
+			gridDecorator.active = false;
+			
+			brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
+			brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 4;
+			brushEngine.pathManager.pathEngine.sendTaps = false;
+			brushEngine.textureScaleFactor = 1;
+			
+			spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_FIXED;
+			spawnDecorator.param_multiples.lowerRangeValue = 8;
+			spawnDecorator.param_multiples.upperRangeValue = 8;
+			spawnDecorator.param_minOffset.numberValue = 0.5;
+			spawnDecorator.param_maxOffset.numberValue = 12;
+			spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -1;
+			spawnDecorator.param_offsetAngleRange.upperDegreesValue = 1;
+			spawnDecorator.param_brushAngleRange.lowerDegreesValue = -2;
+			spawnDecorator.param_brushAngleRange.upperDegreesValue = 2;
+			spawnDecorator.param_bristleVariation.numberValue = 1;
+			
+			colorDecorator.param_pickRadius.lowerRangeValue = 0.4;
+			colorDecorator.param_pickRadius.upperRangeValue = 0.4;
+			colorDecorator.param_brushOpacity.numberValue = 0.7;
+			colorDecorator.param_brushOpacityRange.numberValue = 0;
+			colorDecorator.param_colorBlending.upperRangeValue = 0.1;
+			colorDecorator.param_colorBlending.lowerRangeValue = 0.3;
+			
+			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
+			sizeDecorator.param_invertMapping.booleanValue = false;
+			sizeDecorator.param_mappingFactor.minLimit = 0;
+			sizeDecorator.param_mappingFactor.maxLimit = 2;
+			sizeDecorator.param_mappingFactor.numberValue = 0.2;
+			sizeDecorator.param_mappingRange.numberValue = 0.05;
+			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCULAR_IN;
+			
+			
+			switch ( param_style.index )
+			{
+				case STYLE_DEFAULT:
+					
+					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCQUAD_OUT;
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
+					sizeDecorator.param_invertMapping.booleanValue = true;
+					sizeDecorator.param_mappingFactor.numberValue = 0.4;
+					
+					colorDecorator.param_brushOpacity.numberValue = 0.9;
+					colorDecorator.param_brushOpacityRange.numberValue = 0;
+					colorDecorator.param_colorBlending.upperRangeValue = 0.6;
+					colorDecorator.param_colorBlending.lowerRangeValue = 0.9;
+					
+					spawnDecorator.param_maxOffset.numberValue = 1 + 12* precision;
+					spawnDecorator.param_multiples.lowerRangeValue = 2;
+					spawnDecorator.param_multiples.upperRangeValue = 2;
+
+					break;
+				case STYLE_SPRAY:
+					
+					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCQUAD_OUT;
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
+					sizeDecorator.param_mappingFactor.minLimit = 0;
+					sizeDecorator.param_mappingFactor.maxLimit = 2;
+					sizeDecorator.param_mappingFactor.numberValue = 0.02+ 10* precision;
+					sizeDecorator.param_mappingRange.numberValue = 0.06;
+					brushEngine.textureScaleFactor = 2;
+					
+					
+					colorDecorator.param_brushOpacityRange.numberValue = 0.25;
+					colorDecorator.param_colorBlending.upperRangeValue = 0.98;
+					colorDecorator.param_colorBlending.lowerRangeValue = 0.90;
+					
+					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_FIXED;
+					spawnDecorator.param_multiplesMode.index  = SpawnDecorator.INDEX_MODE_SPEED_INV;
+					spawnDecorator.param_maxOffset.numberValue = 4;
+					spawnDecorator.param_minOffset.numberValue = 4;
+					spawnDecorator.param_multiples.lowerRangeValue = 2;
+					spawnDecorator.param_multiples.upperRangeValue = 2;
+					
+					break;
+				case STYLE_PENCIL_SKETCH:
+					//splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_FIXED;
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
+					sizeDecorator.param_mappingFactor.numberValue = 0.4;
+					
+					colorDecorator.param_pickRadius.lowerRangeValue = 0.05;
+					colorDecorator.param_pickRadius.upperRangeValue = 0.1;
+					colorDecorator.param_colorBlending.upperRangeValue = 0.1;
+					colorDecorator.param_colorBlending.lowerRangeValue = 0.2;
+					brushEngine.param_curvatureSizeInfluence.numberValue = 1;
+					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_FIXED;
+					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -30;
+					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 30;
+					
+					break;
+				case STYLE_AUTO_GRID:
+					spawnDecorator.param_maxOffset.numberValue = 1 + 23* precision;
+					//gridDecorator.active = (param_style.index == 1);
+					sizeDecorator.param_mappingFactor.numberValue = 0.4;
+					gridDecorator.active = true;
+					
+				break;
+			}
+			
 		}
 		
 		protected function onIntensityChanged(event:Event):void

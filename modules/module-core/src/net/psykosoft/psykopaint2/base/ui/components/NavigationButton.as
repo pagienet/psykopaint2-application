@@ -164,16 +164,16 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		protected function onStageMouseUp( event:MouseEvent ):void {
-			//if( hasEventListener( MouseEvent.MOUSE_UP ) ) {
-			_stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-			//}
+			if( _stage.hasEventListener( MouseEvent.MOUSE_UP ) ) {
+				_stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			}
 			//scaleIcon( 1 );
 		}
 
 		protected function onThisMouseDown( event:MouseEvent ):void {
-			//if( !hasEventListener( MouseEvent.MOUSE_UP ) ) {
-				stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-			//}
+			if( !hasEventListener( MouseEvent.MOUSE_UP ) ) {
+				_stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			}
 			//scaleIcon( 0.98 );
 		}
 
