@@ -38,5 +38,11 @@ package net.psykosoft.psykopaint2.core.models
 		function get banned() : Boolean;
 
 		function get onChange():Signal;
+		function get onSubscriptionsChanged():Signal;
+
+		function get hasNotificationSubscriptions():Boolean;
+		function hasNotificationSubscription(type : int):Boolean;
+
+		function subscribeNotification(type:int, subscribed : Boolean, onSuccess:Function, onFail:Function):void;
 	}
 }

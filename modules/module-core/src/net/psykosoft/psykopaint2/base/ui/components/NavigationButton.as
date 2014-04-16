@@ -46,8 +46,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 				_stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			}
 
-			_stage = null;
-
 			removeEventListener( MouseEvent.MOUSE_DOWN, onThisMouseDown );
 
 		}
@@ -164,9 +162,9 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		protected function onStageMouseUp( event:MouseEvent ):void {
-			if( _stage.hasEventListener( MouseEvent.MOUSE_UP ) ) {
+
+			if (_stage && _stage.hasEventListener( MouseEvent.MOUSE_UP ) )
 				_stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-			}
 			//scaleIcon( 1 );
 		}
 
