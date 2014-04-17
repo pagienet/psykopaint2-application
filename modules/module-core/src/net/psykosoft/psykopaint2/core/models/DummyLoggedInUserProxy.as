@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.core.models
 
 	import flash.utils.ByteArray;
 	import flash.utils.setTimeout;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class DummyLoggedInUserProxy implements LoggedInUserProxy
@@ -148,5 +148,15 @@ package net.psykosoft.psykopaint2.core.models
 		{
 			return _onChange;
 		}
+		
+		public function get onSubscriptionsChanged():Signal{return null};
+		public function get hasNotificationSubscriptions():Boolean{return true;};
+		public function hasNotificationSubscription(type : int):Boolean{
+			return true
+		};
+		
+		public function subscribeNotification(type:int, subscribed : Boolean, onSuccess:Function, onFail:Function):void{
+		
+		};
 	}
 }
