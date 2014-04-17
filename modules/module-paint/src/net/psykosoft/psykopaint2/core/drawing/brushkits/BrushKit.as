@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import flash.utils.Dictionary;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
+	import net.psykosoft.psykopaint2.base.utils.events.DataSendEvent;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
@@ -18,6 +19,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
+	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.IPointDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -26,10 +28,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 	public class BrushKit extends EventDispatcher
 	{
+		public static const EVENT_BRUSH_ENGINE_CHANGE:String = "EVENT_BRUSH_ENGINE_CHANGE";
 		
 		protected static var _initialized:Boolean = false;
 		protected static var _availableBrushTypes:Vector.<String>;
 		protected static var _brushClassFromBrushType:Dictionary;
+		 
 		
 		protected static function init():void
 		{
@@ -130,7 +134,37 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		public function set brushEngine( value:AbstractBrush ):void
 		{
-			_brushEngine = value;
+			//IF FIRST TIME WE ASSIGN AN ENGINE
+			if (!_brushEngine ) {
+				_brushEngine = value;
+				
+			}
+			// IF WE CHANGE ENGINE
+			else if(_brushEngine.type!=value.type){
+				
+				//ASSIGN VALUES
+				var view:DisplayObject = _brushEngine.view;
+				var context:Context3D = _brushEngine.context;
+				var canvasModel : CanvasModel= _brushEngine.canvasModel;
+				var renderer:CanvasRenderer = _brushEngine.renderer;
+				var paintSettingsModel:UserPaintSettingsModel = _brushEngine.paintSettingsModel;
+				var pathManager:PathManager = _brushEngine.pathManager;
+				
+				_brushEngine.deactivate();
+				_brushEngine = value;
+				//PASS IN THE SHAPES FROM ONE ENGINE TO THE OTHER
+				_brushEngine.param_shapes.stringList = value.param_shapes.stringList;
+				_brushEngine.pathManager= pathManager;
+				_brushEngine.activate( view, context, canvasModel, renderer, paintSettingsModel);
+				
+				trace("SET BRUSH ENGINE!!!");
+				
+				//SEND EVENT TO BRUSH KIT MANAGER
+				dispatchEvent( new DataSendEvent( EVENT_BRUSH_ENGINE_CHANGE,false,false,value ) );
+				
+			}
+			
+			
 		}
 		
 		public function get brushEngine():AbstractBrush

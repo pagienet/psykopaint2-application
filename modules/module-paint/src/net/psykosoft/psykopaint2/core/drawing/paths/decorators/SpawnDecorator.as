@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const INDEX_MODE_FIXED:int = 0;
 		static public const INDEX_MODE_RANDOM:int = 1;
 		static public const INDEX_MODE_SPEED:int = 2;
+		static public const INDEX_MODE_SPEED_INV:int = 6;
 		static public const INDEX_MODE_PRESSURE_SPEED:int = 3;
 		static public const INDEX_MODE_SIZE:int = 4;
 		static public const INDEX_MODE_SIZE_INV:int = 5;
@@ -52,8 +53,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			param_multiples       = new PsykoParameter( PsykoParameter.IntRangeParameter,PARAMETER_IR_MULTIPLES,1,4,1,16);
 			param_minOffset       = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MINIMUM_OFFSET,0,0,100);
 			param_maxOffset       = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_OFFSET,16,0,100);
-			param_offsetMode      = new PsykoParameter( PsykoParameter.StringListParameter, PARAMETER_SL_OFFSET_MODE,2,["Fixed","Random","Speed","Pressure/Speed","Size","Size Inverse"]);
-			param_multiplesMode   = new PsykoParameter( PsykoParameter.StringListParameter, PARAMETER_SL_MULTIPLE_MODE,5,["Fixed","Random","Speed","Pressure/Speed","Size","Size Inverse"]);
+			param_offsetMode      = new PsykoParameter( PsykoParameter.StringListParameter, PARAMETER_SL_OFFSET_MODE,2,["Fixed","Random","Speed","Speed Inverse","Pressure/Speed","Size","Size Inverse"]);
+			param_multiplesMode   = new PsykoParameter( PsykoParameter.StringListParameter, PARAMETER_SL_MULTIPLE_MODE,5,["Fixed","Random","Speed","Speed Inverse","Pressure/Speed","Size","Size Inverse"]);
 			
 			param_offsetAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, PARAMETER_AR_OFFSET_ANGLE,0,0,-180,180);
 			param_brushAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, PARAMETER_AR_BRUSH_ANGLE_VARIATION,0,0,-180,180);
@@ -86,20 +87,23 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			for ( var j:int = 0; j < count; j++ )
 			{
 				var point:SamplePoint =  points[j];
-				var spawnCount:int =  param_multiples.lowerRangeValue + param_multiples.rangeValue * [1,Math.random(), point.speed / 25, point.pressure > 0 ? point.pressure / 1200 : point.speed / 25, point.size, Math.max(0,msz - point.size) / msz][mapIndex]; 
+				var spawnCount:int =  param_multiples.lowerRangeValue + param_multiples.rangeValue * [1/* fixed */,Math.random()/* random */, point.speed / 25 /* speed */, Math.max(0,msz - (point.speed / 25)) / msz  /* speed inverted*/, point.pressure > 0 ? point.pressure / 1200 : point.speed / 25, point.size, Math.max(0,msz - point.size) / msz][mapIndex]; 
 				
 				//trace(spawnCount, point.size);
 				var offsetRange:Number = param_maxOffset.numberValue - param_minOffset.numberValue;
 				var distance:Number = 2 * offsetRange / spawnCount;
 				switch ( param_offsetMode.index )
 				{
-					case 1:
+					case INDEX_MODE_RANDOM:
 						distance *= Math.random();
 					break;
-					case 2:
+					case INDEX_MODE_SPEED:
 						distance *=  points[j].speed / ms;
 						break;
-					case 3:
+					case INDEX_MODE_SPEED_INV:
+						distance /=  points[j].speed / ms;
+						break;
+					case INDEX_MODE_PRESSURE_SPEED:
 						if ( points[j].pressure > 0 )
 						{
 							distance *= points[j].pressure / 2000;

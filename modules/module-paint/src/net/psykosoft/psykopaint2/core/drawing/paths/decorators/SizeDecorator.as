@@ -75,16 +75,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			for ( var i:int = 0; i < points.length; i++ )
 			{
 				var point:SamplePoint = points[i];
-				if ( mode == 0)
+				if ( mode == INDEX_MODE_FIXED)
 				{
 					point.size =  minFactor + Math.random() * (maxFactor - minFactor );
-				} else if ( mode == 1 )
+				} else if ( mode == INDEX_MODE_SPEED )
 				{
 					applyArray[0] = Math.min(point.speed,ms) / ms;
 					point.size = mapping.apply( null, applyArray);
 					if ( inv ) point.size = 1 - point.size;
 					point.size = minFactor + point.size * (maxFactor - minFactor );
-				}  else if ( mode == 2 )
+				}  else if ( mode == INDEX_MODE_PRESSURE_SPEED )
 				{
 					if ( point.pressure > 0 )
 					{
@@ -96,10 +96,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					}
 					if ( inv ) point.size = 1 - point.size;
 					point.size = minFactor + point.size * (maxFactor - minFactor );
-				}  else if ( mode == 3 )
+				}  else if ( mode == INDEX_MODE_MULTIPLY )
 				{
 					point.size *=  minFactor + Math.random() * (maxFactor - minFactor );
-				} else if ( mode == 4 )
+				} else if ( mode == INDEX_MODE_ADD )
 				{
 					point.size *=  minFactor + Math.random() * (maxFactor - minFactor );
 				} 

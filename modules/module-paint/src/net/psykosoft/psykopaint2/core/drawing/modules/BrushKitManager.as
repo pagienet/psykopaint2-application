@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.display.Shape;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
+	import flash.events.DataEvent;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
@@ -17,6 +18,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.base.states.State;
+	import net.psykosoft.psykopaint2.base.utils.events.DataSendEvent;
 	import net.psykosoft.psykopaint2.base.utils.ui.CanvasInteractionUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
@@ -140,6 +142,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _navigationIsVisible:Boolean;
 		private var _navigationWasHiddenByPainting:Boolean;
 		private var _revealNavigationTimeout:uint;
+		private var _activeBrushEngine:AbstractBrush;
 		
 		public function BrushKitManager()
 		{
@@ -371,8 +374,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				_activeBrushKit.brushEngine.addEventListener( AbstractBrush.STROKE_STARTED, onStrokeStarted);
 				_activeBrushKit.brushEngine.addEventListener( AbstractBrush.STROKE_ENDED, onStrokeEnded );
 				_activeBrushKit.addEventListener( Event.CHANGE, onActiveBrushKitChanged );
+				_activeBrushKit.addEventListener( BrushKit.EVENT_BRUSH_ENGINE_CHANGE, onChangeBrushEngine );
 				updateCurrentBrushColorParameter( );
 				onPickedColorChanged( paintSettingsModel.currentColor, paintSettingsModel.colorMode, false );
+				_activeBrushEngine = _activeBrushKit.brushEngine;
 			}
 		}
 
@@ -384,12 +389,36 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				_activeBrushKit.brushEngine.removeEventListener(AbstractBrush.STROKE_STARTED, onStrokeStarted);
 				_activeBrushKit.brushEngine.removeEventListener( AbstractBrush.STROKE_ENDED, onStrokeEnded );
 				_activeBrushKit.removeEventListener( Event.CHANGE, onActiveBrushKitChanged );
+				_activeBrushKit.removeEventListener( BrushKit.EVENT_BRUSH_ENGINE_CHANGE, onChangeBrushEngine );
+
 				if ( dispose ) _activeBrushKit.dispose();
 				_activeBrushKit = null;
 				_activeBrushKitName = "";
+				_activeBrushEngine = null;
 			}
 		}
+		
+		
+		
 
+		private function onChangeBrushEngine( event:DataSendEvent /* THE NEW ENGINE TYPE IS SENT IN THE EVENT */ ):void
+		{
+			var newActiveBrushEngine:AbstractBrush = event.data;
+			
+			//REMOVE OLD ACTIVE ENGINE EVENTS
+			_activeBrushEngine.removeEventListener(AbstractBrush.STROKE_STARTED, onStrokeStarted);
+			_activeBrushEngine.removeEventListener( AbstractBrush.STROKE_ENDED, onStrokeEnded );
+			
+			_activeBrushEngine = newActiveBrushEngine;
+			//ADD NEW EVENTS
+			_activeBrushEngine.addEventListener( AbstractBrush.STROKE_STARTED, onStrokeStarted);
+			_activeBrushEngine.addEventListener( AbstractBrush.STROKE_ENDED, onStrokeEnded );
+
+			trace("CHANGE BRUSH ENGINE!!!");
+			
+		}
+		
+		
 		private function onActiveBrushKitChanged( event:Event ):void
 		{
 			notifyActivateBrushChangedSignal.dispatch(_activeBrushKit.getParameterSet( !CoreSettings.SHOW_HIDDEN_BRUSH_PARAMETERS ));

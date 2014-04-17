@@ -1,9 +1,12 @@
 package net.psykosoft.psykopaint2.core.views.components.previews
 {
 	import flash.display.MovieClip;
+	import flash.text.TextField;
 	
 	public class BrushStylePreview extends MovieClip
 	{
+		public var txt:TextField;
+		
 		private static var styleToFrame:Array = [
 			"paint1","basic","splat","line","sumi",
 			"Small","Medium","Large",
@@ -29,11 +32,16 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 		
 		public function showIcon( id:String ):void
 		{
+			txt.text = "";
 			var idx:int = styleToFrame.indexOf(id);
 			if ( idx!=-1)
 				gotoAndStop(idx+1);
 			else
-				throw("no icon for style '"+id+"'");
+			{
+				gotoAndStop(1);
+				txt.text = id.toUpperCase();
+			}
+				//throw("no icon for style '"+id+"'");
 		}
 	}
 }
