@@ -6,13 +6,13 @@ package net.psykosoft.psykopaint2.core.managers.pen
 
 	public class WacomPenManager
 	{
-		private var wacomPen : WacomExtension;
-
+		
 		
 		public function WacomPenManager()
 		{
 		}
 		
+		private static var wacomPen : WacomExtension;
 		private static var _pressure : int = -1;
 		private static var _hasPen:Boolean = false;
 		private static var _buttonState:int = 0;
@@ -32,6 +32,11 @@ package net.psykosoft.psykopaint2.core.managers.pen
 		{
 			return _buttonState;
 		}
+		
+		public static function initializePen():void
+		{
+			wacomPen.initialize();
+		}
 
 		[PostConstruct]
 		public function init() : void
@@ -45,8 +50,10 @@ package net.psykosoft.psykopaint2.core.managers.pen
 			wacomPen.addEventListener( WacomExtensionEvent.BUTTON_1_RELEASED, onButton1Released );
 			wacomPen.addEventListener( WacomExtensionEvent.BUTTON_2_RELEASED, onButton2Released );
 			wacomPen.addEventListener( WacomExtensionEvent.PRESSURE_CHANGED, onPressureChanged );
-			wacomPen.initialize();
+			
 		}
+		
+		
 
 		private function onBatteryLevelChanged( event:WacomExtensionEvent ):void {
 			trace( "Pen battery level changed: " + event.data );

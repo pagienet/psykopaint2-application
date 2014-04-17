@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 		public static const ID_PAINT_SURFACE:String = "Surface";
 		public static const ID_LOGOUT:String = "Logout";
 		public static const ID_NOTIFICATION_SETTINGS:String = "Notifications";
+		public static const ID_CONNECT_PEN:String = "Connect Pen";
 
 		public function SettingsSubNavView() {
 			super();
@@ -26,11 +27,17 @@ package net.psykosoft.psykopaint2.home.views.settings
 			createCenterButton( ID_WALLPAPER, ID_WALLPAPER,ButtonIconType.WALLPAPER );
 			createCenterButton( ID_LOGIN, ID_LOGIN,ButtonIconType.LOGIN );
 			createCenterButton( ID_NOTIFICATION_SETTINGS, ID_NOTIFICATION_SETTINGS, ButtonIconType.NOTIFICATIONS );
+			createCenterButton( ID_CONNECT_PEN, ID_CONNECT_PEN, ButtonIconType.PENCIL );
 			validateCenterButtons();
 		}
 
 		public function setLoginBtn( label:String ):void {
 			relabelButtonWithId( ID_LOGIN, label, ButtonIconType.LOGOUT );
+		}
+		
+		public function hidePenButton():void
+		{
+			//TODO: fix button removal from hscroller
 		}
 	}
 }

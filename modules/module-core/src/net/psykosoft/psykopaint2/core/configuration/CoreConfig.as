@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.managers.misc.KeyDebuggingManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.MemoryWarningManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.UnDisposedObjectsManager;
+	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.models.AMFLoggedInUserProxy;
@@ -44,6 +45,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryZoomRatioSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
@@ -82,7 +84,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingInfoFileReadSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryZoomRatioSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateErrorPopUpSignal;
@@ -200,6 +201,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map(AccelerometerManager).asSingleton();
 			_injector.map(RetrievePaintingsDataProcessModel).asSingleton();
 			_injector.map(InAppPurchaseManager).asSingleton();
+			_injector.map(WacomPenManager).asSingleton();
+			
 			// -----------------------
 			// Services.
 			// -----------------------
