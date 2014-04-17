@@ -1,0 +1,66 @@
+Anatomy of a brush:
+
+- Brush Kit:
+A brush kit is like a bag of all the elements which make up a brush. Brush Kits can be defined in XML or directly by inheriting from the BrushKitClass and will have to be added to BrushKitDefaultSet.as in order to be made available.
+
+- PsykoParameter:
+PsykoParameters are how any variable parameters inside the brush should be stored. This allows for a uniform way to attach ui components or alter values in the decorators.
+PsykoParameters can have different types depending on what they are supposed to be used for:
+NumberParameter: a number, values are get and set via .numberValue
+IntParameter: an integer, values are get and set via .intValue
+NumberRangeParameter: a range between lowerRangeValue and upperRangeValue
+IntRangeParameter: an integer range between lowerRangeValue and upperRangeValue
+StringParameter: a string, get and set via .stringValue
+IntListParameter: a list of integer values, list is set via .numberList, .index sets the selected index which will change .intValue (and .numberValue) to the selected list value
+StringListParameter: a list of strings, list is set via .stringList, .index sets the selected index which will change .stringValue to the selected list value
+BooleanParameter: a boolean, get and set via booleanValue
+BooleanListParameter: a list of boolean, list is set via .numberList, .index sets the selected index which will change .booleanValue to the selected list value
+AngleParameter: an angle, values can either be get and set via .degrees (in degrees) or via .numberValue (in radians) - values are internally coerted
+AngleRangeParameter: a range of angles, lowerDegreesValue and upperDegressValue are used to set range in degrees (lowerRangeValue and upperRangeValue for radians)
+IconListParameter: pretty much the same as string list, but used for controlling icon buttons in the ui
+ColorParameter: a uint color value
+
+- Engine
+The engine is the core part which defines how the incoming path points are being rendered to the canvas. That means engines are free to apply any technique they like as long as they play well with the rest of the architecture. Obviously there are already several basic engine types and it is recommended to check if a new brush can reuse those engines and just requires a different type of Brush Mesh or different path decorators
+
+- Brush Mesh
+A brush mesh is responsible for sending brush stroke vertex data to the GPU. A brush mesh contains the logic to produce valid triangles or quads and also the shader codes required by a brush.
+
+- Brush Shape
+Brush shapes contain stroke textures used by brush meshes. That means a brush mesh can use different textures. A single brush shape can also contain muliple strokes which are then arranged in a table structure (aka sprite sheet). A brush shape can have two different "layers" - one is for the shape of the brush, the other one is containing the normal map information.
+
+- Path Engine
+The path engine is responsible for sampling the touch or mouse coordinates and transforming them into a list of interpolated and potentially smoothed points and adds extra information like drawing angle, speed, pressure and curvature. Whilst there are currently 3 different path engines available we currently use the "experimental" one (which should be renamed at some point). Currently all the path engines only handle the first touch point.
+
+- Path Decorators
+Path decorators are a mechanism to transform the incoming point set and add behaviors. Path decorators are supposed to be chained together (there are some special ones that allow conditional processing). So for typical brushes all the wiggling, stroke rotation, scaling and such should be handled by the decorators and not in the engine.
+
+		- Size Decorator: allows to change the "Size" parameter associated with a point (for example based on pressure or speed)
+		
+		- Rotation Decorator: allows to influence the "Angle" parameter of a point (for example by adding a little randomnesss to it)
+		
+		- Color Decorator: will add color information to a point. Either by triggering a "pick color at current location from photo" or by setting a fixed color. (it can also alter the existing color using color matrix ops)
+		
+		- Bump Decorator: allows to change the bumpiness (3d looks) factors of a point
+		
+		- Grid Decorator: allows to quantize the x/y position of a point to have points snap to a grid (for example for Pointillist effects)
+		
+		- Circular Rotation Decorator: Allows to change the angle of a brush based on proximity to a set of given target points. This allows for "van gough" style effects
+		
+		- Splatter Decorator: allows to offset a points perpendicular to the current drawing direction (or based on the given offset angle also in a "fan" pattern)
+		
+		- Spawn Decorator: makes copies of the current point and distributes them within a given offset range
+		
+		- Particle Decorator: produces particles from the current point that head off on their own using several parameters. Particles are not subject to further point decorators but will continue drawing based on their life span even after lifiting the finger
+		
+		- Order Decorator: allows to change the order of the incoming points (this is mainly to avoid a "scales" effect in some brushes)
+		
+		- Limiter Decorator: allows to reduce the amount of points produced - especially if using Spawn it can happen that the point count explodes of not handled properly
+		
+		- Stationary Decorator: will add points when there is no finger motion (since the path engines will usually not do that)
+		
+		- Conditional/EndConditional Decorator: these allow to branch decorator queues based on a given condition. So for example could a set of decorators only be executed if the brush speed is bigger than a certain value
+		
+		- Callback Decorator: this decorator allows to write some custom code inside a brush kit that does something to the passed in points
+
+

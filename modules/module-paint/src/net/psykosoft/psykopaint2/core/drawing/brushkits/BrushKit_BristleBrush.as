@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	public class BrushKit_BristleBrush extends BrushKit
 	{
 		
-		private static const definitionXML:XML = <brush engine={BrushType.SPRAY_CAN} name="Bristle Brush">
+		private static const definitionXML:XML = <brush engine={BrushType.SPRAY_CAN} name="Paint Brush">
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0" />
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="line" />
 					<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value="0"/>

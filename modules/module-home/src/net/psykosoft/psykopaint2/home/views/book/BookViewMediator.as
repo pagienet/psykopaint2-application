@@ -20,6 +20,7 @@ package net.psykosoft.psykopaint2.home.views.book
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.services.SampleImageService;
 	import net.psykosoft.psykopaint2.core.services.SourceImageService;
+	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
@@ -59,10 +60,14 @@ package net.psykosoft.psykopaint2.home.views.book
 		[Inject]
 		public var notifyGalleryZoomRatioSignal : NotifyGalleryZoomRatioSignal;
 
+		[Inject]
+		public var notifyAMFConnectionFailed : NotifyAMFConnectionFailed;
+
 		private var currentState:String;
 		private var _gallerySource:int = -1;
 		private var _activeGalleryNavState:String;
 		private var _galleryZoomRatio:Number;
+		private var _failed:Boolean;
 
 
 		public function BookViewMediator()
@@ -78,6 +83,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			view.switchedToHiddenMode.add(onSwitchedToHiddenMode);
 			notifyStateChange.add(onStateChange);
 			notifyGalleryZoomRatioSignal.add(onGalleryZoomRatioSignal);
+			notifyAMFConnectionFailed.add(onImagesError);
 		}
 
 		override public function destroy():void
@@ -89,6 +95,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			view.switchedToHiddenMode.remove(onSwitchedToHiddenMode);
 			notifyStateChange.remove(onStateChange);
 			notifyGalleryZoomRatioSignal.remove(onGalleryZoomRatioSignal);
+			notifyAMFConnectionFailed.remove(onImagesError);
 		}
 
 		private function onStateChange(newState : String) : void
@@ -133,6 +140,7 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		private function showEaselBook(source:String):void
 		{
+			_failed = false;
 			view.setBookPosition(EaselView.CAMERA_POSITION);
 			view.hidingEnabled = false;
 			view.bookEnabled = true;
@@ -145,6 +153,8 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		private function showGalleryBook(galleryNavState : String, source : uint):void
 		{
+			_failed = false;
+
 			// if _activeGalleryNavState == null, we're newly arriving in the gallery, so we need to show the book
 			if (_activeGalleryNavState == null)
 				view.hiddenRatio = 1.5;
@@ -166,6 +176,8 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		private function onGalleryZoomRatioSignal(value : Number):void
 		{
+			if (_failed) return;
+
 			if (_galleryZoomRatio == value) return;
 
 			// the travel factor causes the book not to stay equidistant from the camera,
@@ -187,13 +199,18 @@ package net.psykosoft.psykopaint2.home.views.book
 				TweenLite.to(view, .4, {hiddenRatio: value == 0.0? 0.0 : 1.0, ease: Quad.easeOut});
 			}
 			else {
-				view.hidingEnabled = false;
-				view.bookEnabled = false;
-				// setting hidden ratio > 1.0 will make it go further offscreen
-				TweenLite.to(view, .4, {hiddenRatio: 1.5, ease: Quad.easeOut});
+				disableAndHideBook();
 			}
 
 			_galleryZoomRatio = value;
+		}
+
+		private function disableAndHideBook():void
+		{
+			view.hidingEnabled = false;
+			view.bookEnabled = false;
+			// setting hidden ratio > 1.0 will make it go further offscreen
+			TweenLite.to(view, .4, {hiddenRatio: 1.5, ease: Quad.easeOut});
 		}
 
 		private function showGalleryBookBottom():void
@@ -217,7 +234,10 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		private function onImagesError(statusCode:int):void
 		{
-			// TODO: handle error
+			// for the gallery, failure will be shown as a painting
+			_failed = true;
+			if (_gallerySource != -1)
+				disableAndHideBook();
 		}
 
 		private function onGalleryImageSelected(galleryImageProxy : GalleryImageProxy) : void

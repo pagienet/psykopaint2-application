@@ -51,10 +51,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 												   Context3DBlendFactor.DESTINATION_COLOR, Context3DBlendFactor.ONE_MINUS_DESTINATION_COLOR];
 		protected const _brushScalingFactor:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1;
 		protected var _maxBrushRenderSize:Number;
+		protected var _textureScaleFactor:Number =1;
 
+		protected var _context:Context3D;
+		protected var _renderer:CanvasRenderer;
 		protected var _canvasModel:CanvasModel;
 		protected var _view:DisplayObject;
 		protected var _pathManager:PathManager;
+		protected var _paintSettingsModel:UserPaintSettingsModel;
 		protected var _colorStrategy:IColorStrategy;
 		protected var _brushShape:AbstractBrushShape;
 		protected var _brushMesh:IBrushMesh;
@@ -81,13 +85,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public var param_quadOffsetRatio:PsykoParameter;
 		public var param_curvatureSizeInfluence:PsykoParameter;
 
-		protected var _context:Context3D;
+		
 		private var _inProgress:Boolean;
 
 		private var _drawNormalsOrSpecular:Boolean;
 		private var _type:String;
 		protected var _snapshot:CanvasSnapShot;
-		protected var _paintSettingsModel:UserPaintSettingsModel;
+		
+		
 
 		public function AbstractBrush(drawNormalsOrSpecular:Boolean)
 		{
@@ -117,6 +122,44 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		// only to be implemented by brushes animating/simulating after finalizing the stroke to knock it off
 		// used for instance on undo
+
+		public function get paintSettingsModel():UserPaintSettingsModel
+		{
+			return _paintSettingsModel;
+		}
+
+		public function get renderer():CanvasRenderer
+		{
+			return _renderer;
+		}
+
+		public function get context():Context3D
+		{
+			return _context;
+		}
+
+		public function get canvasModel():CanvasModel
+		{
+			return _canvasModel;
+		}
+
+		public function get view():DisplayObject
+		{
+			return _view;
+		}
+
+		public function get textureScaleFactor():Number
+		{
+			return _textureScaleFactor;
+		}
+
+		public function set textureScaleFactor(value:Number):void
+		{
+			_textureScaleFactor = value;
+			if (_shapeVariations) _maxBrushRenderSize = _textureScaleFactor* _brushScalingFactor * (Math.sqrt(128 * 128 * 2) / _shapeVariations[5]);
+
+		}
+
 		public function stopProgression():void
 		{
 
@@ -180,7 +223,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_appendVO.quadOffsetRatio = param_quadOffsetRatio.numberValue;
 			_rotationRange = _brushShape.rotationRange;
 			//TODO: this must take into account the actual brush size based on col/rows
-			_maxBrushRenderSize = _brushScalingFactor * (Math.sqrt(128 * 128 * 2) / _shapeVariations[5]);
+			_maxBrushRenderSize = _textureScaleFactor* _brushScalingFactor * (Math.sqrt(128 * 128 * 2) / _shapeVariations[5]);
 		}
 
 		protected function onShapeChanged(event:Event):void
@@ -198,15 +241,19 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_canvasModel = canvasModel;
 			_paintSettingsModel = paintSettingsModel;
 			_context = context;
+			_renderer = renderer;
 			
 			// the purpose of this is to avoid a bit of the delay when drawing the very first time
 			brushShape = brushShapeLibrary.getBrushShape(param_shapes.stringValue);
+
 
 			_pathManager.activate(view, canvasModel, renderer);
 			param_shapes.addEventListener(Event.CHANGE, onShapeChanged);
 
 			_colorStrategy ||= createColorStrategy();
 		}
+		
+		
 
 		public function deactivate():void
 		{

@@ -17,11 +17,12 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
-	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerSucceededSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateErrorPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.popups.base.Jokes;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
@@ -53,9 +54,6 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 		public var notifySaveToServerSucceededSignal : NotifySaveToServerSucceededSignal;
 
 		[Inject]
-		public var notifySaveToServerFailedSignal : NotifySaveToServerFailedSignal;
-
-		[Inject]
 		public var requestShowPopUpSignal : RequestShowPopUpSignal;
 
 		[Inject]
@@ -64,8 +62,15 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 		[Inject]
 		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
 
+		[Inject]
+		public var requestUpdateErrorPopUpSignal:RequestUpdateErrorPopUpSignal;
+
+		[Inject]
+		public var notifyAMFConnectionFailed:NotifyAMFConnectionFailed;
+
 		private var _paintingData : PaintingDataVO;
 		private var _compositeData : ByteArray;
+
 
 
 		public function execute():void
@@ -98,6 +103,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 
 		private function publish() : void
 		{
+			notifyAMFConnectionFailed.add(onPublishFail);
 			amfBridge.publishPainting(loggedInUserProxy.sessionID, _paintingData, _compositeData, onPublishComplete, onPublishFail);
 		}
 
@@ -106,7 +112,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 			cleanUp();
 
 			if (data["status_code"] != 1) {
-				notifySaveToServerFailedSignal.dispatch(data["status_code"], data["status_reason"] != null ? data["status_reason"] : "unknown reason");
+				showErrorPopUp();
 				trace ("Publish unsuccesful with error code: " + data["status_code"]);
 				return;
 			}
@@ -120,12 +126,19 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 		private function onPublishFail(data : Object) : void
 		{
 			cleanUp();
-			notifySaveToServerFailedSignal.dispatch(data["status_code"], "CALL_FAILED");
+			showErrorPopUp();
 			trace ("Publish unsuccesful: call failed");
+		}
+
+		private function showErrorPopUp():void
+		{
+			requestShowPopUpSignal.dispatch(PopUpType.ERROR);
+			requestUpdateErrorPopUpSignal.dispatch("Publish error", "Make sure you have a working internet connection!")
 		}
 
 		private function cleanUp() : void
 		{
+			notifyAMFConnectionFailed.remove(onPublishFail);
 			_paintingData.dispose();
 			_compositeData.clear();
 			_paintingData = null;

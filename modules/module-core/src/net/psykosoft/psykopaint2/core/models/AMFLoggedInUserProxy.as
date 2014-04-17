@@ -82,7 +82,6 @@ package net.psykosoft.psykopaint2.core.models
 			_onSuccess = onSuccess;
 			_onFail = onFail;
 			amfBridge.logIn(email, password, onLogInSuccess, onLogInFail);
-			_userID = 1;
 		}
 
 		public function registerAndLogIn(userRegistrationVO : UserRegistrationVO, onSuccess : Function, onFail : Function) : void
