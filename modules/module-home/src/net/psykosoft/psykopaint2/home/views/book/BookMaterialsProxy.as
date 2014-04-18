@@ -24,6 +24,8 @@ package net.psykosoft.psykopaint2.home.views.book
 	import net.psykosoft.psykopaint2.base.utils.io.QueuedFileLoader;
 	import net.psykosoft.psykopaint2.base.utils.io.events.AssetLoadedEvent;
 	import net.psykosoft.psykopaint2.core.configuration.PsykoFonts;
+	
+	import org.osflash.signals.Signal;
 
 	public class BookMaterialsProxy
 	{
@@ -35,6 +37,10 @@ package net.psykosoft.psykopaint2.home.views.book
 		public static const ICON_COMMENT:String = "ICON_COMMENT";
 		public static const ICON_HEART:String = "ICON_HEART";
 		public static const ICON_PAINTINGMODE:String = "ICON_PAINTINGMODE";
+		public static const FRAME_EMPTY:String = "FRAME_EMPTY";
+		public static const FRAME_WHITE:String = "FRAME_WHITE";
+		
+		public static var onCompleteSignal:Signal = new Signal();
 		
 		private static var _fileLoader:QueuedFileLoader;
 		private static var _assetsURLs:Array;
@@ -44,7 +50,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		private static var _onComplete:Function;
  		private static var _alreadyLoaded:Boolean = false;
  	
- 	
+ 		
  		
 		
 		public function BookMaterialsProxy()
@@ -60,11 +66,13 @@ package net.psykosoft.psykopaint2.home.views.book
 			_assetsURLs= [];
 			_assetsURLs.push({id:RING,url:"home-packaged/images/book/rings.jpg"});
 			_assetsURLs.push({id:PAGE_PAPER,url:"home-packaged/images/page/paperbook2.jpg"});
-			_assetsURLs.push({id:THUMBNAIL_LOADING,url:"home-packaged/away3d/book/loadingThumbnail.png"});
+			_assetsURLs.push({id:THUMBNAIL_LOADING,url:"home-packaged/away3d/book/loadingThumbnail.png",storeBmd:true});
 			_assetsURLs.push({id:THUMBNAIL_SHADOW,url:"home-packaged/images/page/pict_shadow.png"});
 			_assetsURLs.push({id:ICON_COMMENT,url:"home-packaged/images/layouts/comment.png",storeBmd:true});
 			_assetsURLs.push({id:ICON_HEART,url:"home-packaged/images/layouts/heart.png",storeBmd:true});
 			_assetsURLs.push({id:ICON_PAINTINGMODE,url:"home-packaged/images/layouts/painting.png",storeBmd:true});
+			_assetsURLs.push({id:FRAME_EMPTY,url:"home-packaged/images/frames/emptyFrame.png",storeBmd:true});
+			_assetsURLs.push({id:FRAME_WHITE,url:"home-packaged/images/frames/simpleWhite.png",storeBmd:true});
 		}
 		
 		
@@ -87,7 +95,9 @@ package net.psykosoft.psykopaint2.home.views.book
 					}
 				}
 			}else {
+				
 				_onComplete.call();
+				
 			}
 				
 		}
@@ -130,8 +140,6 @@ package net.psykosoft.psykopaint2.home.views.book
 		{
 			var currentAssetURLObj:Object = e.customData;
 			var assetIndex:int = _assetsURLs.indexOf(currentAssetURLObj);
-			//e.customData.index;
-			//trace("BookMaterialsProxy::onImageLoadedComplete assetIndex ="+assetIndex);
 
 			//CREATE THE TEXTURE
 			var bmd:BitmapData = BitmapData(e.data);
@@ -142,7 +150,6 @@ package net.psykosoft.psykopaint2.home.views.book
 				trace("STore bmd for "+ currentAssetURLObj.id);
 			}
 			var newTexture:BitmapTexture = new TrackedBitmapTexture(TextureUtil.autoResizePowerOf2(bmd));
-			//var newTextureMaterial:TextureMaterial = new TextureMaterial(Cast.bitmapTexture(newTexture));
 			var newTextureMaterial:TextureMaterial = new TextureMaterial((newTexture));
 
 			//SET ALPHA BLENDING FOR ALL TEXTURE THAT ARE PNGs //OTHERWISE USE JPG MOFO!!!
@@ -173,7 +180,9 @@ package net.psykosoft.psykopaint2.home.views.book
 			if (assetIndex == _assetsURLs.length - 1) {
 				_alreadyLoaded = true;
 				_onComplete.call();
+				onCompleteSignal.dispatch();
 			}
+			
 		}
 
 		

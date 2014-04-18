@@ -1,5 +1,18 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
+	import com.greensock.easing.Quad;
+	
+	import flash.display.BitmapData;
+	import flash.display.Sprite;
+	import flash.display3D.Context3DCompareMode;
+	import flash.display3D.Context3DStencilAction;
+	import flash.events.Event;
+	import flash.geom.Rectangle;
+	import flash.geom.Vector3D;
+	import flash.utils.getTimer;
+	
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.base.Geometry;
@@ -20,22 +33,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
 	import away3d.textures.Texture2DBase;
-
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Quad;
-
-	import flash.display.BitmapData;
-	import flash.display.Sprite;
-	import flash.display3D.Context3DCompareMode;
-	import flash.display3D.Context3DStencilAction;
-	import flash.events.Event;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	import flash.geom.Vector3D;
-	import flash.utils.getTimer;
-
+	
+	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
@@ -44,7 +44,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
 	import net.psykosoft.psykopaint2.home.model.GalleryImageCache;
-
+	import net.psykosoft.psykopaint2.home.views.book.BookMaterialsProxy;
+	
 	import org.osflash.signals.Signal;
 
 	public class GalleryView extends Sprite
@@ -68,7 +69,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _light:LightBase;
 		private var _container:ObjectContainer3D;
 
-		private var _paintings:Vector.<Mesh> = new Vector.<Mesh>();
+		private var _paintings:Vector.<GalleryPaintingView> = new Vector.<GalleryPaintingView>();
 		private var _lowQualityMaterials:Vector.<TextureMaterial> = new Vector.<TextureMaterial>();
 
 		private var _paintingGeometry:Geometry;
@@ -192,6 +193,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function initHighQualityMaterial():void
 		{
+			//BookMaterialsProxy.getBitmapDataById(BookMaterialsProxy.THUMBNAIL_LOADING)
 			_highQualityColorTexture = new TrackedBitmapRectTexture(null);
 			_highQualityNormalSpecularTexture = new ByteArrayRectTexture(null, 0, 0);
 
@@ -372,7 +374,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			// _activeImageProxy can be null for error message 'paintings'
 			var index : int = _activeImageProxy? _activeImageProxy.index : 0;
-			var painting:Mesh = _paintings[index];
+			var painting:GalleryPaintingView = _paintings[index];
 			var paintingPosition:Vector3D = _view.camera.project(painting.scenePosition);
 			var matrix:Vector.<Number> = _view.camera.lens.matrix.rawData;
 			var z:Number = _view.camera.z - PAINTING_Z;
@@ -451,11 +453,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function initLoadingTexture():void
 		{
-			var bitmapData:BitmapData = new TrackedBitmapData(16, 16, false, 0x808080);
+			var bitmapData:BitmapData = new TrackedBitmapData(16, 16, true, 0x00000000);
 			_loadingTexture = new BitmapTexture(bitmapData);
 			_loadingTexture.getTextureForStage3D(_stage3DProxy);
 			bitmapData.dispose();
+			
 		}
+		
 
 		public function setImmediateActiveImage(galleryImageProxy:GalleryImageProxy):void
 		{
@@ -582,27 +586,35 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			var texture:Texture2DBase = _imageCache.getThumbnail(index);
 			texture ||= _loadingTexture;
-
+			
 			var material:TextureMaterial = new TextureMaterial(texture);
 			material.mipmap = false;
+			//material.alphaBlending=true;
 			var stencilMethod:StencilMethod = new StencilMethod();
 			stencilMethod.referenceValue = 40;
 			stencilMethod.compareMode = Context3DCompareMode.NOT_EQUAL;
 			material.addMethod(stencilMethod);
 
 			_lowQualityMaterials[index] = material;
-
-			var mesh:Mesh = new Mesh(_paintingGeometry, material);
-			mesh.x = index * PAINTING_SPACING;
-			_paintings[index] = mesh;
-
+			
+			
+			_paintings[index] = new GalleryPaintingView(_paintingGeometry, material);
+			_paintings[index].x = index * PAINTING_SPACING;
+			
+			
 			// in case the active painting was moved out of sight and disposed, reset the HQ material
 			// UNLESS it hasn't finished loading!
 			if (!_loadingHQ && _showHighQuality && _highQualityIndex == index) {
 				_paintings[index].material = _highQualityMaterial;
+				
 			}
 
 			_container.addChild(_paintings[index]);
+			
+			//TweenLite.killTweensOf(_paintings[index]);
+			//TweenLite.from(_paintings[index],0.5,{y:300,ease:Expo.easeOut});
+
+			
 		}
 
 		public function dispose():void
@@ -649,7 +661,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function destroyPainting(i:int):void
 		{
-			var painting:Mesh = _paintings[i];
+			var painting:GalleryPaintingView = _paintings[i];
 			_container.removeChild(painting);
 			painting.dispose();
 			_lowQualityMaterials[i].dispose();
@@ -659,16 +671,24 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onThumbnailLoaded(imageProxy:GalleryImageProxy, thumbnail:RectTextureBase):void
 		{
-			if (_paintings[imageProxy.index])
+			if (_paintings[imageProxy.index]){
 				_lowQualityMaterials[imageProxy.index].texture = thumbnail;
+				//TRANSITION
+				//_paintings[imageProxy.index].y=300;
+				TweenLite.from(_paintings[imageProxy.index],0.5,{y:300,ease:Expo.easeOut});
+			}
+			
+			
+			
 		}
 
 		private function onThumbnailDisposed(imageProxy:GalleryImageProxy):void
 		{
 			// this probably also means the painting shouldn't be visible anymore
-			var painting:Mesh = _paintings[imageProxy.index];
+			var painting:GalleryPaintingView = _paintings[imageProxy.index];
 			if (painting) {
 				_lowQualityMaterials[imageProxy.index].texture = _loadingTexture;
+				
 				if (painting.parent)
 					_container.removeChild(painting);
 			}
@@ -677,8 +697,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function onThumbnailLoadingComplete():void
 		{
 			// we can load the high resolution now for
-			if (_showHighQuality)
+			if (_showHighQuality){
 				showHighQualityMaterial();
+				
+			}
 		}
 
 		private function onSurfaceDataComplete(galleryVO:PaintingGalleryVO):void
