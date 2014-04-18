@@ -453,7 +453,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function initLoadingTexture():void
 		{
-			var bitmapData:BitmapData = new TrackedBitmapData(16, 16, true, 0x00000000);
+			var bitmapData:BitmapData = new TrackedBitmapData(16, 16, true, 0xAAAAAA00);
 			_loadingTexture = new BitmapTexture(bitmapData);
 			_loadingTexture.getTextureForStage3D(_stage3DProxy);
 			bitmapData.dispose();

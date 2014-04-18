@@ -53,7 +53,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function loadTexture():void{
 			
 			trace("SWAP LOADING TEXTURE");
-			var isframe:Boolean = (Math.random()>0.5);
+			var isframe:Boolean = (Math.random()>0.9);
 			
 			var frameTexture:BitmapTexture = new BitmapTexture(TextureUtil.autoResizePowerOf2(BookMaterialsProxy.getBitmapDataById((isframe)?BookMaterialsProxy.FRAME_WHITE:BookMaterialsProxy.FRAME_EMPTY)));
 			var frameGeometry:PlaneGeometry = 	new PlaneGeometry(236, 232, 1, 1, false);
