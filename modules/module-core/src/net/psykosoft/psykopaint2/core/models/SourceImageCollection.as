@@ -23,6 +23,31 @@ package net.psykosoft.psykopaint2.core.models
 			return newCollection;
 		}
 		
+		public static function shuffle(imageCollection:SourceImageCollection):SourceImageCollection{
+		
+			function randomSort(a:*, b:*):Number
+			{
+				if (Math.random() < 0.5) return -1;
+				else return 1;
+			}
+			imageCollection.images.sort(randomSort);
+			
+			return imageCollection
+		}
+		
+		/*public static function shuffleVector(vec:Vector.<*>):void{
+			if (vec.length> 1){
+				var i:int = vec.length - 1;
+				while (i > 0) {
+					var s:Number = Rndm.integer(0, vec.length);
+					var temp:* = vec[s];
+					vec[s] = vec[i];
+					vec[i] = temp;
+					i--;
+				}
+			}
+		}*/
+		
 		
 	}
 }

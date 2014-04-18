@@ -1,18 +1,17 @@
 package net.psykosoft.psykopaint2.home.views.book
 {
 	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
 	import com.greensock.easing.Quad;
-
+	
 	import flash.display.BitmapData;
 	import flash.geom.Vector3D;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.io.CameraRollImageOrientation;
-
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
-
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.SourceImageCollection;
 	import net.psykosoft.psykopaint2.core.models.SourceImageProxy;
@@ -20,14 +19,14 @@ package net.psykosoft.psykopaint2.home.views.book
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.services.SampleImageService;
 	import net.psykosoft.psykopaint2.core.services.SourceImageService;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryZoomRatioSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryZoomRatioSignal;
 	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryView;
 	import net.psykosoft.psykopaint2.home.views.home.EaselView;
-
+	
 	import robotlegs.bender.bundles.mvcs.Mediator;
 
 	public class BookViewMediator extends Mediator
@@ -199,7 +198,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		private function showGalleryBookBottom():void
 		{
 			view.setBookPosition(GalleryView.CAMERA_FAR_POSITION);
-			TweenLite.to(view, .4, {hiddenRatio: 1.0, ease: Quad.easeOut});
+			TweenLite.to(view, .4, {hiddenRatio: 0.7, ease: Expo.easeOut});
 			view.bookEnabled = true;
 			view.hidingEnabled = true;
 			view.show();
@@ -207,7 +206,7 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		private function onSourceImagesFetched(collection:SourceImageCollection):void
 		{
-			view.setSourceImages(collection);
+			view.setSourceImages(collection,true);
 		}
 
 		private function onGalleryImagesFetched(collection:GalleryImageCollection):void

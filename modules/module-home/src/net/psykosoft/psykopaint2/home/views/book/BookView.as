@@ -81,7 +81,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		private var _bookEnabled:Boolean;
 		private var _startMouseX:Number;
 		private var _startMouseY:Number;
-		private var _hiddenOffset:Number = -185;
+		private var _hiddenOffset:Number = -198;
 		private var _basePosition:Vector3D = new Vector3D();
 		private var _hiddenRatio:Number = 0.0;
 		private var _consideredHidden:Boolean;
@@ -194,13 +194,15 @@ package net.psykosoft.psykopaint2.home.views.book
 		/////////////////////////////////////////////////////////////////
 
 
-		public function setSourceImages(sourceImageCollection:SourceImageCollection):void
+		public function setSourceImages(sourceImageCollection:SourceImageCollection,shuffle:Boolean=false):void
 		{
 			// TYPE FILE
 			_viewType = TYPE_FILE_VIEW;
 
 			//ASSIGN DATA
 			_sourceImageCollection = sourceImageCollection;
+			
+			if(shuffle) SourceImageCollection.shuffle(_sourceImageCollection);
 
 			//CLEAR PREVIOUS LAYOUT
 			removePages();
@@ -658,7 +660,8 @@ package net.psykosoft.psykopaint2.home.views.book
 		{
 			_container.x = _basePosition.x;
 			_container.y = _basePosition.y + 20 + _hiddenOffset * _hiddenRatio;
-			_container.z = _basePosition.z - 250;
+			_container.z = _basePosition.z - 250 + 100* _hiddenRatio;
+			_container.rotationX = 90+_hiddenRatio*90;
 			updateInteractionRect();
 		}
 

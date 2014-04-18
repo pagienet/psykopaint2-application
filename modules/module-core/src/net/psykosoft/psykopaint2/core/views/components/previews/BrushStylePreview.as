@@ -1,5 +1,6 @@
 package net.psykosoft.psykopaint2.core.views.components.previews
 {
+	import flash.display.FrameLabel;
 	import flash.display.MovieClip;
 	import flash.text.TextField;
 	
@@ -7,7 +8,7 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 	{
 		public var txt:TextField;
 		
-		private static var styleToFrame:Array = [
+		/*private static var styleToFrame:Array = [
 			"paint1","basic","splat","line","sumi",
 			"Small","Medium","Large",
 			"splotch","basic smooth","noisy",
@@ -21,7 +22,7 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 			"Munch","Le Guitarriste",
 			"pencilSketch","wet","render","sketch",
 			"bubbles","cern","curly"
-		];
+		];*/
 		
 		
 		
@@ -33,9 +34,9 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 		public function showIcon( id:String ):void
 		{
 			txt.text = "";
-			var idx:int = styleToFrame.indexOf(id);
-			if ( idx!=-1)
-				gotoAndStop(idx+1);
+			//var idx:int = styleToFrame.indexOf(id);
+			if ( movieClipHasLabel(this,id))
+				gotoAndStop(id);
 			else
 			{
 				gotoAndStop(1);
@@ -43,5 +44,16 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 			}
 				//throw("no icon for style '"+id+"'");
 		}
+		
+		private function movieClipHasLabel(movieClip:MovieClip, labelName:String):Boolean {
+			 var i:int;
+			 var k:int = movieClip.currentLabels.length;
+			 for (i; i < k; ++i) {
+				 var label:FrameLabel = movieClip.currentLabels[i];
+				 if (label.name == labelName)
+					 return true; 
+				}
+			 return false;
+			}
 	}
 }

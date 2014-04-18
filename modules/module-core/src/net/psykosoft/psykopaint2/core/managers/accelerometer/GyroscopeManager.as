@@ -95,12 +95,12 @@ package net.psykosoft.psykopaint2.core.managers.accelerometer
 			
 			if (_orientation == StageOrientation.ROTATED_RIGHT) {
 				_orientationMatrix.transpose();
-				_orientationMatrix.appendRotation(90, Vector3D.Z_AXIS);
+				_orientationMatrix.appendRotation(180, Vector3D.Z_AXIS);
 				_orientationMatrix.transpose();
 			}
 			else {
 				_orientationMatrix.transpose();
-				_orientationMatrix.appendRotation(-90, Vector3D.Z_AXIS);
+				_orientationMatrix.appendRotation(-180, Vector3D.Z_AXIS);
 				_orientationMatrix.transpose();
 			}
 			
