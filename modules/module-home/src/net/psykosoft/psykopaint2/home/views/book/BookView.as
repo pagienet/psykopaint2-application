@@ -574,6 +574,12 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		private function updateSwipeMode():void
 		{
+			// nothing to do here:
+			if (!_bookEnabled && !_hidingEnabled) {
+				_swipeMode = UNDECIDED;
+				return;
+			}
+
 			if (_swipeMode == UNDECIDED) {
 				if (!_bookEnabled) {
 					_swipeMode = HIDE_SWIPE;
@@ -636,10 +642,7 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		private function updateInteractionRect():void
 		{
-			if (_hidingEnabled)
-				_grabThrowController.interactionRect = getBookScreenBounds();
-			else
-				_grabThrowController.interactionRect = null;
+			_grabThrowController.interactionRect = getBookScreenBounds();
 		}
 
 		private function getBookScreenBounds():Rectangle

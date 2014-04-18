@@ -28,10 +28,10 @@ package net.psykosoft.psykopaint2.core.configuration
 		public static const SHOW_BLOCKER:Boolean = false; /*false on release*/
 
 		// Console gpu debugging.
-		public static const STAGE_3D_ERROR_CHECKING:Boolean = false; /*false on release*/
-		public static const DEBUG_RENDER_SEQUENCE:Boolean = false; /*false on release*/
+		public static const STAGE_3D_ERROR_CHECKING:Boolean = true; /*false on release*/
+		public static const DEBUG_RENDER_SEQUENCE:Boolean = true; /*false on release*/
 
-		public static const DEBUG_AGAL:Boolean = false; /*false on release*/
+		public static const DEBUG_AGAL:Boolean = true; /*false on release*/
 
 		// Data service stuff.
 		public static const GATEWAY_URL : String = "http://www.psykopaint.com/api/amf/v1/";

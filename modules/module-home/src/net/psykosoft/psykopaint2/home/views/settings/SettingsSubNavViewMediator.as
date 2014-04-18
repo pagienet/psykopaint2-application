@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.settings
 {
 
+	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
@@ -17,6 +18,11 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 		[Inject]
 		public var loggedInUserProxy:LoggedInUserProxy;
+		
+		[Inject]
+		public var wacomPenManager:WacomPenManager;
+		
+		
 
 		override public function initialize():void {
 
@@ -56,6 +62,11 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 				case SettingsSubNavView.ID_NOTIFICATION_SETTINGS:
 					handleNotificationsClicked();
+					break;
+				
+				case SettingsSubNavView.ID_CONNECT_PEN:
+					WacomPenManager.initializePen();
+					view.hidePenButton();
 					break;
 			}
 		}

@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.managers.misc.KeyDebuggingManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.MemoryWarningManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.UnDisposedObjectsManager;
+	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.models.AMFLoggedInUserProxy;
@@ -44,6 +45,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryZoomRatioSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
@@ -82,9 +84,9 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingInfoFileReadSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryZoomRatioSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateErrorPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
@@ -98,6 +100,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationViewMediator;
 	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerView;
 	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerViewMediator;
+	import net.psykosoft.psykopaint2.core.views.popups.error.ErrorPopUpView;
+	import net.psykosoft.psykopaint2.core.views.popups.error.ErrorPopUpViewMediator;
 	import net.psykosoft.psykopaint2.core.views.popups.login.LoginPopUpView;
 	import net.psykosoft.psykopaint2.core.views.popups.login.LoginPopUpViewMediator;
 	import net.psykosoft.psykopaint2.core.views.popups.messages.MessagePopUpView;
@@ -197,6 +201,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map(AccelerometerManager).asSingleton();
 			_injector.map(RetrievePaintingsDataProcessModel).asSingleton();
 			_injector.map(InAppPurchaseManager).asSingleton();
+			_injector.map(WacomPenManager).asSingleton();
+			
 			// -----------------------
 			// Services.
 			// -----------------------
@@ -231,6 +237,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyEaselRectUpdateSignal ).asSingleton();
 			_injector.map( NotifyPopUpShownSignal ).asSingleton();
 			_injector.map( RequestUpdateMessagePopUpSignal ).asSingleton();
+			_injector.map( RequestUpdateErrorPopUpSignal ).asSingleton();
 			_injector.map( RequestLoadSurfaceSignal ).asSingleton();
 			_injector.map( NotifySurfacePreviewLoadedSignal ).asSingleton();
 			_injector.map( NotifySurfaceLoadedSignal ).asSingleton();
@@ -286,6 +293,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_mediatorMap.map( PsykoSocketView ).toMediator( PsykoSocketViewMediator );
 			_mediatorMap.map( PopUpManagerView ).toMediator( PopUpManagerViewMediator );
 			_mediatorMap.map( MessagePopUpView ).toMediator( MessagePopUpViewMediator );
+			_mediatorMap.map( ErrorPopUpView ).toMediator( ErrorPopUpViewMediator );
 			_mediatorMap.map( LoginPopUpView ).toMediator( LoginPopUpViewMediator );
 			_mediatorMap.map( NotificationSettingsView ).toMediator( NotificationSettingsViewMediator );
 			_mediatorMap.map( DebugView ).toMediator( DebugViewMediator );

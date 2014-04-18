@@ -120,7 +120,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 		// -----------------------
 
 		private function mapSingletons():void {
-			_injector.map(WacomPenManager).asSingleton();
+			
 			_injector.map(GyroscopeLightController).asSingleton();
 			_injector.map(BrushShapeLibrary).asSingleton();
 			_injector.map(BrushKitManager).asSingleton();

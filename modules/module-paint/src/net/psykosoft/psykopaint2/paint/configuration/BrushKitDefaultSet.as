@@ -3,8 +3,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit;
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit_BristleBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit_Cutout;
-	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit_Eraser;
+	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit_Cosmetics;
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit_Paintgun;
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit_Pencil;
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit_SprayCan;
@@ -18,7 +17,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 			new BrushKit_BristleBrush(),
 			new BrushKit_Pencil(),
 			new BrushKit_WaterColor(),
-			new BrushKit_Paintgun()
+			new BrushKit_Paintgun(),
+			new BrushKit_Cosmetics()
 		]);
 		
 		/*

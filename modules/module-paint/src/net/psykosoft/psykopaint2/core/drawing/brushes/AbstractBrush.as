@@ -236,14 +236,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			_brushMesh = createBrushMesh();
 			_brushMesh.init(context);
-			// the purpose of this is to avoid a bit of the delay when drawing the very first time
-			brushShape = brushShapeLibrary.getBrushShape(param_shapes.stringValue);
-
+			
 			_view = view;
 			_canvasModel = canvasModel;
 			_paintSettingsModel = paintSettingsModel;
 			_context = context;
 			_renderer = renderer;
+			
+			// the purpose of this is to avoid a bit of the delay when drawing the very first time
+			brushShape = brushShapeLibrary.getBrushShape(param_shapes.stringValue);
+
+
 			_pathManager.activate(view, canvasModel, renderer);
 			param_shapes.addEventListener(Event.CHANGE, onShapeChanged);
 

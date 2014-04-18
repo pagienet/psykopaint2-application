@@ -3,7 +3,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.models.NetworkFailureGalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
+	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryZoomRatioSignal;
@@ -31,6 +33,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		[Inject]
 		public var requestNavigationToggleSignal : RequestNavigationToggleSignal;
 
+		[Inject]
+		public var notifyAMFConnectionFailed : NotifyAMFConnectionFailed;
+
 		// keeps track whether or not the active painting update was triggered locally
 		private var internalUpdate : Boolean;
 		private var oldState:String;
@@ -50,6 +55,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		override public function initialize() : void
 		{
 			super.initialize();
+			notifyAMFConnectionFailed.add(onImageCollectionFailed);
 			activePaintingModel.onUpdate.add(onActivePaintingUpdate);
 			notifyStateChangeSignal.add(onStateChangeSignal);
 			view.requestImageCollection.add(requestImageCollection);
@@ -60,6 +66,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		override public function destroy() : void
 		{
 			super.destroy();
+			notifyAMFConnectionFailed.remove(onImageCollectionFailed);
 			activePaintingModel.onUpdate.remove(onActivePaintingUpdate);
 			notifyStateChangeSignal.remove(onStateChangeSignal);
 			view.requestImageCollection.remove(requestImageCollection);
@@ -162,8 +169,19 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onImageCollectionFailed(status : uint) : void
 		{
-			// TODO: SHOW FEEDBACK
-			trace ("Failed to fetch image collection!");
+			view.setImageCollection(generateNetworkFailureCollection());
+		}
+
+		private function generateNetworkFailureCollection():GalleryImageCollection
+		{
+			var imageProxy : NetworkFailureGalleryImageProxy = new NetworkFailureGalleryImageProxy();
+
+			var collection : GalleryImageCollection = new GalleryImageCollection();
+			collection.type = GalleryType.NONE;
+			collection.numTotalPaintings = 1;
+			collection.images.push(imageProxy);
+
+			return collection;
 		}
 	}
 }

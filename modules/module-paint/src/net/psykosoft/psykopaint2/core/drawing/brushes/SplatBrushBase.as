@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public static const PARAMETER_N_STROKE_ALPHA:String = "Stroke Alpha";
 		public var param_strokeAlpha:PsykoParameter;
 		
-		private var _incrementalWorkerTexture:TrackedRectTexture;
+		protected var _incrementalWorkerTexture:TrackedRectTexture;
 		
 		public function SplatBrushBase(drawNormalsOrSpecular : Boolean)
 		{
