@@ -44,10 +44,12 @@ package net.psykosoft.psykopaint2.core.models
 
 		private function retrieveCachedUser():void
 		{
-			_sessionID = _localCache.data.session_id;
+			_sessionID = _localCache.data["session_id"];
 
-			if (_userID)
+			if (_sessionID)
 				extractProfileData(_localCache.data);
+			else
+				_userID = -1;
 		}
 
 		public function sendPasswordReminder( email:String, onSuccess : Function, onFail : Function ):void {
@@ -294,6 +296,7 @@ package net.psykosoft.psykopaint2.core.models
 			amfBridge.updateSubscription(_sessionID, type, subscribed,
 				onUpdateSubscriptionsSuccess,
 				function(data:Object) : void {
+					trace ("Successfully updated call failed");
 					subscriptionData["subscribed"] = oldValue;
 					onFail();
 				}
@@ -303,10 +306,12 @@ package net.psykosoft.psykopaint2.core.models
 		private function onUpdateSubscriptionsSuccess(data:Object):void
 		{
 			if (data["status_code"] != 1) {
+				trace ("Successfully updated failed: code " + data["status_code"]);
 				_onFail(data["status_code"], "FAIL");
 				return;
 			}
 
+			trace ("Successfully updated subscriptions");
 			cacheUserData();
 			_onSubscriptionsChange.dispatch();
 			_onSuccess();

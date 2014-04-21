@@ -1,7 +1,5 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
-	import flash.display.BitmapData;
-	
 	import away3d.containers.ObjectContainer3D;
 	import away3d.core.base.Geometry;
 	import away3d.entities.Mesh;
