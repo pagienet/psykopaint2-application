@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 	public class WallpaperSubNavView extends SubNavigationViewBase
 	{
-		public static const ID_BACK:String = "Settings";
+		public static const ID_BACK:String = "Back"; /* Settings */
 
 		private var _atlas:BitmapAtlas;
 

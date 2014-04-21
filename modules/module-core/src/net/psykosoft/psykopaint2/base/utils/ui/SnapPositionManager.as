@@ -16,7 +16,6 @@ package net.psykosoft.psykopaint2.base.utils.ui
 		private var _position:Number;
 		private var _snapMotionSpeed:Number;
 		private var _direction:int;
-		private var _positionChange:Number;
 		private var _closestSnapPointIndex:int;
 		private var _onSnapMotion:Boolean;
 		private var _targetSnapPoint:Number = 0;
@@ -44,7 +43,6 @@ package net.psykosoft.psykopaint2.base.utils.ui
 			_snapPoints = new Vector.<Number>();
 			_closestSnapPointIndex = -1;
 			_direction = 0;
-			_positionChange = 0;
 		}
 
 		public function pushSnapPoint( value:Number ):void {
@@ -74,8 +72,6 @@ package net.psykosoft.psykopaint2.base.utils.ui
 			if( _snapPoints.length == 0 ) return;
 
 			_direction = amount > 0 ? 1 : -1;
-
-			_positionChange = amount;
 
 			// Edge containment.
 			var firstSnapPoint:Number = _snapPoints[ 0 ];
@@ -126,7 +122,6 @@ package net.psykosoft.psykopaint2.base.utils.ui
 
 			// Evaluate throw speed to reach target.
 			_snapMotionSpeed = ( _targetSnapPoint - _position ) / integralFriction;
-			_positionChange = _snapMotionSpeed;
 			_onMotion = _onSnapMotion = true;
 		}
 
@@ -135,7 +130,6 @@ package net.psykosoft.psykopaint2.base.utils.ui
 			var precision:Number = 512;
 			var integralFriction:Number = ( Math.pow( _frictionFactor, precision ) - 1 ) / ( _frictionFactor - 1 );
 			_snapMotionSpeed = ( targetPosition - _position ) / integralFriction;
-			_positionChange = _snapMotionSpeed;
 			_onMotion = _onSnapMotion = true;
 			evaluateClosestSnapPointPosition( targetPosition );
 		}
@@ -149,6 +143,7 @@ package net.psykosoft.psykopaint2.base.utils.ui
 		public function update():void {
 			if( !_onSnapMotion ) return;
 
+			trace("update");
 			// Update speed and position.
 			_position += _snapMotionSpeed;
 			_snapMotionSpeed *= _frictionFactor;
@@ -227,10 +222,6 @@ package net.psykosoft.psykopaint2.base.utils.ui
 		public function get closestSnapPointIndex():int {
 			trace( this, "closest snap: " + _closestSnapPointIndex );
 			return _closestSnapPointIndex;
-		}
-
-		public function get positionChange():Number {
-			return _positionChange;
 		}
 
 		public function get onMotion():Boolean {

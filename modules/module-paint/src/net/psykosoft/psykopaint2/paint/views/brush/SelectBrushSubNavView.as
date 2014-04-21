@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	public class SelectBrushSubNavView extends SubNavigationViewBase
 	{
-		public static const ID_BACK:String = "Edit Painting";
+		public static const ID_BACK:String = "Back";
 		public static const ID_COLOR:String = "Paint Settings";
 	//	public static const ID_ALPHA:String = "Change Opacity";
 

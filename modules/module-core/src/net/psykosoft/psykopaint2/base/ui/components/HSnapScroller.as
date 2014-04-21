@@ -122,7 +122,9 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function evaluateInteractionStart():void {
-//			trace( this, "evaluateInteractionStart()" );
+			//trace( this, "evaluateInteractionStart() scrollingAllowed= "+scrollingAllowed );
+			//MATHIEIU AS I UNDERSTAND THE SCROLLER WON'T UPDATE IF SCROLLING ISN'T ALLOWED 
+			//AND IF THERE IS THE NEED TO SCROLL BECAUSE THE CONTENT DOESN'T TAKE NEED MORE THAN VISIBLE SPACE
 			if( !scrollingAllowed || _container.numChildren == 0|| !thereIsEnoughContentToScroll()  || !mouseHitsInteractiveArea() ) return;
 			
 			_interactionManager.startInteraction();
@@ -130,9 +132,14 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function evaluateInteractionEnd():void {
-//			trace( this, "evaluateInteractionEnd()" );
+			//trace( this, "evaluateInteractionEnd()" );
 			if( !_active ) return;
 			_interactionManager.stopInteraction();
+		}
+		
+		public function evaluateInteractionUpdated():void
+		{
+			_interactionManager.update();
 		}
 
 		public function setVisibleDimensions( width:Number, height:Number ):void {
@@ -308,7 +315,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		private function enterframeHandler( event:Event ):void {
-//			trace( this, ">>> updating scroller <<<" ); // This should trace only when there is motion in the scroller.
+			trace( this, ">>> updating scroller <<<" ); // This should trace only when there is motion in the scroller.
 			_interactionManager.update();
 			_positionManager.update();
 			refreshToPosition();

@@ -11,6 +11,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public static const BG_TYPE_WOOD:String = "wood";
 		public static const BG_TYPE_WOOD_LOW:String = "wood1";
 		private var _type:String;
+		
+		public var bg:Sprite;
 
 		public function NavigationBg() {
 			super();

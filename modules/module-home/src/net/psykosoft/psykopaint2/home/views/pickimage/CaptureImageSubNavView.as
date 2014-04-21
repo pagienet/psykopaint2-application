@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 	public class CaptureImageSubNavView extends SubNavigationViewBase
 	{
-		public static const ID_BACK:String = "Pick an image";
+		public static const ID_BACK:String = "Back" /*Pick An IMAGE */;
 		public static const ID_CAPTURE:String = "Shoot!!";
 		public static const ID_FLIP:String = "Flip";
 

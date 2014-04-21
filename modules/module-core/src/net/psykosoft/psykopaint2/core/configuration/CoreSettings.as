@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.core.configuration
 
 		// Console gpu debugging.
 		public static const STAGE_3D_ERROR_CHECKING:Boolean = true; /*false on release*/
-		public static const DEBUG_RENDER_SEQUENCE:Boolean = true; /*false on release*/
+		public static const DEBUG_RENDER_SEQUENCE:Boolean = false; /*false on release*/
 
 		public static const DEBUG_AGAL:Boolean = true; /*false on release*/
 
