@@ -89,9 +89,10 @@ package net.psykosoft.psykopaint2.paint.commands
 			lightController.enabled = true;
 
 			canvasModel.createPaintTextures();
-			brushKitManager.activate();
-
+			
 			importPaintingData();
+			
+			brushKitManager.activate();
 
 			canvasHistoryModel.clearHistory();
 

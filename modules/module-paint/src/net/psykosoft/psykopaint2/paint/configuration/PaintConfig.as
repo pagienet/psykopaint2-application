@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToEaselViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
-	import net.psykosoft.psykopaint2.paint.signals.NotifyEraserModeChangedSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModeChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
@@ -162,7 +162,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( NotifyPipetteChargeChangedSignal ).asSingleton();
 			_injector.map( NotifyChangePipetteColorSignal ).asSingleton();
 			_injector.map( NotifyTogglePaintingEnableSignal ).asSingleton();
-			_injector.map( NotifyEraserModeChangedSignal ).asSingleton();
+			_injector.map( NotifyPaintModeChangedSignal ).asSingleton();
 			
 		}
 

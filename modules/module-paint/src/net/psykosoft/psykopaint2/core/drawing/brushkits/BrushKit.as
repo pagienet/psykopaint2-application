@@ -24,6 +24,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 
 	public class BrushKit extends EventDispatcher
@@ -116,8 +117,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				PsykoSocket.addMessageCallback("ActiveBrushKit.*", this, onSocketMessage );
 				sendBrushKitParameterSet();
 			}
+			setPaintMode(paintSettingsModel);
 		}
 		
+		protected function setPaintMode(paintSettingsModel: UserPaintSettingsModel):void
+		{
+			paintSettingsModel.setColorMode( PaintMode.PHOTO_MODE );
+		}
+			
 		public function deactivate():void
 		{
 			if ( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION )

@@ -16,6 +16,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	
 	public class BrushKit_Cosmetics extends BrushKit
 	{
@@ -156,6 +158,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			onPrecisionChanged(null);
 			onIntensityChanged(null);
+		}
+		
+		override protected function setPaintMode(paintSettingsModel: UserPaintSettingsModel):void
+		{
+			paintSettingsModel.setColorMode( PaintMode.COSMETIC_MODE );
 		}
 		
 		protected function onPrecisionChanged(event:Event):void

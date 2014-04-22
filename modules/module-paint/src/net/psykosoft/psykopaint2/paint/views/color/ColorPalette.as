@@ -168,12 +168,15 @@ package net.psykosoft.psykopaint2.paint.views.color
 					sendColorSignal = true;
 				}
 				
-				userPaintSettings.selectedSwatchIndex = index;
-				
-				userPaintSettings.setColorMode( autoColor ? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE, sendModeSignal );
-				userPaintSettings.setCurrentColor(_selectedColor, sendColorSignal);
-				userPaintSettings.eraserMode = (index == 5);
+				if ( userPaintSettings.colorMode != PaintMode.COSMETIC_MODE )
+				{
+					userPaintSettings.selectedSwatchIndex = index;
+					userPaintSettings.setColorMode( autoColor ? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE, sendModeSignal );
+					userPaintSettings.setCurrentColor(_selectedColor, sendColorSignal);
+					userPaintSettings.eraserMode = (index == 5);
+				}
 				eraser.filters = index == 5 ? [] : [desaturate];
+				
 			} else {
 				userPaintSettings.selectedSwatchIndex = index;
 			}

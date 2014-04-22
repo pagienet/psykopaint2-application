@@ -93,7 +93,7 @@ package net.psykosoft.psykopaint2.core.model
 			
 			fixed.dispose();
 			
-			setTimeout(initColorTransfer,5);
+			//setTimeout(initColorTransfer,5);
 		}
 		
 		private function initColorTransfer():void
@@ -255,6 +255,7 @@ package net.psykosoft.psykopaint2.core.model
 		
 		public function get colorTransfer() : ColorTransfer
 		{
+			if ( _colorTransfer == null ) initColorTransfer();
 			return _colorTransfer;
 		}
 
