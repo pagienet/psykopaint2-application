@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.core.model
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.paint.configuration.ColorStylePresets;
-	import net.psykosoft.psykopaint2.paint.signals.NotifyEraserModeChangedSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModeChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 
 	public class UserPaintSettingsModel
@@ -19,8 +19,7 @@ package net.psykosoft.psykopaint2.core.model
 		public var notifyPickedColorChangedSignal:NotifyPickedColorChangedSignal;
 		
 		[Inject]
-		public var notifyEraserModeChangedSignal:NotifyEraserModeChangedSignal;
-		
+		public var notifyPaintModeChangedSignal:NotifyPaintModeChangedSignal;
 		
 		[Inject]
 		public var canvasModel:CanvasModel;
@@ -221,7 +220,12 @@ package net.psykosoft.psykopaint2.core.model
 			if ( _colorMode != value )
 			{
 				_colorMode = value;
-				if ( dispatchSignal ) notifyPickedColorChangedSignal.dispatch( _currentColor, _colorMode, false);
+				if ( dispatchSignal ) 
+				{
+					notifyPaintModeChangedSignal.dispatch( _colorMode );
+					if ( _colorMode != PaintMode.COSMETIC_MODE ) notifyPickedColorChangedSignal.dispatch( _currentColor, _colorMode, false);
+				}
+				
 			}
 		}
 		
@@ -235,8 +239,7 @@ package net.psykosoft.psykopaint2.core.model
 			if ( _eraserMode != value )
 			{
 				_eraserMode = value;
-				notifyEraserModeChangedSignal.dispatch( _eraserMode );
-				if ( _eraserMode ) setColorMode( PaintMode.ERASER_MODE, true )
+				setColorMode( _eraserMode ? PaintMode.ERASER_MODE : PaintMode.COLOR_MODE, true )
 			}
 		}
 		

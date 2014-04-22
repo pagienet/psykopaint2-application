@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModeChangedSignal;
 	
 	public class ColorPickerSubNavView extends SubNavigationViewBase
 	{
@@ -164,15 +165,21 @@ package net.psykosoft.psykopaint2.paint.views.color
 			updateContextUI();
 		}
 		
-		private function updateContextUI():void
+		public function updateContextUI():void
 		{
 			if ( _userPaintSettings.colorMode == PaintMode.COLOR_MODE )
 			{
 				hslSliders.visible = true;
 				photoStyleUI.visible = false;
-			} else {
+				colorPalette.visible = true;
+			} else if ( _userPaintSettings.colorMode == PaintMode.PHOTO_MODE ){
 				hslSliders.visible = false;
 				photoStyleUI.visible = true;
+				colorPalette.visible = true;
+			}else if ( _userPaintSettings.colorMode == PaintMode.COSMETIC_MODE ){
+				hslSliders.visible = false;
+				photoStyleUI.visible = true;
+				colorPalette.visible = false;
 			}
 		}
 		

@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	
-	import net.psykosoft.psykopaint2.core.drawing.colortransfer.ColorTransfer;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -15,6 +14,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModeChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPipetteChargeChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyShowPipetteSignal;
@@ -53,6 +53,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 		[Inject]
 		public var notifyColorStyleChangedSignal:NotifyColorStyleChangedSignal;
 		
+		[Inject]
+		public var notifyPaintModeChangedSignal:NotifyPaintModeChangedSignal;
 		
 		[Inject]
 		public var userPaintSettings:UserPaintSettingsModel;
@@ -71,7 +73,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 			view.notifyColorStyleChangedSignal = notifyColorStyleChangedSignal;
 			
 			view.enabledSignal.add( onViewEnabled );
-			userPaintSettings.setDefaultValues();
 			view.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
 			// From view.
 			//view.colorChangedSignal.add( onColorChanged );
@@ -80,13 +81,21 @@ package net.psykosoft.psykopaint2.paint.views.color
 			notifyPickedColorChangedSignal.add( onColorChanged );
 			notifyGlobalGestureSignal.add( onGlobalGestureDetected );
 			notifyPipetteChargeChangedSignal.add( onPipetteChargeChanged );
+			notifyPaintModeChangedSignal.add( onPaintModeChanged );
 			
 			_stage = view.stage;
 			view.setParameters( paintModule.getCurrentBrushParameters() );
 			
 			
 		}
-
+		
+		private function onPaintModeChanged( paintMode:int):void
+		{
+			view.userPaintSettings = userPaintSettings;
+			view.updateContextUI();
+			
+		}
+		
 		override public function destroy():void {
 			super.destroy();
 			view.removeEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );

@@ -32,6 +32,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
@@ -46,7 +47,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
-	import net.psykosoft.psykopaint2.paint.signals.NotifyEraserModeChangedSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModeChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyShowPipetteSignal;
 	import net.psykosoft.psykopaint2.paint.utils.CopyColorAndSourceToBitmapDataUtil;
@@ -121,7 +122,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public var notifyTogglePaintingEnableSignal:NotifyTogglePaintingEnableSignal;
 		
 		[Inject]
-		public var notifyEraserModeChangedSignal:NotifyEraserModeChangedSignal;
+		public var notifyPaintModeChangedSignal:NotifyPaintModeChangedSignal;
 		
 	
 		private var _view : DisplayObject;
@@ -160,7 +161,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			notifyColorStyleChangedSignal.add( onColorStyleChanged );
 			notifyNavigationToggledSignal.add( onNavigationToggled );
 			notifyTogglePaintingEnableSignal.add( onToggleEnablePainting );
-			notifyEraserModeChangedSignal.add( onEraserModeChanged );
+			notifyPaintModeChangedSignal.add( onPaintModeChanged );
 			_navigationIsVisible = true;
 		}
 		
@@ -180,11 +181,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			}
 		}
 		
-		private function onEraserModeChanged( enable:Boolean ):void
+		private function onPaintModeChanged( paintMode:int ):void
 		{
 			if ( _activeBrushKit )
 			{
-				_activeBrushKit.setEraserMode( enable );
+				_activeBrushKit.setEraserMode( paintMode == PaintMode.ERASER_MODE );
 			}
 		}
 		
@@ -340,7 +341,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				registerBrushKit( BrushKit.fromXML(brushKitDef.brush[i]), brushKitDef.brush[i].@name);
 			*/
 			initializeDefaultBrushes();
-
+			
 			_active = true;
 			
 			
@@ -352,7 +353,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
 			activateBrushKit();
 			
-			
+			paintSettingsModel.setDefaultValues();
 		}
 
 		public function deactivate() : void
