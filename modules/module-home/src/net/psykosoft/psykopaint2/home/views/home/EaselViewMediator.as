@@ -94,6 +94,8 @@ package net.psykosoft.psykopaint2.home.views.home
 				view.mouseEnabled = true;
 			else
 				view.mouseEnabled = false;
+			
+			view.cropModeIsActive = ( newState == NavigationStateType.CROP );
 		}
 
 		override public function destroy() : void

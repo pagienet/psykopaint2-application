@@ -69,7 +69,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _texturesInvalid:Boolean;
 
 		private var aspectRatio:Number;
-		private var cropModeIsActive:Boolean;
+		public var cropModeIsActive:Boolean;
 
 		private var cropTransformAccepted:Boolean;
 		private var stage3dProxy:Stage3DProxy;
@@ -502,7 +502,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 			*/
 			
-			cropModeIsActive = true;
+			//cropModeIsActive = true;
 			//temporary to test on desktop
 			if ( !CoreSettings.RUNNING_ON_iPAD )
 			{

@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.crop.configuration
 {
 
-	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 	import net.psykosoft.psykopaint2.crop.signals.DestroyCropModuleCommand;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
