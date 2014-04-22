@@ -2,10 +2,10 @@ package net.psykosoft.psykopaint2.core.services
 {
 	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.events.HTTPStatusEvent;
 	import flash.events.IOErrorEvent;
 	import flash.events.RemoteNotificationEvent;
 	import flash.events.StatusEvent;
-	import flash.net.SharedObject;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestDefaults;
@@ -120,28 +120,35 @@ package net.psykosoft.psykopaint2.core.services
 		private function onRemoteNotificationToken(event:RemoteNotificationEvent):void
 		{
 			trace ("Push notification token received: " + event.tokenId);
-			var data : String = "";
+//			var data : String = "";
 
-			if (loggedInUserProxy.isLoggedIn()) {
-				data = "?alias=UID_" + loggedInUserProxy.userID;
-			}
+//			if (loggedInUserProxy.isLoggedIn()) {
+//				data = "?alias=UID_" + loggedInUserProxy.userID;
+//			}
 
-			var urlRequest : URLRequest = new URLRequest(PROVIDER_TOKEN_URL + event.tokenId + data);
-			/*var data : URLVariables = new URLVariables();
+			URLRequestDefaults.setLoginCredentialsForHost(PROVIDER_HOST_NAME, APP_KEY, APP_SECRET);
 
-			if (loggedInUserProxy.isLoggedIn()) {
-				data.alias = "UID_" + loggedInUserProxy.userID;
-			}
+			var urlRequest : URLRequest = new URLRequest(PROVIDER_TOKEN_URL + event.tokenId);
+			var json : String = JSON.stringify({alias: "UID_" + loggedInUserProxy.userID});
 
-			urlRequest.data = data;*/
+			urlRequest.data = json;
 			urlRequest.authenticate = true;
 			urlRequest.method = URLRequestMethod.PUT;
-			URLRequestDefaults.setLoginCredentialsForHost(PROVIDER_HOST_NAME, APP_KEY, APP_SECRET);
+			urlRequest.contentType = "application/json";
 
 			var loader : URLLoader = new URLLoader();
 			loader.load(urlRequest);
 			loader.addEventListener(Event.COMPLETE, onLoadComplete);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
+			loader.addEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, onHTTPResponseStatus);
+		}
+
+		private function onHTTPResponseStatus(event:HTTPStatusEvent):void
+		{
+			trace ("Notification provider HTTP response:");
+			trace ("response url: " + event.responseURL);
+			trace ("status: " + event.status);
+			trace ("headers: " + event.responseHeaders);
 		}
 
 		private function onIOError(event:IOErrorEvent):void
@@ -155,6 +162,7 @@ package net.psykosoft.psykopaint2.core.services
 		{
 			loader.removeEventListener(Event.COMPLETE, onLoadComplete);
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, onIOError);
+			loader.removeEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, onHTTPResponseStatus);
 		}
 
 		private function onLoadComplete(event:Event):void

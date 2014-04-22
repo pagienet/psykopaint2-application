@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			//if(material==null)
 			//_pageTextureMaterial = new ColorMaterial(0xEEEEEE);
 			//else 
-			_pageTextureMaterial = BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.PAGE_PAPER);
+			_pageTextureMaterial = HomeMaterialsCache.getTextureMaterialById(HomeMaterialsCache.PAGE_PAPER);
 			
 			//_pageTextureMaterial  = new ColorMaterial(0xEEEEEE);
 			

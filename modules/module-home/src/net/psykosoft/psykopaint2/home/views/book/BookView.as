@@ -146,7 +146,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			_coverBook.y = -10;
 			_coverBook.mouseEnabled = true;
 
-			_ringTextureMaterial = BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.RING);
+			_ringTextureMaterial = HomeMaterialsCache.getTextureMaterialById(HomeMaterialsCache.RING);
 			_rings = new BookLayoutRings(_ringTextureMaterial);
 			_container.addChild(_rings);
 			_rings.scaleZ = _rings.scaleX = _rings.scaleY = 0.191;

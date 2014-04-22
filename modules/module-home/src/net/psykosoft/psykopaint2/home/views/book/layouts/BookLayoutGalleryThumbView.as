@@ -23,8 +23,8 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.ImageThumbnailSize;
-	import net.psykosoft.psykopaint2.home.views.book.BookGeometryProxy;
-	import net.psykosoft.psykopaint2.home.views.book.BookMaterialsProxy;
+	import net.psykosoft.psykopaint2.home.views.book.HomeGeometryCache;
+	import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
 
 	public class BookLayoutGalleryThumbView extends ObjectContainer3D
 	{
@@ -64,7 +64,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		{
 			_userNameMaterial = new FlatTextureMaterial(null);
 			_userNameMaterial.blendMode = BlendMode.LAYER;
-			_infoMesh = new Mesh(BookGeometryProxy.getGeometryById(BookGeometryProxy.CARD_GEOMETRY), _userNameMaterial);
+			_infoMesh = new Mesh(HomeGeometryCache.getGeometryById(HomeGeometryCache.CARD_GEOMETRY), _userNameMaterial);
 			_infoMesh.y = 3;
 			_infoMesh.z = -25;
 			_infoMesh.scaleX = 60;
@@ -90,7 +90,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			var textField:TextField = generateTextField(_imageProxy.userName);
 			bitmapData.draw(textField);
 
-			var heartBitmapData : BitmapData = BookMaterialsProxy.getBitmapDataById(BookMaterialsProxy.ICON_HEART);
+			var heartBitmapData : BitmapData = HomeMaterialsCache.getBitmapDataById(HomeMaterialsCache.ICON_HEART);
 			var matrix : Matrix = new Matrix(1, 0, 0, 1, bitmapData.width - heartBitmapData.width, 0);
 			bitmapData.draw(heartBitmapData, matrix);
 
@@ -122,7 +122,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 
 		private function initShadow():void
 		{
-			_shadowMesh = new Mesh(BookGeometryProxy.getGeometryById(BookGeometryProxy.CARD_GEOMETRY), BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.THUMBNAIL_SHADOW));
+			_shadowMesh = new Mesh(HomeGeometryCache.getGeometryById(HomeGeometryCache.CARD_GEOMETRY), HomeMaterialsCache.getTextureMaterialById(HomeMaterialsCache.THUMBNAIL_SHADOW));
 			_shadowMesh.scaleX = 64;
 			_shadowMesh.scaleZ = 25;
 			_shadowMesh.z = -18;
@@ -131,7 +131,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 
 		private function initThumbnail():void
 		{
-			_thumbMesh = new Mesh(BookGeometryProxy.getGeometryById(BookGeometryProxy.CARD_GEOMETRY), BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.THUMBNAIL_LOADING));
+			_thumbMesh = new Mesh(HomeGeometryCache.getGeometryById(HomeGeometryCache.CARD_GEOMETRY), HomeMaterialsCache.getTextureMaterialById(HomeMaterialsCache.THUMBNAIL_LOADING));
 			_thumbMesh.scaleX = _width;
 			_thumbMesh.scaleZ = _height;
 			_thumbMesh.y = 1;
@@ -168,7 +168,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 
 			_onComplete = onComplete;
 
-			_thumbMesh.material = BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.THUMBNAIL_LOADING)
+			_thumbMesh.material = HomeMaterialsCache.getTextureMaterialById(HomeMaterialsCache.THUMBNAIL_LOADING)
 			_imageProxy.loadThumbnail(onThumbnailLoaded, onThumbnailFail, ImageThumbnailSize.SMALL);
 		}
 

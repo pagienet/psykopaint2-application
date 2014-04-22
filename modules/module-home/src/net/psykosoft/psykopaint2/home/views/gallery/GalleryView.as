@@ -44,7 +44,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
 	import net.psykosoft.psykopaint2.home.model.GalleryImageCache;
-	import net.psykosoft.psykopaint2.home.views.book.BookMaterialsProxy;
+	import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
 	
 	import org.osflash.signals.Signal;
 

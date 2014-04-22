@@ -12,16 +12,14 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.home.views.book.BookGeometryProxy;
-	import net.psykosoft.psykopaint2.home.views.book.BookMaterialsProxy;
+	import net.psykosoft.psykopaint2.home.views.book.HomeGeometryCache;
+	import net.psykosoft.psykopaint2.home.views.book.HomeGeometryCache;
+	import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
 	
 	public class GalleryPaintingView extends ObjectContainer3D
 	{
 		private var _mesh:Mesh;
 		private var _material:MaterialBase;
-		
-		private var _loadingMesh:Mesh;
-		private var _loadingTexture:BitmapTexture;
 		
 		private var _frameMesh:Mesh;
 		
@@ -40,8 +38,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_mesh.z=0;
 			
 			
-			
-			
 			//WHEN LOADING TEXTURE FINISHED WE LOAD THE LOADING TEXTURE
 			//BookMaterialsProxy.onCompleteSignal.addOnce(loadTexture);
 			loadTexture();
@@ -53,18 +49,17 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			trace("SWAP LOADING TEXTURE");
 			var isframe:Boolean = (Math.random()>0.9);
 			
-			var frameTexture:BitmapTexture = new BitmapTexture(TextureUtil.autoResizePowerOf2(BookMaterialsProxy.getBitmapDataById((isframe)?BookMaterialsProxy.FRAME_WHITE:BookMaterialsProxy.FRAME_EMPTY)));
-			var frameGeometry:PlaneGeometry = 	new PlaneGeometry(236, 232, 1, 1, false);
-			_frameMesh = new Mesh(frameGeometry, new TextureMaterial(frameTexture));
+			var frameMaterial:TextureMaterial = HomeMaterialsCache.getTextureMaterialById((isframe)? HomeMaterialsCache.FRAME_WHITE : HomeMaterialsCache.FRAME_EMPTY);
+			var frameGeometry:Geometry = HomeGeometryCache.getGeometryById(HomeGeometryCache.FRAME_GEOMETRY);
+			_frameMesh = new Mesh(frameGeometry, frameMaterial);
+			_frameMesh.scaleX = 236;
+			_frameMesh.scaleY = 232;
 			_frameMesh.y=3;
 			TextureMaterial(_frameMesh.material).alphaBlending=true;
 			this.addChild(_frameMesh);
 			
 			//IF THERE'S NOT FRAME WE PUT IT BEHIND THE PAINTING
 			_frameMesh.z=(isframe)?-1:4;
-			
-			
-			
 		}
 		
 		
@@ -97,10 +92,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 //				removeChild(_loadingMesh);
 //			}
 			_mesh.dispose();
-			//MATERIAL IS DISPOSED IN THE PARENT GAlleryView
-			//_material.dispose();
-			//_loadingTexture.dispose();
-			//_loadingMesh.dispose();
 		}
 	}
 }

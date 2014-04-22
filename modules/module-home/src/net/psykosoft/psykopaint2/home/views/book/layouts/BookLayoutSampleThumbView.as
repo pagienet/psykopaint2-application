@@ -18,8 +18,8 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 	
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.core.models.SourceImageProxy;
-	import net.psykosoft.psykopaint2.home.views.book.BookGeometryProxy;
-	import net.psykosoft.psykopaint2.home.views.book.BookMaterialsProxy;
+	import net.psykosoft.psykopaint2.home.views.book.HomeGeometryCache;
+	import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
 	
 
 	public class BookLayoutSampleThumbView extends ObjectContainer3D
@@ -51,15 +51,15 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			_stage3DProxy = stage3DProxy;
 
 			//THIS IS THE CLASS WHERE WE ADD THE THUMBNAIL WITH SHADOWS			
-			var cardGeom : Geometry = BookGeometryProxy.getGeometryById(BookGeometryProxy.CARD_GEOMETRY);
-			_thumbMesh = new Mesh(cardGeom, BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.THUMBNAIL_LOADING));
+			var cardGeom : Geometry = HomeGeometryCache.getGeometryById(HomeGeometryCache.CARD_GEOMETRY);
+			_thumbMesh = new Mesh(cardGeom, HomeMaterialsCache.getTextureMaterialById(HomeMaterialsCache.THUMBNAIL_LOADING));
 			_thumbMesh.scaleX = _width;
 			_thumbMesh.scaleZ = _height;
 			_thumbMesh.y = 1;
 			_thumbMesh.mouseEnabled=true;
 			addChild(_thumbMesh);
 
-			_shadowTextureMaterial = BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.THUMBNAIL_SHADOW);
+			_shadowTextureMaterial = HomeMaterialsCache.getTextureMaterialById(HomeMaterialsCache.THUMBNAIL_SHADOW);
 			_shadowMesh = new Mesh(cardGeom,_shadowTextureMaterial);
 			_shadowMesh.scaleX = 64;
 			_shadowMesh.scaleZ = 25;
