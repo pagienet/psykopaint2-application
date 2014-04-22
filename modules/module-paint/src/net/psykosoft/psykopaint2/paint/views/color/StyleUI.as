@@ -89,7 +89,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 				stage.removeEventListener(MouseEvent.MOUSE_MOVE, onSliderMouseMove );
 				stage.removeEventListener(MouseEvent.MOUSE_UP, onSliderMouseUp );
 			}
-			
+		}
+		
+		public function showStyleUI( show:Boolean ):void
+		{
+			styleBar.visible = slider1Bar.visible = slider1Handle.visible = styleSelector.visible = styleIconHolder.visible = show;
 		}
 		
 		protected function onStyleMouseDown( event:MouseEvent ):void

@@ -174,10 +174,12 @@ package net.psykosoft.psykopaint2.paint.views.color
 				colorPalette.visible = true;
 			} else if ( _userPaintSettings.colorMode == PaintMode.PHOTO_MODE ){
 				hslSliders.visible = false;
+				photoStyleUI.showStyleUI(true);
 				photoStyleUI.visible = true;
 				colorPalette.visible = true;
 			}else if ( _userPaintSettings.colorMode == PaintMode.COSMETIC_MODE ){
 				hslSliders.visible = false;
+				photoStyleUI.showStyleUI(false);
 				photoStyleUI.visible = true;
 				colorPalette.visible = false;
 			}
