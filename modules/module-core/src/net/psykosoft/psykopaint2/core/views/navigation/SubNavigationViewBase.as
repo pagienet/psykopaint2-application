@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var scrollerButtonClickedSignal:Signal;
 
 		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 45;
+		private var _initialPositionX:Number;
 
 		public function SubNavigationViewBase() {
 			super();
@@ -73,10 +74,22 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function evaluateScrollingInteractionStart():void {
 			_scroller.evaluateInteractionStart();
+			_initialPositionX = _scroller.positionManager.position;
 		}
 
 		public function evaluateScrollingInteractionEnd():void {
 			_scroller.evaluateInteractionEnd();
+		}
+		
+		public function evaluateScrollingInteractionUpdated():void
+		{
+			trace(this,"evaluateScrollingInteractionUpdated" );
+			
+			//_scroller.positionManager.update();
+			
+			//var shiftDistance:Number = Math.min(Math.abs(_initialPositionX - _scroller.positionManager.position),200);
+			//_scroller.y = 768 - SCROLLER_DISTANCE_FROM_BOTTOM - _scroller.visibleHeight / 2;
+		
 		}
 
 		// Just for debugging, can be removed...
@@ -365,5 +378,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				trace("FIXME SubNavigationViewBase.onScrollerItemRendererRemoved");
 			}
 		}
+		
+		
 	}
 }

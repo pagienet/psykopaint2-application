@@ -131,6 +131,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			_panGestureHorizontal.direction = PanGestureDirection.HORIZONTAL;
 			_panGestureHorizontal.addEventListener( GestureEvent.GESTURE_BEGAN, onHorizontalPanGestureBegan );
 			_panGestureHorizontal.addEventListener( GestureEvent.GESTURE_ENDED, onHorizontalPanGestureEnded );
+			//_panGestureHorizontal.addEventListener( GestureEvent.GESTURE_CHANGED, onHorizontalPanGestureUpdating );
 			_panGestureHorizontal.delegate = _delegate;
 		}
 
@@ -138,6 +139,12 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 //			trace( this, "onHorizontalPanGestureBegan" );
 			if ( _gesturesEnabled )
 				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_BEGAN, event );
+		}
+		
+		private function onHorizontalPanGestureUpdating( event:GestureEvent ):void {
+			//trace( this, "onHorizontalPanGestureUpdating" );
+			if ( _gesturesEnabled )
+				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_UPDATED, event );
 		}
 
 		private function onHorizontalPanGestureEnded( event:GestureEvent ):void {

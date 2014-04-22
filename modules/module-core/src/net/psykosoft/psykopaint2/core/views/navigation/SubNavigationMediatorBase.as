@@ -78,10 +78,16 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onViewScrollingEnded():void {
 			requestResumeCPUUsageForUISignal.dispatch();
+			
 		}
 
 		private function onViewScrollingStarted():void {
 			requestSaveCPUForUISignal.dispatch();
+		}
+		
+		private function onViewScrollingUpdating():void {
+			
+			trace(this,"onViewScrollingUpdating");
 		}
 
 		// -----------------------
@@ -89,7 +95,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// -----------------------
 
 		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
-//			trace( this, "onGlobalGesture: " + gestureType );
+			trace( this, "onGlobalGesture: " + gestureType );
 			switch( gestureType ) {
 				case GestureType.HORIZONTAL_PAN_GESTURE_BEGAN: {
 					_subNavigationView.evaluateScrollingInteractionStart();
@@ -99,6 +105,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 					_subNavigationView.evaluateScrollingInteractionEnd();
 					break;
 				}
+				case GestureType.HORIZONTAL_PAN_GESTURE_UPDATED: {
+					_subNavigationView.evaluateScrollingInteractionUpdated();
+					break;
+				}
+						
 			}
 		}
 

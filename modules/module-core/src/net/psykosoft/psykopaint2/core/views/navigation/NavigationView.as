@@ -1,16 +1,25 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
+	import com.greensock.easing.Quad;
+	import com.greensock.easing.Sine;
+	
 	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
+	import flash.display.StageQuality;
 	import flash.events.MouseEvent;
+	import flash.geom.Matrix;
 	import flash.utils.Dictionary;
 	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.base.utils.misc.ClickUtil;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.LeftButton;
 	import net.psykosoft.psykopaint2.core.views.components.button.RightButton;
@@ -24,6 +33,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var header:NavigationHeader;
 		public var leftBtnSide:Sprite;
 		public var rightBtnSide:Sprite;
+		public var loadingView:LoadingView
 
 		public var buttonClickedSignal:Signal;
 
@@ -32,6 +42,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _currentSubNavView:SubNavigationViewBase;
 
 		private var _panel:NavigationPanel;
+		private var _clickedButton:NavigationButton;
+		private var _previousSubNavView:Object;
 
 		public function NavigationView() {
 			super();
@@ -50,6 +62,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_leftButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
 			_rightButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
 			visible = false;
+			loadingView.visible=false;
 		}
 
 		// ---------------------------------------------------------------------
@@ -70,39 +83,144 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function updateSubNavigation( subNavType:Class ):void {
 
+			//THE DIRECTION OF THE TRANSITION CHANGE IF WE CLICK ON BACK BUTTON
+			var tweenDirection:int = (_clickedButton && _clickedButton.id =="Back")?-1:1;
+			
+			var navigationView:NavigationView = this;
+			
+			
 			// Keep current nav when incoming class is the abstract one.
 			// TODO: review...
 			if( subNavType == SubNavigationViewBase ) {
+				loadingView.visible = true;
 				return;
 			}
 
 			trace( this, "updating sub-nav: " + subNavType );
-
-			// Disable old view.
-			disposeSubNavigation();
-
+			
+			//HIDE PREVIOUS VIEW
+			if (_currentSubNavView){
+				
+				
+				var snapShotContainer:Sprite = new Sprite();
+				var matrix:Matrix = new Matrix();
+				
+				//MAKE A SNAPSHOT, SHOW IT AS SAME POSITION AND TWEEN IT
+				//MATHIEU THIS TRANSITION LOOKS GOOD BUT IS TOO SLOW BECAUSE OF REGULAR DISPLAY LIST
+				var snapshotBmd:BitmapData = new BitmapData(1024,this.height,true,0x00000000);
+				matrix.ty =- this.getBounds(this).y;
+				
+				snapshotBmd.draw(this,matrix);
+				var snapShotBm:Bitmap = new Bitmap(snapshotBmd);
+				snapShotBm.y = this.y - matrix.ty;
+				snapShotContainer.addChild(snapShotBm);
+				
+				var previousSubNavView:SubNavigationViewBase = _currentSubNavView;
+				previousSubNavView.scrollerButtonClickedSignal.remove( onSubNavigationScrollerButtonClicked );
+				_currentSubNavView = null;
+				
+				
+			/*	_previousSubNavView = _currentSubNavView;
+				_previousSubNavView.scrollerButtonClickedSignal.remove( onSubNavigationScrollerButtonClicked );
+				_currentSubNavView = null;
+				
+				
+				//DISABLING SUB NAV AFTER TRANSITION SO THERE'S NO WAITING TIME
+				_previousSubNavView.disable();
+				_previousSubNavView.parent.removeChild( _previousSubNavView );
+				
+				
+				TweenLite.to(_previousSubNavView,0.5,{x:-tweenDirection*1024,ease:Sine.easeOut,onComplete:function(){
+					showNewSubNavigationView(subNavType);
+				}});*/
+					
+				//
+				//TweenLite.from(_currentSubNavView,0.5,{ease:Sine.easeOut,x:1024*tweenDirection});
+				
+				//DISABLING SUB NAV AFTER TRANSITION SO THERE'S NO WAITING TIME
+				previousSubNavView.disable();
+				previousSubNavView.parent.removeChild( previousSubNavView );
+				
+				// SHOW NEW NAVIGATION
+				showNewSubNavigationView(subNavType);
+				
+				//TAKE AN OTHER SNAPSHOT OF THE NEW NAVIGATION VIEW
+				var newSubNavViewBmd:BitmapData = new BitmapData(1024,this.height,true,0x00000000);
+				matrix.ty =- this.getBounds(this).y;
+				
+				newSubNavViewBmd.draw(this,matrix);
+				var newSubNavViewBm:Bitmap = new Bitmap(newSubNavViewBmd);
+				newSubNavViewBm.y = this.y - matrix.ty;
+				newSubNavViewBm.x =  (_clickedButton && _clickedButton.id =="Back")?-1024: 1024;
+				//newSubNavViewBm.x *= CoreSettings.GLOBAL_SCALING;
+				snapShotContainer.addChild(newSubNavViewBm);
+				
+				this.stage.addChild(snapShotContainer);
+				snapShotContainer.scaleX = snapShotContainer.scaleY = CoreSettings.GLOBAL_SCALING;
+				
+				navigationView.visible=false;
+				
+				
+				TweenLite.to(snapShotContainer,0.3,{ease:Quad.easeOut,x:-1024*tweenDirection*CoreSettings.GLOBAL_SCALING,onComplete:function(){
+					
+					
+					navigationView.visible=true;
+					
+					//REMOVE SNAPSHOTS
+					snapShotContainer.parent.removeChild(snapShotContainer);
+					
+					newSubNavViewBmd.dispose();
+					newSubNavViewBm.parent.removeChild(newSubNavViewBm);
+					
+					snapshotBmd.dispose();
+					snapShotBm.parent.removeChild(snapShotBm);
+					
+					//this.x=0;
+					
+					loadingView.visible=false;
+					
+				}});
+				
+			}
+			else {
+				showNewSubNavigationView(subNavType);
+				loadingView.visible=false;
+			}
+		
+			
+		}
+		
+		private function showNewSubNavigationView(subNavType:Class):void{
+			//THE DIRECTION OF THE TRANSITION CHANGE IF WE CLICK ON BACK BUTTON
+			var tweenDirection:int = (_clickedButton && _clickedButton.id =="Back")?-1:1;
+			
 			// Defaults to rope bg.
 			setBgType( NavigationBg.BG_TYPE_ROPE );
-
+			
 			// Reset.
 			leftBtnSide.visible = false;
 			rightBtnSide.visible = false;
-
+			
 			if( !subNavType ) {
 				header.setTitle( "" );
 				return;
 			} else {
 				setChildIndex(header,0);
 			}
-
+			
+			
+			
 			trace( this, "creating new sub navigation view" );
 			_currentSubNavView = new subNavType();
 			_currentSubNavView.setNavigation( this );
 			_panel.addChildAt( _currentSubNavView, 1 );
-
 			_currentSubNavView.enable();
 			_currentSubNavView.scrollerButtonClickedSignal.add( onSubNavigationScrollerButtonClicked );
+			
+			
+			
 		}
+		
 
 		private function disposeSubNavigation():void {
 			if( _currentSubNavView ) {
@@ -113,6 +231,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				_currentSubNavView = null;
 			}
 		}
+		
+		
+	
 
 		// ---------------------------------------------------------------------
 		// Side buttons.
@@ -165,6 +286,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			var clickedButton:NavigationButton = ClickUtil.getObjectOfClassInHierarchy( event.target as DisplayObject, NavigationButton ) as NavigationButton;
 			if( !clickedButton ) throw new Error( "unidentified button clicked." );
 
+			_clickedButton = clickedButton;
 			trace( this, "button clicked - id: " + clickedButton.id + ", label: " + clickedButton.labelText );
 			buttonClickedSignal.dispatch( clickedButton.id );
 		}

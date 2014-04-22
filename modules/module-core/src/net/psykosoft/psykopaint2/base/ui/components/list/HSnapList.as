@@ -326,5 +326,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 				_container.graphics.drawRect( px, 0, itemData.itemRendererWidth, itemData.itemRendererWidth );
 			}
 		}
+		
+		
 	}
 }
