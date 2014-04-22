@@ -453,7 +453,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function initLoadingTexture():void
 		{
-			var bitmapData:BitmapData = new TrackedBitmapData(16, 16, true, 0xAAAAAA00);
+			var bitmapData:BitmapData = new TrackedBitmapData(16, 16, true, 0xFFAAAAAA);
 			_loadingTexture = new BitmapTexture(bitmapData);
 			_loadingTexture.getTextureForStage3D(_stage3DProxy);
 			bitmapData.dispose();
@@ -675,7 +675,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				_lowQualityMaterials[imageProxy.index].texture = thumbnail;
 				//TRANSITION
 				//_paintings[imageProxy.index].y=300;
-				TweenLite.from(_paintings[imageProxy.index],0.5,{y:300,ease:Expo.easeOut});
+				//TweenLite.from(_paintings[imageProxy.index],0.5,{y:300,ease:Expo.easeOut});
 			}
 			
 			

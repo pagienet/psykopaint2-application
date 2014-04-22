@@ -48,6 +48,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			
 			trace("SWAP LOADING TEXTURE");
 			var isframe:Boolean = (Math.random()>0.9);
+			isframe=false;
 			
 			var frameMaterial:TextureMaterial = HomeMaterialsCache.getTextureMaterialById((isframe)? HomeMaterialsCache.FRAME_WHITE : HomeMaterialsCache.FRAME_EMPTY);
 			var frameGeometry:Geometry = HomeGeometryCache.getGeometryById(HomeGeometryCache.FRAME_GEOMETRY);
@@ -58,7 +59,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			TextureMaterial(_frameMesh.material).alphaBlending=true;
 			this.addChild(_frameMesh);
 			
-			//IF THERE'S NOT FRAME WE PUT IT BEHIND THE PAINTING
+			//IF THERE'S NO FRAME WE PUT IT BEHIND THE PAINTING
 			_frameMesh.z=(isframe)?-1:4;
 		}
 		
