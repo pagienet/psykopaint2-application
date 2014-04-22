@@ -1,13 +1,10 @@
 package net.psykosoft.psykopaint2.app.states
 {
 	import flash.display.BitmapData;
-	import flash.utils.setTimeout;
 	
-	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
@@ -83,42 +80,40 @@ package net.psykosoft.psykopaint2.app.states
 		 * 	background : RefCountedTexture; // containing the background for the renderer
 		 * }
 		 */
+		
 		override ns_state_machine function activate(data : Object = null) : void
 		{
 			_croppedBitmapData = BitmapData(data.bitmapData);
 			_background = RefCountedRectTexture(data.background);
-
+			
 			notifySurfaceLoadedSignal.addOnce(onSurfaceLoaded);
 			requestLoadSurfaceSignal.dispatch(0);
 		}
-
+		
 		private function onSurfaceLoaded(data : SurfaceDataVO) : void
 		{
-			_surfaceData = data;
-			notifyHomeModuleDestroyedSignal.addOnce( onHomeModuleDestroyed );
-			requestDestroyHomeModuleSignal.dispatch();
-		}
-
-		private function onHomeModuleDestroyed():void {
-
-			var vo : PaintingDataVO = createPaintingVO(_surfaceData);
-			_surfaceData = null;
-
-			_croppedBitmapData.dispose();
-			_croppedBitmapData = null;
-
+			var vo : PaintingDataVO = createPaintingVO(data);
 			notifyPaintModuleSetUp.addOnce(onPaintingModuleSetUp);
 			requestSetupPaintModuleSignal.dispatch(vo);
 		}
-
+		
+		private function onHomeModuleDestroyed():void {
+			_croppedBitmapData.dispose();
+			_croppedBitmapData = null;
+		}
+		
 		private function onPaintingModuleSetUp() : void
 		{
+			notifyHomeModuleDestroyedSignal.addOnce( onHomeModuleDestroyed );
+			requestDestroyHomeModuleSignal.dispatch();
+			
 			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
 			requestSetCanvasBackgroundSignal.dispatch(_background.newReference(), easelRectModel.absoluteScreenRect);
-
+			
 			notifyCanvasZoomedToDefaultViewSignal.addOnce( onZoomInComplete );
 			requestZoomCanvasToDefaultViewSignal.dispatch();
 		}
+		
 
 		private function onZoomInComplete() : void
 		{

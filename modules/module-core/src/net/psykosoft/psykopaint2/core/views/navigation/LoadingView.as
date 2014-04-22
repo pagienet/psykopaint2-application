@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 	import flash.display.MovieClip;
-	import flash.display.Sprite;
 	
 	import net.psykosoft.psykopaint2.base.ui.components.PsykoLabel;
 	
