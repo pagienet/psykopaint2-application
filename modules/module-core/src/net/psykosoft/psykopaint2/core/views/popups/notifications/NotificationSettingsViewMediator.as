@@ -57,6 +57,7 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 		private function enableUI(value : Boolean):void
 		{
 			view.likesCheckbox.enabled = value;
+			view.newsCheckbox.enabled = value;
 		}
 
 		private function onSubscriptionFailed():void
@@ -67,6 +68,7 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 		private function updateUI():void
 		{
 			view.likesCheckbox.selected = loggedInUserProxy.hasNotificationSubscription(NotificationSubscriptionType.FAVORITE_PAINTING);
+			view.newsCheckbox.selected = loggedInUserProxy.hasNotificationSubscription(NotificationSubscriptionType.GLOBAL_NEWS);
 		}
 
 		private function onRequestClose():void

@@ -15,6 +15,7 @@ package net.psykosoft.psykopaint2.core.services
 	import flash.notifications.RemoteNotifierSubscribeOptions;
 
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
+	import net.psykosoft.psykopaint2.core.models.NotificationSubscriptionType;
 
 	import org.osflash.signals.Signal;
 
@@ -28,6 +29,7 @@ package net.psykosoft.psykopaint2.core.services
 
 		private static const PROVIDER_HOST_NAME : String = "go.urbanairship.com";
 		private static const PROVIDER_TOKEN_URL : String = "https://" + PROVIDER_HOST_NAME + "/api/device_tokens/";
+		private static const PROVIDER_NEWS_TAG_URL : String = "https://" + PROVIDER_HOST_NAME + "/api/tags/GLOBAL_NEWS";
 		private static const APP_KEY : String = "TBIsu8fQTYea2qRbEQLrQw";
 		private static const APP_SECRET : String = "X2Ula0ROQFWSCOXlpZ9hEw";
 
@@ -36,6 +38,7 @@ package net.psykosoft.psykopaint2.core.services
 		private var _subsribeOptions:RemoteNotifierSubscribeOptions;
 
 		public const subscriptionFailed : Signal = new Signal();
+		private var _token:String;
 
 
 		public function PushNotificationService()
@@ -64,6 +67,7 @@ package net.psykosoft.psykopaint2.core.services
 
 		private function onSubscriptionsChanged():void
 		{
+			_token = null;
 			if (hasSubscriptions)
 				subscribe();
 			else
@@ -119,16 +123,13 @@ package net.psykosoft.psykopaint2.core.services
 
 		private function onRemoteNotificationToken(event:RemoteNotificationEvent):void
 		{
-			trace ("Push notification token received: " + event.tokenId);
-//			var data : String = "";
+			_token = event.tokenId;
 
-//			if (loggedInUserProxy.isLoggedIn()) {
-//				data = "?alias=UID_" + loggedInUserProxy.userID;
-//			}
+			trace ("Push notification token received: " + _token);
 
 			URLRequestDefaults.setLoginCredentialsForHost(PROVIDER_HOST_NAME, APP_KEY, APP_SECRET);
 
-			var urlRequest : URLRequest = new URLRequest(PROVIDER_TOKEN_URL + event.tokenId);
+			var urlRequest : URLRequest = new URLRequest(PROVIDER_TOKEN_URL + _token);
 			var json : String = JSON.stringify({alias: "UID_" + loggedInUserProxy.userID});
 
 			urlRequest.data = json;
@@ -138,7 +139,7 @@ package net.psykosoft.psykopaint2.core.services
 
 			var loader : URLLoader = new URLLoader();
 			loader.load(urlRequest);
-			loader.addEventListener(Event.COMPLETE, onLoadComplete);
+			loader.addEventListener(Event.COMPLETE, onSubscribeTokenComplete);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 			loader.addEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, onHTTPResponseStatus);
 		}
@@ -160,15 +161,42 @@ package net.psykosoft.psykopaint2.core.services
 
 		private function removeListeners(loader:URLLoader):void
 		{
-			loader.removeEventListener(Event.COMPLETE, onLoadComplete);
+			loader.removeEventListener(Event.COMPLETE, onSubscribeTokenComplete);
+			loader.removeEventListener(Event.COMPLETE, onProcessTagsComplete);
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, onIOError);
 			loader.removeEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, onHTTPResponseStatus);
 		}
 
-		private function onLoadComplete(event:Event):void
+		private function onSubscribeTokenComplete(event:Event):void
 		{
 			removeListeners(URLLoader(event.target));
 			trace ("Logged in to notification provider. Response: " + URLLoader(event.target).data);
+
+			registerTags();
+		}
+
+		private function registerTags():void
+		{
+			var urlRequest : URLRequest = new URLRequest(PROVIDER_NEWS_TAG_URL);
+			var object : Object = {};
+
+			if (loggedInUserProxy.hasNotificationSubscription(NotificationSubscriptionType.GLOBAL_NEWS))
+				object.device_tokens = { add: [ _token ] };
+			else
+				object.device_tokens = { remove: [ _token ] };
+
+			var json : String = JSON.stringify(object);
+
+			urlRequest.data = json;
+			urlRequest.authenticate = true;
+			urlRequest.method = URLRequestMethod.POST;
+			urlRequest.contentType = "application/json";
+
+			var loader : URLLoader = new URLLoader();
+			loader.load(urlRequest);
+			loader.addEventListener(Event.COMPLETE, onProcessTagsComplete);
+			loader.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
+			loader.addEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, onHTTPResponseStatus);
 		}
 
 		private function onNotificationReceived(event:RemoteNotificationEvent):void
@@ -178,6 +206,12 @@ package net.psykosoft.psykopaint2.core.services
 			for (var field:String in event.data) {
 				trace(field + ":  " + event.data[field]);
 			}
+		}
+
+		private function onProcessTagsComplete(event:Event):void
+		{
+			removeListeners(URLLoader(event.target));
+			trace ("Updating tags complete. Response: " + URLLoader(event.target).data);
 		}
 	}
 }

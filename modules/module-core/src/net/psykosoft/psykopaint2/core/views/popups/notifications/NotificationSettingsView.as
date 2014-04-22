@@ -20,12 +20,16 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 	{
 		// Declared in Flash.
 		public var bg:Sprite;
-		public var likesCheckbox:CheckBox;
 		public var leftSide:Sprite;
+
+		public var likesCheckbox:CheckBox;
+		public var newsCheckbox:CheckBox;
 		private var _backButton:IconButtonAlt;
 
 		public const popUpWantsToCloseSignal:Signal = new Signal();
-		public const settingsChangedSignal:Signal = new Signal(int, Boolean);	// notification type, subscribed or not
+		public const settingsChangedSignal:Signal = new Signal(int, Boolean);	// int: type of notification (NotificationSubscriptionType), Boolean: whether or not to subscribe
+
+		// notification type, subscribed or not
 
 		public function NotificationSettingsView()
 		{
@@ -39,7 +43,8 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 
 		private function initUI():void
 		{
-			likesCheckbox = createCheckbox(670, 254, onLikeChanged);
+			likesCheckbox = createCheckbox(653, 254, onLikeChanged);
+			newsCheckbox = createCheckbox(653, 385, onNewsChanged);
 		}
 
 		override protected function onDisabled():void
@@ -64,6 +69,11 @@ package net.psykosoft.psykopaint2.core.views.popups.notifications
 		private function onLikeChanged(event:Event):void
 		{
 			settingsChangedSignal.dispatch(NotificationSubscriptionType.FAVORITE_PAINTING, likesCheckbox.selected);
+		}
+
+		private function onNewsChanged(event:Event):void
+		{
+			settingsChangedSignal.dispatch(NotificationSubscriptionType.GLOBAL_NEWS, newsCheckbox.selected);
 		}
 	}
 }

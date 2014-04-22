@@ -292,6 +292,7 @@ package net.psykosoft.psykopaint2.core.models
 			}
 
 			_onSuccess = onSuccess;
+			_onFail = onFail;
 
 			amfBridge.updateSubscription(_sessionID, type, subscribed,
 				onUpdateSubscriptionsSuccess,
@@ -306,8 +307,8 @@ package net.psykosoft.psykopaint2.core.models
 		private function onUpdateSubscriptionsSuccess(data:Object):void
 		{
 			if (data["status_code"] != 1) {
-				trace ("Successfully updated failed: code " + data["status_code"]);
-				_onFail(data["status_code"], "FAIL");
+				trace ("Updating subscriptions failed: code " + data["status_code"]);
+				_onFail();
 				return;
 			}
 

@@ -161,7 +161,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				navigationView.visible=false;
 				
 				
-				TweenLite.to(snapShotContainer,0.3,{ease:Quad.easeOut,x:-1024*tweenDirection*CoreSettings.GLOBAL_SCALING,onComplete:function(){
+				TweenLite.to(snapShotContainer,0.3,{ease:Quad.easeOut,x:-1024*tweenDirection*CoreSettings.GLOBAL_SCALING,onComplete:function():void{
 					
 					
 					navigationView.visible=true;
@@ -171,7 +171,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 					
 					newSubNavViewBmd.dispose();
 					newSubNavViewBm.parent.removeChild(newSubNavViewBm);
-					
+
 					snapshotBmd.dispose();
 					snapShotBm.parent.removeChild(snapShotBm);
 					
