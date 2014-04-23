@@ -71,6 +71,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		
 		public static const INSTAGRAM:String = "instagram";
 		public static const LOVE:String = "love";
+		public static const LOVED:String = "loved";
 		public static const MODEL:String = "model";
 		public static const OK:String = "ok";
 		public static const PICTURE:String = "picture";

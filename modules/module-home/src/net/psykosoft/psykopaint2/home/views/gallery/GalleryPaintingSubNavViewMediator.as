@@ -2,10 +2,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 {
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
-	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
@@ -95,7 +96,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			if (painting) {
 				view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, painting.collectionType != GalleryType.NONE);
 				var label : String = !loggedInUser.isLoggedIn() || (!painting.isFavorited && painting.userID != loggedInUser.userID)? "LOVE" : "UNLOVE";
-				view.relabelButtonWithId(GalleryPaintingSubNavView.ID_LOVE, label, null);
+				var icon:String = (label=="UNLOVE")?ButtonIconType.LOVED:ButtonIconType.LOVE;
+				view.relabelButtonWithId(GalleryPaintingSubNavView.ID_LOVE, label,icon);
 			}
 			else
 				view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, false);

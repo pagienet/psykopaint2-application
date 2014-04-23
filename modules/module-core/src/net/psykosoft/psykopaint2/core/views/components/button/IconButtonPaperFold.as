@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.core.views.components.button
 	import com.greensock.easing.Expo;
 	
 	import flash.display.MovieClip;
-	import flash.events.Event;
 	
 	public class IconButtonPaperFold extends MovieClip 
 	{
