@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFinalizeCropSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
@@ -58,6 +59,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		
 		[Inject]
 		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
+		
+		[Inject]
+		public var notifyToggleLoadingMessageSignal:NotifyToggleLoadingMessageSignal;
+		
 
 		private var _selectedSurfaceID : uint;
 		private var canOpenImageOnEasel:Boolean;
@@ -96,6 +101,10 @@ package net.psykosoft.psykopaint2.home.views.home
 				view.mouseEnabled = false;
 			
 			view.cropModeIsActive = ( newState == NavigationStateType.CROP );
+			if ( view.cropModeIsActive )
+			{
+				notifyToggleLoadingMessageSignal.dispatch(false);
+			}
 		}
 
 		override public function destroy() : void

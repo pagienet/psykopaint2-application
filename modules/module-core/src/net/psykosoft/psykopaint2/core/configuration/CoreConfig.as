@@ -63,6 +63,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessage;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleSwipeGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleTransformGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
@@ -261,6 +263,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyGlobalAccelerometerSignal ).asSingleton();
 			_injector.map( NotifyToggleTransformGestureSignal ).asSingleton();
 			_injector.map( NotifyToggleSwipeGestureSignal ).asSingleton();
+			_injector.map( NotifyToggleLoadingMessageSignal ).asSingleton();
 			_injector.map( NavigationCanHideWithGesturesSignal ).asSingleton();
 			_injector.map( NotifyEaselTappedSignal ).asSingleton();
 			_injector.map( RequestUpdateCropImageSignal ).asSingleton();
