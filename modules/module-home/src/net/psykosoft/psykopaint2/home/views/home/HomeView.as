@@ -87,7 +87,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function playIntroAnimation(onComplete : Function) : void
 		{
 			initCameraIntroPosition();
-			TweenLite.to(	_camera, 0.25, { 	z:450,
+			TweenLite.to(	_camera, 0.5, { 	z:450,
 				ease: Strong.easeOut,
 				onComplete:onComplete,
 				overwrite : 0

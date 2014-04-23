@@ -74,7 +74,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function updateShareButton():void
 		{
 			var painting : GalleryImageProxy = activePaintingModel.painting;
-			view.enableButtonWithId(GalleryPaintingSubNavView.ID_SHARE, painting.collectionType != GalleryType.NONE);
+			if (view&&painting) view.enableButtonWithId(GalleryPaintingSubNavView.ID_SHARE, painting.collectionType != GalleryType.NONE);
 		}
 
 		private function updateUserProfileButton():void
