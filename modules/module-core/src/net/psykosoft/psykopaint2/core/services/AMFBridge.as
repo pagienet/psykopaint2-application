@@ -170,5 +170,20 @@ package net.psykosoft.psykopaint2.core.services
 		{
 			_connection.call( "Main/subscribeNotification", new Responder(onSuccess, onFail), sessionID, type, subscribe );
 		}
+
+		public function followUser(sessionID : String, userID : int, onSuccess : Function, onFail : Function) : void
+		{
+			_connection.call("Main/followUser", new Responder(onSuccess, onFail), sessionID, userID);
+		}
+
+		public function unfollowUser(sessionID : String, userID : int, onSuccess : Function, onFail : Function) : void
+		{
+			_connection.call("Main/unfollowUser", new Responder(onSuccess, onFail), sessionID, userID);
+		}
+
+		public function getFollowedUsers(sessionID : String, onSuccess : Function, onFail : Function) : void
+		{
+			_connection.call("Main/getFollowingUsers", new Responder(onSuccess, onFail), sessionID);
+		}
 	}
 }

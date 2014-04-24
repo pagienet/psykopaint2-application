@@ -34,6 +34,8 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryPaintingSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryShareSubNavView;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryShareSubNavViewMediator;
+	import net.psykosoft.psykopaint2.home.views.gallery.GalleryUserSubNavView;
+	import net.psykosoft.psykopaint2.home.views.gallery.GalleryUserSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryView;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.EaselView;
@@ -164,6 +166,7 @@ package net.psykosoft.psykopaint2.home.config
 			_mediatorMap.map( GalleryBrowseSubNavView ).toMediator( GalleryBrowseSubNavViewMediator );
 			_mediatorMap.map( GalleryPaintingSubNavView ).toMediator( GalleryPaintingSubNavViewMediator );
 			_mediatorMap.map( GalleryShareSubNavView ).toMediator( GalleryShareSubNavViewMediator );
+			_mediatorMap.map( GalleryUserSubNavView ).toMediator( GalleryUserSubNavViewMediator );
 			_mediatorMap.map( HomeSubNavView ).toMediator( HomeSubNavViewMediator );
 			_mediatorMap.map( PickAUserImageView ).toMediator( PickAUserImageViewMediator );
 			_mediatorMap.map( CaptureImageSubNavView ).toMediator( CaptureImageSubNavViewMediator );
