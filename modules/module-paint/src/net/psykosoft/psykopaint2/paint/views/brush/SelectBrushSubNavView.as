@@ -57,33 +57,33 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			for( var i:uint; i < len; ++i ) {
 				var iconType:String;
 				switch( i ) {
-					case 0: {
+					case 0: 
 						iconType = ButtonIconType.SPRAYCAN;
 						break;
-					}
-					case 1: {
+					
+					case 1: 
 						iconType = hasFullVersion ? ButtonIconType.BRUSH : ButtonIconType.TRY_BRUSH;
 						break;
-					}
-					case 2: {
+					
+					case 2: 
 						iconType =  hasFullVersion ? ButtonIconType.PENCIL : ButtonIconType.TRY_PENCIL;
 						break;
-					}
-					case 3: {
+					
+					case 3: 
 						iconType =hasFullVersion ? ButtonIconType.WATERCOLOR : ButtonIconType.TRY_WATERCOLOR;
 						break;
-					}
-					case 4: {
+					
+					case 4: 
 						iconType =hasFullVersion ? ButtonIconType.PAINTGUN : ButtonIconType.TRY_PAINTGUN;
 						break;
-					}
-					case 5: {
-						iconType = ButtonIconType.ERASER;
+					
+					case 5: 
+						iconType =hasFullVersion ? ButtonIconType.COSMETICS : ButtonIconType.TRY_COSMETICS;
 						break;
-					}
-					default: {
+					
+					default: 
 						iconType = hasFullVersion ? ButtonIconType.BRUSH :ButtonIconType.TRY_BRUSH;
-					}
+					
 				}
 				createCenterButton( availableBrushTypes[ i ], availableBrushTypes[ i ], iconType, IconButton, null, true, true, false );
 			}
