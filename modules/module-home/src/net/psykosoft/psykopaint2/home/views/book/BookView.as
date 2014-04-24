@@ -634,7 +634,7 @@ package net.psykosoft.psykopaint2.home.views.book
 				_consideredHidden = false;
 				switchedToNormalMode.dispatch();
 			}
-			else if (value > .99 && !_consideredHidden) {
+			else if (value > .67 && !_consideredHidden) {
 				_consideredHidden = true;
 				switchedToHiddenMode.dispatch();
 			}
