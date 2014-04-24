@@ -33,14 +33,14 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 		
 		public function showIcon( id:String ):void
 		{
-			txt.text = "";
+			if ( txt ) txt.text = "";
 			//var idx:int = styleToFrame.indexOf(id);
 			if ( movieClipHasLabel(this,id))
 				gotoAndStop(id);
 			else
 			{
 				gotoAndStop(1);
-				txt.text = id.toUpperCase();
+				if ( txt ) txt.text = id.toUpperCase();
 			}
 				//throw("no icon for style '"+id+"'");
 		}

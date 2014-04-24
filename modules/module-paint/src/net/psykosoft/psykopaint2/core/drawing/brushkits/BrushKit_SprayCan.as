@@ -187,7 +187,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			sizeDecorator.param_mappingRange.numberValue = 0.04;
 			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCQUAD_IN;
 			
-			splatterDecorator = new SplatterDecorator();
 			splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_FIXED;
 			splatterDecorator.param_mappingMode.numberValue = 1;
 			splatterDecorator.param_mappingFunction.index = SplatterDecorator.INDEX_MAPPING_LINEAR;
@@ -462,7 +461,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
 					splatterDecorator.param_splatFactor.numberValue = 10 * precision;
 					spawnDecorator.param_maxOffset.numberValue = precision * 12;
-					
+					break;
 				
 				
 				case STYLE_PIXELATE:
@@ -531,6 +530,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					break;
 			}
+			
+			trace("stop");
 		}
 		
 		protected function onIntensityChanged(event:Event):void
