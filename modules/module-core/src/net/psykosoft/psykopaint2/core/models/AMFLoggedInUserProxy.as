@@ -360,8 +360,8 @@ package net.psykosoft.psykopaint2.core.models
 			}
 
 			var response : Array = data["response"];
-			for (var i : int = 0; i < data; ++i) {
-				if (response[i].id == _toFollowUserID) {
+			for each(var user : Object in response) {
+				if (user.id == _toFollowUserID) {
 					_onSuccess(true);
 					_toFollowUserID = -1;
 					return;

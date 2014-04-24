@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		public var activePaintingModel : ActiveGalleryPaintingModel;
 
 		private var _isFollowing : Boolean;
+		private var _userID : int = -1;
 
 		public function GalleryUserSubNavViewMediator()
 		{
@@ -29,6 +30,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			// Init.
 			registerView(view);
 			super.initialize();
+
+			_userID = -1;
 
 			activePaintingModel.onUpdate.add(updateUI);
 			updateUI();
@@ -45,12 +48,18 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function updateUI() : void
 		{
 			view.enableButtonWithId(GalleryUserSubNavView.ID_FOLLOW, false);
-			loggedInUser.getIsFollowingUser(activePaintingModel.painting.userID, onGetIsFollowingUserResult, onGetIsFollowingUserError);
+
+			if (_userID != activePaintingModel.painting.userID) {
+				_userID = activePaintingModel.painting.userID;
+				loggedInUser.getIsFollowingUser(_userID, onGetIsFollowingUserResult, onGetIsFollowingUserError);
+			}
+
 		}
 
 		private function onGetIsFollowingUserResult(isFollowing : Boolean) : void
 		{
-			setFollowing(isFollowing);
+			if (view.isEnabled)
+				setFollowing(isFollowing);
 		}
 
 		private function setFollowing(value : Boolean) : void

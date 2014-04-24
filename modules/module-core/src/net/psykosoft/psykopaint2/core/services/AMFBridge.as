@@ -173,12 +173,12 @@ package net.psykosoft.psykopaint2.core.services
 
 		public function followUser(sessionID : String, userID : int, onSuccess : Function, onFail : Function) : void
 		{
-			_connection.call("Main/addUserFavoritePainting", new Responder(onSuccess, onFail), sessionID, userID);
+			_connection.call("Main/followUser", new Responder(onSuccess, onFail), sessionID, userID);
 		}
 
 		public function unfollowUser(sessionID : String, userID : int, onSuccess : Function, onFail : Function) : void
 		{
-			_connection.call("Main/removeUserFavoritePainting", new Responder(onSuccess, onFail), sessionID, userID);
+			_connection.call("Main/unfollowUser", new Responder(onSuccess, onFail), sessionID, userID);
 		}
 
 		public function getFollowedUsers(sessionID : String, onSuccess : Function, onFail : Function) : void
