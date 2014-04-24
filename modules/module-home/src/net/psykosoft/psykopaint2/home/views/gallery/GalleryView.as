@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
 	import com.greensock.easing.Quad;
-	
+
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.display3D.Context3DCompareMode;
@@ -103,6 +103,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private static var _highQualityMaterial:PaintingMaterial;
 
 		private var _highQualityNormalSpecularTexture:ByteArrayRectTexture;
+		private var _stillLoadingNormalSpecularTexture:BitmapRectTexture;
 		private var _highQualityColorTexture:BitmapRectTexture;
 		private var _showHighQuality:Boolean;
 		private var _loadingHQ:Boolean;
@@ -187,22 +188,27 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 			if (_activeImageProxy) {
 				_loadingHQ = true;
-				_activeImageProxy.loadSurfaceData(onSurfaceDataComplete, onSurfaceDataError);
+				_activeImageProxy.loadSurfaceData(onSurfaceDataComplete, onSurfaceDataError, onSurfaceColorDataComplete);
 			}
 		}
 
 		private function initHighQualityMaterial():void
 		{
+			var emptyNormalMap : BitmapData = new BitmapData(1, 1, false, 0x00808000);
+
 			//BookMaterialsProxy.getBitmapDataById(BookMaterialsProxy.THUMBNAIL_LOADING)
 			_highQualityColorTexture = new TrackedBitmapRectTexture(null);
 			_highQualityNormalSpecularTexture = new ByteArrayRectTexture(null, 0, 0);
+			_stillLoadingNormalSpecularTexture = new BitmapRectTexture(emptyNormalMap);
+			_stillLoadingNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
+			emptyNormalMap.dispose();
 
 			if (!_highQualityMaterial)
 				_highQualityMaterial = new PaintingMaterial();
 
 			_highQualityMaterial.lightPicker = new StaticLightPicker([_light]);
 			_highQualityMaterial.albedoTexture = _highQualityColorTexture;
-			_highQualityMaterial.normalSpecularTexture = _highQualityNormalSpecularTexture;
+			_highQualityMaterial.normalSpecularTexture = _stillLoadingNormalSpecularTexture;
 			_highQualityMaterial.ambientColor = 0xffffff;
 			_highQualityMaterial.specular = 1.5;
 			_highQualityMaterial.gloss = 200;
@@ -457,9 +463,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_loadingTexture = new BitmapTexture(bitmapData);
 			_loadingTexture.getTextureForStage3D(_stage3DProxy);
 			bitmapData.dispose();
-			
+
 		}
-		
+
 
 		public function setImmediateActiveImage(galleryImageProxy:GalleryImageProxy):void
 		{
@@ -671,15 +677,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onThumbnailLoaded(imageProxy:GalleryImageProxy, thumbnail:RectTextureBase):void
 		{
-			if (_paintings[imageProxy.index]){
+			if (_paintings[imageProxy.index])
 				_lowQualityMaterials[imageProxy.index].texture = thumbnail;
-				//TRANSITION
-				//_paintings[imageProxy.index].y=300;
-				//TweenLite.from(_paintings[imageProxy.index],0.5,{y:300,ease:Expo.easeOut});
-			}
-			
-			
-			
 		}
 
 		private function onThumbnailDisposed(imageProxy:GalleryImageProxy):void
@@ -699,23 +698,29 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			// we can load the high resolution now for
 			if (_showHighQuality){
 				showHighQualityMaterial();
-				
 			}
 		}
 
-		private function onSurfaceDataComplete(galleryVO:PaintingGalleryVO):void
+		private function onSurfaceColorDataComplete(galleryVO:PaintingGalleryVO):void
 		{
 			_highQualityColorTexture.bitmapData = galleryVO.colorData;
 			_highQualityColorTexture.getTextureForStage3D(_stage3DProxy);
 
-			_highQualityNormalSpecularTexture.setByteArray(galleryVO.normalSpecularData, galleryVO.colorData.width, galleryVO.colorData.height);
-			_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
-
-			_highQualityIndex = _activeImageProxy.index;
+			_highQualityMaterial.normalSpecularTexture = _stillLoadingNormalSpecularTexture;
 
 			// it may have been disposed before load finished?
 			if (_paintings[_activeImageProxy.index])
 				_paintings[_activeImageProxy.index].material = _highQualityMaterial;
+		}
+
+		private function onSurfaceDataComplete(galleryVO:PaintingGalleryVO):void
+		{
+			_highQualityNormalSpecularTexture.setByteArray(galleryVO.normalSpecularData, galleryVO.colorData.width, galleryVO.colorData.height);
+			_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
+
+			_highQualityMaterial.normalSpecularTexture = _highQualityNormalSpecularTexture;
+
+			_highQualityIndex = _activeImageProxy.index;
 
 			_loadingHQ = false;
 			galleryVO.dispose();

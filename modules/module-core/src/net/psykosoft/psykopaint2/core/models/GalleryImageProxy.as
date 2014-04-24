@@ -26,7 +26,8 @@ package net.psykosoft.psykopaint2.core.models
 			throw new AbstractMethodError();
 		}
 
-		public function loadSurfaceData(onComplete : Function, onError : Function) : void
+		// onSurfaceColorDataComplete is optional
+		public function loadSurfaceData(onComplete:Function, onError:Function, onSurfaceColorDataComplete:Function = null) :void
 		{
 			throw new AbstractMethodError();
 		}

@@ -23,6 +23,7 @@ package net.psykosoft.psykopaint2.core.models
 		public var thumbnailFilename : String;
 		public var compositeFilename : String;
 
+		private var _onColorComplete : Function;
 		private var _onComplete : Function;
 		private var _onError : Function;
 		private var _sizeHint : int;
@@ -133,10 +134,12 @@ package net.psykosoft.psykopaint2.core.models
 			onError();
 		}
 
-		override public function loadSurfaceData(onComplete : Function, onError : Function) : void
+		override public function loadSurfaceData(onComplete:Function, onError:Function, onSurfaceColorDataComplete:Function = null) :void
 		{
 			if (_onComplete) cancelLoading();
 			if (_paintingGalleryVO) onComplete(_paintingGalleryVO);
+			_onColorComplete = onSurfaceColorDataComplete;
+
 			_paintingGalleryVO = new PaintingGalleryVO();
 			_onComplete = onComplete;
 			_onError = onError;
@@ -151,6 +154,10 @@ package net.psykosoft.psykopaint2.core.models
 			// sometimes, a freak occurrence causes the callback to be reached after cancelling
 			if (_paintingGalleryVO) {
 				_paintingGalleryVO.colorData = bitmapData;
+
+				if (_onColorComplete)
+					_onColorComplete(_paintingGalleryVO);
+
 				loadBitmapData(sourceThumbnailURL, onSourceThumbComplete, onLoadError);
 			}
 			else {
