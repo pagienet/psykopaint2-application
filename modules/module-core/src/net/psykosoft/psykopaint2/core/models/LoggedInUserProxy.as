@@ -44,5 +44,11 @@ package net.psykosoft.psykopaint2.core.models
 		function hasNotificationSubscription(type : int):Boolean;
 
 		function subscribeNotification(type:int, subscribed : Boolean, onSuccess:Function, onFail:Function):void;
+
+		function getIsFollowingUser(userID : int, onSuccess:Function, onFail:Function) : void;
+
+		function unfollowUser(userID : int, onSuccess:Function, onFail:Function) : void;
+
+		function followUser(userID : int, onSuccess:Function, onFail:Function) : void;
 	}
 }

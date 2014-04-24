@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.core.models
 		private var _numFollowers : uint;
 		private var _active : Boolean;
 		private var _banned : Boolean;
-		private var _passwordReminderEmail:String;
+		private var _passwordReminderEmail : String;
 
 		private var _onChange : Signal = new Signal();
 		private var _onSubscriptionsChange : Signal = new Signal();
@@ -33,7 +33,8 @@ package net.psykosoft.psykopaint2.core.models
 		private var _onSuccess : Function;
 
 		private var _localCache : SharedObject;
-		private var _subscriptions:Array;
+		private var _subscriptions : Array;
+		private var _toFollowUserID : int;
 
 		public function AMFLoggedInUserProxy()
 		{
@@ -42,7 +43,7 @@ package net.psykosoft.psykopaint2.core.models
 			retrieveCachedUser();
 		}
 
-		private function retrieveCachedUser():void
+		private function retrieveCachedUser() : void
 		{
 			_sessionID = _localCache.data["session_id"];
 
@@ -52,26 +53,29 @@ package net.psykosoft.psykopaint2.core.models
 				_userID = -1;
 		}
 
-		public function sendPasswordReminder( email:String, onSuccess : Function, onFail : Function ):void {
+		public function sendPasswordReminder(email : String, onSuccess : Function, onFail : Function) : void
+		{
 			_onFail = onFail;
 			_onSuccess = onSuccess;
 			_passwordReminderEmail = email;
-			amfBridge.requestResetPassword( email, onSendPasswordReminderSuccess, onSendPasswordReminderFailure );
+			amfBridge.requestResetPassword(email, onSendPasswordReminderSuccess, onSendPasswordReminderFailure);
 		}
 
-		private function onSendPasswordReminderSuccess( data:Object ):void {
+		private function onSendPasswordReminderSuccess(data : Object) : void
+		{
 			if (_onSuccess) _onSuccess(_passwordReminderEmail);
 			_passwordReminderEmail = null;
 		}
 
-		private function onSendPasswordReminderFailure( data:Object ):void {
-			_onFail( data["status_code"] );
+		private function onSendPasswordReminderFailure(data : Object) : void
+		{
+			_onFail(data["status_code"]);
 			_passwordReminderEmail = null;
 		}
 
-		public function sendProfileImages( imageLarge:ByteArray, imageSmall:ByteArray ) : void
+		public function sendProfileImages(imageLarge : ByteArray, imageSmall : ByteArray) : void
 		{
-			amfBridge.setProfileImage( _sessionID, imageLarge, imageSmall );
+			amfBridge.setProfileImage(_sessionID, imageLarge, imageSmall);
 		}
 
 		public function isLoggedIn() : Boolean
@@ -83,7 +87,7 @@ package net.psykosoft.psykopaint2.core.models
 		{
 			_onSuccess = onSuccess;
 			_onFail = onFail;
-			amfBridge.logIn(email, password, onLogInSuccess, onLogInFail);
+			amfBridge.logIn(email, password, onLogInSuccess, onGeneralFail);
 		}
 
 		public function registerAndLogIn(userRegistrationVO : UserRegistrationVO, onSuccess : Function, onFail : Function) : void
@@ -117,7 +121,7 @@ package net.psykosoft.psykopaint2.core.models
 			_onFail = onFail;
 			_onSuccess = onSuccess;
 
-			amfBridge.logOut(_sessionID, onLogOutSuccess, onLogOutFail);
+			amfBridge.logOut(_sessionID, onGeneralSuccess, onGeneralFail);
 
 			// clear local data regardless of success, if offline, session will simply expire
 			_userID = -1;
@@ -137,7 +141,7 @@ package net.psykosoft.psykopaint2.core.models
 
 		}
 
-		private function onLogOutSuccess(data : Object) : void
+		private function onGeneralSuccess(data : Object) : void
 		{
 			if (data["status_code"] != 1) {
 				_onFail(data["status_code"], "FAIL");
@@ -147,7 +151,7 @@ package net.psykosoft.psykopaint2.core.models
 			if (_onSuccess) _onSuccess();
 		}
 
-		private function onLogOutFail(data : Object) : void
+		private function onGeneralFail(data : Object) : void
 		{
 			_onFail(AMFErrorCode.CALL_FAILED, "CALL_FAILED");
 		}
@@ -157,9 +161,9 @@ package net.psykosoft.psykopaint2.core.models
 //			traceResponse("onLogInSuccess - (server responded): ", data);
 
 			if (data["status_code"] != 1) {
-				var firstname:String = "";
-				if(data["status_code"] == 2) {
-					if( data["response"] && data["response"]["firstname"] ) {
+				var firstname : String = "";
+				if (data["status_code"] == 2) {
+					if (data["response"] && data["response"]["firstname"]) {
 						firstname = data["response"]["firstname"];
 					}
 //					trace("> " + firstname);
@@ -173,11 +177,6 @@ package net.psykosoft.psykopaint2.core.models
 			_onChange.dispatch();
 			_onSubscriptionsChange.dispatch();
 			if (_onSuccess) _onSuccess();
-		}
-
-		private function onLogInFail(data : Object) : void
-		{
-			_onFail(AMFErrorCode.CALL_FAILED, "CALL_FAILED", "");
 		}
 
 		private function populateUserData(data : Object) : void
@@ -202,7 +201,7 @@ package net.psykosoft.psykopaint2.core.models
 			_localCache.flush();
 		}
 
-		private function extractProfileData(userData:Object):void
+		private function extractProfileData(userData : Object) : void
 		{
 			_userID = userData["id"];
 			_firstName = userData["firstname"];
@@ -216,7 +215,7 @@ package net.psykosoft.psykopaint2.core.models
 
 			if (_subscriptions) {
 				for (var i : int = 0; i < _subscriptions.length; ++i) {
-					trace ("Notification subscription: " + _subscriptions[i]["notification_type"] + ": " + _subscriptions[i]["subscribed"]);
+					trace("Notification subscription: " + _subscriptions[i]["notification_type"] + ": " + _subscriptions[i]["subscribed"]);
 				}
 			}
 		}
@@ -266,17 +265,17 @@ package net.psykosoft.psykopaint2.core.models
 			return _banned;
 		}
 
-		public function get onChange():Signal
+		public function get onChange() : Signal
 		{
 			return _onChange;
 		}
 
-		public function get onSubscriptionsChanged():Signal
+		public function get onSubscriptionsChanged() : Signal
 		{
 			return _onSubscriptionsChange;
 		}
 
-		public function subscribeNotification(type:int, subscribed : Boolean, onSuccess:Function, onFail:Function):void
+		public function subscribeNotification(type : int, subscribed : Boolean, onSuccess : Function, onFail : Function) : void
 		{
 			var oldValue : Boolean;
 			var subscriptionData : Object;
@@ -295,30 +294,31 @@ package net.psykosoft.psykopaint2.core.models
 			_onFail = onFail;
 
 			amfBridge.updateSubscription(_sessionID, type, subscribed,
-				onUpdateSubscriptionsSuccess,
-				function(data:Object) : void {
-					trace ("Successfully updated call failed");
-					subscriptionData["subscribed"] = oldValue;
-					onFail();
-				}
+					onUpdateSubscriptionsSuccess,
+					function (data : Object) : void
+					{
+						trace("Successfully updated call failed");
+						subscriptionData["subscribed"] = oldValue;
+						onFail();
+					}
 			);
 		}
 
-		private function onUpdateSubscriptionsSuccess(data:Object):void
+		private function onUpdateSubscriptionsSuccess(data : Object) : void
 		{
 			if (data["status_code"] != 1) {
-				trace ("Updating subscriptions failed: code " + data["status_code"]);
+				trace("Updating subscriptions failed: code " + data["status_code"]);
 				_onFail();
 				return;
 			}
 
-			trace ("Successfully updated subscriptions");
+			trace("Successfully updated subscriptions");
 			cacheUserData();
 			_onSubscriptionsChange.dispatch();
 			_onSuccess();
 		}
 
-		public function get hasNotificationSubscriptions():Boolean
+		public function get hasNotificationSubscriptions() : Boolean
 		{
 			if (!_subscriptions) return false;
 
@@ -330,7 +330,7 @@ package net.psykosoft.psykopaint2.core.models
 			return false;
 		}
 
-		public function hasNotificationSubscription(type:int):Boolean
+		public function hasNotificationSubscription(type : int) : Boolean
 		{
 			if (!_subscriptions) return false;
 
@@ -340,6 +340,50 @@ package net.psykosoft.psykopaint2.core.models
 			}
 
 			return false;
+		}
+
+		public function getIsFollowingUser(userID : int, onSuccess : Function, onFail : Function) : void
+		{
+			_toFollowUserID = userID;
+			_onFail = onFail;
+			_onSuccess = onSuccess;
+			amfBridge.getFollowedUsers(_sessionID, onGetIsFollowingUserResult, onGeneralFail);
+		}
+
+		private function onGetIsFollowingUserResult(data : Object) : void
+		{
+			if (data["status_code"] != 1) {
+				trace("Updating subscriptions failed: code " + data["status_code"]);
+				_toFollowUserID = -1;
+				_onFail(data["status_code"], data["status_reason"]);
+				return;
+			}
+
+			var response : Array = data["response"];
+			for (var i : int = 0; i < data; ++i) {
+				if (response[i].id == _toFollowUserID) {
+					_onSuccess(true);
+					_toFollowUserID = -1;
+					return;
+				}
+			}
+
+			_toFollowUserID = -1;
+			_onSuccess(false);
+		}
+
+		public function unfollowUser(userID : int, onSuccess : Function, onFail : Function) : void
+		{
+			_onFail = onFail;
+			_onSuccess = onSuccess;
+			amfBridge.unfollowUser(_sessionID, userID, onGeneralSuccess, onGeneralFail);
+		}
+
+		public function followUser(userID : int, onSuccess : Function, onFail : Function) : void
+		{
+			_onFail = onFail;
+			_onSuccess = onSuccess;
+			amfBridge.followUser(_sessionID, userID, onGeneralSuccess, onGeneralFail);
 		}
 	}
 }
