@@ -26,7 +26,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private static const STYLE_PENCIL_SKETCH:int=1;
 		private static const STYLE_AUTO_GRID:int = 2;
 		private static const STYLE_SPRAY:int = 3;
-		//private static const STYLE_ROUGH_SQUARE:int = 1;
+		private static const STYLE_PENCIL_SKETCH2:int =4;
+		private static const STYLE_COOLINK:int = 5;
 		
 		
 		private var sizeDecorator:SizeDecorator;
@@ -36,6 +37,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var param_precision:PsykoParameter;
 		private var param_intensity:PsykoParameter;
 		private var gridDecorator:GridDecorator;
+		private var splatterDecorator:SplatterDecorator;
 		
 		
 		public function BrushKit_Pencil()
@@ -54,7 +56,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			(brushEngine as SketchBrush).param_surfaceRelief.numberValue = 0.2;
 			brushEngine.param_bumpiness.numberValue = 0;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.25;
-			brushEngine.param_shapes.stringList = Vector.<String>(["pencilSketch","line","line","noisy"]);
+			brushEngine.param_shapes.stringList = Vector.<String>(["pencilSketch","line","line","noisy","pencilSketch","pencilSketch"]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -96,6 +98,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			spawnDecorator.param_bristleVariation.numberValue = 1;
 			pathManager.addPointDecorator( spawnDecorator );
 			
+			splatterDecorator = new SplatterDecorator();
+			splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_SIZE_INV;
+			splatterDecorator.param_mappingMode.numberValue = 1;
+			splatterDecorator.param_mappingFunction.index = SplatterDecorator.INDEX_MAPPING_LINEAR;
+			splatterDecorator.param_splatFactor.numberValue = 20;
+			splatterDecorator.param_minOffset.numberValue = 0;
+			splatterDecorator.param_offsetAngleRange.degrees = 360;
+			splatterDecorator.param_sizeFactor.numberValue = 0;
+			pathManager.addPointDecorator( splatterDecorator );
+			
+			
 			gridDecorator = new GridDecorator();
 			gridDecorator.param_angleStep.degrees = 45;
 			gridDecorator.param_stepX.numberValue = 0;
@@ -109,7 +122,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["pencil","Sketch","grid pen","Sprayper"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["pencil","Pastels","grid pen","Sprayper"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -217,7 +230,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					break;
 				case STYLE_PENCIL_SKETCH:
-					//splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_FIXED;
+					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_FIXED;
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
 					sizeDecorator.param_mappingFactor.numberValue = 0.4;
 					
@@ -238,6 +251,72 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					gridDecorator.active = true;
 					
 				break;
+				case STYLE_COOLINK:
+					trace("STYLE COOL INK");
+					//SIZE VARY ON SPEED
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_SPEED;
+					sizeDecorator.param_mappingFactor.numberValue = 3;
+					sizeDecorator.param_mappingRange.numberValue = 1;
+					
+					
+					/*bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_SPEED;
+					bumpDecorator.param_bumpInfluence.numberValue = 0.25;
+					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
+					bumpDecorator.param_bumpinessRange.numberValue = -0.16 ;
+					bumpDecorator.param_glossiness.numberValue = 0.8  ;
+					bumpDecorator.param_shininess.numberValue = 0.25  ;*/
+					
+					
+					colorDecorator.param_colorBlending.upperRangeValue = 0.90;
+					colorDecorator.param_colorBlending.lowerRangeValue = 0.85;
+					
+					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
+					splatterDecorator.param_splatFactor.numberValue = 0.02+precision*0.6 ;
+					
+					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SPEED_INV;
+					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_FIXED;
+					spawnDecorator.param_maxSize.numberValue = 2+precision*2;
+					spawnDecorator.param_multiples.lowerRangeValue = 1;
+					spawnDecorator.param_multiples.upperRangeValue = 1;
+					spawnDecorator.param_maxOffset.numberValue = 0.02+precision*10;
+					spawnDecorator.param_minOffset.numberValue = 0.02+precision*10;
+					spawnDecorator.param_autorotate.booleanValue=false;
+					break;
+				
+				
+				
+				case STYLE_PENCIL_SKETCH:
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 2;
+					
+					sizeDecorator.param_mappingFactor.numberValue = 0.07;
+					sizeDecorator.param_mappingRange.numberValue = 0.02;
+					
+					spawnDecorator.param_maxSize.numberValue = 0.5;
+					spawnDecorator.param_maxOffset.numberValue = 0.25 + precision * 4
+					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -180;
+					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 180;
+					spawnDecorator.param_multiples.upperRangeValue = 2 + precision * 12;
+					
+					splatterDecorator.param_splatFactor.numberValue = 2 * precision;
+					splatterDecorator.param_brushAngleOffsetRange.degrees = precision * 10;
+				break;
+				case STYLE_PENCIL_SKETCH2:
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.2 + precision;
+					
+					sizeDecorator.param_mappingFactor.numberValue = 0.03 +precision * 0.1;
+					sizeDecorator.param_mappingRange.numberValue = 0.02;
+					
+					spawnDecorator.param_maxSize.numberValue = 1;
+					spawnDecorator.param_maxOffset.numberValue = 0.25 + precision * 4
+					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -180;
+					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 180;
+					spawnDecorator.param_multiples.upperRangeValue = 1 + precision * 10;
+					
+					splatterDecorator.param_splatFactor.numberValue = 4 * precision;
+					splatterDecorator.param_brushAngleOffsetRange.degrees = precision * 10;
+					
+					break;
+				
 			}
 			
 		}

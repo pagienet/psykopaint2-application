@@ -17,7 +17,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
-	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModeChangedSignal;
 	
 	public class ColorPickerSubNavView extends SubNavigationViewBase
 	{
