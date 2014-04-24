@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 
+	/* allows to offset a points perpendicular to the current drawing direction (or based on the given offset angle also in a "fan" pattern) */
 	final public class SplatterDecorator extends AbstractPointDecorator
 	{
 		

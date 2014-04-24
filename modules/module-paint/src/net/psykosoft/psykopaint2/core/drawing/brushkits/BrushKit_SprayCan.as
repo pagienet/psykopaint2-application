@@ -33,8 +33,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private static const STYLE_PENCIL_SKETCH2:int =4;
 		private static const STYLE_COOLINK:int = 5;
 		private static const STYLE_PIXELATE:int = 6;
-		private static const STYLE_PAINTSTROKES:int = 7;
-		private static const STYLE_HARD_ROUND_CIRCLE:int = 8;
+		
 		
 		
 		
@@ -96,7 +95,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			splatterDecorator.param_minOffset.numberValue = 0;
 			splatterDecorator.param_offsetAngleRange.degrees = 360;
 			splatterDecorator.param_sizeFactor.numberValue = 0;
-			//pathManager.addPointDecorator( splatterDecorator );
+			pathManager.addPointDecorator( splatterDecorator );
 			
 			bumpDecorator = new BumpDecorator();
 			bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
@@ -188,7 +187,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCQUAD_IN;
 			
 			splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_FIXED;
-			splatterDecorator.param_mappingMode.numberValue = 1;
 			splatterDecorator.param_mappingFunction.index = SplatterDecorator.INDEX_MAPPING_LINEAR;
 			splatterDecorator.param_splatFactor.numberValue = 20;
 			splatterDecorator.param_minOffset.numberValue = 0;
@@ -355,14 +353,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 					break;
 				
-				case STYLE_PAINTSTROKES:
-					brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 3;
-					sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.25;
-					sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 0.12;
-					spawnDecorator.param_maxSize.numberValue = 0.05 + precision * 0.36;
-					spawnDecorator.param_maxOffset.numberValue = 16 + precision * 40;
-					break;
+				
 				
 				case STYLE_SIMPLE_SPRAY:
 					
@@ -398,31 +389,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					break;
 				
-				case STYLE_HARD_ROUND_CIRCLE:
-					
-					
-					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_FIXED;
-					bumpDecorator.param_bumpInfluence.numberValue = 0.45;
-					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
-					bumpDecorator.param_bumpinessRange.numberValue = -0.20 ;
-					bumpDecorator.param_glossiness.numberValue = 0.8  ;
-					bumpDecorator.param_shininess.numberValue = 0.25  ;
-					
-					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
-					sizeDecorator.param_mappingRange.numberValue = 0;
-					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
-					
-					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_SPEED;
-					splatterDecorator.param_splatFactor.numberValue = 10 * precision;
-					
-					colorDecorator.param_colorBlending.upperRangeValue = 0.1;
-					colorDecorator.param_colorBlending.lowerRangeValue = 0.2;
-					colorDecorator.param_pickRadius.lowerRangeValue = 0.3;
-					colorDecorator.param_pickRadius.upperRangeValue = 0.35;
-					
-					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_SPEED;
-					spawnDecorator.param_maxOffset.numberValue = precision * 4;
-					break;
+				
 				
 				case STYLE_COOLINK:
 					trace("STYLE COOL INK");

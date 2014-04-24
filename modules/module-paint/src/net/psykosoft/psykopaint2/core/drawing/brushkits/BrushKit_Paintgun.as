@@ -32,9 +32,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private static const STYLE_PAINTBRUSH:int = 5;
 		private static const STYLE_SUMI:int = 6;
 		private static const STYLE_PAINTSTROKES:int = 7;
-		private static const STYLE_PAINTSTROKES_VAN_GOUGH:int = 8;
-		private static const STYLE_PAINTSTROKES_FIREWORKS:int = 9;
-		private static const STYLE_PAINTSTROKES_SPIRAL:int = 10;
+		
 		
 		private var param_style:PsykoParameter;
 		private var param_precision:PsykoParameter;
@@ -45,10 +43,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var bumpDecorator:BumpDecorator;
 		private var spawnDecorator:SpawnDecorator;
 		private var colorDecorator:ColorDecorator;
-		private var callbackDecorator:CallbackDecorator;
-		private var forceRotationAngle:Number;
-		private var rotationCenterX:Number;
-		private var rotationCenterY:Number;
+		//private var callbackDecorator:CallbackDecorator;
+		
+		
 		private var eraserMode:Boolean;
 		
 		public function BrushKit_Paintgun()
@@ -67,7 +64,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpiness.numberValue = 0;
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-			brushEngine.param_shapes.stringList = Vector.<String>(["inksplats","splats","spray","vectorsplat","crayon","paintbrush","sumi","paint1","paint1","paint1","paint1"]);
+			brushEngine.param_shapes.stringList = Vector.<String>(["inksplats","splats","spray","vectorsplat","crayon","paintbrush","sumi","paint1"]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -111,9 +108,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			pathManager.addPointDecorator( spawnDecorator );
 			
 			
-			callbackDecorator = new CallbackDecorator(this, processPoints);
-			callbackDecorator.active = false;
-			pathManager.addPointDecorator( callbackDecorator );
+			//callbackDecorator = new CallbackDecorator(this, processPoints);
+			//callbackDecorator.active = false;
+			//pathManager.addPointDecorator( callbackDecorator );
 			
 			colorDecorator = new ColorDecorator();
 			colorDecorator.param_brushOpacity.numberValue = 1;
@@ -130,7 +127,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["splat","sketch","sketch","sketch","sketch","sketch","sketch","sketch","basic","basic","basic"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["splat","sketch","sketch","sketch","sketch","sketch","sketch","sketch"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -140,7 +137,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			param_precision.addEventListener( Event.CHANGE, onPrecisionChanged );
 			_parameterMapping.addParameter(param_precision);
 			
-			param_intensity = new PsykoParameter( PsykoParameter.NumberParameter,"Intensity",0.9,0,1);
+			param_intensity = new PsykoParameter( PsykoParameter.NumberParameter,"Intensity",1,0,1);
 			param_intensity.showInUI = 2;
 			param_intensity.addEventListener( Event.CHANGE, onIntensityChanged );
 			_parameterMapping.addParameter(param_intensity);
@@ -151,16 +148,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function onStyleChanged(event:Event):void
 		{
-			if (  param_style.index == STYLE_PAINTSTROKES || 
-				param_style.index == STYLE_PAINTSTROKES_VAN_GOUGH || 
-				param_style.index == STYLE_PAINTSTROKES_FIREWORKS ||
-				param_style.index == STYLE_PAINTSTROKES_SPIRAL
-			)
-			{
-				brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-			} else {
-				brushEngine.param_quadOffsetRatio.numberValue = 0;
-			}
+			
 			brushEngine.param_shapes.index = param_style.index;
 			
 			spawnDecorator.active = true;
@@ -184,7 +172,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -180;
 			spawnDecorator.param_offsetAngleRange.upperDegreesValue = 180;
 			
-			callbackDecorator.active = false;
 			
 			switch ( param_style.index )
 			{
@@ -192,21 +179,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				
 					brushEngine.param_curvatureSizeInfluence.numberValue = 1;
 					break;
-				case STYLE_PAINTSTROKES_VAN_GOUGH:
-					callbackDecorator.active = true;
-					forceRotationAngle = Math.PI*0.5;
-					brushEngine.param_curvatureSizeInfluence.numberValue = 0;
-					break;
-				case STYLE_PAINTSTROKES_FIREWORKS:
-					callbackDecorator.active = true;
-					forceRotationAngle = 0;
-					brushEngine.param_curvatureSizeInfluence.numberValue = 0;
-					break;
-				case STYLE_PAINTSTROKES_SPIRAL:
-					callbackDecorator.active = true;
-					forceRotationAngle = Math.PI*0.25;
-					brushEngine.param_curvatureSizeInfluence.numberValue = 0;
-					break;
+				
 				case STYLE_INKSPLATS:
 				case STYLE_SPLATS:
 				case STYLE_SPRAY:
@@ -239,9 +212,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			switch ( param_style.index )
 			{
 				case STYLE_PAINTSTROKES:
-				case STYLE_PAINTSTROKES_VAN_GOUGH:
-				case STYLE_PAINTSTROKES_FIREWORKS:
-				case STYLE_PAINTSTROKES_SPIRAL:
+
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 3;
 					sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.5;
 					sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 0.12;
@@ -287,9 +258,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			switch ( param_style.index )
 			{
 				case STYLE_PAINTSTROKES:
-				case STYLE_PAINTSTROKES_VAN_GOUGH:
-				case STYLE_PAINTSTROKES_FIREWORKS:
-				case STYLE_PAINTSTROKES_SPIRAL:
 				case STYLE_SPLATS:
 				case STYLE_SPRAY:
 				case STYLE_CRAYON:
@@ -322,24 +290,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			}
 		}
 		
-		protected function processPoints(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
-		{
-			if ( points.length == 0 ) return points;
-			
-			if (points[0].first )
-			{
-				rotationCenterX = points[0].x;
-				rotationCenterY = points[0].y;
-				if (  param_style.index == STYLE_PAINTSTROKES_SPIRAL ) forceRotationAngle = Math.random() * Math.PI * 2;
-			}
-			for ( var i:int = 0; i < points.length; i++ )
-			{
-				var p:SamplePoint = points[i];
-				p.angle = Math.atan2(rotationCenterY -p.y ,rotationCenterX - p.x) +  forceRotationAngle;
-			}
-			
-			return points;
-		}
+		
 		
 		override public function setEraserMode( enabled:Boolean ):void
 		{

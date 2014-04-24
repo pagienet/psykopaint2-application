@@ -1,13 +1,21 @@
 package net.psykosoft.psykopaint2.core.drawing.brushkits
 {
+	import flash.events.Event;
+	
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
 	import net.psykosoft.psykopaint2.core.drawing.paths.AbstractPathEngine;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
+	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.AbstractPointDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.BumpDecorator;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.CallbackDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.GridDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
@@ -15,7 +23,32 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	public class BrushKit_BristleBrush extends BrushKit
 	{
 		
-		private static const definitionXML:XML = <brush engine={BrushType.SPRAY_CAN} name="Paint Brush">
+		
+		
+		private static const STYLE_PAINTSTROKES_VAN_GOUGH:int = 0;
+		private static const STYLE_BRISTLE_BRUSH:int = 1;
+		
+		private static const STYLE_PAINTSTROKES_FIREWORKS:int = 2;
+		private static const STYLE_PAINTSTROKES_SPIRAL:int = 3;
+		
+		private var sizeDecorator:SizeDecorator;
+		private var splatterDecorator:SplatterDecorator;
+		private var bumpDecorator:BumpDecorator;
+		private var spawnDecorator:SpawnDecorator;
+		private var colorDecorator:ColorDecorator;
+		private var callbackDecorator:CallbackDecorator;
+		
+		
+		private var forceRotationAngle:Number;
+		private var rotationCenterX:Number;
+		private var rotationCenterY:Number;
+		
+		private var param_style:PsykoParameter;
+		private var param_precision:PsykoParameter;
+		private var param_intensity:PsykoParameter;
+		
+		
+		/*private static const definitionXML:XML = <brush engine={BrushType.SPRAY_CAN} name="Paint Brush">
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0" />
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="line" />
 					<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value="0"/>
@@ -74,12 +107,291 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 						</SplatterDecorator>
 
 					</pathengine>
-				</brush>
+				</brush>*/
+		
+		
 		
 		public function BrushKit_BristleBrush()
 		{
 			isPurchasable = true;
-			init(definitionXML);
+			if (!_initialized ) BrushKit.init();
+			name = "paint brush";
+			
+			//init(definitionXML);
+			
+			
+			//CREATE SPRAY CAN BRUSH ENGINE
+			brushEngine = new SprayCanBrush();
+			brushEngine.param_bumpiness.numberValue = 0;
+			brushEngine.param_bumpInfluence.numberValue = 0.8;
+			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
+			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","line","line"]);
+			
+			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
+			brushEngine.pathManager = pathManager;
+			
+			sizeDecorator = new SizeDecorator();
+			pathManager.addPointDecorator( sizeDecorator );
+			
+			spawnDecorator = new SpawnDecorator();
+			pathManager.addPointDecorator( spawnDecorator );
+			
+			bumpDecorator = new BumpDecorator();
+			pathManager.addPointDecorator( bumpDecorator );
+			
+			colorDecorator = new ColorDecorator();
+			pathManager.addPointDecorator( colorDecorator );
+			
+			splatterDecorator = new SplatterDecorator();
+			pathManager.addPointDecorator( splatterDecorator );
+			
+			callbackDecorator = new CallbackDecorator( this, processPoints );
+			pathManager.addPointDecorator( callbackDecorator );
+			
+			_parameterMapping = new PsykoParameterMapping();
+			
+			//UI elements:
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Van Gogh","Monet","Rembrandt"]);
+			param_style.showInUI = 0;
+			param_style.addEventListener( Event.CHANGE, onStyleChanged );
+			_parameterMapping.addParameter(param_style);
+			
+			param_precision = new PsykoParameter( PsykoParameter.NumberParameter,"Precision",0.5,0,1);
+			param_precision.showInUI = 1;
+			param_precision.addEventListener( Event.CHANGE, onPrecisionChanged );
+			_parameterMapping.addParameter(param_precision);
+			
+			param_intensity = new PsykoParameter( PsykoParameter.NumberParameter,"Intensity",1,0,1);
+			param_intensity.showInUI = 2;
+			param_intensity.addEventListener( Event.CHANGE, onIntensityChanged );
+			_parameterMapping.addParameter(param_intensity);
+						
+			
+			onStyleChanged(null);
+			
 		}
+		
+		
+		protected function onStyleChanged(event:Event):void
+		{
+			
+			brushEngine.param_shapes.index = param_style.index;			
+			onPrecisionChanged(null);
+			onIntensityChanged(null);
+		}
+		
+		protected function onPrecisionChanged(event:Event):void
+		{
+			var precision:Number = param_precision.numberValue;
+			
+			callbackDecorator.active=false;
+			
+			//BRUSH ENGINE
+			brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
+			brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 4;
+			brushEngine.pathManager.pathEngine.sendTaps = false;
+			brushEngine.textureScaleFactor = 1;
+			brushEngine.param_quadOffsetRatio.numberValue = 0;
+			
+
+			
+			//SIZE
+			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
+			sizeDecorator.param_mappingFactor.minLimit = 0.01;
+			sizeDecorator.param_mappingFactor.maxLimit = 2;
+			sizeDecorator.param_mappingFactor.numberValue = 0.2;
+			sizeDecorator.param_mappingRange.numberValue = 0.05;
+			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCULAR_IN;
+			
+			//SPAWN
+			spawnDecorator.param_multiples.upperRangeValue = 16;
+			spawnDecorator.param_multiples.lowerRangeValue = 4;
+			spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_PRESSURE_SPEED;
+			spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_RANDOM;
+			//spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -180;
+			//spawnDecorator.param_offsetAngleRange.upperDegreesValue = 180;
+			spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -1;
+			spawnDecorator.param_offsetAngleRange.upperDegreesValue = 1;
+			spawnDecorator.param_maxSize.numberValue = 0.12;
+			spawnDecorator.param_minOffset.numberValue = 0;
+			spawnDecorator.param_maxOffset.numberValue = 16;
+			spawnDecorator.param_bristleVariation.numberValue = 0.0;
+			spawnDecorator.param_autorotate.booleanValue =true;
+			
+			
+			
+			//BUMP
+			bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
+			bumpDecorator.param_invertMapping.booleanValue = true;
+			bumpDecorator.param_bumpiness.numberValue = 0.8;
+			bumpDecorator.param_bumpinessRange.numberValue = 0.5;
+			bumpDecorator.param_bumpInfluence.numberValue = 0.25;
+			bumpDecorator.param_noBumpProbability.numberValue = 0.6;
+			
+			//COLOR
+			colorDecorator.param_brushOpacity.numberValue = 1;
+			colorDecorator.param_brushOpacityRange.numberValue = 0;
+			colorDecorator.param_colorBlending.upperRangeValue = 1;
+			colorDecorator.param_colorBlending.lowerRangeValue = 0.95;
+			colorDecorator.param_pickRadius.lowerRangeValue = 0.25;
+			colorDecorator.param_pickRadius.upperRangeValue = 0.33;
+			colorDecorator.param_smoothFactor.lowerRangeValue = 0.8;
+			
+			//SPLATTER
+			splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_SPEED;
+			splatterDecorator.param_mappingFunction.index = SplatterDecorator.INDEX_MAPPING_CIRCQUAD;
+			splatterDecorator.param_splatFactor.numberValue = 20;
+			splatterDecorator.param_minOffset.numberValue = 0;
+			splatterDecorator.param_offsetAngleRange.degrees = 360;
+			splatterDecorator.param_sizeFactor.numberValue = 0;
+			
+			
+			switch ( param_style.index )
+			{
+				
+				case STYLE_PAINTSTROKES_VAN_GOUGH:
+					
+					trace("van Gogh");
+					brushEngine.param_quadOffsetRatio.numberValue = 0.4;
+					
+				
+					callbackDecorator.active = false;
+					forceRotationAngle = 0;
+					brushEngine.param_curvatureSizeInfluence.numberValue = 0;
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 3;
+					sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.5;
+					sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 0.12;
+					spawnDecorator.param_maxSize.numberValue = 0.05 + precision * 0.36;
+					spawnDecorator.param_maxOffset.numberValue = 16 + precision * 40;
+					
+					bumpDecorator.param_glossiness.numberValue = 0.5 ;
+					bumpDecorator.param_shininess.numberValue = 0.3;
+					
+					break;
+				/*case STYLE_PAINTSTROKES_FIREWORKS:
+					callbackDecorator.active = true;
+					forceRotationAngle = 0;
+					brushEngine.param_curvatureSizeInfluence.numberValue = 0;
+					break;
+				case STYLE_PAINTSTROKES_SPIRAL:
+					callbackDecorator.active = true;
+					forceRotationAngle = Math.PI*0.25;
+					brushEngine.param_curvatureSizeInfluence.numberValue = 0;
+					break;*/
+					
+				case STYLE_BRISTLE_BRUSH:
+					trace("BRistle 3")
+					bumpDecorator.param_bumpiness.numberValue = 0.8;
+					bumpDecorator.param_bumpinessRange.numberValue = 0.3;
+					bumpDecorator.param_bumpInfluence.numberValue = 0.2;
+					bumpDecorator.param_noBumpProbability.numberValue = 0.4;
+					spawnDecorator.param_bristleVariation.numberValue = 10;
+					
+					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SPEED;
+					spawnDecorator.param_multiples.upperRangeValue = 16;
+					spawnDecorator.param_multiples.lowerRangeValue = 12;
+					
+					spawnDecorator.param_minOffset.numberValue =  0+precision * 6;
+					spawnDecorator.param_maxOffset.numberValue =  0+precision * 6;
+					
+					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -90;
+					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 90;
+					
+					bumpDecorator.param_glossiness.numberValue = 0.8 ;
+					bumpDecorator.param_shininess.numberValue = 0.3;
+					
+					break;
+				
+				default:
+
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
+					sizeDecorator.param_mappingRange.numberValue = 0.001;
+					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
+					
+
+					
+					
+					break;
+				
+				
+			}
+		}
+		
+		protected function onIntensityChanged(event:Event):void
+		{
+			var intensity:Number = param_intensity.numberValue;
+			//RESET LAYER OPACITY
+			if (brushEngine is SprayCanBrush) (brushEngine  as SprayCanBrush).param_strokeAlpha.numberValue = 1;
+			
+			switch ( param_style.index )
+			{
+				
+				
+				case "STYLE TO ASSING":
+					
+					//ALPHA OF LAYER IS 1 HERE CAUSE WE DON'T WANT TO HAVE TRANSPARENCY ON THE LAYER SIDE
+					(brushEngine  as SprayCanBrush).param_strokeAlpha.numberValue = 1;
+					//CHANGE INDIVIDUAL BRUSH OPACITY
+					colorDecorator.param_brushOpacity.numberValue = 0.1+intensity*0.9;
+					bumpDecorator.param_bumpInfluence.numberValue = 0.15+intensity*0.25;
+					bumpDecorator.param_bumpinessRange.numberValue = 0.25+intensity*0.15;
+					
+					break;
+				
+				
+				/*case STYLE_PAINTSTROKES:
+					
+					//spawnDecorator.param_maxSize.numberValue = 0.05 + intensity * 2;
+					//spawnDecorator.param_maxOffset.numberValue = 16 + intensity * 4;
+					
+					//splatterDecorator.param_sizeFactor.numberValue = intensity*4;
+					
+					
+					//brushEngine.param_quadOffsetRatio.numberValue = 0.4;
+					//brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + intensity * 3;
+					
+					//sizeDecorator.param_mappingFactor.numberValue = 0.05 + intensity * 0.25;
+					//sizeDecorator.param_mappingRange.numberValue = 0.01 + intensity * 0.12;
+					
+					break;*/
+				
+				
+			
+				//SIMPLE OPACITY BY DEFAULT
+				default:
+					
+					(brushEngine as SprayCanBrush).param_strokeAlpha.numberValue = 0.1+param_intensity.numberValue*0.9;
+					
+					break;
+				
+				
+			}
+		
+			
+			
+			
+		}	
+		
+		
+		protected function processPoints(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
+		{
+			if ( points.length == 0 ) return points;
+			
+			if (points[0].first )
+			{
+				rotationCenterX = points[0].x;
+				rotationCenterY = points[0].y;
+				if (  param_style.index == STYLE_PAINTSTROKES_SPIRAL ) forceRotationAngle = Math.random() * Math.PI * 2;
+			}
+			for ( var i:int = 0; i < points.length; i++ )
+			{
+				var p:SamplePoint = points[i];
+				p.angle = Math.atan2(rotationCenterY -p.y ,rotationCenterX - p.x) +  forceRotationAngle;
+			}
+			
+			return points;
+		}
+		
+		
 	}
 }

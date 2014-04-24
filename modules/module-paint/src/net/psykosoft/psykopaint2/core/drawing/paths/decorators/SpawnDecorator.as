@@ -7,6 +7,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 
+	/* makes copies of the current point and distributes them within a given offset range */
+
 	final public class SpawnDecorator extends AbstractPointDecorator
 	{
 		
@@ -37,6 +39,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public var param_maxOffset:PsykoParameter;
 		public var param_offsetMode:PsykoParameter;
 		public var param_offsetAngleRange:PsykoParameter;
+		/* USE lowerRangeValue AND upperRangeValue IN DEGREES */
 		public var param_brushAngleRange:PsykoParameter;
 		public var param_bristleVariation:PsykoParameter;
 		public var param_maxSpeed:PsykoParameter;
@@ -78,8 +81,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var msz:Number = param_maxSize.numberValue;
 			var c:int = 0;
 			
-			var oar_rng:Number = param_offsetAngleRange.rangeValue;
 			var oar_lrng:Number = param_offsetAngleRange.lowerRangeValue;
+			var oar_rng:Number = param_offsetAngleRange.rangeValue;
 			var bn:Number = param_bristleVariation.numberValue;
 			var bar_rng:Number = param_brushAngleRange.rangeValue;
 			var bar_lrng:Number = param_brushAngleRange.lowerRangeValue;
@@ -120,7 +123,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					var p:SamplePoint = points[j].getClone();
 					var offsetAngle:Number = ((ar ? p.angle + Math.PI * 0.5 : 0 ) + Math.random() * oar_rng + oar_lrng);
 					var radius:Number = (i-spawnCount/2) * distance + (Math.random()-Math.random()) * distance*0.5*bn;
-					p.angle += + Math.random() * bar_rng + bar_lrng;
+					p.angle +=  (Math.random() * bar_rng + bar_lrng);
 					p.x +=  Math.cos(offsetAngle) * radius; 
 					p.y +=  Math.sin(offsetAngle) * radius; 
 					result[c++] = p;
