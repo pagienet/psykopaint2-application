@@ -16,5 +16,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			stop();
 			this.gotoAndStop(int(Math.random()*this.totalFrames+1));
 		}
+		
+		override public function set visible( value:Boolean ):void
+		{
+			this.gotoAndStop(int(Math.random()*this.totalFrames+1));
+			super.visible = value;
+		}
 	}
 }

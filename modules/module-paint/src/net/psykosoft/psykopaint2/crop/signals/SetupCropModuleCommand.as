@@ -24,11 +24,10 @@ package net.psykosoft.psykopaint2.crop.signals
 
 		[Inject]
 		public var requestAddViewToMainLayerSignal : RequestAddViewToMainLayerSignal;
-
+		
 		override public function execute() : void
 		{
 			super.execute();
-
 			var cropRootView : CropRootView = new CropRootView();
 			requestAddViewToMainLayerSignal.dispatch(cropRootView,ViewLayerOrdering.AT_BOTTOM_LAYER);
 			requestUpdateCropImageSignal.dispatch(bitmapData, orientation);

@@ -42,6 +42,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyTogglePaintingEnableSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
@@ -123,6 +124,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		[Inject]
 		public var notifyPaintModeChangedSignal:NotifyPaintModeChangedSignal;
+		
+		[Inject]
+		public var notifyToggleLoadingMessageSignal:NotifyToggleLoadingMessageSignal;
 		
 	
 		private var _view : DisplayObject;
@@ -354,6 +358,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			activateBrushKit();
 			
 			paintSettingsModel.setDefaultValues();
+			
+			notifyToggleLoadingMessageSignal.dispatch(false);
 		}
 
 		public function deactivate() : void

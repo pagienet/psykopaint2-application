@@ -2,19 +2,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 {
 
 	import com.greensock.TweenLite;
-	import com.greensock.easing.Expo;
 	import com.greensock.easing.Quad;
-	import com.greensock.easing.Sine;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
-	import flash.display.MovieClip;
 	import flash.display.Sprite;
-	import flash.display.StageQuality;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
-	import flash.utils.Dictionary;
 	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
@@ -92,7 +87,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			// Keep current nav when incoming class is the abstract one.
 			// TODO: review...
 			if( subNavType == SubNavigationViewBase ) {
-				loadingView.visible = true;
+				//loadingView.visible = true;
 				return;
 			}
 
@@ -177,14 +172,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 					
 					//this.x=0;
 					
-					loadingView.visible=false;
+					//loadingView.visible=false;
 					
 				}});
 				
 			}
 			else {
 				showNewSubNavigationView(subNavType);
-				loadingView.visible=false;
+				//loadingView.visible=false;
 			}
 		
 			

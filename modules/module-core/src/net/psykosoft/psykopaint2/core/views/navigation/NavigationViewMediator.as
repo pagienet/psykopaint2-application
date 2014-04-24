@@ -2,13 +2,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 {
 
 	import flash.display.Stage;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.ui.CanvasInteractionUtil;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationPositionChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	
@@ -32,6 +33,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		[Inject]
 		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
+		
+		[Inject]
+		public var notifyToggleLoadingMessageSignal:NotifyToggleLoadingMessageSignal;
 
 		[Inject]
 		public var navigationCanHideWithGesturesSignal:NavigationCanHideWithGesturesSignal;
@@ -51,7 +55,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			requestNavigationToggleSignal.add( onToggleRequest );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			navigationCanHideWithGesturesSignal.add( onNavigationCanHideWithGestures );
-
+			notifyToggleLoadingMessageSignal.add( onToggleLoadingMessage );
+			
 			// From view.
 			view.panel.shownSignal.add( onViewShown );
 			view.panel.showingSignal.add( onViewShowing );
@@ -60,7 +65,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			view.panel.positionChanged.add( onViewPositionChanged );
 
 		}
-
+		
+		private function onToggleLoadingMessage( show:Boolean ):void
+		{
+			view.loadingView.visible = show;
+			
+		}
+		
 		// -----------------------
 		// From view.
 		// -----------------------

@@ -4,12 +4,13 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
 	
+	import net.psykosoft.psykopaint2.base.utils.io.CameraRollUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
-	import net.psykosoft.psykopaint2.base.utils.io.CameraRollUtil;
 	import net.psykosoft.psykopaint2.core.views.popups.login.DeviceCameraUtil;
 	import net.psykosoft.psykopaint2.home.commands.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
@@ -31,6 +32,9 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		[Inject]
 		public var requestLoadSurfacePreviewSignal:RequestLoadSurfacePreviewSignal;
 	
+		[Inject]
+		public var notifyToggleLoadingMessageSignal:NotifyToggleLoadingMessageSignal;
+		
 		
 		private var _cameraUtil:DeviceCameraUtil;
 		private var _rollUtil:CameraRollUtil;
@@ -106,6 +110,8 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 				}
 
 				case PickAnImageSubNavView.ID_USER: {
+					notifyToggleLoadingMessageSignal.dispatch(true);
+					
 					if(!CoreSettings.RUNNING_ON_iPAD)
 						requestNavigationStateChange(NavigationStateType.PICK_USER_IMAGE_DESKTOP);
 					else if (!CoreSettings.USE_NATIVE_CAMERA_ROLL_TO_RETRIEVE_USER_IMAGES)

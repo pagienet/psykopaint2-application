@@ -97,7 +97,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 			_parameterMapping = new PsykoParameterMapping();
 
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["basic","wet", "splat", "splat", "splat", "splat"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Simple","Wet", "Circles", "Blobs", "Add Water", "Drops"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -125,8 +125,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_SPEED;
 			sizeDecorator.param_invertMapping.booleanValue = true;
 			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
-			sizeDecorator.param_mappingFactor.numberValue = .6;
-			sizeDecorator.param_mappingRange.numberValue = .4;
+			sizeDecorator.param_mappingFactor.numberValue = .2;
+			sizeDecorator.param_mappingRange.numberValue = .8;
 			
 			callbackDecorator = new CallbackDecorator( this, processPoints );
 			
@@ -210,6 +210,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_shapes.index = 0;
 			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .2;
 			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .1;
+			WaterColorBrush(brushEngine).param_glossiness.numberValue = 0.2;
 		}
 
 		private function setValuesForWetBrush():void
@@ -218,20 +219,23 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .2;
 			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .1;
+			WaterColorBrush(brushEngine).param_glossiness.numberValue = 0.8;
 		}
 
 		protected function onPrecisionChanged(event:Event):void
 		{
 			var precision:Number = param_precision.numberValue;
-			brushEngine.param_sizeFactor.lowerRangeValue = brushEngine.param_sizeFactor.upperRangeValue = precision;
+			brushEngine.param_sizeFactor.lowerRangeValue = brushEngine.param_sizeFactor.upperRangeValue = 0.02+precision;
 			splatterDecorator.param_splatFactor.value = SPLAT_FACTOR*precision;
-			splatterDecorator.param_minOffset.value = MIN_SPLAT*precision;
+			splatterDecorator.param_minOffset.value =  MIN_SPLAT*precision;
 		}
 		
 		protected function onIntensityChanged(event:Event):void
 		{
-			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.07 * param_intensity.numberValue;
+			//WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.07 * param_intensity.numberValue;
+			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.01 + 0.1 * param_intensity.numberValue;
 			WaterColorBrush(brushEngine).param_damageFlow.numberValue = .1 + 0.3 * param_intensity.numberValue;
+			
 		}
 		
 		protected function processPoints(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
