@@ -25,10 +25,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		
 		
-		private static const STYLE_PAINTSTROKES_VAN_GOUGH:int = 0;
-		private static const STYLE_BRISTLE_BRUSH:int = 1;
-		
-		private static const STYLE_PAINTSTROKES_FIREWORKS:int = 2;
+		private static const STYLE_VAN_GOGH:int = 0;
+		private static const STYLE_MONET:int = 1;
+		private static const STYLE_MANET:int = 2;
 		private static const STYLE_PAINTSTROKES_SPIRAL:int = 3;
 		
 		private var sizeDecorator:SizeDecorator;
@@ -125,7 +124,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpiness.numberValue = 0;
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","line","line"]);
+			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","line","paint1"]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -151,7 +150,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Van Gogh","Monet","Rembrandt"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Van Gogh","Monet","Pissaro"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -249,7 +248,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			switch ( param_style.index )
 			{
 				
-				case STYLE_PAINTSTROKES_VAN_GOUGH:
+				case STYLE_VAN_GOGH:
 					
 					trace("van Gogh");
 					brushEngine.param_quadOffsetRatio.numberValue = 0.4;
@@ -279,7 +278,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					brushEngine.param_curvatureSizeInfluence.numberValue = 0;
 					break;*/
 					
-				case STYLE_BRISTLE_BRUSH:
+				case STYLE_MONET:
 					trace("BRistle 3")
 					bumpDecorator.param_bumpiness.numberValue = 0.8;
 					bumpDecorator.param_bumpinessRange.numberValue = 0.3;
@@ -299,6 +298,44 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					bumpDecorator.param_glossiness.numberValue = 0.8 ;
 					bumpDecorator.param_shininess.numberValue = 0.3;
+					
+					break;
+				
+				case STYLE_MANET:
+					trace("BRistle 3");
+					brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 10;
+					
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
+					sizeDecorator.param_mappingFactor.numberValue = 0.1+precision * 0.3;
+					sizeDecorator.param_mappingRange.numberValue = 0.02+precision * 0.06;
+					
+					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCULAR_IN;
+					
+					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
+					splatterDecorator.param_mappingFunction.index = SplatterDecorator.INDEX_MAPPING_CIRCQUAD;
+					splatterDecorator.param_splatFactor.numberValue = precision * 5;
+					splatterDecorator.param_minOffset.numberValue = 0;
+					splatterDecorator.param_offsetAngleRange.degrees = 360;
+					splatterDecorator.param_sizeFactor.numberValue = 0.5+precision * 6;
+					
+					
+					bumpDecorator.param_bumpiness.numberValue = 0.8;
+					bumpDecorator.param_bumpinessRange.numberValue = 0.3;
+					bumpDecorator.param_bumpInfluence.numberValue = 0.2;
+					bumpDecorator.param_noBumpProbability.numberValue = 0.4;
+					spawnDecorator.param_bristleVariation.numberValue = 10;
+					
+					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_RANDOM;
+					spawnDecorator.param_multiples.upperRangeValue = 8;
+					spawnDecorator.param_multiples.lowerRangeValue = 1;
+					spawnDecorator.param_minOffset.numberValue =  0+precision * 20;
+					spawnDecorator.param_maxOffset.numberValue =  0+precision * 50;
+					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -10;
+					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 10;
+					
+					bumpDecorator.param_glossiness.numberValue = 0.2 ;
+					bumpDecorator.param_shininess.numberValue = 0.8;
 					
 					break;
 				

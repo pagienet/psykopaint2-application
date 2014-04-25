@@ -80,8 +80,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			sizeDecorator = new SizeDecorator();
 			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
-			sizeDecorator.param_mappingFactor.minLimit = 0.01;
-			sizeDecorator.param_mappingFactor.maxLimit = 2;
 			sizeDecorator.param_mappingFactor.numberValue = 0.2;
 			sizeDecorator.param_mappingRange.numberValue = 0.05;
 			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCULAR_IN;
