@@ -55,13 +55,7 @@ package net.psykosoft.psykopaint2.core.controllers
 			targetPos.x = 0;
 			targetPos.y = 0;
 			targetPos.z = -_lightDistance;
-			
-			/*
-			defaultPos.normalize();
-			targetPos.x = defaultPos.x;
-			targetPos.y = defaultPos.y;
-			targetPos.z = defaultPos.z;
-			*/
+
 			targetPos = orientationMatrix.deltaTransformVector(targetPos);
 			pos.x += (targetPos.x - pos.x)*_lightInterpolation;
 			pos.y += (targetPos.y - pos.y)*_lightInterpolation;
