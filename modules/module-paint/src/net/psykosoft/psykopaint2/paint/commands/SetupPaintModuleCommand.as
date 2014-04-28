@@ -124,7 +124,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		{
 			var canvasImporter : CanvasImporter = new CanvasImporter();
 			canvasImporter.importPainting(canvasModel, initPaintingVO);
-			userPaintSettingModel.setColorMode(initPaintingVO.sourceImageData ? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE, false );
+			userPaintSettingModel.setColorMode(initPaintingVO.sourceImageData ? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE );
 			userPaintSettingModel.hasSourceImage = initPaintingVO.sourceImageData != null;
 			userPaintSettingModel.isContinuedPainting = (initPaintingVO.loadedFileName != null);
 			initPaintingVO.dispose();

@@ -141,21 +141,19 @@ package net.psykosoft.psykopaint2.paint.views.color
 			if ( index == -1 && !userPaintSettings.pipetteIsEmpty) index = 9;
 			if ( index>-1)
 			{
-				var sendModeSignal:Boolean = false;
 				var sendColorSignal:Boolean = false;
-				
+				var newColorMode:int = PaintMode.COLOR_MODE;
 				//userPaintSettings.selectedSwatchIndex != index &&
 				if ( swatches[index] == autoColorSwatch){
 					paletteSelector.x = swatches[index].x + 32;
 					paletteSelector.y = swatches[index].y+37;
 					_selectedColor = userPaintSettings.currentColor;
-					sendModeSignal = true;
+					newColorMode = PaintMode.PHOTO_MODE;
 				} else if ( swatches[index] == eraser){
 					paletteSelector.x = swatches[index].x + 32;
 					paletteSelector.y = swatches[index].y+37;
 					_selectedColor = 0;
-					
-					sendModeSignal = true;
+					newColorMode = PaintMode.ERASER_MODE;
 				} else if ( swatches[index] == currentColor){
 					paletteSelector.x = swatches[index].x-2;
 					paletteSelector.y = swatches[index].y+3;
@@ -171,8 +169,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 				if ( userPaintSettings.colorMode != PaintMode.COSMETIC_MODE )
 				{
 					userPaintSettings.selectedSwatchIndex = index;
-					userPaintSettings.setColorMode( autoColor ? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE, sendModeSignal );
 					userPaintSettings.setCurrentColor(_selectedColor, sendColorSignal);
+					userPaintSettings.setColorMode(newColorMode);// autoColor ? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE );
+					
 					userPaintSettings.eraserMode = (index == 5);
 				}
 				eraser.filters = index == 5 ? [] : [desaturate];

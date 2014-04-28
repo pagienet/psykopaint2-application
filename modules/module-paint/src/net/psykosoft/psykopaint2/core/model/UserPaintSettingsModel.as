@@ -215,17 +215,13 @@ package net.psykosoft.psykopaint2.core.model
 			return _currentColor;
 		}
 		
-		public function setColorMode( value:int, dispatchSignal:Boolean = true ):void
+		public function setColorMode( value:int):void
 		{
 			if ( _colorMode != value )
 			{
 				_colorMode = value;
-				if ( dispatchSignal ) 
-				{
-					notifyPaintModeChangedSignal.dispatch( _colorMode );
-					if ( _colorMode != PaintMode.COSMETIC_MODE ) notifyPickedColorChangedSignal.dispatch( _currentColor, _colorMode, false);
-				}
-				
+				notifyPaintModeChangedSignal.dispatch( _colorMode );
+				if ( _colorMode != PaintMode.COSMETIC_MODE ) notifyPickedColorChangedSignal.dispatch( _currentColor, _colorMode, false);
 			}
 		}
 		
@@ -239,7 +235,7 @@ package net.psykosoft.psykopaint2.core.model
 			if ( _eraserMode != value )
 			{
 				_eraserMode = value;
-				setColorMode( _eraserMode ? PaintMode.ERASER_MODE : PaintMode.COLOR_MODE, true )
+				setColorMode( _eraserMode ? PaintMode.ERASER_MODE : PaintMode.COLOR_MODE  )
 			}
 		}
 		
