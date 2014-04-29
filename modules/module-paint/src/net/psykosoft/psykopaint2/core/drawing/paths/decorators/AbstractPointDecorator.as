@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import com.greensock.easing.Sine;
 	import com.greensock.easing.Strong;
 	
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
@@ -111,6 +112,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		
 		protected var _parameters:Vector.<PsykoParameter>;
 		protected var _active:Boolean;
+		
+		protected const _scalingFactor:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1;
+		
 		
 		public function AbstractPointDecorator()
 		{

@@ -1,7 +1,5 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
-	import com.quasimondo.geom.ColorMatrix;
-	
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;

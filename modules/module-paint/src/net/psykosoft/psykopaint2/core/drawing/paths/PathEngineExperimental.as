@@ -47,7 +47,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			
 			var speedSmoothingFactor:Number = _speedSmoothing.numberValue;
 			var stepFactor:Number = _outputStepSize.numberValue;
-			var speedCorrection:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 0.5 : 1;
+			var retinaCorrection:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 0.5 : 1;
+			stepFactor /= retinaCorrection;
 			var first:Boolean = false;
 			if ( p1 == null )
 			{
@@ -92,7 +93,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						lastPointSpeed = ((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed );
 						var p:SamplePoint = PathManager.getSamplePoint( ti2*p1x+tit*cx+tt*p2x, 
 																		ti2*p1y+tit*cy+tt*p2y,
-																		lastPointSpeed * speedCorrection,
+																		lastPointSpeed * retinaCorrection,
 																		0,
 																		angle,
 																		curvature,
@@ -155,7 +156,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						p = PathManager.getSamplePoint( 
 							ti2*p1x+tit*cx+tt*p2x, 
 							ti2*p1y+tit*cy+tt*p2y,
-							lastPointSpeed * speedCorrection,
+							lastPointSpeed * retinaCorrection,
 							0,
 							angle,
 							curvature,
@@ -208,7 +209,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					lastPointSpeed  = ((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed );
 					p = PathManager.getSamplePoint( ti2*p1x+tit*cx+tt*p2x, 
 						ti2*p1y+tit*cy+tt*p2y,
-						lastPointSpeed * speedCorrection,
+						lastPointSpeed * retinaCorrection,
 						0,
 						angle,
 						curvature,

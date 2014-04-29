@@ -94,7 +94,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				
 				//trace(spawnCount, point.size);
 				var offsetRange:Number = param_maxOffset.numberValue - param_minOffset.numberValue;
-				var distance:Number = 2 * offsetRange / spawnCount;
+				var distance:Number = _scalingFactor * 2 * offsetRange / spawnCount;
 				switch ( param_offsetMode.index )
 				{
 					case INDEX_MODE_RANDOM:
