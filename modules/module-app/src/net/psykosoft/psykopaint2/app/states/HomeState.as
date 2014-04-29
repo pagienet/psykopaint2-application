@@ -63,7 +63,7 @@ package net.psykosoft.psykopaint2.app.states
 			requestCropSourceImageSignal.add(onRequestCropState);
 
 			navigationCanHideWithGesturesSignal.dispatch( false );
-			requestNavigationToggleSignal.dispatch( 1, true );
+			requestNavigationToggleSignal.dispatch( 1, true, false );
 		}
 
 		override ns_state_machine function deactivate() : void

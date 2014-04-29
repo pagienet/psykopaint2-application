@@ -468,7 +468,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private function revealHiddenNavigation() : void
 		{
-			requestNavigationToggleSignal.dispatch(1,true);
+			requestNavigationToggleSignal.dispatch(1,true, true);
 			_navigationWasHiddenByPainting = false;
 		}
 		
@@ -477,7 +477,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if (_canvasMatrix.a > 0.74 && _view.mouseY > 550 )
 			{
 			
-				requestNavigationToggleSignal.dispatch(-1,false);
+				requestNavigationToggleSignal.dispatch(-1,false, true);
 				_view.removeEventListener(Event.ENTER_FRAME, onPaintOverNavCheck );
 				_navigationWasHiddenByPainting = true;
 			}

@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 	
 	import flash.net.SharedObject;
 	
-	import net.psykosoft.psykopaint2.core.data.UserConfigVO;
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 
