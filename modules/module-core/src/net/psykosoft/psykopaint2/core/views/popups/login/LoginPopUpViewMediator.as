@@ -98,6 +98,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			view.signupSubView.canRequestSignUp = true;
 			_signingUp = false;
+
+			requestHidePopUpSignal.dispatch();
 		}
 
 		// the fail signal contains an int with a value from AMFErrorCode.as
