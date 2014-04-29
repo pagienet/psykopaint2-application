@@ -1,8 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
-	import away3d.hacks.NativeRectTexture;
-
 	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
 	import com.greensock.easing.Quad;
 	
 	import flash.display.BitmapData;
@@ -13,7 +12,9 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.display3D.textures.RectangleTexture;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.utils.ByteArray;
@@ -25,6 +26,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.entities.Mesh;
 	import away3d.events.Object3DEvent;
 	import away3d.events.Stage3DEvent;
+	import away3d.hacks.NativeRectTexture;
 	import away3d.hacks.PaintingMaterial;
 	import away3d.lights.LightBase;
 	import away3d.materials.lightpickers.LightPickerBase;
@@ -42,9 +44,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	public class EaselView extends Sprite
 	{
-		public static const CAMERA_POSITION:Vector3D = new Vector3D(271, -40, 300);
-		public static const CANVAS_DEFAULT_POSITION : Vector3D = new Vector3D(271, -24, -5);
-		private static const CANVAS_WIDTH : Number = 170;
+		public static const CAMERA_POSITION:Vector3D = new Vector3D(271, -40, 250);
+		public static const CANVAS_DEFAULT_POSITION : Vector3D = new Vector3D(278, -28, -5);
+		private static const CANVAS_WIDTH : Number = 158;
 
 		public var easelRectChanged : Signal = new Signal();
 		public var easelTappedSignal : Signal = new Signal();
@@ -294,7 +296,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function animateCanvasOut() : void
 		{
 			if (_canvas.visible)
-				TweenLite.to(_canvas,.25, {x: CANVAS_DEFAULT_POSITION.x + 400, ease: Quad.easeIn, onComplete: animateCanvasIn});
+				TweenLite.to(_canvas,.50, {x: CANVAS_DEFAULT_POSITION.x + 400, ease: Expo.easeOut, onComplete: animateCanvasIn});
 			else {
 				_canvas.x = -600;
 				animateCanvasIn();
@@ -310,8 +312,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			_pendingPaintingInfoVO = null;
 
 			if (_canvas.visible) {
-				_canvas.x = CANVAS_DEFAULT_POSITION.x - 400;
-				TweenLite.to(_canvas, .25, {x: CANVAS_DEFAULT_POSITION.x , ease: Quad.easeOut});
+				_canvas.x = CANVAS_DEFAULT_POSITION.x + 400;
+				TweenLite.to(_canvas, .50, {x: CANVAS_DEFAULT_POSITION.x , ease: Expo.easeOut});
 			}
 		}
 
@@ -710,7 +712,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 			var util:CopyMeshToBitmapDataUtil = new CopyMeshToBitmapDataUtil();
 			var result:BitmapData = new BitmapData( CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT,false );
-			return util.execute( _canvas, _diffuseTexture.texture, result, _context3D );;
+			
+			result = util.execute( _canvas, _diffuseTexture.texture, result, _context3D );
+			result.applyFilter(result,new Rectangle(0,0,CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT),new Point(),new BlurFilter(15,15));
+			return result;
 		}
 	}
 }
