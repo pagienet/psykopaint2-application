@@ -150,22 +150,23 @@ package net.psykosoft.psykopaint2.paint.views.color
 		{
 			if ( !fromSliders )
 			{
-				colorPalette.autoColor = (colorMode == PaintMode.PHOTO_MODE);
+				//colorPalette.autoColor = (colorMode == PaintMode.PHOTO_MODE);
 				hslSliders.updateSliders();
 				
 			} else {
 				if ( colorPalette.pipetteSwatchSelected ) notifyChangePipetteColorSignal.dispatch(newColor)
-				colorPalette.autoColor = false;
+				//colorPalette.autoColor = false;
 				colorPalette.selectedColor = newColor;
 				_userPaintSettings.setColorMode(PaintMode.COLOR_MODE);
 			}
-			if (!colorPalette.autoColor && _userPaintSettings.selectedSwatchIndex > -1 && colorPalette.selectedColor != newColor ) colorPalette.selectedIndex = -1;
+			//if (!colorPalette.autoColor && _userPaintSettings.selectedSwatchIndex > -1 && colorPalette.selectedColor != newColor ) colorPalette.selectedIndex = -1;
 			
-			updateContextUI();
+			//updateContextUI();
 		}
 		
 		public function updateContextUI():void
 		{
+			colorPalette.autoColor = ( _userPaintSettings.colorMode == PaintMode.PHOTO_MODE);
 			if ( _userPaintSettings.colorMode == PaintMode.COLOR_MODE )
 			{
 				hslSliders.visible = true;
