@@ -1,11 +1,19 @@
 package net.psykosoft.psykopaint2.core.models
 {
 
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.Loader;
+	import flash.display.LoaderInfo;
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.net.SharedObject;
+	import flash.net.URLRequest;
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
+	import net.psykosoft.psykopaint2.core.signals.NotifyProfilePictureUpdatedSignal;
 
 	import org.osflash.signals.Signal;
 
@@ -13,6 +21,9 @@ package net.psykosoft.psykopaint2.core.models
 	{
 		[Inject]
 		public var amfBridge : AMFBridge;
+
+		[Inject]
+		public var notifyProfilePictureUpdatedSignal : NotifyProfilePictureUpdatedSignal;
 
 		private var _userID : int = -1;
 
@@ -35,11 +46,16 @@ package net.psykosoft.psykopaint2.core.models
 		private var _localCache : SharedObject;
 		private var _subscriptions : Array;
 		private var _toFollowUserID : int;
+		private var _thumbnailURL:String;
 
 		public function AMFLoggedInUserProxy()
 		{
 			_localCache = SharedObject.getLocal("com.psykopaint.userData");
+		}
 
+		[PostConstruct]
+		public function init() : void
+		{
 			retrieveCachedUser();
 		}
 
@@ -47,8 +63,10 @@ package net.psykosoft.psykopaint2.core.models
 		{
 			_sessionID = _localCache.data["session_id"];
 
-			if (_sessionID)
+			if (_sessionID) {
 				extractProfileData(_localCache.data);
+				loadUserImage();
+			}
 			else
 				_userID = -1;
 		}
@@ -138,7 +156,7 @@ package net.psykosoft.psykopaint2.core.models
 
 			_onChange.dispatch();
 			_onSubscriptionsChange.dispatch();
-
+			notifyProfilePictureUpdatedSignal.dispatch(null);
 		}
 
 		private function onGeneralSuccess(data : Object) : void
@@ -177,6 +195,37 @@ package net.psykosoft.psykopaint2.core.models
 			_onChange.dispatch();
 			_onSubscriptionsChange.dispatch();
 			if (_onSuccess) _onSuccess();
+
+			loadUserImage();
+		}
+
+		public function loadUserImage():void
+		{
+			var loader : Loader = new Loader();
+			if (_thumbnailURL && _thumbnailURL != "") {
+				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadImageComplete);
+				loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadImageError);
+				loader.load(new URLRequest(_thumbnailURL));
+			}
+			else
+				notifyProfilePictureUpdatedSignal.dispatch(null);
+		}
+
+		private function onLoadImageError(event:IOErrorEvent):void
+		{
+			var loader : Loader = Loader(event.target);
+			loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onLoadImageComplete);
+			loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, onLoadImageError);
+			notifyProfilePictureUpdatedSignal.dispatch(null);
+		}
+
+		private function onLoadImageComplete(event:Event):void
+		{
+			var loader : Loader = LoaderInfo(event.target).loader;
+			loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onLoadImageComplete);
+			loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, onLoadImageError);
+			var bitmapData : BitmapData = Bitmap(loader.content).bitmapData;
+			notifyProfilePictureUpdatedSignal.dispatch(bitmapData);
 		}
 
 		private function populateUserData(data : Object) : void
@@ -198,6 +247,7 @@ package net.psykosoft.psykopaint2.core.models
 			_localCache.data["active"] = _active;
 			_localCache.data["banned"] = _banned;
 			_localCache.data["notifications"] = _subscriptions;
+			_localCache.data["thumbnail_url"] = _thumbnailURL;
 			_localCache.flush();
 		}
 
@@ -212,6 +262,7 @@ package net.psykosoft.psykopaint2.core.models
 			_active = userData["active"];
 			_banned = userData["banned"];
 			_subscriptions = userData["notifications"];
+			_thumbnailURL = userData["thumbnail_url"];
 
 			if (_subscriptions) {
 				for (var i : int = 0; i < _subscriptions.length; ++i) {

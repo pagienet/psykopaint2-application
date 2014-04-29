@@ -2,7 +2,9 @@ package net.psykosoft.psykopaint2.home.views.home
 {
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
-	
+
+	import flash.display.BitmapData;
+
 	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -276,6 +278,11 @@ package net.psykosoft.psykopaint2.home.views.home
 				_animateToTarget = true;
 				_cameraController.force(activeSection);
 			}
+		}
+
+		public function updateProfilePicture(bitmapData:BitmapData):void
+		{
+			_atelier.setIconImage(bitmapData);
 		}
 	}
 }
