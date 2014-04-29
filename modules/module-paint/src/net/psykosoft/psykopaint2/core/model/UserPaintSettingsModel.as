@@ -52,6 +52,20 @@ package net.psykosoft.psykopaint2.core.model
 			initialized = false;
 		}
 		
+		public function dispose():void
+		{
+			if ( initialized )
+			{
+				initialized = false;
+				_colorPalettes.length = 0;
+				_colorPalettes = null;
+				styleMatrices.length = 0;
+				styleMatrices = null;
+				colorStyleParameter = null;
+				styleBlendParameter = null;
+				previewMixtureParameter = null;
+			}
+		}
 		
 		public function setDefaultValues():void
 		{
