@@ -109,33 +109,52 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Auto show/hide.
 		// ---------------------------------------------------------------------
 
-		public function toggle():void {
-			if( _shown ) hide();
-			else show();
+		public function toggle(skipTween:Boolean = false ):void {
+			if( _shown ) hide(skipTween);
+			else show(skipTween);
 		}
 
-		public function show():void {
+		public function show( skipTween:Boolean = false ):void {
 			//trace( this, "show" );
 			if( _shown ) return;
 			visible = true;
 			showingSignal.dispatch();
 			
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 0.5, {
-				y:  _positionManager.getSnapPointAtIndex( 0 ) + 768,
-				onComplete:function():void{_positionManager.position = y - 768;_shown = visible = true;shownSignal.dispatch();},
-				ease: Strong.easeInOut } );
+			if ( !skipTween )
+			{
+				TweenLite.to( this, 0.5, {
+					y:  _positionManager.getSnapPointAtIndex( 0 ) + 768,
+					onComplete:function():void{_positionManager.position = y - 768;_shown = visible = true;shownSignal.dispatch();},
+					ease: Strong.easeInOut } );
+			} else {
+				y = _positionManager.getSnapPointAtIndex( 0 ) + 768;
+				_positionManager.position = y - 768;
+				_shown = visible = true;
+				shownSignal.dispatch();
+			}
+			
 		}
 
-		public function hide():void {
+		public function hide( skipTween:Boolean = false  ):void {
 			//trace( this, "hide" );
 			if( !_shown ) return;
 			hidingSignal.dispatch();
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 0.5, {
-				y:  _positionManager.getSnapPointAtIndex( 1 ) + 768,
-				onComplete:function():void{_positionManager.position = y - 768;_shown = visible = false;hiddenSignal.dispatch();},
-				ease: Strong.easeOut } );
+			if ( !skipTween )
+			{
+				
+				TweenLite.to( this, 0.5, {
+					y:  _positionManager.getSnapPointAtIndex( 1 ) + 768,
+					onComplete:function():void{_positionManager.position = y - 768;_shown = visible = false;hiddenSignal.dispatch();},
+					ease: Strong.easeOut } );
+			} else {
+				y = _positionManager.getSnapPointAtIndex( 1 ) + 768;
+				_positionManager.position = y - 768;
+				_shown = visible = false;
+				hiddenSignal.dispatch();
+				
+			}
 		}
 
 		// ---------------------------------------------------------------------

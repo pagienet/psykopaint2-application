@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	
 	import de.popforge.math.LCG;
 	
+	import net.psykosoft.psykopaint2.core.drawing.config.Settings;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
@@ -103,13 +104,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var mo:Number    = param_minOffset.numberValue;
 			var ms:Number 	 = param_maxSize.numberValue;
 			var bao:Number   = param_brushAngleOffsetRange.numberValue;
+			
 			for ( var i:int = 0; i < points.length; i++ )
 			{
 				var point:SamplePoint = points[i];
 				var angle:Number = point.angle + aaj + rng.getNumber(-oar,oar) + (rng.getChance() ? pi2 : pi3);
 				var offset:Number =  rng.getMappedNumber(0, 1, mf );
 				
-				var distance:Number =  mo + spf * offset * [point.speed / 25, point.size, Math.sqrt(Math.max(0,ms - point.size)), point.pressure > 0 ? point.pressure / 1200 : point.speed / 25, 1, 1 - (point.speed / 25)][mapIndex]; 
+				var distance:Number =  _scalingFactor * (mo + spf * offset * [point.speed / 25, point.size, Math.sqrt(Math.max(0,ms - point.size)), point.pressure > 0 ? point.pressure / 1200 : point.speed / 25, 1, 1 - (point.speed / 25)][mapIndex]); 
 				point.x  +=  Math.cos(angle) * distance;
 				point.y  +=  Math.sin(angle) * distance;
 				point.size *=  1 - Math.min(1,sf * offset) ; 

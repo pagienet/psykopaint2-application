@@ -92,7 +92,7 @@ package net.psykosoft.psykopaint2.core
 			if( parent == stage ) {
 				_injector.getInstance( RequestHideSplashScreenSignal ).dispatch();
 				_injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.HOME);
-				_injector.getInstance( RequestNavigationToggleSignal ).dispatch( 1, true);
+				_injector.getInstance( RequestNavigationToggleSignal ).dispatch( 1, true, false);
 				startEnterFrame();
 			}
 		}

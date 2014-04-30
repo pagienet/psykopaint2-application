@@ -71,7 +71,7 @@ package net.psykosoft.psykopaint2.app.states
 		private function onTransitionComplete() : void
 		{
 			// TODO: this probably needs to be moved to some activation command
-			requestNavigationToggleSignal.dispatch(1, true);
+			requestNavigationToggleSignal.dispatch(1, true, false);
 			requestStateChangeSignal.dispatch(NavigationStateType.HOME);
 
 			stateMachine.setActiveState(homeState);

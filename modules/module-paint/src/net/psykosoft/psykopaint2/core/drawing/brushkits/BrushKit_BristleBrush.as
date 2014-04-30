@@ -27,8 +27,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		private static const STYLE_VAN_GOGH:int = 0;
 		private static const STYLE_MONET:int = 1;
-		private static const STYLE_MANET:int = 2;
-		private static const STYLE_PAINTSTROKES_SPIRAL:int = 3;
+		private static const STYLE_PISSARO:int = 2;
+		private static const STYLE_MANET:int = 3;
+
+		//private static const STYLE_PAINTSTROKES_SPIRAL:int = 3;
 		
 		private var sizeDecorator:SizeDecorator;
 		private var splatterDecorator:SplatterDecorator;
@@ -124,7 +126,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpiness.numberValue = 0;
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","line","paint1"]);
+			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","line","paint1","paintbrush"]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -150,7 +152,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Van Gogh","Monet","Pissaro"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Van Gogh","Monet","Pissaro","Manet"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -184,6 +186,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			var precision:Number = param_precision.numberValue;
 			
 			callbackDecorator.active=false;
+			splatterDecorator.active=true;
 			
 			//BRUSH ENGINE
 			brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
@@ -301,7 +304,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					break;
 				
-				case STYLE_MANET:
+				case STYLE_PISSARO:
 					trace("BRistle 3");
 					brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 10;
@@ -331,11 +334,53 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_multiples.lowerRangeValue = 1;
 					spawnDecorator.param_minOffset.numberValue =  0+precision * 20;
 					spawnDecorator.param_maxOffset.numberValue =  0+precision * 50;
-					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -10;
-					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 10;
+					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -180;
+					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 180;
 					
 					bumpDecorator.param_glossiness.numberValue = 0.2 ;
 					bumpDecorator.param_shininess.numberValue = 0.8;
+					
+					break;
+				
+				case STYLE_MANET:
+					brushEngine.param_quadOffsetRatio.numberValue = 0.4;
+					brushEngine.param_curvatureSizeInfluence.numberValue = 1;
+					brushEngine.textureScaleFactor = 1;
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 8;
+					brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.01 + precision * 0.3;
+					
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
+					sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.25;
+					sizeDecorator.param_mappingRange.numberValue = 0.03 + precision * 0.10;
+					
+					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_SIZE_INV;
+					splatterDecorator.param_brushAngleOffsetRange.degrees =  0;
+					splatterDecorator.active=false;
+					
+					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
+					
+					
+					colorDecorator.param_pickRadius.lowerRangeValue = 0.25;
+					colorDecorator.param_pickRadius.upperRangeValue = 0.33;
+					colorDecorator.param_colorBlending.upperRangeValue = 1;
+					colorDecorator.param_colorBlending.lowerRangeValue = 0.95;
+					
+					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SIZE_INV;
+					spawnDecorator.param_maxSize.numberValue = 1;
+					spawnDecorator.param_multiples.lowerRangeValue = 5;
+					spawnDecorator.param_multiples.upperRangeValue = 16;
+					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -10;
+					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 10;
+					//spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -(120 + precision * 60);
+					//spawnDecorator.param_offsetAngleRange.upperDegreesValue = 120 + precision * 60;
+					spawnDecorator.param_maxSize.numberValue = 0.05 + precision * 0.36;
+					spawnDecorator.param_maxOffset.numberValue = 16 + precision * 40;
+					
+					
+					
+					
+					
+					
 					
 					break;
 				
@@ -418,7 +463,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			{
 				rotationCenterX = points[0].x;
 				rotationCenterY = points[0].y;
-				if (  param_style.index == STYLE_PAINTSTROKES_SPIRAL ) forceRotationAngle = Math.random() * Math.PI * 2;
+				//if (  param_style.index == STYLE_PAINTSTROKES_SPIRAL ) forceRotationAngle = Math.random() * Math.PI * 2;
 			}
 			for ( var i:int = 0; i < points.length; i++ )
 			{

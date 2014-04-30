@@ -99,11 +99,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			notifyNavigationToggledSignal.dispatch( true );
 		}
 
-		private function onToggleRequest( value:int, autoCenter:Boolean ):void {
+		private function onToggleRequest( value:int, autoCenter:Boolean, skipTween:Boolean ):void {
 			_autoCenter = autoCenter;
-			if( value == 1 ) view.panel.show();
-			else if( value == -1 ) view.panel.hide();
-			else view.panel.toggle();
+			if( value == 1 ) view.panel.show(skipTween);
+			else if( value == -1 ) view.panel.hide(skipTween);
+			else view.panel.toggle(skipTween);
 		}
 
 
@@ -135,8 +135,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 					//var objsUnderMouse:Array = target.getObjectsUnderPoint( TapGesture( event.target ).location );
 					if( CanvasInteractionUtil.canContentsUnderMouseBeIgnored(target) ) { // We only want clicks on the stage.
 						// Perform hide/show
-						if( !view.panel.shown ) view.panel.show();
-						else view.panel.hide();
+						if( !view.panel.shown ) view.panel.show(true);
+						else view.panel.hide(true);
 					}
 				}
 

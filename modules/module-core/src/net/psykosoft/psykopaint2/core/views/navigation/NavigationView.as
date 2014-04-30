@@ -96,7 +96,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			//HIDE PREVIOUS VIEW
 			if (_currentSubNavView){
 				
-				
+				/*
 				var snapShotContainer:Sprite = new Sprite();
 				var matrix:Matrix = new Matrix();
 				
@@ -114,25 +114,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				previousSubNavView.scrollerButtonClickedSignal.remove( onSubNavigationScrollerButtonClicked );
 				_currentSubNavView = null;
 				
-				
-			/*	_previousSubNavView = _currentSubNavView;
-				_previousSubNavView.scrollerButtonClickedSignal.remove( onSubNavigationScrollerButtonClicked );
-				_currentSubNavView = null;
-				
-				
-				//DISABLING SUB NAV AFTER TRANSITION SO THERE'S NO WAITING TIME
-				_previousSubNavView.disable();
-				_previousSubNavView.parent.removeChild( _previousSubNavView );
-				
-				
-				TweenLite.to(_previousSubNavView,0.5,{x:-tweenDirection*1024,ease:Sine.easeOut,onComplete:function(){
-					showNewSubNavigationView(subNavType);
-				}});*/
-					
-				//
-				//TweenLite.from(_currentSubNavView,0.5,{ease:Sine.easeOut,x:1024*tweenDirection});
-				
-				//DISABLING SUB NAV AFTER TRANSITION SO THERE'S NO WAITING TIME
+
 				previousSubNavView.disable();
 				previousSubNavView.parent.removeChild( previousSubNavView );
 				
@@ -170,11 +152,19 @@ package net.psykosoft.psykopaint2.core.views.navigation
 					snapshotBmd.dispose();
 					snapShotBm.parent.removeChild(snapShotBm);
 					
-					//this.x=0;
 					
-					//loadingView.visible=false;
-					
-				}});
+				}});*/
+				
+				
+				
+				var previousSubNavView:SubNavigationViewBase = _currentSubNavView;
+				previousSubNavView.scrollerButtonClickedSignal.remove( onSubNavigationScrollerButtonClicked );
+				_currentSubNavView = null;
+				previousSubNavView.disable();
+				previousSubNavView.parent.removeChild( previousSubNavView );
+				
+				// SHOW NEW NAVIGATION
+				showNewSubNavigationView(subNavType);
 				
 			}
 			else {
