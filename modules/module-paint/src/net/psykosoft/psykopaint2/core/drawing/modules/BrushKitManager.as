@@ -6,18 +6,17 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.display.Shape;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
-	import flash.events.DataEvent;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
+	import flash.events.KeyboardEvent;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
+	import flash.ui.Keyboard;
 	import flash.utils.clearTimeout;
 	import flash.utils.getTimer;
 	import flash.utils.setTimeout;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
-	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.utils.events.DataSendEvent;
 	import net.psykosoft.psykopaint2.base.utils.ui.CanvasInteractionUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -47,6 +46,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModeChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
@@ -127,6 +127,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		[Inject]
 		public var notifyToggleLoadingMessageSignal:NotifyToggleLoadingMessageSignal;
+		
+		[Inject]
+		public var requestUndoSignal:RequestUndoSignal;
 		
 	
 		private var _view : DisplayObject;
@@ -326,8 +329,22 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 			if (_active)
 				activateBrushKit();
+			
+			if ( !CoreSettings.RUNNING_ON_iPAD )
+			{
+				_view.stage.addEventListener(KeyboardEvent.KEY_UP,onKeyUp);
+			}
 		}
-
+		
+		protected function onKeyUp(event:KeyboardEvent):void
+		{
+			if ( event.keyCode == Keyboard.U )
+			{
+				requestUndoSignal.dispatch();
+			}
+			
+		}
+		
 		public function activate() : void
 		{
 			brushShapeLibrary.init();

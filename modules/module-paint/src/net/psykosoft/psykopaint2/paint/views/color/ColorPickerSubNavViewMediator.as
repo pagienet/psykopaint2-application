@@ -118,7 +118,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
 				case ColorPickerSubNavView.ID_BACK:
-					requestNavigationStateChange( NavigationStateType.PREVIOUS );
+					requestNavigationStateChange( NavigationStateType.PAINT_SELECT_BRUSH );
 					break;
 			}
 		}

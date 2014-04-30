@@ -6,12 +6,9 @@ package net.psykosoft.psykopaint2.paint
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
-	import flash.utils.ByteArray;
 	
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
@@ -71,7 +68,7 @@ package net.psykosoft.psykopaint2.paint
 			_coreModule.injector.getInstance(RequestHideSplashScreenSignal).dispatch();
 			_coreModule.startEnterFrame();
 			setupStandaloneModule();
-			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			if ( !CoreSettings.RUNNING_ON_iPAD ) stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		}
 
 		private function onKeyUp(event : KeyboardEvent) : void
