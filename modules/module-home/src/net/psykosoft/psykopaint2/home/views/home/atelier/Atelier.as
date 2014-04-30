@@ -104,6 +104,8 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		// replaces user icon
 		public function setIconImage(bitmapData:BitmapData):void
 		{
+			if (!_userIconMaterial) return;
+
 			if (bitmapData) {
 				if (!_userIconTexture)
 					_userIconTexture = new BitmapRectTexture(bitmapData);
