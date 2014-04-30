@@ -27,8 +27,8 @@ package net.psykosoft.psykopaint2.core.views.popups.error
 		{
 			super();
 			_backButton = leftSide.getChildByName("btn") as IconButtonAlt;
-			_backButton.addEventListener(MouseEvent.CLICK, onBackButtonClicked);
 			_backButton.labelText = "OK";
+			_backButton.label.visible = false;
 			_backButton.iconType = ButtonIconType.BACK;
 		}
 
@@ -47,12 +47,16 @@ package net.psykosoft.psykopaint2.core.views.popups.error
 			extra.selectable = extra.mouseEnabled = false;
 			extra.text = "";
 
-			// TODO: why the reparenting?
-			_container.addChild(bg);
-			_container.addChild(main);
-			_container.addChild(extra);
+			leftSide.addEventListener(MouseEvent.CLICK, onBackButtonClicked);
 
 			layout();
+		}
+
+
+		override protected function onDisabled():void
+		{
+			super.onDisabled();
+			leftSide.removeEventListener(MouseEvent.CLICK, onBackButtonClicked);
 		}
 
 		public function updateMessage(newTitle:String, newMessage:String):void
