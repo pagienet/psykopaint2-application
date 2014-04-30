@@ -19,6 +19,8 @@ package net.psykosoft.psykopaint2.core.models
 
 		function sendProfileImages(imageLarge : ByteArray, imageSmall : ByteArray) : void;
 
+		function loadUserImage():void;
+
 		function get userID() : int;
 
 		function get sessionID() : String;

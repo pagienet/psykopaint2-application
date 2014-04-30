@@ -1,5 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.home.atelier
 {
+	import away3d.hacks.BitmapRectTexture;
+
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.geom.Matrix3D;
@@ -39,7 +41,9 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		private var _assetsCount:uint;
 		private var _assetsLoaded:uint;
 
-		private var _iconTexture:BitmapTexture;
+		private var _userIconMaterial:TextureMaterial;
+		private var _defaultUserIconTexture:BitmapTexture;
+		private var _userIconTexture:BitmapRectTexture;
 		private var _wallTexture:ATFTexture;
 		private var _elementsTexture:ATFTexture;
 
@@ -50,6 +54,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		private var _textures : Vector.<Texture2DBase>;
 		private var _materials : Vector.<MaterialBase>;
 		private var _stage3DProxy : Stage3DProxy;
+
 
 		function Atelier (stage3DProxy : Stage3DProxy):void
 		{
@@ -68,7 +73,11 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		override public function dispose():void
 		{
 			var i:uint;
-			_iconTexture = null;
+			if (_userIconTexture) {
+				_userIconTexture.dispose();
+				_userIconTexture = null;
+			}
+			_defaultUserIconTexture = null;
 			_wallTexture = null;
 
 			for (i = 0;i<_meshes.length;++i) {
@@ -95,8 +104,26 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		// replaces user icon
 		public function setIconImage(bitmapData:BitmapData):void
 		{
-			_iconTexture.bitmapData = bitmapData;
-			_iconTexture.getTextureForStage3D(_stage3DProxy);
+			if (!_userIconMaterial) return;
+
+			if (bitmapData) {
+				if (!_userIconTexture)
+					_userIconTexture = new BitmapRectTexture(bitmapData);
+				else
+					_userIconTexture.bitmapData = bitmapData;
+
+				_userIconTexture.getTextureForStage3D(_stage3DProxy);
+
+				_userIconMaterial.texture = _userIconTexture;
+			}
+			else {
+				if (_userIconTexture) {
+					_userIconTexture.dispose();
+					_userIconTexture = null;
+				}
+
+				_userIconMaterial.texture = _defaultUserIconTexture;
+			}
 		}
 
 		// replaces user wallimage
@@ -234,7 +261,9 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 				//default icon user
 				case 2:
 					mesh.material = buildBitmapMaterial(BitmapData(e.data));
-					_iconTexture = BitmapTexture(TextureMaterial(mesh.material).texture);
+					_userIconMaterial = TextureMaterial(mesh.material);
+					_userIconMaterial.mipmap = false;
+					_defaultUserIconTexture = BitmapTexture(_userIconMaterial.texture);
 					break;
 
 				//floor, elements

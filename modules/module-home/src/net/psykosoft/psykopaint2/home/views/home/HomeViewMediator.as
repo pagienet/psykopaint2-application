@@ -3,15 +3,19 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import away3d.core.managers.Stage3DProxy;
 
+	import flash.display.BitmapData;
+
 	import flash.geom.Matrix3D;
 
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
+	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyProfilePictureUpdatedSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewIntroZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
@@ -48,6 +52,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyGyroscopeUpdateSignal : NotifyGyroscopeUpdateSignal;
 
+		[Inject]
+		public var userProxy : LoggedInUserProxy;
+
 		// TODO: Make pop-ups truly modal using blockers instead of enforcing this on mediators!
 		// probably should do the same for book, so "scrollEnabled" is not necessary at all
 		[Inject]
@@ -55,6 +62,10 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var requestHidePopUpSignal : RequestHidePopUpSignal;
+
+		[Inject]
+		public var notifyProfilePictureUpdatedSignal : NotifyProfilePictureUpdatedSignal;
+
 
 		private var _currentNavigationState : String;
 
@@ -71,6 +82,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestHidePopUpSignal.add(onHidePopUp);
 			requestHomeIntroSignal.add(onIntroRequested);
 			notifyGyroscopeUpdateSignal.add(onGyroscopeUpdate);
+			notifyProfilePictureUpdatedSignal.add(onProfilePictureUpdate);
 
 			// From view.
 			view.disabledSignal.add(onDisabled);
@@ -80,6 +92,27 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			view.stage3dProxy = stage3dProxy;
 			view.enable();
+
+			userProxy.loadUserImage();
+		}
+
+		override public function destroy() : void
+		{
+			view.disable();
+
+			requestShowPopUpSignal.remove(onShowPopUp);
+			requestHidePopUpSignal.remove(onHidePopUp);
+			requestHomeIntroSignal.remove(onIntroRequested);
+			view.activeSectionChanged.remove(onActiveSectionChanged);
+
+			view.disabledSignal.remove(onDisabled);
+			view.sceneReadySignal.remove(onSceneReady);
+			notifyGyroscopeUpdateSignal.remove(onGyroscopeUpdate);
+			notifyProfilePictureUpdatedSignal.remove(onProfilePictureUpdate);
+
+			view.dispose();
+
+			super.destroy();
 		}
 
 		private function onActiveSectionChanged(sectionID : int) : void
@@ -102,25 +135,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 		}
 
-		override public function destroy() : void
-		{
-
-			view.disable();
-
-			requestShowPopUpSignal.remove(onShowPopUp);
-			requestHidePopUpSignal.remove(onHidePopUp);
-			requestHomeIntroSignal.remove(onIntroRequested);
-			view.activeSectionChanged.remove(onActiveSectionChanged);
-
-			view.disabledSignal.remove(onDisabled);
-			view.sceneReadySignal.remove(onSceneReady);
-			notifyGyroscopeUpdateSignal.remove(onGyroscopeUpdate);
-
-			view.dispose();
-
-			super.destroy();
-		}
-
 		private function onShowPopUp(popUpType:String) : void
 		{
 			view.scrollingEnabled = false;
@@ -134,6 +148,11 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onGyroscopeUpdate(orientationMatrix : Matrix3D) : void
 		{
 			view.setOrientationMatrix(orientationMatrix);
+		}
+
+		private function onProfilePictureUpdate(bitmapData : BitmapData):void
+		{
+			view.updateProfilePicture(bitmapData);
 		}
 
 		private function onDisabled() : void

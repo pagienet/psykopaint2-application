@@ -130,10 +130,6 @@ package net.psykosoft.psykopaint2.core.services
 				vo.userID = obj["user_id"];
 				vo.userThumbnailURL = obj["user_thumbnail_url"];
 				vo.isFavorited = obj.hasOwnProperty("is_favorited")? obj["is_favorited"] : false;
-				
-				//TODO: this has to be replaced by something meaningful now that we do not distinguish photo and color mode anymore:
-				//vo.paintingMode = obj["is_photo_painting"] == 1? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
-				
 				collection.images.push(vo);
 			}
 

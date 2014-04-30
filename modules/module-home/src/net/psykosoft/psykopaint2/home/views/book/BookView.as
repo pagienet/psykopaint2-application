@@ -684,7 +684,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			}else if(_viewType == TYPE_GALLERY_VIEW){
 				pageCreated = SIMULTANEOUS_PAGES;
 			}
-			
+
 			return pageCreated;
 		}
 

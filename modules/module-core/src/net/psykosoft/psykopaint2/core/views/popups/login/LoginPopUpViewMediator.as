@@ -10,8 +10,11 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import net.psykosoft.psykopaint2.core.models.UserRegistrationVO;
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
+	import net.psykosoft.psykopaint2.core.signals.NotifyProfilePictureUpdatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+
+	import org.osflash.signals.Signal;
 
 	public class LoginPopUpViewMediator extends MediatorBase
 	{
@@ -27,10 +30,14 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		[Inject]
 		public var notifyAMFConnectionFailed : NotifyAMFConnectionFailed;
 
+		[Inject]
+		public var notifyProfilePictureUpdatedSignal:NotifyProfilePictureUpdatedSignal;
+
 		private var _photoLarge:BitmapData;
 		private var _photoSmall:BitmapData;
 		private var _loggingIn:Boolean;
 		private var _signingUp:Boolean;
+
 
 		override public function initialize():void {
 			super.initialize();
@@ -98,6 +105,12 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			view.signupSubView.canRequestSignUp = true;
 			_signingUp = false;
+
+			notifyProfilePictureUpdatedSignal.dispatch(_photoSmall);
+
+			_photoSmall.dispose();
+
+			requestHidePopUpSignal.dispatch();
 		}
 
 		// the fail signal contains an int with a value from AMFErrorCode.as
