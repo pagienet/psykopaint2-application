@@ -9,7 +9,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import flash.utils.setTimeout;
 	
 	import away3d.containers.View3D;
-	
+
+	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapList;
+
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.views.components.button.BitmapButton;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
@@ -111,7 +113,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				if ( paintingButtons[i].id == id )
 				{
 					paintingButtons[i].deleted = !paintingButtons[i].deleted;
-					removeButtonWithId(id);
+					_scroller.removeButtonWithId(id);
 					return;
 				}
 				

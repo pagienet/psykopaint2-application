@@ -4,12 +4,15 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 	import flash.display.DisplayObject;
 	import flash.utils.Dictionary;
 	import flash.utils.describeType;
-	
+	import flash.utils.setTimeout;
+
 	import net.psykosoft.psykopaint2.base.ui.components.HSnapScroller;
 	import net.psykosoft.psykopaint2.base.ui.components.ICopyableData;
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
+	import net.psykosoft.psykopaint2.base.utils.ui.HScrollInteractionManager;
+	import net.psykosoft.psykopaint2.base.utils.ui.SnapPositionManager;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
-	
+
 	import org.osflash.signals.Signal;
 
 	/*
@@ -39,7 +42,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			reset();
 			_dataProvider = data;
 			// Create snap points.
-			invalidateContent();
+			recalculateSnapPoints();
 		}
 
 		override public function dispose():void {
@@ -66,16 +69,53 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			super.dispose();
 		}
 
-		override public function reset():void {
-
-			// Release all current item renderers.
-			freeAllItemRenderers();
-			_dataProvider = null;
-
-			super.reset();
+		public function removeButtonWithId(id:String):void {
+			var targetData:ButtonData = getDataForId(id);
+			if( !targetData ) return;
+			removeButton(targetData.itemRenderer as NavigationButton);
 		}
 
-		override public function invalidateContent():void {
+		public function getDataForId(id:String):ButtonData {
+			 var targetData:ButtonData;
+			if( _dataProvider ) {
+				var numData:uint = dataProvider.length;
+				for( var i:uint = 0; i < numData; i++ ) {
+					var data:ButtonData = dataProvider[ i ] as ButtonData;
+					if( id.indexOf( data.id ) != -1 ) {
+					    targetData = data;
+						break;
+					}
+				}
+			}
+			return targetData;
+		}
+
+		public function removeButton(btn:NavigationButton):void {
+
+			// Remove the renderer.
+			btn.visible = false; // Item renderer should be freed below.
+
+			// Remove the data.
+			var data:ButtonData = getDataForRenderer(btn);
+			var dataIdx:uint = _dataProvider.indexOf(data);
+			_dataProvider.splice(dataIdx, 1);
+
+			// Recalculate positioning of elements.
+			_minContentX = 0;
+			_maxContentX = 0;
+			var xCache:int = _positionManager.position;
+			_positionManager.reset();
+			recalculateSnapPoints(false);
+			updateItemRendererPositionsFromData();
+			refreshItemRendererVisibilityAndAssignmentsFromPositions();
+
+			// Restore position.
+			_positionManager.position = xCache;
+		}
+
+		override public function recalculateSnapPoints(doDock:Boolean = true):void {
+
+//			super.recalculateSnapPoints();
 
 			if( !_dataProvider ) return;
 
@@ -98,17 +138,28 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			}
 
 			containEdgeSnapPoints();
-			dock();
+			if(doDock) dock();
 
 			// Should be commented, just for visualization/debugging.
 //			graphics.clear();
-//			_container.graphics.clear();
+			_container.graphics.clear();
 //			visualizeVisibleDimensions();
 //			visualizeContentDimensions();
 //			visualizeSnapPoints();
 //			visualizeDataPositionsAndDimensions();
 
-			refreshItemRenderers();
+//			trace("invalidated");
+
+			refreshItemRendererVisibilityAndAssignmentsFromPositions();
+		}
+
+		override public function reset():void {
+
+			// Release all current item renderers.
+			freeAllItemRenderers();
+			_dataProvider = null;
+
+			super.reset();
 		}
 
 		private function rand( min:Number, max:Number ):Number {
@@ -117,7 +168,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 		override protected function onUpdate():void {
 			if( _dataProvider ) {
-				refreshItemRenderers();
+				refreshItemRendererVisibilityAndAssignmentsFromPositions();
 			}
 		}
 
@@ -133,9 +184,11 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 		// Item renderer updates.
 		// ---------------------------------------------------------------------
 
-		public function refreshItemRenderers():void {
+		public function refreshItemRendererVisibilityAndAssignmentsFromPositions():void {
 
 			if( !_dataProvider ) return;
+
+//			trace("refreshItemRendererVisibilityAndAssignmentsFromPositions ------");
 
 			var i:uint;
 			var numItems:uint;
@@ -192,14 +245,36 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 				
 				// Add it to display.
 				itemRenderer.x = itemData.itemRendererPosition;
+//				trace("x: " + itemRenderer.x);
 				itemRenderer.y = itemData.itemRendererWidth / 2;
 				itemRenderer.visible = true;
+//				itemRenderer.alpha = 0.25;
 				if( itemRenderer.parent != _container ) {
 					_container.addChild( itemRenderer );
 				}
 
 				if( itemData.onItemRendererAssigned != null) {
 					itemData.onItemRendererAssigned( itemRenderer );
+				}
+			}
+		}
+
+		private function updateItemRendererPositionsFromData():void {
+//			trace("updateItemRendererPositionsFromData -----");
+			var numItems:int = _dataProvider.length;
+			var itemData:ISnapListData;
+			var itemRenderer:DisplayObject;
+			for(var i:int = 0; i < numItems; i++ ) {
+				itemData = _dataProvider[i];
+				itemRenderer = itemData.itemRenderer;
+				if(itemRenderer) {
+					itemRenderer.x = itemData.itemRendererPosition;
+					itemRenderer.y = itemData.itemRendererWidth / 2;
+//					itemRenderer.visible = true;
+//					trace("x: " + itemRenderer.x);
+					_container.graphics.beginFill( 0xFF0000 );
+					_container.graphics.drawCircle( itemRenderer.x, itemRenderer.y, 10 );
+					_container.graphics.endFill();
 				}
 			}
 		}
@@ -269,7 +344,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			}
 		}
 
-		public function updateAllItemRenderersFromData():void {
+		public function updateItemRenderersFromData():void {
 			var i:uint;
 			var numItems:uint;
 			numItems = _dataProvider.length;

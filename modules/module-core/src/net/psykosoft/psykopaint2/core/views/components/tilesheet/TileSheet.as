@@ -84,7 +84,7 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 				}
 			}
 
-			invalidateContent();
+			recalculateSnapPoints();
 		}
 
 		public function setTileContentFromSpriteSheet( bmd:BitmapData, bmdX:Number, bmdY:Number, tileIndex:uint ):void {

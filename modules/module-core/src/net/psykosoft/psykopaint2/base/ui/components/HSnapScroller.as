@@ -107,7 +107,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			return value;
 		}
 
-		public function invalidateContent():void {
+		public function recalculateSnapPoints(doDock:Boolean = true):void {
 
 			// Add snap points for each child at its position.
 			var len:uint = _container.numChildren;
@@ -118,7 +118,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			}
 
 			containEdgeSnapPoints();
-			dock();
+			if(doDock) dock();
 		}
 
 		public function evaluateInteractionStart():void {
@@ -315,7 +315,11 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		private function enterframeHandler( event:Event ):void {
-			trace( this, ">>> updating scroller <<<" ); // This should trace only when there is motion in the scroller.
+			update();
+		}
+
+		protected function update():void {
+			//			trace( this, ">>> updating scroller <<<" ); // This should trace only when there is motion in the scroller.
 			_interactionManager.update();
 			_positionManager.update();
 			refreshToPosition();

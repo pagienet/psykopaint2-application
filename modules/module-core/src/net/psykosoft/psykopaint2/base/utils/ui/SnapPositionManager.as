@@ -143,7 +143,7 @@ package net.psykosoft.psykopaint2.base.utils.ui
 		public function update():void {
 			if( !_onSnapMotion ) return;
 
-			trace("update");
+//			trace("update");
 			// Update speed and position.
 			_position += _snapMotionSpeed;
 			_snapMotionSpeed *= _frictionFactor;

@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public var label:Sprite;
 		public var icon:IconButtonPaperFold;
 		public var pinMc:Sprite;
-		
+
 		public function IconButton() {
 			super();
 			super.setLabel( label );
