@@ -66,7 +66,7 @@ package net.psykosoft.psykopaint2.crop
 			_coreModule.injector.getInstance(RequestHideSplashScreenSignal).dispatch();
 			_coreModule.startEnterFrame();
 			setupStandaloneModule();
-			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			if ( !CoreSettings.RUNNING_ON_iPAD ) stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		}
 
 		private function onKeyUp(event : KeyboardEvent) : void
