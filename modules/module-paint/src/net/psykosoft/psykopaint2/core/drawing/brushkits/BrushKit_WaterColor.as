@@ -1,16 +1,10 @@
 package net.psykosoft.psykopaint2.core.drawing.brushkits
 {
 	import flash.events.Event;
-
-	import flashx.textLayout.elements.GlobalSettings;
-
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.drawing.BrushType;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
-	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.AbstractPointDecorator;
@@ -76,7 +70,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		public function BrushKit_WaterColor()
 		{
-			//isPurchasable = true;
+			isPurchasable = true;
 			init(null);
 		}
 		
