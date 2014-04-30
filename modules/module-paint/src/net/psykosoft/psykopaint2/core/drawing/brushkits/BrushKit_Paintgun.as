@@ -1,26 +1,17 @@
 package net.psykosoft.psykopaint2.core.drawing.brushkits
 {
-	import flash.display3D.Context3DBlendFactor;
 	import flash.events.Event;
 	
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
-	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
-	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.AbstractPointDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.BumpDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.CallbackDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.CircularRotationDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.GridDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.RotationDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
-	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	
 	public class BrushKit_Paintgun extends BrushKit
 	{
@@ -112,8 +103,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			//pathManager.addPointDecorator( callbackDecorator );
 			
 			colorDecorator = new ColorDecorator();
-			colorDecorator.param_brushOpacity.numberValue = 1;
-			colorDecorator.param_brushOpacityRange.numberValue = 0;
+			colorDecorator.param_brushOpacity.numberValue = 0.7;
+			colorDecorator.param_brushOpacityRange.numberValue = 0.5;
 			colorDecorator.param_colorBlending.upperRangeValue = 1;
 			colorDecorator.param_colorBlending.lowerRangeValue = 0.95;
 			colorDecorator.param_pickRadius.lowerRangeValue = 0.25;
