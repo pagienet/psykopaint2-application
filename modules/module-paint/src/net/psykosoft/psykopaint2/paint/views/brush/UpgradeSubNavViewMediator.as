@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
@@ -9,8 +10,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyTogglePaintingEnableSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateErrorPopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 
 	public class UpgradeSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -34,6 +38,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		
 		[Inject]
 		public var notifyPurchaseStatusSignal:NotifyPurchaseStatusSignal;
+		
+		[Inject]
+		public var requestShowPopUpSignal:RequestShowPopUpSignal;
+		
+		[Inject]
+		public var requestUpdateErrorPopUpSignal:RequestUpdateErrorPopUpSignal;
+		
 		
 		override public function initialize():void {
 			// Init.
@@ -73,24 +84,41 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			switch ( status )
 			{
 				case InAppPurchaseManager.STATUS_PURCHASE_CANCELLED:
-				case InAppPurchaseManager.STATUS_PURCHASE_FAILED:
 					requestUndoSignal.dispatch();
-					
-					requestNavigationStateChange( NavigationStateType.PREVIOUS );
+					//originaly I used NavigationStateType.PREVIOUS here - but this caused some issues sometimes
+					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_COLOR );
 					notifyTogglePaintingEnableSignal.dispatch(true);
 				break;
+				
+				case InAppPurchaseManager.STATUS_PURCHASE_FAILED:
+					requestUndoSignal.dispatch();
+					requestShowPopUpSignal.dispatch( PopUpType.ERROR )
+					requestUpdateErrorPopUpSignal.dispatch("Upgrade Failed","Oops - something went wrong with your purchase.  Please check your internet connection and try again.");
+					
+					
+					//originaly I used NavigationStateType.PREVIOUS here - but this caused some issues sometimes
+					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_COLOR );
+					notifyTogglePaintingEnableSignal.dispatch(true);
+					break;
+				
 				case InAppPurchaseManager.STATUS_PURCHASE_COMPLETE:
 				case InAppPurchaseManager.STATUS_PURCHASE_NOT_REQUIRED:
 					//as long as we have a single buy in product this is okayish:
 					userConfig.userConfig.hasFullVersion = true;
-					requestNavigationStateChange( NavigationStateType.PREVIOUS );
+					//originaly I used NavigationStateType.PREVIOUS here - but this caused some issues sometimes
+					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_COLOR );
 					notifyTogglePaintingEnableSignal.dispatch(true);
 					
 				break;
 				case InAppPurchaseManager.STATUS_STORE_UNAVAILABLE:
-					//TODO: for offline testing only - important to remove it for release!
-					userConfig.userConfig.hasFullVersion = true;
-					requestNavigationStateChange( NavigationStateType.PREVIOUS );
+					//for testing on desktop you always get the brushes:
+					//if ( !CoreSettings.RUNNING_ON_iPAD)  userConfig.userConfig.hasFullVersion = true;
+					requestUndoSignal.dispatch();
+					requestShowPopUpSignal.dispatch( PopUpType.ERROR )
+					requestUpdateErrorPopUpSignal.dispatch("App Store is not available","Unfortunately we cannot connect to the App Store. Please check your internet connection and try again.");
+				
+					//originaly I used NavigationStateType.PREVIOUS here - but this caused some issues sometimes
+					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_COLOR );
 					notifyTogglePaintingEnableSignal.dispatch(true);
 				break;
 				
