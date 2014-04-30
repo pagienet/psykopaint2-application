@@ -85,18 +85,19 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			{
 				case InAppPurchaseManager.STATUS_PURCHASE_CANCELLED:
 					requestUndoSignal.dispatch();
-					
-					requestNavigationStateChange( NavigationStateType.PREVIOUS );
+					//originaly I used NavigationStateType.PREVIOUS here - but this caused some issues sometimes
+					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_COLOR );
 					notifyTogglePaintingEnableSignal.dispatch(true);
 				break;
 				
 				case InAppPurchaseManager.STATUS_PURCHASE_FAILED:
+					requestUndoSignal.dispatch();
 					requestShowPopUpSignal.dispatch( PopUpType.ERROR )
 					requestUpdateErrorPopUpSignal.dispatch("Upgrade Failed","Oops - something went wrong with your purchase.  Please check your internet connection and try again.");
 					
-					requestUndoSignal.dispatch();
 					
-					requestNavigationStateChange( NavigationStateType.PREVIOUS );
+					//originaly I used NavigationStateType.PREVIOUS here - but this caused some issues sometimes
+					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_COLOR );
 					notifyTogglePaintingEnableSignal.dispatch(true);
 					break;
 				
@@ -104,17 +105,20 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				case InAppPurchaseManager.STATUS_PURCHASE_NOT_REQUIRED:
 					//as long as we have a single buy in product this is okayish:
 					userConfig.userConfig.hasFullVersion = true;
-					requestNavigationStateChange( NavigationStateType.PREVIOUS );
+					//originaly I used NavigationStateType.PREVIOUS here - but this caused some issues sometimes
+					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_COLOR );
 					notifyTogglePaintingEnableSignal.dispatch(true);
 					
 				break;
 				case InAppPurchaseManager.STATUS_STORE_UNAVAILABLE:
 					//for testing on desktop you always get the brushes:
 					//if ( !CoreSettings.RUNNING_ON_iPAD)  userConfig.userConfig.hasFullVersion = true;
+					requestUndoSignal.dispatch();
 					requestShowPopUpSignal.dispatch( PopUpType.ERROR )
 					requestUpdateErrorPopUpSignal.dispatch("App Store is not available","Unfortunately we cannot connect to the App Store. Please check your internet connection and try again.");
-					requestUndoSignal.dispatch();
-					requestNavigationStateChange( NavigationStateType.PREVIOUS );
+				
+					//originaly I used NavigationStateType.PREVIOUS here - but this caused some issues sometimes
+					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_COLOR );
 					notifyTogglePaintingEnableSignal.dispatch(true);
 				break;
 				
