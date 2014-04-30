@@ -213,9 +213,9 @@ package net.psykosoft.psykopaint2.core.models
 
 		private function onLoadImageError(event:IOErrorEvent):void
 		{
-			var loader : Loader = Loader(event.target);
-			loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onLoadImageComplete);
-			loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, onLoadImageError);
+			var loader : LoaderInfo = LoaderInfo(event.target);
+			loader.removeEventListener(Event.COMPLETE, onLoadImageComplete);
+			loader.removeEventListener(IOErrorEvent.IO_ERROR, onLoadImageError);
 			notifyProfilePictureUpdatedSignal.dispatch(null);
 		}
 
