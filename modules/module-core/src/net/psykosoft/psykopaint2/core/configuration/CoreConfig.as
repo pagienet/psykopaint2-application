@@ -22,6 +22,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
+	import net.psykosoft.psykopaint2.core.managers.social.SocialSharingManager;
 	import net.psykosoft.psykopaint2.core.models.AMFLoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
@@ -204,6 +205,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map(AccelerometerManager).asSingleton();
 			_injector.map(RetrievePaintingsDataProcessModel).asSingleton();
 			_injector.map(InAppPurchaseManager).asSingleton();
+			_injector.map(SocialSharingManager).asSingleton();
 			_injector.map(WacomPenManager).asSingleton();
 			
 			// -----------------------

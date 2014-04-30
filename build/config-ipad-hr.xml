@@ -25,6 +25,17 @@
 		    <false/>
 		    <key>UIStatusBarStyle</key>
 			<string>UIStatusBarStyleLightContent</string>
+			<key>FacebookAppID</key>
+			<string>503384473059408</string>
+			<key>CFBundleURLTypes</key>
+			<array>
+			<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+			<string>fb503384473059408</string>
+			</array>
+			</dict>
+			</array>
             ]]>
         </InfoAdditions>
 		<Entitlements>
