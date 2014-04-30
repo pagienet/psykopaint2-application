@@ -104,6 +104,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 				}
 					
 				case PickAnImageSubNavView.ID_SCRATCH: {
+					notifyToggleLoadingMessageSignal.dispatch(true);
 					requestStartColorPaintingSignal.dispatch( 0 );
 				//	requestNavigationStateChange( NavigationStateType.HOME_PICK_SURFACE );
 					break;
