@@ -128,12 +128,20 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			param_paintMode = new PsykoParameter( PsykoParameter.IntParameter, PARAMETER_N_PAINT_MODE, 1, 0, 1);
 
+			param_meshType.addEventListener(Event.CHANGE, onDisruptingParameterChange);
+			param_paintMode.addEventListener(Event.CHANGE, onDisruptingParameterChange);
+
 			_parameters.push( param_surfaceRelief, param_gravityStrength, param_pigmentDensity, param_pigmentStaining, param_pigmentGranulation);
 
 			param_sizeFactor.lowerRangeValue = .77;
 			param_sizeFactor.upperRangeValue = .77;
 
 			type = BrushType.WATER_COLOR;
+		}
+
+		private function onDisruptingParameterChange(event:Event):void
+		{
+			abortSimulationImmediately();
 		}
 
 		private function onMeshTypeChange(event:Event):void

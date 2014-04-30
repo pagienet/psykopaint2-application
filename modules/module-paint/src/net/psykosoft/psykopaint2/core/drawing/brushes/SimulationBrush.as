@@ -2,24 +2,21 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 {
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
-	import flash.display3D.Context3DStencilAction;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 
 	import net.psykosoft.psykopaint2.core.drawing.actions.CanvasSnapShot;
 
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationRibbonMesh;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
-	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 
 	public class SimulationBrush extends AbstractBrush
 	{
 		private var _lastDrawCount : int;
 		private var _cleanUpTickerTimer : Timer;
+		private var _running:Boolean;
 
 		public function SimulationBrush(drawNormalsOrSpecular : Boolean)
 		{
@@ -39,6 +36,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			cleanUpTicker();
 			resetSimulation();
+			_running = true;
 
 			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
@@ -80,6 +78,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			snapShot = tempSnapShot;
 		}
 
+		protected function abortSimulationImmediately() : void
+		{
+			if (!_running) return;
+			snapShot = null;
+			_view.stage.frameRate = 60;
+			_running = false;
+			_view.stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+		}
+
 		private function onTimerComplete(event : TimerEvent) : void
 		{
 			cleanUpTicker();
@@ -94,6 +101,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			snapShot = null;
 
+			_running = false;
 			_view.stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 
