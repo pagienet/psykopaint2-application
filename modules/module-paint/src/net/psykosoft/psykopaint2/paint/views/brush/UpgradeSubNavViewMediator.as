@@ -53,9 +53,15 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			
 			notifyPurchaseStatusSignal.add( onPurchaseStatus );
 		}
-		
-		
-		// -----------------------
+
+
+		override public function destroy():void
+		{
+			super.destroy();
+			notifyPurchaseStatusSignal.remove( onPurchaseStatus );
+		}
+
+// -----------------------
 		// From view.
 		// -----------------------
 
