@@ -1,8 +1,9 @@
 package net.psykosoft.psykopaint2.home.views.home.controllers
 {
 	import away3d.cameras.Camera3D;
+import away3d.events.Object3DEvent;
 
-	import com.greensock.TweenLite;
+import com.greensock.TweenLite;
 	import com.greensock.easing.Quad;
 
 	import flash.display.Stage;
@@ -20,6 +21,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 	public class CameraPromenadeController
 	{
 		public var activePositionChanged : Signal = new Signal();
+		public var distanceToTargetChanged : Signal = new Signal();
 
 		private var _target : Camera3D;
 		private var _targetPositions : Vector.<Vector3D>;
@@ -45,6 +47,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 		{
 			_stage = stage;
 			_target = target;
+			_target.addEventListener(Object3DEvent.POSITION_CHANGED, onTargetPositionChanged);
 			_grabThrowController = new GrabThrowController(stage);
 			_grabThrowController.interactionRect = new Rectangle(0, 0, _stage.stageWidth, _stage.stageHeight);
 			_targetPositions = new <Vector3D>[];
@@ -87,6 +90,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
 			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
 			_grabThrowController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
+			_target.removeEventListener(Object3DEvent.POSITION_CHANGED, onTargetPositionChanged);
 		}
 
 		private function onDragUpdate(event : GrabThrowEvent) : void
@@ -102,8 +106,16 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 			moveToBestPosition();
 		}
 
+		private function onTargetPositionChanged( event:Object3DEvent ):void {
+			if(!_allowDistanceNotifications) return;
+			var dis:Number = Math.abs( _targetPositions[_activeTargetPositionID].x - _target.x );
+			distanceToTargetChanged.dispatch(dis);
+		}
+
 		private function updateMovement(velocity : Number) : void
 		{
+//			trace("updateMovement()");
+
 			var targetX : Number = _target.x + velocity;
 			var firstIndex : int;
 			var secondIndex : int;
@@ -138,6 +150,60 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 				_target.z = firstSnap.z + ratio*(secondSnap.z - firstSnap.z);
 			}
 
+			// Notify closest target changes.
+			var targetID:int = findClosestID(_target.x);
+			if(_activeTargetPositionID != targetID) {
+				_activeTargetPositionID = targetID;
+				activePositionChanged.dispatch();
+			}
+		}
+
+		private function moveToBestPosition() : void
+		{
+//			trace("moveToBestPosition()");
+
+			killTween();
+			var targetID : int;
+
+			// just go back to where ye came from!
+			if (Math.abs(_velocity) < 5*CoreSettings.GLOBAL_SCALING) {
+				targetID = findClosestID(_target.x);
+				var targetPos : Vector3D = _targetPositions[targetID];
+				TweenLite.to(_target,.5,
+							{	x: targetPos.x,
+								y: targetPos.y,
+								z: targetPos.z,
+								ease:Quad.easeOut
+							});
+			}
+			else {
+
+				// convert per frame to per second
+				_velocity *= 60;
+				_startPos = _target.position;
+				var targetTime : Number = .25;
+				var targetFriction : Number = .8;
+				if (_velocity > 0) targetFriction = -targetFriction;
+				// where would the target end up with the current speed after aimed time with aimed friction?
+				targetID = findClosestID(_startPos.x + _velocity * targetTime + targetFriction * targetTime * targetTime );
+
+				// solving:
+				// p(t) = p(0) + v(0)*t + a*t^2 / 2 = target
+				// v(t) = v(0) + a*t = 0
+				// for 'a' (acceleration, ie negative friction) and 't'
+
+				_tweenTime = 2 * (_targetPositions[targetID].x - _startPos.x) / _velocity;
+				_friction = -_velocity/_tweenTime;
+
+				_startTime = getTimer();
+				_hasEnterFrame = true;
+				_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			}
+
+			if (_activeTargetPositionID != targetID) {
+				_activeTargetPositionID = targetID;
+				activePositionChanged.dispatch();
+			}
 		}
 
 		private function getLowerBoundingIndex(x : Number) : int
@@ -178,51 +244,6 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 			}
 
 			return bestIndex;
-		}
-
-		private function moveToBestPosition() : void
-		{
-			killTween();
-			var targetID : int;
-
-			// just go back to where ye came from!
-			if (Math.abs(_velocity) < 5*CoreSettings.GLOBAL_SCALING) {
-				targetID = findClosestID(_target.x);
-				var targetPos : Vector3D = _targetPositions[targetID];
-				TweenLite.to(_target,.5,
-							{	x: targetPos.x,
-								y: targetPos.y,
-								z: targetPos.z,
-								ease:Quad.easeOut
-							});
-			}
-			else {
-				// convert per frame to per second
-				_velocity *= 60;
-				_startPos = _target.position;
-				var targetTime : Number = .25;
-				var targetFriction : Number = .8;
-				if (_velocity > 0) targetFriction = -targetFriction;
-				// where would the target end up with the current speed after aimed time with aimed friction?
-				targetID = findClosestID(_startPos.x + _velocity * targetTime + targetFriction * targetTime * targetTime );
-
-				// solving:
-				// p(t) = p(0) + v(0)*t + a*t^2 / 2 = target
-				// v(t) = v(0) + a*t = 0
-				// for 'a' (acceleration, ie negative friction) and 't'
-
-				_tweenTime = 2 * (_targetPositions[targetID].x - _startPos.x) / _velocity;
-				_friction = -_velocity/_tweenTime;
-
-				_startTime = getTimer();
-				_hasEnterFrame = true;
-				_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			}
-
-			if (_activeTargetPositionID != targetID) {
-				_activeTargetPositionID = targetID;
-				activePositionChanged.dispatch();
-			}
 		}
 
 		private function onEnterFrame(event : Event) : void
@@ -266,18 +287,25 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 			return _activeTargetPositionID;
 		}
 
+		private var _allowDistanceNotifications:Boolean = true;
 		public function navigateTo(positionID : int) : void
 		{
+//			trace("navigateTo: " + positionID);
 			if (_activeTargetPositionID != positionID) {
-				_activeTargetPositionID = positionID;
+				_allowDistanceNotifications = false;
 				var target : Vector3D = _targetPositions[positionID];
 				killTween();
 				_tween = TweenLite.to(_target, 1,
 										{	x : target.x,
 											y : target.y,
 											z : target.z,
+											onComplete: onNavigationComplete,
 											ease: Quad.easeInOut, overwrite : 0});
 			}
+		}
+
+		private function onNavigationComplete():void {
+			_allowDistanceNotifications = true;
 		}
 
 		public function force(positionID : int) : void

@@ -15,7 +15,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyProfilePictureUpdatedSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifyHomeDistanceToSectionChangedSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifyProfilePictureUpdatedSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewIntroZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
@@ -66,6 +67,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyProfilePictureUpdatedSignal : NotifyProfilePictureUpdatedSignal;
 
+		[Inject]
+		public var notifyHomeDistanceToSectionChangedSignal : NotifyHomeDistanceToSectionChangedSignal;
 
 		private var _currentNavigationState : String;
 
@@ -88,6 +91,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.disabledSignal.add(onDisabled);
 
 			view.activeSectionChanged.add(onActiveSectionChanged);
+			view.distanceToSectionChanged.add(onDistanceToSectionChanged);
 			view.sceneReadySignal.add(onSceneReady);
 
 			view.stage3dProxy = stage3dProxy;
@@ -104,6 +108,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestHidePopUpSignal.remove(onHidePopUp);
 			requestHomeIntroSignal.remove(onIntroRequested);
 			view.activeSectionChanged.remove(onActiveSectionChanged);
+			view.distanceToSectionChanged.remove(onDistanceToSectionChanged);
 
 			view.disabledSignal.remove(onDisabled);
 			view.sceneReadySignal.remove(onSceneReady);
@@ -117,6 +122,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onActiveSectionChanged(sectionID : int) : void
 		{
+//			trace("HVM - onActiveSectionChanged: " + sectionID);
 			switch (sectionID) {
 				case HomeView.GALLERY:
 					// bit of a hack to make the book show up with the painting details menu
@@ -133,6 +139,10 @@ package net.psykosoft.psykopaint2.home.views.home
 					requestNavigationStateChange(NavigationStateType.SETTINGS);
 					break;
 			}
+		}
+
+		private function onDistanceToSectionChanged(dis:Number):void {
+			notifyHomeDistanceToSectionChangedSignal.dispatch(dis);
 		}
 
 		private function onShowPopUp(popUpType:String) : void
