@@ -27,6 +27,7 @@ package net.psykosoft.psykopaint2.core.io
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
+	import net.psykosoft.psykopaint2.paint.utils.CopyColorAndSourceToBitmapDataUtil;
 	import net.psykosoft.psykopaint2.paint.utils.CopyColorToBitmapDataUtil;
 
 	/**
@@ -40,6 +41,7 @@ package net.psykosoft.psykopaint2.core.io
 		private static var _copySubTextureChannelsRGB : CopySubTextureChannels;
 		private static var _copySubTextureChannelsA : CopySubTextureChannels;
 		private static var _copyColorToBitmapData : CopyColorToBitmapDataUtil;
+		private static var _copyColorAndSourceToBitmapData:CopyColorAndSourceToBitmapDataUtil;
 
 		private var _canvas : CanvasModel;
 		private var _paintingData : PaintingDataVO;
@@ -64,6 +66,7 @@ package net.psykosoft.psykopaint2.core.io
 			_copySubTextureChannelsRGB ||= new CopySubTextureChannels("xyz", "xyz");
 			_copySubTextureChannelsA ||= new CopySubTextureChannels("w", "z");
 			_copyColorToBitmapData ||= new CopyColorToBitmapDataUtil();
+			_copyColorAndSourceToBitmapData ||= new CopyColorAndSourceToBitmapDataUtil();
 		}
 
 		// in this case, color will contain JPEG data, sourceImage will contain PNG Thumbnail, and normal data will be compressed with zlib
@@ -136,7 +139,10 @@ package net.psykosoft.psykopaint2.core.io
 
 		private function saveColorFlat() : void
 		{
-			_copyColorToBitmapData.execute(_canvas, _workerBitmapData);
+			if (_canvas.sourceTexture)
+				_copyColorAndSourceToBitmapData.execute(_canvas, _workerBitmapData);
+			else
+				_copyColorToBitmapData.execute(_canvas, _workerBitmapData);
 			_paintingData.colorData = _workerBitmapData.encode(_workerBitmapData.rect, new JPEGEncoderOptions(_jpegQuality));
 		}
 
