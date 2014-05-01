@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewIntroZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestForceHomeSectionSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
@@ -133,6 +134,7 @@ package net.psykosoft.psykopaint2.home.config
 	   		_injector.map( NotifyHomeViewSceneReadySignal ).asSingleton();
 			_injector.map( NotifyHomeViewIntroZoomCompleteSignal ).asSingleton();
 			_injector.map( NotifyHomeViewDeleteModeChangedSignal ).asSingleton();
+			_injector.map( RequestForceHomeSectionSignal ).asSingleton();
 		}
 
 		// -----------------------

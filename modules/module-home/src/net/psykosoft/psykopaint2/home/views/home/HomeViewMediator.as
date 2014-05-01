@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestForceHomeSectionSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 
 	public class HomeViewMediator extends MediatorBase
@@ -66,6 +67,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyProfilePictureUpdatedSignal : NotifyProfilePictureUpdatedSignal;
 
+		[Inject]
+		public var forceHomeSectionSignal : RequestForceHomeSectionSignal;
 
 		private var _currentNavigationState : String;
 
@@ -83,6 +86,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestHomeIntroSignal.add(onIntroRequested);
 			notifyGyroscopeUpdateSignal.add(onGyroscopeUpdate);
 			notifyProfilePictureUpdatedSignal.add(onProfilePictureUpdate);
+			forceHomeSectionSignal.add(onForceHomeSectionSignal);
 
 			// From view.
 			view.disabledSignal.add(onDisabled);
@@ -104,6 +108,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestHidePopUpSignal.remove(onHidePopUp);
 			requestHomeIntroSignal.remove(onIntroRequested);
 			view.activeSectionChanged.remove(onActiveSectionChanged);
+			forceHomeSectionSignal.remove(onForceHomeSectionSignal);
 
 			view.disabledSignal.remove(onDisabled);
 			view.sceneReadySignal.remove(onSceneReady);
@@ -113,6 +118,11 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.dispose();
 
 			super.destroy();
+		}
+
+		private function onForceHomeSectionSignal(section : int):void
+		{
+			view.forceSection(section);
 		}
 
 		private function onActiveSectionChanged(sectionID : int) : void

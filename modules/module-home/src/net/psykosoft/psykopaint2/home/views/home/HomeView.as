@@ -15,7 +15,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	
 	import away3d.Away3D;
 	import away3d.cameras.Camera3D;
-	import away3d.cameras.lenses.PerspectiveLens;
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.lights.PointLight;
@@ -267,6 +266,11 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function get activeSection() : int
 		{
 			return _cameraController.activeTargetPositionID;
+		}
+
+		public function forceSection(section : int) : void
+		{
+			_cameraController.force(section);
 		}
 
 		public function set activeSection(activeSection : int) : void

@@ -11,7 +11,9 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
-	
+	import net.psykosoft.psykopaint2.home.signals.RequestForceHomeSectionSignal;
+	import net.psykosoft.psykopaint2.home.views.home.HomeView;
+
 
 	use namespace ns_state_machine;
 
@@ -35,6 +37,9 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
 
+		[Inject]
+		public var forceHomeSectionSignal : RequestForceHomeSectionSignal;
+
 		private var _bitmapData : BitmapData;
 		private var _orientation : int;
 		private var _background : RefCountedRectTexture;
@@ -50,6 +55,8 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			_bitmapData = BitmapData(data.map);
 			_orientation = int( data.orientation );
+			// force position focused on easel in case we're going to quick for tweens to finish
+			forceHomeSectionSignal.dispatch(HomeView.EASEL);
 			notifyBackgroundSetSignal.addOnce(onBackgroundSet);
 			requestCreateCropBackgroundSignal.dispatch();
 		}

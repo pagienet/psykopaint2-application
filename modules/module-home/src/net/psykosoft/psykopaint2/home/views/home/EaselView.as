@@ -223,8 +223,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			var aspectRatio : Number = CoreSettings.STAGE_HEIGHT/CoreSettings.STAGE_WIDTH;
 			var halfWidth : Number = CANVAS_WIDTH*.5;
 			var halfHeight : Number = CANVAS_WIDTH*aspectRatio*.5;
-			var vectorTopLeft : Vector3D = _canvas.scenePosition.clone();
-			var vectorBottomRight : Vector3D = _canvas.scenePosition.clone();
+			var vectorTopLeft : Vector3D = CANVAS_DEFAULT_POSITION.clone();
+			var vectorBottomRight : Vector3D = CANVAS_DEFAULT_POSITION.clone();
 			vectorTopLeft.x += halfWidth;
 			vectorTopLeft.y += halfHeight;
 			vectorBottomRight.x -= halfWidth;
