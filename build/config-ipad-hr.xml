@@ -47,6 +47,7 @@
         <requestedDisplayResolution>high</requestedDisplayResolution>
     </iPhone>
     <extensions>
+        <extensionID>com.milkmangames.extensions.GoViral</extensionID>
         <extensionID>net.psykosoft.notifications</extensionID>
         <extensionID>net.psykosoft.photos</extensionID>
 		<extensionID>net.psykosoft.gyroscope</extensionID>
