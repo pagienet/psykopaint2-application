@@ -48,7 +48,7 @@ package net.psykosoft.psykopaint2.paint.utils
 			_copyProgram.upload(vertexByteCode, fragmentByteCode);
 		}
 
-		override protected function copy(canvas : CanvasModel, context3D : Context3D) : void
+		override protected function copy(canvas : CanvasModel, context3D : Context3D, scaleX : Number, scaleY : Number) : void
 		{
 			_context3D = context3D;
 			if (!_copyProgram) initProgram();
@@ -56,8 +56,8 @@ package net.psykosoft.psykopaint2.paint.utils
 
 			_props[0] = -1;
 			_props[1] = -1;
-			_props[4] = 2;
-			_props[5] = 2;
+			_props[4] = scaleX * 2;
+			_props[5] = scaleY * 2;
 
 			_props[8] = 0; 	// uv coords
 			_props[9] = 0;

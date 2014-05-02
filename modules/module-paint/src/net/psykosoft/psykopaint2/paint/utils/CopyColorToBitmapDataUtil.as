@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.paint.utils
 			var context3D : Context3D = canvas.stage3D.context3D;
 			context3D.setRenderToBackBuffer();
 			context3D.clear();
-			copy(canvas, context3D);
+			copy(canvas, context3D, target.width / canvas.width, target.height / canvas.height);
 			context3D.drawToBitmapData(target);
 
 			return target;
@@ -63,7 +63,7 @@ package net.psykosoft.psykopaint2.paint.utils
 			_copyProgram.upload(vertexByteCode, fragmentByteCode);
 		}
 
-		protected function copy(canvas : CanvasModel, context3D : Context3D) : void
+		protected function copy(canvas : CanvasModel, context3D : Context3D, scaleX : Number, scaleY : Number) : void
 		{
 			_context3D = context3D;
 			if (!_copyProgram) initProgram();
@@ -71,8 +71,8 @@ package net.psykosoft.psykopaint2.paint.utils
 
 			_props[0] = -1;
 			_props[1] = -1;
-			_props[4] = 2;
-			_props[5] = 2;
+			_props[4] = scaleX * 2;
+			_props[5] = scaleY * 2;
 
 			_props[8] = 0; 	// uv coords
 			_props[9] = 0;

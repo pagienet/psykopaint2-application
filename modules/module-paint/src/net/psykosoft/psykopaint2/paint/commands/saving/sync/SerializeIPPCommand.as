@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
 
 	import net.psykosoft.psykopaint2.core.io.CanvasIPPSerializer;
+	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
@@ -15,6 +16,9 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 
 		[Inject]
 		public var canvasRenderer:CanvasRenderer;
+
+		[Inject]
+		public var canvas:CanvasModel;
 
 		override public function execute() : void
 		{
@@ -28,7 +32,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 				saveVO.paintingId = "psyko-" + dateMs;
 
 			var serializer:CanvasIPPSerializer = new CanvasIPPSerializer();
-			saveVO.infoBytes = serializer.serialize(saveVO.paintingId, dateMs, canvasRenderer, saveVO.dataBytes);
+			saveVO.infoBytes = serializer.serialize(saveVO.paintingId, dateMs, canvas, canvasRenderer, saveVO.dataBytes);
 			dispatchComplete(true);
 		}
 	}

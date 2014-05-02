@@ -1,18 +1,26 @@
 package net.psykosoft.psykopaint2.core.io
 {
+	import avm2.intrinsics.memory.li8;
+	import avm2.intrinsics.memory.si8;
+
 	import flash.display.BitmapData;
 	import flash.display.PNGEncoderOptions;
+	import flash.system.ApplicationDomain;
 	import flash.utils.ByteArray;
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
+	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.paint.utils.CopyColorAndSourceToBitmapDataUtil;
 
 	public class CanvasIPPSerializer
 	{
 		public static const SURFACE_PREVIEW_SHRINK_FACTOR : Number = 4;
+
+		private static var _copyColorAndSourceToBitmapData:CopyColorAndSourceToBitmapDataUtil;
 
 		private var _output : ByteArray;
 
@@ -20,9 +28,10 @@ package net.psykosoft.psykopaint2.core.io
 
 		public function CanvasIPPSerializer()
 		{
+			_copyColorAndSourceToBitmapData ||= new CopyColorAndSourceToBitmapDataUtil();
 		}
 
-		public function serialize(paintingID : String, lastSavedOnDateMs : Number, canvasRenderer : CanvasRenderer, dpp : ByteArray) : ByteArray
+		public function serialize(paintingID : String, lastSavedOnDateMs : Number, canvas : CanvasModel, canvasRenderer : CanvasRenderer, dpp : ByteArray) : ByteArray
 		{
 			_output = new ByteArray();
 			dpp.position = 0;
@@ -38,12 +47,27 @@ package net.psykosoft.psykopaint2.core.io
 
 			var position : int = dpp.position;
 			var len : int = width * height * 4;
-			reduceSurface(dpp, width, height, position);	// color data
+			if (canvas.sourceTexture)
+				mergeColor(canvas);
+			else
+				reduceSurface(dpp, width, height, position);	// color data
 			reduceSurface(dpp, width, height, position + len);	// normal specular data
 
 			dpp.position = 0;
 			_output.position = 0;
 			return cleanUpAndReturn();
+		}
+
+		private function mergeColor(canvas:CanvasModel):void
+		{
+			var offset : int = _output.position;
+			var bitmapData : BitmapData = new BitmapData(canvas.width / SURFACE_PREVIEW_SHRINK_FACTOR, canvas.height / SURFACE_PREVIEW_SHRINK_FACTOR, false);
+			_copyColorAndSourceToBitmapData.execute(canvas, bitmapData);
+			bitmapData.copyPixelsToByteArray(bitmapData.rect, _output);
+			ARGBtoBGRA(canvas.width * canvas.height * 4, offset);
+			bitmapData.dispose();
+
+			_output.position = _output.length;
 		}
 
 		private function writeHeader(paintingID : String, lastSavedOnDateMs : Number, width : int, height : int) : void
@@ -75,15 +99,36 @@ package net.psykosoft.psykopaint2.core.io
 
 		private function generateThumbnail(canvasRenderer : CanvasRenderer) : BitmapData
 		{
-			// temporarily store so we can render with alpha 1
-			var alpha : Number = canvasRenderer.sourceTextureAlpha;
-			canvasRenderer.sourceTextureAlpha = 1;
 			// TODO: generate thumbnail by accepting scale in renderToBitmapData
 			var thumbnail : BitmapData = canvasRenderer.renderToBitmapData();
-			canvasRenderer.sourceTextureAlpha = alpha;
 			var scaledThumbnail : BitmapData = BitmapDataUtils.scaleBitmapData(thumbnail, 0.25); // TODO: apply different scales depending on source and target resolutions
 			thumbnail.dispose();
 			return scaledThumbnail;
+		}
+
+		private function ARGBtoBGRA(len : int, offset : int) : void
+		{
+			var tmp:ByteArray = ApplicationDomain.currentDomain.domainMemory;
+			len += offset;
+			_output.length = len;
+			ApplicationDomain.currentDomain.domainMemory = _output;
+
+			for (var i : int = offset; i < len; i += 4) {
+				var offset1 : int = int(i + 1);
+				var offset2 : int = int(i + 2);
+				var offset3 : int = int(i + 3);
+				var a : uint = li8(i);
+				var r : uint = li8(offset1);
+				var g : uint = li8(offset2);
+				var b : uint = li8(offset3);
+
+				si8(b, i);
+				si8(g, offset1);
+				si8(r, offset2);
+				si8(a, offset3);
+			}
+
+			ApplicationDomain.currentDomain.domainMemory = tmp;
 		}
 
 		private function reduceSurface(sourceData : ByteArray, sourceWidth : uint, sourceHeight : uint, offset : uint) : void
