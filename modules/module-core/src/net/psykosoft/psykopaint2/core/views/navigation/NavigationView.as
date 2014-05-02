@@ -38,7 +38,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private var _panel:NavigationPanel;
 		private var _clickedButton:NavigationButton;
-		private var _previousSubNavView:Object;
 
 		public function NavigationView() {
 			super();

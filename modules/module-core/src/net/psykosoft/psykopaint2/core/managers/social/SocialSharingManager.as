@@ -63,11 +63,7 @@ package net.psykosoft.psykopaint2.core.managers.social
 			// set up all the event listeners.
 			// you only need the ones for the services you want to use.		
 			
-			// mail events
-			GoViral.goViral.addEventListener(GVMailEvent.MAIL_CANCELED,onMailEvent);
-			GoViral.goViral.addEventListener(GVMailEvent.MAIL_FAILED,onMailEvent);
-			GoViral.goViral.addEventListener(GVMailEvent.MAIL_SAVED,onMailEvent);
-			GoViral.goViral.addEventListener(GVMailEvent.MAIL_SENT,onMailEvent);
+			
 			
 			// facebook events
 			GoViral.goViral.addEventListener(GVFacebookEvent.FB_DIALOG_CANCELED,onFacebookEvent);
@@ -514,25 +510,7 @@ package net.psykosoft.psykopaint2.core.managers.social
 			}
 		}
 		
-		/** Handle Mail Event */
-		private function onMailEvent(e:GVMailEvent):void
-		{
-			switch(e.type)
-			{
-				case GVMailEvent.MAIL_CANCELED:
-					trace("Mail canceled.");
-					break;
-				case GVMailEvent.MAIL_FAILED:
-					trace("Mail failed:"+e.errorMessage);
-					break;
-				case GVMailEvent.MAIL_SAVED:
-					trace("Mail saved.");
-					break;
-				case GVMailEvent.MAIL_SENT:
-					trace("Mail sent!");
-					break;
-			}
-		}
+		
 		
 		/** Handle Generic Share Event */
 		private function onShareEvent(e:GVShareEvent):void

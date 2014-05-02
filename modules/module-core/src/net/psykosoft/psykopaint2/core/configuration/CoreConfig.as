@@ -50,7 +50,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifyHomeDistanceToSectionChangedSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationPositionChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
@@ -65,7 +66,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessage;
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleSwipeGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleTransformGestureSignal;
@@ -273,6 +273,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestOpenCroppedBitmapDataSignal ).asSingleton();
 			_injector.map( NotifyPurchaseStatusSignal ).asSingleton();
 			_injector.map( NotifyProfilePictureUpdatedSignal ).asSingleton();
+			_injector.map( NotifyHomeDistanceToSectionChangedSignal ).asSingleton();
 			// services
 			_injector.map( NotifyAMFConnectionFailed ).asSingleton();
 		}

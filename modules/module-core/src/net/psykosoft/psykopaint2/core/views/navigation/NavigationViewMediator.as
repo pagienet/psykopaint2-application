@@ -7,7 +7,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationPositionChangedSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifyHomeDistanceToSectionChangedSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifyNavigationPositionChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
@@ -40,6 +41,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		[Inject]
 		public var navigationCanHideWithGesturesSignal:NavigationCanHideWithGesturesSignal;
 
+		[Inject]
+		public var notifyHomeSectionRatioChangedSignal : NotifyHomeDistanceToSectionChangedSignal;
+
 		private var _navigationCanHideWithGestures:Boolean;
 
 		override public function initialize():void {
@@ -56,6 +60,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			navigationCanHideWithGesturesSignal.add( onNavigationCanHideWithGestures );
 			notifyToggleLoadingMessageSignal.add( onToggleLoadingMessage );
+			notifyHomeSectionRatioChangedSignal.add( onDistanceToHomeSectionChanged );
 			
 			// From view.
 			view.panel.shownSignal.add( onViewShown );
@@ -65,7 +70,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			view.panel.positionChanged.add( onViewPositionChanged );
 
 		}
-		
+
 		private function onToggleLoadingMessage( show:Boolean ):void
 		{
 			view.loadingView.visible = show;
@@ -110,6 +115,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onDistanceToHomeSectionChanged(dis:Number):void {
+//			trace("NVM - onDistanceToHomeSectionChanged - dis: " + dis);
+			view.y = 0.000000000001 * Math.pow( dis, 6 );
+		}
 
 		private function onNavigationCanHideWithGestures( value:Boolean ):void {
 			_navigationCanHideWithGestures = value;

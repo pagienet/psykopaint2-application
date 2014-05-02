@@ -107,10 +107,14 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				
 				case InAppPurchaseManager.STATUS_STORE_UNAVAILABLE:
 					//for testing on desktop you always get the brushes:
-					//if ( !CoreSettings.RUNNING_ON_iPAD)  userConfig.userConfig.hasFullVersion = true;
-					requestUndoSignal.dispatch();
-					requestShowPopUpSignal.dispatch( PopUpType.ERROR )
-					requestUpdateErrorPopUpSignal.dispatch("App Store is not available","Unfortunately we cannot connect to the App Store right now. Please check your internet connection and try again.");
+					if ( !CoreSettings.RUNNING_ON_iPAD)  
+					{
+						userConfig.userConfig.hasFullVersion = true;
+					} else {
+						requestUndoSignal.dispatch();
+						requestShowPopUpSignal.dispatch( PopUpType.ERROR )
+						requestUpdateErrorPopUpSignal.dispatch("App Store is not available","Unfortunately we cannot connect to the App Store right now. Please check your internet connection and try again.");
+					}
 					break;
 				
 			}
