@@ -4,11 +4,13 @@ package net.psykosoft.psykopaint2.core.views.components.button
 	import com.greensock.easing.Expo;
 	
 	import flash.display.MovieClip;
+	import flash.display.Sprite;
 	
 	public class IconButtonPaperFold extends MovieClip 
 	{
 		public var paperFoldMc:MovieClip;
 		private var _folded:Boolean = true;
+		public var upgrade:Sprite;
 		
 		public function IconButtonPaperFold()
 		{

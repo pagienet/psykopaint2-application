@@ -426,8 +426,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.4;
 					colorDecorator.param_pickRadius.upperRangeValue = 0.4;
-					colorDecorator.param_brushOpacity.numberValue = 0.9;
-					colorDecorator.param_brushOpacityRange.numberValue = 0.1;
+					colorDecorator.param_brushOpacity.numberValue = 0.8;
+					colorDecorator.param_brushOpacityRange.numberValue = 0.5;
 					colorDecorator.param_colorBlending.upperRangeValue = 0.9;
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.8;
 					colorDecorator.param_colorBlending.upperRangeValue = 0.98;
@@ -462,7 +462,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_glossiness.numberValue = 0.90  ;
 					bumpDecorator.param_shininess.numberValue = 0.2  ;
 					
-					
+					colorDecorator.param_brushOpacity.numberValue = 0.8;
+					colorDecorator.param_brushOpacityRange.numberValue = 0.5;
 					
 					break;
 				default:
