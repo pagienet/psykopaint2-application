@@ -54,11 +54,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 			} 
 			spotColor.visible = spotColorSwatch.visible = showSpotColor;
 			visible = true;
-			lastActionCharge = false;
+			lastActionCharge = true;
 			_pipetteStartMouseX = parent.mouseX;
-			_pipetteStartMouseY = parent.mouseY;
+			_pipetteStartMouseY = parent.mouseY + 10;
 			
-			lastPipetteDirectionV = 0;
+			lastPipetteDirectionV = -1;
 			lastPipetteDirectionH = 0;
 			
 			incoming_red = (incomingColor >> 16) & 0xff;
