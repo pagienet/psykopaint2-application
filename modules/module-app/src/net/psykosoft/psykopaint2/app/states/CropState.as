@@ -54,11 +54,12 @@ package net.psykosoft.psykopaint2.app.states
 
 			requestCancelCropSignal.add(onRequestCancelCropSignal);
 			requestOpenCroppedBitmapDataSignal.add(onRequestOpenCroppedBitmapData);
-
+			/*
 			if (data.orientation == CameraRollImageOrientation.ROTATION_0 && BitmapDataUtils.aspectRatioMatches(bitmapData, CoreSettings.STAGE_WIDTH / CoreSettings.STAGE_HEIGHT))
 				advanceDirectly(bitmapData);
 			else
-				requestStateChangeSignal.dispatch(NavigationStateType.CROP);
+			*/
+			requestStateChangeSignal.dispatch(NavigationStateType.CROP);
 		}
 
 		private function advanceDirectly(bitmapData : BitmapData) : void

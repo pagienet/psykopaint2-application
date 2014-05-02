@@ -714,7 +714,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			var result:BitmapData = new BitmapData( CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT,false );
 			
 			result = util.execute( _canvas, _diffuseTexture.texture, result, _context3D );
-			result.applyFilter(result,new Rectangle(0,0,CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT),new Point(),new BlurFilter(15,15));
+			//What is this? This blur does not make any sense. The color decorator has a "pick radius" option which uses the built in pyramid map to get smoothed colors
+			//result.applyFilter(result,new Rectangle(0,0,CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT),new Point(),new BlurFilter(15,15));
 			return result;
 		}
 	}
