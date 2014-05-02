@@ -75,8 +75,12 @@ package net.psykosoft.psykopaint2.core.io
 
 		private function generateThumbnail(canvasRenderer : CanvasRenderer) : BitmapData
 		{
+			// temporarily store so we can render with alpha 1
+			var alpha : Number = canvasRenderer.sourceTextureAlpha;
+			canvasRenderer.sourceTextureAlpha = 1;
 			// TODO: generate thumbnail by accepting scale in renderToBitmapData
 			var thumbnail : BitmapData = canvasRenderer.renderToBitmapData();
+			canvasRenderer.sourceTextureAlpha = alpha;
 			var scaledThumbnail : BitmapData = BitmapDataUtils.scaleBitmapData(thumbnail, 0.25); // TODO: apply different scales depending on source and target resolutions
 			thumbnail.dispose();
 			return scaledThumbnail;
