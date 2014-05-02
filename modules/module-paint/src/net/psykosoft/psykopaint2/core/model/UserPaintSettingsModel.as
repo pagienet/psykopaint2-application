@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.core.model
 	import net.psykosoft.psykopaint2.core.drawing.colortransfer.ColorTransfer;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
+	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.ColorStylePresets;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModeChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
@@ -20,6 +21,10 @@ package net.psykosoft.psykopaint2.core.model
 		
 		[Inject]
 		public var notifyPaintModeChangedSignal:NotifyPaintModeChangedSignal;
+		
+		[Inject]
+		public var notifyColorStyleChangedSignal:NotifyColorStyleChangedSignal;
+		
 		
 		[Inject]
 		public var canvasModel:CanvasModel;
@@ -100,6 +105,11 @@ package net.psykosoft.psykopaint2.core.model
 				//,0xd94300
 				
 				initialized = true;
+			} else {
+				colorStyleParameter.index = 0;
+				styleBlendParameter.numberValue = 1;
+				previewMixtureParameter.numberValue = 0.5;
+				
 			}
 		}
 		
@@ -148,6 +158,10 @@ package net.psykosoft.psykopaint2.core.model
 				v.push((threshold - blendRange *0.5 )/ 255.0 ,  255 / blendRange );
 				styleMatrices.push( v );
 				
+				if ( step == 0 )
+				{
+					notifyColorStyleChangedSignal.dispatch( styleMatrices[0],styleBlendParameter.numberValue);
+				}
 			//}
 			step++;
 			colorStyleParameter.stringList = Vector.<String>(parameterList);

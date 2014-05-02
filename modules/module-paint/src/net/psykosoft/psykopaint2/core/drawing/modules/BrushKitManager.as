@@ -373,9 +373,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			
 			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
 			activateBrushKit();
-			
 			paintSettingsModel.setDefaultValues();
-			
 			notifyToggleLoadingMessageSignal.dispatch(false);
 		}
 

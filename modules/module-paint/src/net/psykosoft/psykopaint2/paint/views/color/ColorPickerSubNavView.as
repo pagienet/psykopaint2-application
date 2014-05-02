@@ -90,6 +90,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 			photoStyleUI.setSnappings(null,Vector.<Number>([0.5]));
 			//this must be called at the end since it will trigger color change signals
 			colorPalette.setUserPaintSettings( _userPaintSettings );
+			
+			
+			
 		}
 		
 		override protected function onDisabled():void
