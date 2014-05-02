@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	
 	import net.psykosoft.psykopaint2.base.utils.io.CameraRollImageOrientation;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.NotifyCameraFlipRequest;
@@ -23,6 +24,10 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 		[Inject]
 		public var requestCropSourceImageSignal:RequestCropSourceImageSignal;
+		
+		[Inject]
+		public var notifyToggleLoadingMessageSignal:NotifyToggleLoadingMessageSignal;
+		
 
 		override public function initialize():void {
 
@@ -53,6 +58,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 		private function onCameraSnapshotRequest():void {
 			view.pause();
+			notifyToggleLoadingMessageSignal.dispatch(true);
 			var bmd:BitmapData = view.takeSnapshot();
 			requestCropSourceImageSignal.dispatch( bmd, CameraRollImageOrientation.ROTATION_0 );
 		}
