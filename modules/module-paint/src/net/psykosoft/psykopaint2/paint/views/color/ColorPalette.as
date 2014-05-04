@@ -1,5 +1,8 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
+	
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -143,23 +146,28 @@ package net.psykosoft.psykopaint2.paint.views.color
 				var newColorMode:int = PaintMode.COLOR_MODE;
 				//userPaintSettings.selectedSwatchIndex != index &&
 				if ( swatches[index] == autoColorSwatch){
-					paletteSelector.x = swatches[index].x + 32;
-					paletteSelector.y = swatches[index].y+37;
+					//paletteSelector.x = swatches[index].x + 32;
+					//paletteSelector.y = swatches[index].y+37;
+					TweenLite.to(paletteSelector,0.2,{ease:Expo.easeOut,x:swatches[index].x + 32,y:swatches[index].y+37});
 					_selectedColor = userPaintSettings.currentColor;
 					newColorMode = PaintMode.PHOTO_MODE;
 				} else if ( swatches[index] == eraser){
-					paletteSelector.x = swatches[index].x + 32;
-					paletteSelector.y = swatches[index].y+37;
+					//paletteSelector.x = swatches[index].x + 32;
+					//paletteSelector.y = swatches[index].y+37;
+					TweenLite.to(paletteSelector,0.2,{ease:Expo.easeOut,x:swatches[index].x + 32,y:swatches[index].y+37});
 					_selectedColor = 0;
 					newColorMode = PaintMode.ERASER_MODE;
 				} else if ( swatches[index] == currentColor){
-					paletteSelector.x = swatches[index].x-2;
-					paletteSelector.y = swatches[index].y+3;
+					//paletteSelector.x = swatches[index].x-2;
+					//paletteSelector.y = swatches[index].y+3;
+					TweenLite.to(paletteSelector,0.2,{ease:Expo.easeOut,x:swatches[index].x -2,y:swatches[index].y+3});
 					_selectedColor = palettes[selectedPaletteIndex][index];
 					sendColorSignal = true;
 				} else {
-					paletteSelector.x = swatches[index].x;
-					paletteSelector.y = swatches[index].y+2;
+					//paletteSelector.x = swatches[index].x;
+					//paletteSelector.y = swatches[index].y+2;
+					TweenLite.to(paletteSelector,0.2,{ease:Expo.easeOut,x:swatches[index].x,y:swatches[index].y+2});
+
 					_selectedColor = palettes[selectedPaletteIndex][index];
 					sendColorSignal = true;
 				}

@@ -7,9 +7,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
-
+	import flash.text.TextField;
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
@@ -110,7 +111,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		override protected function onSetup() : void
 		{
 			super.onSetup();
-			createCenterButton(ID_LOVE, ID_LOVE, ButtonIconType.LOVE);
+			var loveButon:ButtonData = createCenterButton(ID_LOVE, ID_LOVE, ButtonIconType.LOVE);
+			
+			//TextField(loveButon['txt']).text=String(Math.round(Math.random()*100));
 			//createCenterButton(ID_COMMENT, ID_COMMENT, ButtonIconType.COMMENT);
 			createCenterButton(ID_SHARE, ID_SHARE, ButtonIconType.SHARE);
 			

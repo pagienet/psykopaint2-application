@@ -1,5 +1,8 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
+	
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -125,7 +128,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 				var index:int = sx * (styleParameter.stringList.length - 1) + 0.5;
 				
 				var spacing:Number = sliderRange / (styleParameter.stringList.length - 1);
-				styleSelector.x = sliderOffset + styleBar.x + index * spacing;
+				//styleSelector.x = sliderOffset + styleBar.x + index * spacing;
+				TweenLite.to(styleSelector,0.2,{ease:Expo.easeOut,x:sliderOffset + styleBar.x + index * spacing});
 				styleParameter.index = index;
 				
 				updateStyleSliderShuffling();
