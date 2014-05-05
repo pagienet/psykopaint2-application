@@ -97,7 +97,7 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		private function onCameraPositionChanged(event:Object3DEvent):void
 		{
-			updateInteractionRect();
+			if ( _bookEnabled ) updateInteractionRect();
 		}
 
 		private function onAddedToStage(event:Event):void
@@ -645,6 +645,7 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		private function getBookScreenBounds():Rectangle
 		{
+			
 			// figure out projected bounds of book, use cover as guidance
 			var matrix:Matrix3D = _coverBook.sceneTransform;
 
