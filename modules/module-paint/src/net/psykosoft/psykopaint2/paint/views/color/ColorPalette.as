@@ -229,6 +229,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 				swatch.transform.colorTransform = dummyColorTransform;
 				palettes[selectedPaletteIndex][getSwatchIndex(swatch)] = color;
 			}
+			if (swatch == currentColor && !currentColorSwatch.visible) {
+				currentColorSwatch.visible = true;
+				currentColor.visible = true;
+			}
 		}
 		
 		public function get currentPalette():Vector.<uint>
