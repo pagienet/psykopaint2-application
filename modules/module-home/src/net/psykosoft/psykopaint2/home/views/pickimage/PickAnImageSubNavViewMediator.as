@@ -85,11 +85,14 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			super.destroy();
 
 			if( _cameraUtil ) {
+				_cameraUtil.imageRetrievedSignal.remove( onPhotoRetrieved );
 				_cameraUtil.dispose();
 				_cameraUtil = null;
 			}
 
 			if( _rollUtil ) {
+				_rollUtil.imageRetrievedSignal.remove( onPhotoRetrieved );
+				_rollUtil.selectionCancelledSignal.remove( onSelectionCancelled );
 				_rollUtil.dispose();
 				_rollUtil = null;
 			}
@@ -149,6 +152,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		private function loadPhoto():void {
 			_rollUtil = new CameraRollUtil();
 			_rollUtil.imageRetrievedSignal.add( onPhotoRetrieved );
+			_rollUtil.selectionCancelledSignal.add( onSelectionCancelled );
 			var w:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1024 : 512;
 			var h:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 512 : 256;
 			_rollUtil.launch( new Rectangle( view.mouseX, view.mouseY, 10, 10 ), w, h );
@@ -164,6 +168,10 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		private function onPhotoRetrieved( bmd:BitmapData, orientation:int ):void {
 			trace( this, "photo retrieved: " + bmd.width + "x" + bmd.height );
 			requestCropSourceImageSignal.dispatch( bmd, orientation );
+		}
+		
+		private function onSelectionCancelled( ):void {
+			notifyToggleLoadingMessageSignal.dispatch( false );
 		}
 	}
 }

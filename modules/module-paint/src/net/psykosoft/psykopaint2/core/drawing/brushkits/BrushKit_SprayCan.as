@@ -240,7 +240,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			{
 				case STYLE_DEFAULT:
 					trace("STYLE DEFAULT");
-					spawnDecorator.active = true;
+					spawnDecorator.active = false;
 					splatterDecorator.active = true;
 					brushEngine.textureScaleFactor = 2;
 					//DISTANCE BETWEEN STEPS : THE LESS, THE MORE DENSE IT WILL BE
@@ -270,12 +270,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					//spawnDecorator.param_minOffset.numberValue = 0;
 					//spawnDecorator.param_maxOffset.numberValue = 16;
 					
-					/*
+					
 					//SIZE VARY ON SPEED
-					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
+					//sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
 					//sizeDecorator.param_mappingFactor.numberValue = 0.2+precision*1;
-					sizeDecorator.param_mappingRange.numberValue = 0;
-					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
+					//sizeDecorator.param_mappingRange.numberValue = 0;
+					//sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
 					
 					//sizeDecorator.param_mappingFactor.numberValue = 1;
 					//sizeDecorator.param_mappingRange.numberValue = 10;
@@ -283,8 +283,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					//sizeDecorator.param_mappingFactor.numberValue = 3;
 					//sizeDecorator.param_mappingRange.numberValue = 1;
 					
-					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_SPEED;
-					splatterDecorator.param_splatFactor.numberValue = 0.2+10 * precision;
+					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
+					splatterDecorator.param_splatFactor.numberValue = 0.01+0.4 * precision;
 					//splatterDecorator.param_splatFactor.numberValue = 1;
 					
 					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_FIXED;
@@ -302,7 +302,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.97;
 					
 					brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
-					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 3 - precision * 2;*/
+					//brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 3 - precision * 2.5;
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 2.5;
 					
 					
 					break;

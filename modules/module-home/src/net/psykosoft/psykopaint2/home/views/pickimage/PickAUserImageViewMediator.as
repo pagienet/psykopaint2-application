@@ -16,6 +16,9 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		[Inject]
 		public var requestCropSourceImageSignal:RequestCropSourceImageSignal;
 		
+		[Inject]
+		public var notifyToggleLoadingMessageSignal:NotifyToggleLoadingMessageSignal;
+		
 		
 		override public function initialize():void {
 
@@ -43,7 +46,10 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		private function onImagePicked( bmd:BitmapData, orientation:int ):void {
 			if( bmd ) {
 				requestCropSourceImageSignal.dispatch( bmd, orientation );
-			} else requestNavigationStateChange( NavigationStateType.PREVIOUS );
+			} else {
+				requestNavigationStateChange( NavigationStateType.PREVIOUS );
+				notifyToggleLoadingMessageSignal.dispatch(false);
+			}
 		}
 	}
 }
