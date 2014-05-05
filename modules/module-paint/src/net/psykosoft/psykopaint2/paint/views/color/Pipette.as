@@ -99,7 +99,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 					} else if ( dy < 0  ){
 						lastActionCharge = true;
 						if ( currentFrame < totalFrames ) nextFrame();
-						var blendFactor:Number =currentFrame -1; 
+						var blendFactor:Number = (currentFrame -1)* 0.5; 
 						pipette_red = (pipette_red * blendFactor + incoming_red) / (blendFactor +1 );
 						pipette_green = (pipette_green * blendFactor + incoming_green) / (blendFactor +1 );
 						pipette_blue = (pipette_blue * blendFactor + incoming_blue) / (blendFactor +1 );
