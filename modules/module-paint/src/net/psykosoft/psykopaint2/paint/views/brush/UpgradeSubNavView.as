@@ -1,8 +1,14 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
-	
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
+
+import flash.display.Sprite;
+import flash.events.Event;
+import flash.events.MouseEvent;
+import flash.text.TextField;
+import flash.utils.setTimeout;
+
+import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
@@ -22,12 +28,23 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			setHeader( "Try or Buy" );
 			
 			createCenterButton( ID_CANCEL,ID_CANCEL, ButtonIconType.CANCEL_UPGRADE, IconButton, null, true, true, false );
-			createCenterButton( ID_BUY,ID_BUY, ButtonIconType.BUY_UPGRADE, IconButton, null, true, true, false );
+			createCenterButton( ID_BUY,ID_BUY, ButtonIconType.BUY_UPGRADE, IconButton, null, true, true, false, MouseEvent.MOUSE_UP, this, onUpgradeIconReady );
 			validateCenterButtons();
 		
 		}
 
-	
-		
+		private function onUpgradeIconReady(renderer:Sprite):void {
+			trace("--ON ADDED--");
+			var btn:IconButton = renderer as IconButton;
+			btn.addEventListener(Event.ADDED_TO_STAGE, onUpgradeBtnAddedToStage);
+		}
+
+		private function onUpgradeBtnAddedToStage( event:Event ):void {
+			var btn:IconButton = event.target as IconButton;
+			btn.removeEventListener(Event.ADDED_TO_STAGE, onUpgradeBtnAddedToStage);
+			var upgradeSpr:Sprite = btn.icon.getChildByName("upgrade") as Sprite;
+			var lbl:TextField = upgradeSpr.getChildByName("upgradePrice_txt") as TextField;
+			lbl.text = "$" + (int)(999 * Math.random());
+		}
 	}
 }
