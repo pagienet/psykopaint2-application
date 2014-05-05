@@ -110,7 +110,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			
 			gridDecorator = new GridDecorator();
-			gridDecorator.param_angleStep.degrees = 45;
+			gridDecorator.param_angleStep.degrees = 90;
 			gridDecorator.param_stepX.numberValue = 0;
 			gridDecorator.param_stepY.numberValue = 0;
 			
@@ -122,7 +122,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Pencil","Pastels","Quill","Charcoal"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Pencil","Pastels","Quill","Charcoal","Sketch","grid"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -216,7 +216,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					//sizeDecorator.param_invertMapping.booleanValue = true;
 					sizeDecorator.param_mappingRange.numberValue = 0.01;
 					sizeDecorator.param_mappingFactor.numberValue = 0.04;
-					sizeDecorator.param_maxSpeed.numberValue = 20;
+					sizeDecorator.param_maxSpeed.numberValue = 40;
 					
 					colorDecorator.param_brushOpacity.numberValue = 0.6;
 					colorDecorator.param_brushOpacityRange.numberValue = 0.2;
@@ -305,10 +305,28 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					break;
 				
 				case STYLE_AUTO_GRID:
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 1;
+					
 					spawnDecorator.param_maxOffset.numberValue = 1 + 23* precision;
-					//gridDecorator.active = (param_style.index == 1);
+					spawnDecorator.param_brushAngleRange.degrees=0;
+					
+					spawnDecorator.active=false;
+					
+					sizeDecorator.param_mappingRange.numberValue = 0.01;
+					//sizeDecorator.param_mappingFactor.numberValue = 0.1;
 					sizeDecorator.param_mappingFactor.numberValue = 0.4;
+					
+					
+					splatterDecorator.param_offsetAngleRange.degrees = 0;
+					splatterDecorator.active=false;
+					
+									
 					gridDecorator.active = true;
+					gridDecorator.param_stepX.numberValue = 2;
+					gridDecorator.param_stepY.numberValue = 2;
+					gridDecorator.param_angleStep.degrees = 90;
+					//gridDecorator.p
+					
 					
 				break;
 				case STYLE_COOLINK:
