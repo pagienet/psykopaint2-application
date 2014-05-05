@@ -73,6 +73,8 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const BUY_UPGRADE:String = "buy_upgrade";
 		
 		public static const INSTAGRAM:String = "instagram";
+		public static const FOLLOW:String = "follow";
+		public static const UNFOLLOW:String = "unfollow";
 		public static const LOVE:String = "love";
 		public static const LOVED:String = "loved";
 		public static const MODEL:String = "model";

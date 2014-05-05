@@ -71,13 +71,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 			if (_isFollowing) {
 				label = "UNFOLLOW";
-				// TODO: Provide proper unfollow icon
-				icon = ButtonIconType.FRIENDS;
+				icon = ButtonIconType.UNFOLLOW;
 			}
 			else {
 				label = "FOLLOW";
-				// TODO: Provide proper follow icon
-				icon = ButtonIconType.FRIENDS;
+				icon = ButtonIconType.FOLLOW;
 			}
 
 			view.relabelButtonWithId(GalleryUserSubNavView.ID_FOLLOW, label, icon);
