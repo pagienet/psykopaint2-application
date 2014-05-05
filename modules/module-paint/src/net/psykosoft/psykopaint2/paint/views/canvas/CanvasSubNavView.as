@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		override protected function onEnabled():void {
 			
 			//setLeftButton( ID_HOME, ID_HOME, ButtonIconType.HOME );
-			setRightButton( ID_PICK_A_BRUSH, ID_PICK_A_BRUSH, ButtonIconType.BRUSH );
+			setRightButton( ID_PICK_A_BRUSH, ID_PICK_A_BRUSH, ButtonIconType.NEXT );
 			setBgType( NavigationBg.BG_TYPE_ROPE );
 			setHeader( "Edit Painting" );
 		}

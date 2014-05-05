@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const PARAM10:String = "param10";
 		public static const PARAM11:String = "param11";
 		public static const BACK:String = "back";
+		public static const NEXT:String = "next";
 		public static const BIN:String = "bin";
 		public static const BLANK_CANVAS:String = "blankCanvas";
 		public static const CAMERA:String = "camera";
