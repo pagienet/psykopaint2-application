@@ -34,7 +34,6 @@ import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 		}
 
 		private function onUpgradeIconReady(renderer:Sprite):void {
-			trace("--ON ADDED--");
 			var btn:IconButton = renderer as IconButton;
 			btn.addEventListener(Event.ADDED_TO_STAGE, onUpgradeBtnAddedToStage);
 		}

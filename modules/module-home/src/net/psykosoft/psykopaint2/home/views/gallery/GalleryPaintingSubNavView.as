@@ -4,15 +4,18 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.display.MovieClip;
-	import flash.events.Event;
+import flash.display.Sprite;
+import flash.events.Event;
 	import flash.events.IOErrorEvent;
-	import flash.net.URLRequest;
+import flash.events.MouseEvent;
+import flash.net.URLRequest;
 	import flash.text.TextField;
 	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
+import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
+import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class GalleryPaintingSubNavView extends SubNavigationViewBase
 	{
@@ -111,7 +114,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		override protected function onSetup() : void
 		{
 			super.onSetup();
-			var loveButon:ButtonData = createCenterButton(ID_LOVE, ID_LOVE, ButtonIconType.LOVE);
+			createCenterButton(ID_LOVE, ID_LOVE, ButtonIconType.LOVE, IconButton, null, false, true, true, MouseEvent.MOUSE_UP, this, onLoveBtnReady);
 			
 			//TextField(loveButon['txt']).text=String(Math.round(Math.random()*100));
 			//createCenterButton(ID_COMMENT, ID_COMMENT, ButtonIconType.COMMENT);
@@ -120,6 +123,18 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			validateCenterButtons();
 
 			getRightButton().addChild(_container);
+		}
+
+		private function onLoveBtnReady(renderer:Sprite):void {
+			var btn:IconButton = renderer as IconButton;
+				btn.addEventListener(Event.ADDED_TO_STAGE, onLoveBtnAddedToStage);
+		}
+
+		private function onLoveBtnAddedToStage( event:Event ):void {
+			var btn:IconButton = event.target as IconButton;
+			btn.removeEventListener(Event.ADDED_TO_STAGE, onLoveBtnAddedToStage);
+			var lbl:TextField = btn.icon.getChildByName("txt") as TextField;
+			lbl.text = String( (int)(999 * Math.random()) );
 		}
 	}
 }
