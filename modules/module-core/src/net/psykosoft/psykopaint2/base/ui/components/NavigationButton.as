@@ -169,7 +169,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		protected function onThisMouseDown( event:MouseEvent ):void {
-			if( _stage && !_stage.hasEventListener( MouseEvent.MOUSE_UP ) ) {
+			if( enabled && _stage && !_stage.hasEventListener( MouseEvent.MOUSE_UP ) ) {
 				_stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			}
 			//scaleIcon( 0.98 );
