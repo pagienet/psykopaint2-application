@@ -63,6 +63,9 @@ package net.psykosoft.psykopaint2.core.views.popups
 			// From view.
 			view.popUpShownSignal.add( onPopUpShown );
 			view.popUpHiddenSignal.add( onPopUpHidden );
+
+			// For working on pop ups. Keep commented...
+			//onShowPopUpRequest(PopUpType.SHARE);
 		}
 
 		// ---------------------------------------------------------------------

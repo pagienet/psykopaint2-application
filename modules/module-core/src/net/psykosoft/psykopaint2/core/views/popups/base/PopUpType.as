@@ -10,5 +10,6 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 		public static const LOGIN:String = "net.psykosoft.psykopaint2.core.views.popups.login.LoginPopUpView";
 		public static const NOTIFICATION_SETTINGS:String = "net.psykosoft.psykopaint2.core.views.popups.notifications.NotificationSettingsView";
 		public static const ERROR:String = "net.psykosoft.psykopaint2.core.views.popups.error.ErrorPopUpView";
+		public static const SHARE:String = "net.psykosoft.psykopaint2.core.views.popups.share.SharePopUpView";
 	}
 }
