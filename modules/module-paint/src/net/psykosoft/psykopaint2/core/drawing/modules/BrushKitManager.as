@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.core.drawing.modules
 {
 
+	import com.milkmangames.nativeextensions.ios.StoreKitProduct;
+	
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
@@ -38,6 +40,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyFullUpgradePriceSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
@@ -131,6 +134,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		[Inject]
 		public var requestUndoSignal:RequestUndoSignal;
 		
+		[Inject]
+		public var notifyFullUpgradePriceSignal:NotifyFullUpgradePriceSignal;
+		
+		
 	
 		private var _view : DisplayObject;
 		private var _active : Boolean;
@@ -151,6 +158,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _navigationWasHiddenByPainting:Boolean;
 		private var _revealNavigationTimeout:uint;
 		private var _activeBrushEngine:AbstractBrush;
+		public var fullUpgradePackage:StoreKitProduct;
 		
 		public function BrushKitManager()
 		{
@@ -169,6 +177,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			notifyNavigationToggledSignal.add( onNavigationToggled );
 			notifyTogglePaintingEnableSignal.add( onToggleEnablePainting );
 			notifyPaintModeChangedSignal.add( onPaintModeChanged );
+			notifyFullUpgradePriceSignal.add( onUpgradePriceAvailable );
+			
 			_navigationIsVisible = true;
 		}
 		
@@ -523,6 +533,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			}
 			if (_activeBrushKit)
 				_activeBrushKit.brushEngine.freeExpendableMemory();
+		}
+		
+		private function onUpgradePriceAvailable( product:StoreKitProduct):void
+		{
+			fullUpgradePackage = product;
+			
 		}
 		
 	}

@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.core.signals
 	public class NotifyPurchaseStatusSignal extends TracingSignal
 	{
 		public function NotifyPurchaseStatusSignal() {
-			super( String, int ); //purchase object id, status code
+			super( String, int ); //purchase status id, status code
 		}
 	}
 }

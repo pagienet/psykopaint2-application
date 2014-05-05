@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
+	import com.milkmangames.nativeextensions.ios.StoreKitProduct;
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
@@ -8,6 +10,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.signals.NotifyFullUpgradePriceSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyTogglePaintingEnableSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
@@ -45,6 +49,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		[Inject]
 		public var requestUpdateErrorPopUpSignal:RequestUpdateErrorPopUpSignal;
 		
+		[Inject]
+		public var brushKitManager : BrushKitManager;
+
 		
 		override public function initialize():void {
 			// Init.
@@ -52,9 +59,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			super.initialize();
 			
 			notifyPurchaseStatusSignal.add( onPurchaseStatus );
+			view.upgradePrice = brushKitManager.fullUpgradePackage.localizedPrice;
 		}
-
-
+		
 		override public function destroy():void
 		{
 			super.destroy();

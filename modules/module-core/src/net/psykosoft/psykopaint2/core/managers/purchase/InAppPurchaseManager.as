@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 	import flash.net.SharedObject;
 	
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
+	import net.psykosoft.psykopaint2.core.signals.NotifyFullUpgradePriceSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 
 	public class InAppPurchaseManager
@@ -37,8 +38,13 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		public var notifyPurchaseStatusSignal:NotifyPurchaseStatusSignal
 		
 		[Inject]
+		public var notifyFullUpgradePriceSignal:NotifyFullUpgradePriceSignal
+		
+		
+		[Inject]
 		public var userConfigModel:UserConfigModel
 		
+		private var availableProducts:Vector.<StoreKitProduct>;
 		
 		public function InAppPurchaseManager()
 		{
@@ -170,7 +176,7 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		private function onProductsLoaded(e:StoreKitEvent):void
 		{
 			trace("InAppPurchaseManager: products loaded.");
-			
+			availableProducts = e.validProducts;
 			for each(var product:StoreKitProduct in e.validProducts)
 			{
 				trace("ID: "+product.productId);
@@ -178,6 +184,8 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 				trace("Description: "+product.description);
 				trace("String Price: "+product.localizedPrice);
 				trace("Price: "+product.price);
+				//TODO: right now we only have one product so this is dirty but should work:
+				notifyFullUpgradePriceSignal.dispatch(product);
 			}
 			trace("Loaded "+e.validProducts.length+" Products.");
 			
