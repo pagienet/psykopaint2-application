@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.home.views.book
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
+	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryView;
 	import net.psykosoft.psykopaint2.home.views.home.EaselView;
 	
@@ -61,6 +62,9 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		[Inject]
 		public var notifyAMFConnectionFailed : NotifyAMFConnectionFailed;
+		
+		[Inject]
+		public var requestStartColorPaintingSignal : RequestStartNewColorPaintingSignal;
 
 		private var currentState:String;
 		private var _gallerySource:int = -1;
@@ -83,8 +87,15 @@ package net.psykosoft.psykopaint2.home.views.book
 			notifyStateChange.add(onStateChange);
 			notifyGalleryZoomRatioSignal.add(onGalleryZoomRatioSignal);
 			notifyAMFConnectionFailed.add(onImagesError);
+			requestStartColorPaintingSignal.add( onColorPaintingStarting );
 		}
-
+		
+		private function onColorPaintingStarting(ignore:uint):void
+		{
+			disableAndHideBook();
+			
+		}
+		
 		override public function destroy():void
 		{
 			view.dispose();

@@ -640,7 +640,8 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		private function updateInteractionRect():void
 		{
-			_grabThrowController.interactionRect = getBookScreenBounds();
+			//TODO: fix this patch to avoid null error when hidden book is hiddean again
+			if ( _coverBook ) _grabThrowController.interactionRect = getBookScreenBounds();
 		}
 
 		private function getBookScreenBounds():Rectangle
@@ -660,11 +661,15 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		private function updatePosition():void
 		{
-			_container.x = _basePosition.x;
-			_container.y = _basePosition.y + 20 + _hiddenOffset * _hiddenRatio;
-			_container.z = _basePosition.z - 250 + 100* _hiddenRatio;
-			_container.rotationX = 90+_hiddenRatio*90;
-			updateInteractionRect();
+			//TODO: this check for _container is only a dirty patch to avoid a null error that happens sometimes:
+			if ( _container )
+			{
+				_container.x = _basePosition.x;
+				_container.y = _basePosition.y + 20 + _hiddenOffset * _hiddenRatio;
+				_container.z = _basePosition.z - 250 + 100* _hiddenRatio;
+				_container.rotationX = 90+_hiddenRatio*90;
+				updateInteractionRect();
+			}
 		}
 
 		override public function set mouseEnabled(enabled:Boolean):void
