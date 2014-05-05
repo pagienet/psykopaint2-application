@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.home.views.home
 {
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
-	import com.greensock.easing.Quad;
 	
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -12,9 +11,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.display3D.textures.RectangleTexture;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.utils.ByteArray;

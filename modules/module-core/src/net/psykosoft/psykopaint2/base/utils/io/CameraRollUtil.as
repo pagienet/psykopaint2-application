@@ -20,8 +20,6 @@ package net.psykosoft.psykopaint2.base.utils.io
 	import jp.shichiseki.exif.ExifInfo;
 	import jp.shichiseki.exif.IFD;
 	
-	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
-	
 	import org.osflash.signals.Signal;
 
 	public class CameraRollUtil
@@ -30,6 +28,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 		private var _imageLoader:Loader;
 
 		public var imageRetrievedSignal:Signal;
+		public var selectionCancelledSignal:Signal;
 		private var exifData:Array;
 		private var mediaPromise:MediaPromise;
 		private var imageBytes:ByteArray;
@@ -38,7 +37,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 			super();
 
 			imageRetrievedSignal = new Signal();
-
+			selectionCancelledSignal = new Signal();
 			_cameraRoll = new CameraRoll();
 			_cameraRoll.addEventListener( MediaEvent.SELECT, onPhotoComplete );
 			_cameraRoll.addEventListener( Event.CANCEL, browseCanceled );
@@ -160,6 +159,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 
 		private function browseCanceled( event:Event ):void {
 			trace( this, "canceled" );
+			selectionCancelledSignal.dispatch();
 		}
 
 		public function launch( launcherRect:Rectangle, width:Number, height:Number ):void {

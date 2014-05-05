@@ -15,7 +15,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	
 	import net.psykosoft.psykopaint2.base.utils.io.CameraRollImageOrientation;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	
 	import org.osflash.signals.Signal;
 
@@ -26,14 +25,15 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		private var _stage:Stage;
 
 		public var imageRetrievedSignal:Signal;
-
+		public var selectionCancelledSignal:Signal;
+		
 		public function DeviceCameraUtil( stage:Stage ) {
 			super();
 
 			_stage = stage;
 
 			imageRetrievedSignal = new Signal();
-
+			selectionCancelledSignal = new Signal();
 			_cameraUi = new CameraUI();
 
 			_cameraUi.addEventListener( MediaEvent.COMPLETE, imageCaptured );

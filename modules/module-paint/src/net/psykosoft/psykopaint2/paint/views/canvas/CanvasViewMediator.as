@@ -169,7 +169,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function onNavigationPositionChange(offset:Number):void
 		{
 			// lovely magical numbers to counter the magic numbers from the nav panel
-			offsetY = offset * CoreSettings.GLOBAL_SCALING * .75 * .4;
+			offsetY = offset * CoreSettings.GLOBAL_SCALING * .75 * .33;
 			if (_canvasRect)
 				updateAndConstrainCanvasRect();
 		}
