@@ -42,7 +42,8 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const FROM_IPAD:String = "fromIpad";
 		public static const HAND_OK:String = "handOK";
 		public static const HOME:String = "home";
-		
+		public static const EMPTY:String = "empty";
+
 		//SETTINGS
 		public static const LOGIN:String = "login";
 		public static const LOGOUT:String = "logout";

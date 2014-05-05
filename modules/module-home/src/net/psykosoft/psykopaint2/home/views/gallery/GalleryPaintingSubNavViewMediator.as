@@ -38,6 +38,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			view.setupSignal.addOnce(onViewSetUp);
 			loggedInUser.onChange.add(onLoggedInUserChange);
+
 			// Init.
 			registerView(view);
 			super.initialize();

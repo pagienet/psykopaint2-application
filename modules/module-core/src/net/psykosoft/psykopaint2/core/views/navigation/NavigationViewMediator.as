@@ -117,8 +117,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// -----------------------
 
 		private function onDistanceToHomeSectionChanged(dis:Number):void {
+			// COMMENTED OUT DUE TO PERFORMANCE ISSUES.
+			// Updating the 2D UI while updating the GPU causes compositing and performance drops too much.
 //			trace("NVM - onDistanceToHomeSectionChanged - dis: " + dis);
-			view.y = 0.000000000001 * Math.pow( dis, 6 );
+//			view.y = 0.000000000001 * Math.pow( dis, 6 );
 		}
 
 		private function onNavigationCanHideWithGestures( value:Boolean ):void {

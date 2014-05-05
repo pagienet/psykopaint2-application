@@ -27,7 +27,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var bg:NavigationBg;
 		public var header:NavigationHeader;
 		public var leftBtnSide:Sprite;
+		public var leftBtnSideBg:Sprite;
 		public var rightBtnSide:Sprite;
+		public var rightBtnSideBg:Sprite;
 		public var loadingView:LoadingView
 
 		public var buttonClickedSignal:Signal;
@@ -46,6 +48,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			_leftButton = leftBtnSide.getChildByName( "btn" ) as LeftButton;
 			_rightButton = rightBtnSide.getChildByName( "btn" ) as RightButton;
+			leftBtnSideBg = leftBtnSide.getChildByName( "paperbg" ) as Sprite;
+			rightBtnSideBg = rightBtnSide.getChildByName( "paperbg" ) as Sprite;
 
 			initializePanel();
 
@@ -223,21 +227,23 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Side buttons.
 		// ---------------------------------------------------------------------
 
-		public function setLeftButton( id:String, label:String, iconType:String = ButtonIconType.BACK, showBackground:Boolean = true ):void {
+		public function setLeftButton( id:String, label:String, iconType:String = ButtonIconType.BACK, showBackground:Boolean = true, bgVisible:Boolean = true ):void {
 			_leftButton.id = id;
 			_leftButton.labelText = label;
 			_leftButton.iconType = iconType;
 			_leftButton.visible = true;
 			leftBtnSide.visible = true;
+			leftBtnSideBg.visible = bgVisible;
 			leftBtnSide.getChildByName( "clipOverlay" ).visible = leftBtnSide.getChildByName( "paperbg").visible = showBackground;
 		}
 
-		public function setRightButton( id:String, label:String, iconType:String = ButtonIconType.CONTINUE, labelVisible : Boolean = false ):void {
+		public function setRightButton( id:String, label:String, iconType:String = ButtonIconType.CONTINUE, labelVisible : Boolean = false, bgVisible:Boolean = true ):void {
 			_rightButton.id = id;
 			_rightButton.labelText = label;
 			_rightButton.iconType = iconType;
 			_rightButton.visible = true;
 			_rightButton.label.visible = labelVisible;
+			rightBtnSideBg.visible = bgVisible;
 			rightBtnSide.visible = true;
 		}
 

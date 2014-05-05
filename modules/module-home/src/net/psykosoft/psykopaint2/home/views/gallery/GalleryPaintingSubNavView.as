@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		public function setUserProfile(name : String, url : String) : void
 		{
-			setRightButton(PROFILE, name, ButtonIconType.DEFAULT, true);
+			setRightButton(PROFILE, name, ButtonIconType.EMPTY, true, false);
 
 			if (_userThumbnailURL != url) {
 				_userThumbnailURL = url;

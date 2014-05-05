@@ -109,12 +109,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_navigation.header.setTitle( value );
 		}
 
-		public function setLeftButton( id:String, label:String, iconType:String = ButtonIconType.BACK, showBackground:Boolean = true ):void {
-			_navigation.setLeftButton( id, label, iconType, showBackground );
+		public function setLeftButton( id:String, label:String, iconType:String = ButtonIconType.BACK, showBackground:Boolean = true, bgVisible:Boolean = true ):void {
+			_navigation.setLeftButton( id, label, iconType, showBackground, bgVisible );
 		}
 
-		public function setRightButton( id:String, label:String, iconType:String = ButtonIconType.CONTINUE, labelVisible : Boolean = false ):void {
-			_navigation.setRightButton( id, label, iconType, labelVisible );
+		public function setRightButton( id:String, label:String, iconType:String = ButtonIconType.CONTINUE, labelVisible : Boolean = false, bgVisible:Boolean = true ):void {
+			_navigation.setRightButton( id, label, iconType, labelVisible, bgVisible );
 		}
 
 		public function showLeftButton( value:Boolean ):void {
