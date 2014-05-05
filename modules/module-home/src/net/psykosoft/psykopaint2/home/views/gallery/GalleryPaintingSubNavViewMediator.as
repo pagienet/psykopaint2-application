@@ -66,9 +66,21 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function updateMenu() : void
 		{
-			updateLoveButton();
-			updateShareButton();
-			updateUserProfileButton();
+			if (!activePaintingModel.painting || activePaintingModel.painting.collectionType == GalleryType.NONE)
+				showButtons(false);
+			else {
+				showButtons(true);
+				updateLoveButton();
+				updateShareButton();
+				updateUserProfileButton();
+			}
+		}
+
+		private function showButtons(visible : Boolean) : void
+		{
+			view.setButtonVisibilityWithID(GalleryPaintingSubNavView.ID_SHARE, visible);
+			view.setButtonVisibilityWithID(GalleryPaintingSubNavView.ID_LOVE, visible);
+			view.getRightButton().visible = visible;
 		}
 
 		private function updateShareButton():void
