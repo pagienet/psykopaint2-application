@@ -194,7 +194,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function initHighQualityMaterial():void
 		{
-			var emptyNormalMap : BitmapData = new BitmapData(1, 1, false, 0x00808000);
+			var emptyNormalMap : BitmapData = new TrackedBitmapData(1, 1, false, 0x00808000);
 
 			//BookMaterialsProxy.getBitmapDataById(BookMaterialsProxy.THUMBNAIL_LOADING)
 			_highQualityColorTexture = new TrackedBitmapRectTexture(null);
