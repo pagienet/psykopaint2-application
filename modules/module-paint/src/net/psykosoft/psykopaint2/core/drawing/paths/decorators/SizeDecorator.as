@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			
 			param_mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MAPPING,INDEX_MAPPING_LINEAR,mappingFunctionLabels);
 			param_invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_INVERT_MAPPING,0);
-			param_maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
+			param_maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,200);
 			
 			_parameters.push(param_mappingMode,param_mappingFactor,param_mappingRange,param_mappingFunction,param_invertMapping,param_maxSpeed );
 			
