@@ -90,7 +90,7 @@ package net.psykosoft.psykopaint2.core.model
 					selectedSwatchIndex = 0;
 					_colorMode = PaintMode.COLOR_MODE;
 				}
-				styleBlendParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Style Blend Factor",1,0,1);
+				styleBlendParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Style Blend Factor",0.5,0,1);
 				previewMixtureParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Preview Blending",0.5,0,1);
 				setupColorTransfer(0);
 				
@@ -107,7 +107,7 @@ package net.psykosoft.psykopaint2.core.model
 				initialized = true;
 			} else {
 				colorStyleParameter.index = 0;
-				styleBlendParameter.numberValue = 1;
+				styleBlendParameter.numberValue = 0.5;
 				previewMixtureParameter.numberValue = 0.5;
 				
 			}

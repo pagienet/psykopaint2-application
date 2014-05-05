@@ -28,10 +28,12 @@ package net.psykosoft.psykopaint2.crop.views.crop
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
 				case CropSubNavView.ID_PICK_AN_IMAGE:
+					view.enableButtonWithId( CropSubNavView.ID_PICK_AN_IMAGE,false);
 					requestCancelCropSignal.dispatch();
 					break;
 				case CropSubNavView.ID_CONFIRM_CROP:
 					//TODO: blocker activation
+					view.enableButtonWithId( CropSubNavView.ID_CONFIRM_CROP,false);
 					notifyToggleLoadingMessageSignal.dispatch(true);
 					requestFinalizeCropSignal.dispatch();
 				    break;
