@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.core.views.components.button
 {
 
-	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
@@ -29,13 +28,19 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		
 		
 		override protected function onStageMouseUp( event:MouseEvent ):void {
-			super.onStageMouseUp(event);
-			icon.fold=true;
+			if ( enabled )
+			{
+				super.onStageMouseUp(event);
+				icon.fold=true;
+			}
 		}
 		
 		override protected function onThisMouseDown( event:MouseEvent ):void {
-			super.onThisMouseDown(event);
-			icon.fold=false;
+			if ( enabled )
+			{
+				super.onThisMouseDown(event);
+				icon.fold=false;
+			}
 		}
 		
 		override public function set labelText(value:String):void{

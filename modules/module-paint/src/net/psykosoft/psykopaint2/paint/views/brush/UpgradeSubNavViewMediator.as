@@ -106,6 +106,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					break;
 				
 				case InAppPurchaseManager.STATUS_STORE_UNAVAILABLE:
+				case InAppPurchaseManager.STATUS_STORE_PRODUCTS_UNAVAILABLE:
 					//for testing on desktop you always get the brushes:
 					if ( !CoreSettings.RUNNING_ON_iPAD)  
 					{

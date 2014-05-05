@@ -73,6 +73,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onToggleLoadingMessage( show:Boolean ):void
 		{
+			trace("onToggleLoadingMessage",show);
 			view.loadingView.visible = show;
 			
 		}

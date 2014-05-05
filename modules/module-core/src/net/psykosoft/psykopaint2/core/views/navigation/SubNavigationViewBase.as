@@ -181,8 +181,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			}
 		}
 
-		public function enableButtonWithId( id:String, enabled:Boolean ):void {
+		public function setButtonVisibilityWithID( id:String, visible:Boolean ):void
+		{
+			var displayObject : DisplayObject = getItemRendererForElementWithId(id);
+			displayObject.visible = visible;
+		}
 
+		public function enableButtonWithId( id:String, enabled:Boolean ):void {
 			var targetData:ButtonData;
 			var dataProvider:Vector.<ISnapListData> = _scroller.dataProvider;
 			if( dataProvider ) {
@@ -195,9 +200,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 					}
 				}
 			}
-
 			if( !targetData ) return;
-
+			
 			targetData.enabled = enabled;
 
 			_scroller.updateItemRenderersFromData();
