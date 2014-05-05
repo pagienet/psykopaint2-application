@@ -247,10 +247,11 @@ package net.psykosoft.psykopaint2.home.views.book
 			//NUMBER OF PAGES DEPEND ON THE NUMBER OF IMAGES SENT IN AND NEEDS TO BE PAIR...
 			var numberOfPages:uint = Math.ceil((_galleryImageCollection.images.length / BookLayoutGalleryView.LENGTH) / 2) * 2;
 			//... AND IT CAN'T BE HIGHER THAN 
-			numberOfPages = Math.min(SIMULTANEOUS_PAGES, numberOfPages);
+			//numberOfPages = Math.min(SIMULTANEOUS_PAGES, numberOfPages);
+			numberOfPages = SIMULTANEOUS_PAGES;
 
 			//MAX NUMBER OF PAGES IS 
-			_maxNumberOfPages = (_galleryImageCollection.numTotalPaintings / BookLayoutGalleryView.LENGTH);
+			_maxNumberOfPages = Math.max(numberOfPages,(_galleryImageCollection.numTotalPaintings / BookLayoutGalleryView.LENGTH));
 
 			//CREATE PAGES
 			createPages(numberOfPages);
@@ -355,7 +356,7 @@ package net.psykosoft.psykopaint2.home.views.book
 
 			var firstPageIndex:int = Math.floor(_doublePageIndex) * 2 % PAGES_CREATED;
 
-
+			trace("PAGES_CREATED = "+ PAGES_CREATED);
 			//	trace("updatePages _doublePageIndex = "+_doublePageIndex+"  firstPageIndex="+firstPageIndex);
 			for (var p:int = 0; p < _pages.length; p++) {
 
@@ -452,9 +453,6 @@ package net.psykosoft.psykopaint2.home.views.book
 
 						page.visible = true;
 
-						//TO AVOID OVERLAPS WITH PAGES BEHIND WE GIVE A BIT OF BIAS TO SHOWING THE PAGES BEHIND
-						//SINCE THE FLIP OF THE PAGES HIDE THE PAGES BEHIND AT THE BEGINNING OF THE MOVEMENT ANYWAY
-//						
 						if (easing < 0.25) {
 							page.visible = false;
 						}
@@ -682,6 +680,7 @@ package net.psykosoft.psykopaint2.home.views.book
 				pageCreated = Math.min(_pages.length,SIMULTANEOUS_PAGES);
 				//IF GALLERY VIEW WE ALWAYS HAVE THE SIMULTANEOUS_PAGES amount of pages
 			}else if(_viewType == TYPE_GALLERY_VIEW){
+				//pageCreated = Math.min(_maxNumberOfPages,SIMULTANEOUS_PAGES);
 				pageCreated = SIMULTANEOUS_PAGES;
 			}
 
