@@ -192,7 +192,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			
 			splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
-			splatterDecorator.param_mappingFunction.index = SplatterDecorator.INDEX_MAPPING_LINEAR;
+			splatterDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
 			splatterDecorator.param_brushAngleOffsetRange.degrees =  0;
 			splatterDecorator.param_splatFactor.numberValue = 20;
 			splatterDecorator.param_minOffset.numberValue = 0;
@@ -249,7 +249,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					splatterDecorator.active=false;
 					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
-					splatterDecorator.param_mappingFunction.index = SplatterDecorator.INDEX_MAPPING_CIRCQUAD;
+					splatterDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCQUAD_IN;
 					splatterDecorator.param_splatFactor.numberValue = 0+precision * 10;
 					splatterDecorator.param_minOffset.numberValue = 0+precision * 10;
 					//splatterDecorator.param_offsetAngleRange.degrees = 360;
@@ -306,7 +306,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					splatterDecorator.active=true;
 					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
-					splatterDecorator.param_mappingFunction.index = SplatterDecorator.INDEX_MAPPING_CIRCQUAD;
+					splatterDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCULAR_IN;
 					splatterDecorator.param_splatFactor.numberValue = 0+precision * 20;
 					splatterDecorator.param_minOffset.numberValue = 0+precision * 20;
 					splatterDecorator.param_offsetAngleRange.degrees = 120;
@@ -388,7 +388,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
 					splatterDecorator.param_brushAngleOffsetRange.degrees =  0;
-					splatterDecorator.param_mappingFunction.index = SplatterDecorator.INDEX_MAPPING_LINEAR;
+					splatterDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
 					splatterDecorator.param_splatFactor.numberValue = precision * 40;
 					splatterDecorator.param_minOffset.numberValue = precision * 40;
 					splatterDecorator.param_offsetAngleRange.degrees = 360;
@@ -413,7 +413,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					//splatterDecorator.active=false;
 					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
-					splatterDecorator.param_mappingFunction.index = SplatterDecorator.INDEX_MAPPING_CIRCQUAD;
+					splatterDecorator.param_mappingFunction.index =  AbstractPointDecorator.INDEX_MAPPING_CIRCQUAD_IN;
 					splatterDecorator.param_splatFactor.numberValue = 0+precision * 10;
 					splatterDecorator.param_minOffset.numberValue = 0+precision * 10;
 					splatterDecorator.param_offsetAngleRange.degrees = 1;
@@ -465,7 +465,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					
 					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
-					splatterDecorator.param_mappingFunction.index = SplatterDecorator.INDEX_MAPPING_CIRCQUAD;
+					splatterDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCQUAD_IN;
 					splatterDecorator.param_splatFactor.numberValue = 0+precision * 1;
 					splatterDecorator.param_minOffset.numberValue = 0+precision * 1;
 					splatterDecorator.param_offsetAngleRange.degrees = 0;
