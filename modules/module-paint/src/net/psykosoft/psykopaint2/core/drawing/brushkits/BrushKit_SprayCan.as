@@ -460,6 +460,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_colorBlending.upperRangeValue = 0.9;
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.8;
 					
+					
 					splatterDecorator.active=false;
 					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_SIZE_INV;
 					splatterDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
