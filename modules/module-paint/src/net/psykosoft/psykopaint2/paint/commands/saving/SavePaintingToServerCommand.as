@@ -18,7 +18,8 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
-	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerSucceededSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
@@ -67,6 +68,9 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 
 		[Inject]
 		public var notifyAMFConnectionFailed:NotifyAMFConnectionFailed;
+
+		[Inject]
+		public var notifyPopUpRemovedSignal:NotifyPopUpRemovedSignal;
 
 		private var _paintingData : PaintingDataVO;
 		private var _compositeData : ByteArray;
@@ -119,8 +123,13 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 			else {
 				trace ("Publish successful");
 				requestHidePopUpSignal.dispatch();
+				notifyPopUpRemovedSignal.addOnce(onPublishPopUpRemoved);
 				notifySaveToServerSucceededSignal.dispatch();
 			}
+		}
+
+		private function onPublishPopUpRemoved():void {
+			requestShowPopUpSignal.dispatch(PopUpType.SHARE);
 		}
 
 		private function onPublishFail(data : Object) : void
