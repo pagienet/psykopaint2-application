@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 						</SizeDecorator>
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} value="0.5" path="pathengine.pointdecorator_1" showInUI="2" />
-							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffffff" />
+							<!--<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffffff" />-->
 						</ColorDecorator>
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_2" index={BumpDecorator.INDEX_MODE_FIXED} />

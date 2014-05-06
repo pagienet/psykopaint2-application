@@ -11,18 +11,19 @@ package net.psykosoft.psykopaint2.core.managers.social
 	import com.milkmangames.nativeextensions.events.GVTwitterEvent;
 	
 	import flash.display.BitmapData;
-	
-	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
+import flash.events.EventDispatcher;
+
+import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	
 
-	public class SocialSharingManager
+	public class SocialSharingManager extends EventDispatcher
 	{
 		
 		public static const FACEBOOK_APP_ID:String="503384473059408";
 		
 		
 		[Inject]
-		public var userConfigModel:UserConfigModel
+		public var userConfigModel:UserConfigModel;
 		
 		
 		public function SocialSharingManager()
@@ -204,7 +205,7 @@ package net.psykosoft.psykopaint2.core.managers.social
 		}	
 		
 		/** Check you're logged in to facebook before doing anything else. */
-		private function checkLoggedInFacebook():Boolean
+		public function checkLoggedInFacebook():Boolean
 		{
 			// make sure you're logged in first
 			if (!GoViral.goViral.isFacebookAuthenticated())
@@ -491,6 +492,8 @@ package net.psykosoft.psykopaint2.core.managers.social
 					trace("Facebook Ad ID Response:"+e.facebookMobileAdId);
 					break;
 			}
+
+			dispatchEvent(e);
 		}
 		
 		/** Handle Twitter Event */

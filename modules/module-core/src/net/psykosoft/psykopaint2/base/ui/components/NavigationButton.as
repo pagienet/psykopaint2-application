@@ -22,8 +22,9 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected var _iconBitmap:Bitmap;
 		protected var _selectable:Boolean;
 		protected var _selected:Boolean;
-		protected var _enabled:Boolean;
+		protected var _enabled:Boolean = true;
 		protected var _disableMouseInteractivityWhenSelected:Boolean = true;
+		private var _addedStageListener:Boolean;
 		
 		private static const enabledCtf:ColorTransform = new ColorTransform();
 		private static const disabledCtf:ColorTransform = new ColorTransform( -1, -1, -1, 1);
@@ -42,8 +43,9 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 //			trace( this, "dispose()" );
 
-			if( hasEventListener( MouseEvent.MOUSE_UP ) ) {
+			if( _addedStageListener ) {
 				_stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+				_addedStageListener = false;
 			}
 
 			removeEventListener( MouseEvent.MOUSE_DOWN, onThisMouseDown );
@@ -162,15 +164,17 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		protected function onStageMouseUp( event:MouseEvent ):void {
-
 			//if (_stage && _stage.hasEventListener( MouseEvent.MOUSE_UP ) )
 				//_stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			//scaleIcon( 1 );
+			_stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			_addedStageListener = false;
 		}
 
 		protected function onThisMouseDown( event:MouseEvent ):void {
-			if( enabled && _stage && !_stage.hasEventListener( MouseEvent.MOUSE_UP ) ) {
+			if( enabled && _stage && !_addedStageListener ) {
 				_stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+				_addedStageListener = true;
 			}
 			//scaleIcon( 0.98 );
 		}

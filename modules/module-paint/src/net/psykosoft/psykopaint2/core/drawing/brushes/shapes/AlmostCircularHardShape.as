@@ -13,13 +13,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		[Embed(source="assets/notentirelycircular1.png", mimeType="image/png")]
 		protected var SourceMap:Class;
 		
-		[Embed(source="assets/notentirelycircularheight9_8x8.png", mimeType="image/png")]
+		//[Embed(source="assets/notentirelycircularheight9_8x8.png", mimeType="image/png")]
+		[Embed(source="assets/notentirelycircular16_8x8.png", mimeType="image/png")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function AlmostCircularHardShape(context3D : Context3D)
 		{
 			super(context3D, "almost circular hard", SourceMap,SourceNormalSpecularMap,1024,8,8);
-			rotationRange = Math.PI;
+			rotationRange = Math.PI*2;
 		}
 	}
 }

@@ -18,7 +18,8 @@ package net.psykosoft.psykopaint2.core.views.base
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
-	import net.psykosoft.psykopaint2.core.views.components.input.PsykoInput;
+import net.psykosoft.psykopaint2.core.views.components.button.IconButtonAlt;
+import net.psykosoft.psykopaint2.core.views.components.input.PsykoInput;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.debug.DebugView;
 	import net.psykosoft.psykopaint2.core.views.debug.ErrorsView;
@@ -54,6 +55,12 @@ package net.psykosoft.psykopaint2.core.views.base
 			}
 
 			// TODO: UI tests, remove.
+//			var iconButton:IconButtonAlt = new IconButtonAlt();
+//			iconButton.labelText = "yo";
+//			iconButton.x = 250;
+//			iconButton.y = 250;
+//			addChild(iconButton);
+
 			/*var btn:SbSliderButton = new SbSliderButton();
 			btn.labelText = "myParam";
 			btn.x = 512;

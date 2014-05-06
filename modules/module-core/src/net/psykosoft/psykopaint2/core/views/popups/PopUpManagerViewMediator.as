@@ -6,7 +6,8 @@ package net.psykosoft.psykopaint2.core.views.popups
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportEndedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifyDataForPopUpSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
@@ -47,6 +48,9 @@ package net.psykosoft.psykopaint2.core.views.popups
 		[Inject]
 		public var requestHidePopUpSignal:RequestHidePopUpSignal;
 
+		[Inject]
+		public var notifyDataForPopUpSignal:NotifyDataForPopUpSignal;
+
 		override public function initialize():void {
 
 			registerView( view );
@@ -59,13 +63,14 @@ package net.psykosoft.psykopaint2.core.views.popups
 			notifyCanvasExportEndedSignal.add( onExportCanvasEnded );
 			requestShowPopUpSignal.add( onShowPopUpRequest );
 			requestHidePopUpSignal.add( onHidePopUpRequest );
+			notifyDataForPopUpSignal.add( onDataForPopUp );
 
 			// From view.
 			view.popUpShownSignal.add( onPopUpShown );
 			view.popUpHiddenSignal.add( onPopUpHidden );
 
 			// For working on pop ups. Keep commented...
-			//onShowPopUpRequest(PopUpType.SHARE);
+//			onShowPopUpRequest(PopUpType.SHARE);
 		}
 
 		// ---------------------------------------------------------------------
@@ -78,6 +83,10 @@ package net.psykosoft.psykopaint2.core.views.popups
 
 		private function onHidePopUpRequest():void {
 			hidePopUp();
+		}
+
+		private function onDataForPopUp(data:Array):void {
+			view.data = data;
 		}
 
 		// -----------------------

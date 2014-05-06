@@ -18,7 +18,9 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
-	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifyDataForPopUpSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerSucceededSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
@@ -68,9 +70,15 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 		[Inject]
 		public var notifyAMFConnectionFailed:NotifyAMFConnectionFailed;
 
+		[Inject]
+		public var notifyPopUpRemovedSignal:NotifyPopUpRemovedSignal;
+
+		[Inject]
+		public var notifyDataForPopUpSignal:NotifyDataForPopUpSignal;
+
 		private var _paintingData : PaintingDataVO;
 		private var _compositeData : ByteArray;
-
+		private var _bitmapData:BitmapData;
 
 
 		public function execute():void
@@ -96,9 +104,8 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 
 		private function grabComposite() : void
 		{
-			var bitmapData : BitmapData = canvasRenderer.renderToBitmapData();
-			_compositeData = bitmapData.encode(bitmapData.rect, new JPEGEncoderOptions(CoreSettings.PUBLISH_JPEG_QUALITY))
-			bitmapData.dispose();
+			_bitmapData = canvasRenderer.renderToBitmapData();
+			_compositeData = _bitmapData.encode(_bitmapData.rect, new JPEGEncoderOptions(CoreSettings.PUBLISH_JPEG_QUALITY))
 		}
 
 		private function publish() : void
@@ -109,18 +116,28 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 
 		private function onPublishComplete(data : Object) : void
 		{
-			cleanUp();
-
 			if (data["status_code"] != 1) {
 				showErrorPopUp();
 				trace ("Publish unsuccesful with error code: " + data["status_code"]);
+				cleanUp();
 				return;
 			}
 			else {
 				trace ("Publish successful");
 				requestHidePopUpSignal.dispatch();
+				notifyPopUpRemovedSignal.addOnce(onPublishPopUpRemoved);
 				notifySaveToServerSucceededSignal.dispatch();
 			}
+		}
+
+		private function onPublishPopUpRemoved():void {
+
+			requestShowPopUpSignal.dispatch(PopUpType.SHARE);
+
+			// Send bmd to whoever wants to listen.
+			notifyDataForPopUpSignal.dispatch([_bitmapData.clone()]);
+
+			cleanUp();
 		}
 
 		private function onPublishFail(data : Object) : void
@@ -139,6 +156,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 		private function cleanUp() : void
 		{
 			notifyAMFConnectionFailed.remove(onPublishFail);
+			_bitmapData.dispose();
 			_paintingData.dispose();
 			_compositeData.clear();
 			_paintingData = null;

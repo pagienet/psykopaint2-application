@@ -44,7 +44,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportEndedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifyDataForPopUpSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyFullUpgradePriceSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryZoomRatioSignal;
@@ -262,6 +263,7 @@ import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 			_injector.map( RequestResumeCPUUsageForUISignal ).asSingleton();
 			_injector.map( RequestChangeRenderRectSignal ).asSingleton();
 			_injector.map( RequestShowPopUpSignal ).asSingleton();
+			_injector.map( NotifyDataForPopUpSignal ).asSingleton();
 			_injector.map( RequestHidePopUpSignal ).asSingleton();
 			_injector.map( NotifyGalleryZoomRatioSignal ).asSingleton();
 			_injector.map( NotifyPaintingInfoFileReadSignal ).asSingleton();
