@@ -443,12 +443,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_maxOffset.numberValue = 0.01+precision * 200;
 					spawnDecorator.param_minOffset.numberValue = 0.01;
 					spawnDecorator.param_maxSize.numberValue = 0.20;
-					spawnDecorator.param_multiples.lowerRangeValue = 1;
+					spawnDecorator.param_multiples.lowerRangeValue = 10;
 					spawnDecorator.param_multiples.upperRangeValue = 50;
+					/*
 					spawnDecorator.param_bristleVariation.numberValue=0.5;
 					spawnDecorator.param_offsetAngleRange.lowerDegreesValue=-180;
 					spawnDecorator.param_offsetAngleRange.upperDegreesValue=180;
-					
+					*/
+					spawnDecorator.param_bristleVariation.numberValue=0;
+					spawnDecorator.param_offsetAngleRange.lowerDegreesValue=-180;
+					spawnDecorator.param_offsetAngleRange.upperDegreesValue=180;
+					spawnDecorator.param_sizeFactor.numberValue = 0.6;
+					spawnDecorator.param_sizeMappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_EXPONENTIAL_IN;
 					
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.4;
 					colorDecorator.param_pickRadius.upperRangeValue = 0.4;
