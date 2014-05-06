@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	{
 		public static const PARAMETER_B_COLORMATRIX:String = "Appy Color Matrix";
 		public static const PARAMETER_NR_SATURATION:String = "Saturation";
-		public static const PARAMETER_AR_HUE:String = "Hue";
+		public static const PARAMETER_NR_HUE:String = "Hue";
 		public static const PARAMETER_NR_BRIGHTNESS:String = "Brightness";
 		public static const PARAMETER_NR_COLOR_BLENDING:String = "Color Blending";
 		public static const PARAMETER_N_OPACITY:String = "Opacity";
@@ -98,9 +98,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			
 			param_applyColorMatrix  = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_COLORMATRIX,false);
 			
-			param_saturationAdjustment  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_SATURATION,1,1,-3, 3);
-			param_hueAdjustment  = new PsykoParameter( PsykoParameter.AngleRangeParameter,PARAMETER_AR_HUE,0,0,-180, 180);
-			param_brightnessAdjustment  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_BRIGHTNESS,0,0,-255, 255);
+			param_saturationAdjustment  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_SATURATION,0,0,-10, 10);
+			param_hueAdjustment  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_HUE,0,0,-1, 1);
+			param_brightnessAdjustment  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_BRIGHTNESS,0,0,-1, 1);
 			
 			param_colorBlending  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_COLOR_BLENDING,0.7,0.7,0, 1);
 			param_brushOpacity  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_OPACITY,0.9,0,1);
@@ -126,9 +126,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			if ( applyMatrix )
 			{
 				cm.reset();
-				cm.adjustSaturation( param_saturationAdjustment.randomValue );
-				cm.adjustHue( param_hueAdjustment.randomDegreeValue );
-				cm.adjustBrightness( param_brightnessAdjustment.randomValue );
+				cm.adjustSaturation( param_saturationAdjustment.randomValue + 1 );
+				cm.adjustHue( param_hueAdjustment.randomValue * 180);
+				cm.adjustBrightness( param_brightnessAdjustment.randomValue * 255 );
 			}
 			
 			var radiusMode:int = param_pickRadiusMode.index;

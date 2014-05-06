@@ -59,7 +59,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			super( );
 			
-			param_multiples       = new PsykoParameter( PsykoParameter.IntRangeParameter,PARAMETER_IR_MULTIPLES,1,4,1,16);
+			param_multiples       = new PsykoParameter( PsykoParameter.IntRangeParameter,PARAMETER_IR_MULTIPLES,1,4,1,50);
 			param_minOffset       = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MINIMUM_OFFSET,0,0,100);
 			param_maxOffset       = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_OFFSET,16,0,100);
 			param_offsetMode      = new PsykoParameter( PsykoParameter.StringListParameter, PARAMETER_SL_OFFSET_MODE,2,["Fixed","Random","Speed","Speed Inverse","Pressure/Speed","Size","Size Inverse"]);
@@ -113,6 +113,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					case INDEX_MODE_RANDOM:
 						distance *= Math.random();
 					break;
+					case INDEX_MODE_SIZE:
+						distance *=  points[j].size/param_maxSize.numberValue;
+						break;
+					case INDEX_MODE_SIZE_INV:
+						distance /= points[j].size/param_maxSize.numberValue;
+						break;
 					case INDEX_MODE_SPEED:
 						distance *=  points[j].speed / ms;
 						break;
@@ -141,8 +147,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					p.y +=  Math.sin(offsetAngle) * radius; 
 					if ( sf != 0 )
 					{
-						applyArray[0] = 1 - Math.abs(i-sc_half) / sc_half;
-						point.size *=  1 - Math.min(1,sf * msf.apply( null, applyArray)) ; 
+						applyArray[0] = Math.abs(radius) / (distance*sc_half);
+						p.size *=  1 - Math.min(1,sf * msf.apply( null, applyArray)) ; 
 					}
 					result[c++] = p;
 				}
