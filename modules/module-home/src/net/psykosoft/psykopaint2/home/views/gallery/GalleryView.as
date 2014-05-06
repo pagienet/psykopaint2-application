@@ -479,13 +479,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		public function setActiveImage(galleryImageProxy:GalleryImageProxy):void
 		{
-			if (_activeImageProxy) {
-				if (!galleryImageProxy || _activeImageProxy.collectionType != galleryImageProxy.collectionType)
-					resetPaintings();
+			if (!_activeImageProxy || !galleryImageProxy || _activeImageProxy.collectionType != galleryImageProxy.collectionType)
+				resetPaintings();
 
-				if (!galleryImageProxy || _activeImageProxy.id != galleryImageProxy.id)
-					removeHighQualityMaterial();
-			}
+			if (_activeImageProxy && (!galleryImageProxy || _activeImageProxy.id != galleryImageProxy.id))
+				removeHighQualityMaterial();
 
 			// make sure to clone so we can load while the book is loading
 			_activeImageProxy = galleryImageProxy? galleryImageProxy.clone() : null;
