@@ -43,6 +43,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public var param_brushAngleRange:PsykoParameter;
 		public var param_bristleVariation:PsykoParameter;
 		public var param_maxSpeed:PsykoParameter;
+		/* LIMITING THE OVERALL SIZE OF THE SPREAD OF THE SPAWN  */
 		public var param_maxSize:PsykoParameter;
 		public var param_autorotate:PsykoParameter;
 		public var param_multiplesMode:PsykoParameter;
