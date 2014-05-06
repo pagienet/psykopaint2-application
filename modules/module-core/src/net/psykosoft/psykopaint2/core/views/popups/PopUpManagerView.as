@@ -54,6 +54,12 @@ package net.psykosoft.psykopaint2.core.views.popups
 			event.stopImmediatePropagation();
 		}
 
+		public function set data(data:Array):void {
+			if(_popUp) {
+				_popUp.data = data;
+			}
+		}
+
 		// -----------------------
 		// Show.
 		// -----------------------

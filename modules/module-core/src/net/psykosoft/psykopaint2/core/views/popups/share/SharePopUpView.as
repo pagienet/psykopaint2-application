@@ -4,6 +4,10 @@ package net.psykosoft.psykopaint2.core.views.popups.share
 import com.greensock.TweenLite;
 import com.greensock.easing.Strong;
 
+import flash.display.Bitmap;
+
+import flash.display.BitmapData;
+
 import flash.display.MovieClip;
 
 import flash.display.Sprite;
@@ -23,6 +27,8 @@ public class SharePopUpView extends PopUpViewBase
 	public var rightSide:Sprite;
 	public var facebookChk:CheckBox;
 	public var twitterChk:CheckBox;
+	public var paintingPlaceHolder:Sprite;
+	public var paintingMask:Sprite;
 
 	private var _rightButton:IconButtonAlt;
 
@@ -55,7 +61,21 @@ public class SharePopUpView extends PopUpViewBase
 		popUpWantsToCloseSignal.dispatch();
 	}
 
-	// -----------------------
+	override public function set data( data:Array ):void {
+
+		var bmd:BitmapData = data[0];
+//		trace("SharePopUpView - received bmd: " + bmd.width + "x" + bmd.height);
+
+		var bit:Bitmap = new Bitmap(bmd); // frame size: 296x221
+		bit.width = paintingMask.width;
+		bit.scaleY = bit.scaleX;
+		paintingPlaceHolder.x = paintingMask.x;
+		paintingPlaceHolder.y = paintingMask.y;
+
+		paintingPlaceHolder.addChild(bit);
+	}
+
+// -----------------------
 	// Side btn animations.
 	// -----------------------
 

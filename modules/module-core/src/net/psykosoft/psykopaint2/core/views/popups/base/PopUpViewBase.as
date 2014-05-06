@@ -61,5 +61,9 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 				_container = null;
 			}
 		}
+
+		public function set data( data:Array ):void {
+			// Override.
+		}
 	}
 }
