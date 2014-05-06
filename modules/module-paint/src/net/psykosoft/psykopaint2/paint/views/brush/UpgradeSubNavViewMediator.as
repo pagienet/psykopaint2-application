@@ -59,7 +59,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			super.initialize();
 			
 			notifyPurchaseStatusSignal.add( onPurchaseStatus );
-			view.upgradePrice = brushKitManager.fullUpgradePackage.localizedPrice;
+			if (  brushKitManager.fullUpgradePackage != null ) view.upgradePrice = brushKitManager.fullUpgradePackage.localizedPrice;
 		}
 		
 		override public function destroy():void
