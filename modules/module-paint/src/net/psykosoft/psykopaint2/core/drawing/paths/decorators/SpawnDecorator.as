@@ -23,6 +23,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PARAMETER_N_MAXIMUM_SPEED:String = "Maximum Speed";
 		public static const PARAMETER_N_MAXIMUM_SIZE:String = "Maximum Size";
 		public static const PARAMETER_SL_MULTIPLE_MODE:String = "Multiples Mode";
+		public static const PARAMETER_SL_SIZE_MAPPING:String = "Size Mapping";
+		public static const PARAMETER_N_SIZE_FACTOR:String = "Size Factor";
 		
 		static public const INDEX_MODE_FIXED:int = 0;
 		static public const INDEX_MODE_RANDOM:int = 1;
@@ -47,8 +49,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public var param_maxSize:PsykoParameter;
 		public var param_autorotate:PsykoParameter;
 		public var param_multiplesMode:PsykoParameter;
+		public var param_sizeFactor:PsykoParameter;
+		public var param_sizeMappingFunction:PsykoParameter;
 		
 		private var swapVector:Vector.<SamplePoint>;
+		private const _applyArray:Array = [0,0,1,1];
 		
 		public function SpawnDecorator()
 		{
@@ -66,6 +71,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			param_autorotate      = new PsykoParameter( PsykoParameter.BooleanParameter, PARAMETER_B_AUTOROTATE,1);
 			param_maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			param_maxSize   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SIZE,1,0,1);
+			
+			param_sizeFactor 	      = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SIZE_FACTOR,0,0,2);
+			param_sizeMappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_SIZE_MAPPING,1,mappingFunctionLabels);
 			
 			_parameters.push(  param_multiples,param_multiplesMode, param_minOffset, param_maxOffset, param_offsetMode, param_offsetAngleRange, param_brushAngleRange, param_bristleVariation,param_maxSpeed,param_autorotate,param_maxSize);
 			swapVector = new Vector.<SamplePoint>()
@@ -87,6 +95,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var bn:Number = param_bristleVariation.numberValue;
 			var bar_rng:Number = param_brushAngleRange.rangeValue;
 			var bar_lrng:Number = param_brushAngleRange.lowerRangeValue;
+			var sf:Number    = param_sizeFactor.numberValue;
+			var msf:Function  = mappingFunctions[param_sizeMappingFunction.index];
+			
+			var applyArray:Array = _applyArray;
 			
 			for ( var j:int = 0; j < count; j++ )
 			{
@@ -118,15 +130,20 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				}
 				
 				distance += param_minOffset.numberValue;
-				
+				var sc_half:Number = spawnCount*0.5;
 				for ( var i:int = 0; i < spawnCount; i++ )
 				{
 					var p:SamplePoint = points[j].getClone();
 					var offsetAngle:Number = ((ar ? p.angle + Math.PI * 0.5 : 0 ) + Math.random() * oar_rng + oar_lrng);
-					var radius:Number = (i-spawnCount/2) * distance + (Math.random()-Math.random()) * distance*0.5*bn;
+					var radius:Number = (i-sc_half) * distance + (Math.random()-Math.random()) * distance*0.5*bn;
 					p.angle +=  (Math.random() * bar_rng + bar_lrng);
 					p.x +=  Math.cos(offsetAngle) * radius; 
 					p.y +=  Math.sin(offsetAngle) * radius; 
+					if ( sf != 0 )
+					{
+						applyArray[0] = 1 - Math.abs(i-sc_half) / sc_half;
+						point.size *=  1 - Math.min(1,sf * msf.apply( null, applyArray)) ; 
+					}
 					result[c++] = p;
 				}
 				PathManager.recycleSamplePoint(points[j]);
