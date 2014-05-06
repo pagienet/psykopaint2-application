@@ -46,7 +46,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		
 		private function loadTexture():void{
 			
-			trace("SWAP LOADING TEXTURE");
 			var isframe:Boolean = (Math.random()>0.9);
 			isframe=false;
 			

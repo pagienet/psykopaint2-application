@@ -111,9 +111,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				var label : String = !loggedInUser.isLoggedIn() || (!painting.isFavorited && painting.userID != loggedInUser.userID)? "LOVE" : "UNLOVE";
 				var icon:String = (label=="UNLOVE") ? ButtonIconType.LOVED : ButtonIconType.LOVE;
 				view.relabelButtonWithId(GalleryPaintingSubNavView.ID_LOVE, label,icon);
+				view.setLoveCount(painting.numLikes);
 			}
-			else
+			else {
 				view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, false);
+				view.setLoveCount(0);
+			}
 		}
 
 		override protected function onButtonClicked(id : String) : void
