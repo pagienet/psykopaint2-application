@@ -451,6 +451,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_bristleVariation.numberValue=0;
 					spawnDecorator.param_offsetAngleRange.lowerDegreesValue=-180;
 					spawnDecorator.param_offsetAngleRange.upperDegreesValue=180;
+
 					
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.4;
 					colorDecorator.param_pickRadius.upperRangeValue = 0.4;
