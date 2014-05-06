@@ -29,6 +29,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
+	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
@@ -137,7 +138,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		[Inject]
 		public var notifyFullUpgradePriceSignal:NotifyFullUpgradePriceSignal;
 		
-		
+		[Inject]
+		public var purchaseManager:InAppPurchaseManager;
 	
 		private var _view : DisplayObject;
 		private var _active : Boolean;

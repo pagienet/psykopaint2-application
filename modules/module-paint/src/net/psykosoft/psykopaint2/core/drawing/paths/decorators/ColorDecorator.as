@@ -14,9 +14,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	
 	final public class ColorDecorator extends AbstractPointDecorator
 	{
-		//public static const PARAMETER_SL_COLOR_MODE:String = "Color Mode";
-		public static const PARAMETER_IL_COLOR_SWATCH:String = "Color Swatch";
-		public static const PARAMETER_C_COLOR:String = "Color";
 		public static const PARAMETER_B_COLORMATRIX:String = "Appy Color Matrix";
 		public static const PARAMETER_NR_SATURATION:String = "Saturation";
 		public static const PARAMETER_AR_HUE:String = "Hue";
@@ -33,20 +30,62 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const INDEX_MODE_PICK_COLOR:int = 0;
 		public static const INDEX_MODE_FIXED_COLOR:int = 1;
 		
-		public var param_saturationAdjustment:PsykoParameter;
-		public var param_hueAdjustment:PsykoParameter;
-		public var param_brightnessAdjustment:PsykoParameter;
-		public var param_presetColor:PsykoParameter;
-		public var param_colorBlending:PsykoParameter;
-		public var param_brushOpacity:PsykoParameter;
-		public var param_brushOpacityRange:PsykoParameter;
-		public var param_pickRadius:PsykoParameter;
-		public var param_pickRadiusMode:PsykoParameter;
-		public var param_maxSpeed:PsykoParameter;
+		// "Appy Color Matrix" - Boolean
+		// if set to true a color matrix will be applied to the sampled color values
+		// the matrix is defined by the following 3 parameters
 		public var param_applyColorMatrix:PsykoParameter;
+		
+		// "Saturation" - NumberRange
+		// the saturation is changed randomly within the given range
+		public var param_saturationAdjustment:PsykoParameter;
+		
+		// "Hue" - NumberRange
+		// the hue is changed randomly within the given range
+		public var param_hueAdjustment:PsykoParameter;
+		
+		// "Brightness" - NumberRange
+		// the brightness is changed randomly within the given range
+		public var param_brightnessAdjustment:PsykoParameter;
+		
+		//  "Color Blending" - NumberRange
+		// defines how much of the previously picked color is mixed with the incoming one
+		// if given a range the amount can vary randomly per point.
+		// a value of 0 will return just the new color, a value of 1 just the previous one
+		public var param_colorBlending:PsykoParameter;
+		
+		// "Opacity" - NumberValue
+		// sets the opacity of the point
+		public var param_brushOpacity:PsykoParameter;
+		
+		// "Opacity Range" - NumberValue
+		// sets a range in which the opacity of the point vcan vary randomly
+		// the range is between param_brushOpacity.numberValue - param_brushOpacityRange.numberValue and  param_brushOpacity.numberValue + param_brushOpacityRange.numberValue
+		// and gets limited to a range of 0..1
+		public var param_brushOpacityRange:PsykoParameter;
+		
+		// "Color Pick Radius" - NumberRange
+		// the distance range from the brush center that the 4 corner color pickers are located
+		// a bigger distance will result in more of a color gradient withing the brush quad
+		public var param_pickRadius:PsykoParameter;
+		
+		// "Pick Radius Mode" - StringList
+		// defines what controls the pickRadius:
+		// index = 0: the radius is random within the range
+		// index = 1: the radius is dependent on the drawing speed: the slower you draw the smaller the radius and thus the more precise the colors
+		public var param_pickRadiusMode:PsykoParameter;
+		
+		//"Maximum Speed" - NumberValue
+		// used only if the Pick Radius Mode is speed based and controls how speed is mapped to radius
+		public var param_maxSpeed:PsykoParameter;
+		
+		//"Random Pick Offset" - NumberValue
+		// if a value > 0 is used the color picker center will be randomly offset from the brush center
+		// and thus make the colors less precise
 		public var param_pickOffsetFactor:PsykoParameter;
+		
+		//"Color Smooth Factor"- NumberRange
+		/* DEFINE THE SAMPE SIZE : the area from which the color average is picked. If 0 means no blur/average */
 		public var param_smoothFactor:PsykoParameter;
-		public var param_color:PsykoParameter;
 		
 		private var cm:ColorMatrix;
 		private const lastRGBA:Vector.<Number> = new Vector.<Number>(16,true);
@@ -56,7 +95,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			super();
 			//colorMode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_COLOR_MODE,0,["Pick Color","Fixed Color"] );
-			param_presetColor = new PsykoParameter( PsykoParameter.IntListParameter,PARAMETER_IL_COLOR_SWATCH,0,[0x000000,0xffffff,0x808080,0xc00000]);
 			
 			param_applyColorMatrix  = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_COLORMATRIX,false);
 			
@@ -73,11 +111,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			param_pickOffsetFactor  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_PICK_RANDOM_OFFSET_FACTOR,0,0,200);
 			
 			param_smoothFactor  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_SMOOTH_FACTOR,1,1,0,1);
-			param_color  = new PsykoParameter( PsykoParameter.ColorParameter,PARAMETER_C_COLOR,0x000000);
 			param_maxSpeed  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			
 			
-			_parameters.push(param_presetColor, param_applyColorMatrix,param_saturationAdjustment, param_hueAdjustment, param_brightnessAdjustment,param_colorBlending,param_brushOpacity,param_brushOpacityRange,param_pickRadius,param_pickRadiusMode,param_smoothFactor,param_color,param_maxSpeed,param_pickOffsetFactor);
+			_parameters.push(param_applyColorMatrix,param_saturationAdjustment, param_hueAdjustment, param_brightnessAdjustment,param_colorBlending,param_brushOpacity,param_brushOpacityRange,param_pickRadius,param_pickRadiusMode,param_smoothFactor,param_maxSpeed,param_pickOffsetFactor);
 			cm = new ColorMatrix();
 		}
 		
@@ -101,17 +138,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var pof:Number = param_pickOffsetFactor.numberValue;
 			var bo:Number = Quad.easeIn(param_brushOpacity.numberValue,0,1,1);
 			var bor:Number = param_brushOpacityRange.numberValue;
-			
-			//var mode:int = colorMode.index;
-			//if ( mode == 1 ) 
-			//{
-			var c:uint = param_color.colorValue;
-			var r:Number = (((c >>> 16) & 0xff) / 255);
-			var g:Number = (((c >>> 8) & 0xff) / 255);
-			var b:Number = ((c & 0xff) / 255);
-				
-			//}
-			
 			
 			var cb:PathManagerCallbackInfo = manager.callbacks;
 			for ( var i:int = 0; i < points.length; i++ )

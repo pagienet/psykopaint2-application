@@ -356,7 +356,6 @@ package net.psykosoft.psykopaint2.home.views.book
 
 			var firstPageIndex:int = Math.floor(_doublePageIndex) * 2 % PAGES_CREATED;
 
-			trace("PAGES_CREATED = "+ PAGES_CREATED);
 			//	trace("updatePages _doublePageIndex = "+_doublePageIndex+"  firstPageIndex="+firstPageIndex);
 			for (var p:int = 0; p < _pages.length; p++) {
 
