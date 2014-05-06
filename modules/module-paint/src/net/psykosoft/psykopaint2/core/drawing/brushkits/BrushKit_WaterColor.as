@@ -45,12 +45,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				</brush>
 */
 
-		private static const STYLE_BASIC:int = 0;
-		private static const STYLE_WET:int = 1;
-		private static const STYLE_DRY_DROPS:int = 2;
-		private static const STYLE_WET_DROPS:int = 3;
-		private static const STYLE_DAMAGE:int = 4;
-		private static const STYLE_DAMAGE_DROPS:int = 5;
+		private static const STYLE_WET:int = 0;
+		private static const STYLE_MEDIUM:int = 1;
+		private static const STYLE_BASIC:int = 2;
+		private static const STYLE_DRY_DROPS:int = 3;
+		private static const STYLE_WET_DROPS:int = 4;
+		private static const STYLE_DAMAGE:int = 5;
+		private static const STYLE_DAMAGE_DROPS:int = 6;
 
 		private var param_style:PsykoParameter;
 		private var param_precision:PsykoParameter;
@@ -84,24 +85,24 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 1.0;
 			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.006;
 			WaterColorBrush(brushEngine).param_pigmentGranulation.numberValue = .5;
-			brushEngine.param_shapes.stringList = Vector.<String>(["basic","wet"]);
+			brushEngine.param_shapes.stringList = Vector.<String>(["wet2","wet","almost circular hard"]);
 
 			pathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
 
 			_parameterMapping = new PsykoParameterMapping();
 
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Simple","Wet", "Circles", "Blobs", "Add Water", "Drops"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Wet","Medium","Dry", "Drops", "Blobs", "Add Water"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
 			
-			param_precision = new PsykoParameter( PsykoParameter.NumberParameter,"Precision",0.77,0,1);
+			param_precision = new PsykoParameter( PsykoParameter.NumberParameter,"Precision",0.5,0,1);
 			param_precision.showInUI = 1;
 			param_precision.addEventListener( Event.CHANGE, onPrecisionChanged );
 			_parameterMapping.addParameter(param_precision);
 			
-			param_intensity = new PsykoParameter( PsykoParameter.NumberParameter,"Intensity",0.2,0,1);
+			param_intensity = new PsykoParameter( PsykoParameter.NumberParameter,"Intensity",0.25,0,1);
 			param_intensity.showInUI = 2;
 			param_intensity.addEventListener( Event.CHANGE, onIntensityChanged );
 			_parameterMapping.addParameter(param_intensity);
@@ -134,9 +135,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function onStyleChanged(event:Event):void
 		{
+			//brushEngine.param_shapes.index = 0;
+			
+			
 			switch (param_style.index) {
 				case STYLE_BASIC:
 					setValuesForDryBrush();
+					setValuesForRibbon();
+					setValuesForColor();
+					break;
+				case STYLE_MEDIUM:
+					setValuesForWetBrush();
 					setValuesForRibbon();
 					setValuesForColor();
 					break;
@@ -173,12 +182,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 		private function setValuesForColor():void
 		{
-			WaterColorBrush(brushEngine).param_paintMode.value = 0;
+			WaterColorBrush(brushEngine).param_paintMode.value = 0.1;
 		}
 
 		private function setValuesForDamage():void
 		{
-			WaterColorBrush(brushEngine).param_paintMode.value = 1;
+			WaterColorBrush(brushEngine).param_paintMode.value = 9;
 		}
 
 		private function setValuesForDrops():void
@@ -201,20 +210,42 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 		private function setValuesForDryBrush():void
 		{
-			brushEngine.param_shapes.index = 0;
+			brushEngine.param_shapes.index = 2;
+			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .1;
+			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .1;
+			WaterColorBrush(brushEngine).param_glossiness.numberValue = 0.5;
+			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 1.0;
+			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.010;
+			WaterColorBrush(brushEngine).param_pigmentGranulation.numberValue = .9;
+		}
+		
+		
+		private function setValuesForMediumBrush():void
+		{
+			brushEngine.param_shapes.index = 1;
+			
 			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .2;
 			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .1;
-			WaterColorBrush(brushEngine).param_glossiness.numberValue = 0.2;
+			WaterColorBrush(brushEngine).param_glossiness.numberValue = 0.4;
+			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 1.0;
+			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.006;
+			WaterColorBrush(brushEngine).param_pigmentGranulation.numberValue = .5;
 		}
 
 		private function setValuesForWetBrush():void
 		{
-			brushEngine.param_shapes.index = 1;
+			brushEngine.param_shapes.index = 0;
 
-			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .2;
+			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .08;
 			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .1;
-			WaterColorBrush(brushEngine).param_glossiness.numberValue = 0.8;
+			WaterColorBrush(brushEngine).param_glossiness.numberValue = 0.2;
+			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 1.0;
+			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.013;
+			WaterColorBrush(brushEngine).param_pigmentGranulation.numberValue = .3;
 		}
+		
+		
+		
 
 		protected function onPrecisionChanged(event:Event):void
 		{

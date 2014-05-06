@@ -490,8 +490,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
 					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
-					sizeDecorator.param_mappingFactor.numberValue = 0.04+precision * 0.1;
-					sizeDecorator.param_mappingRange.numberValue = 0.03+precision * 0.09;
+					sizeDecorator.param_mappingFactor.numberValue = 0.04+precision * 0.3;
+					sizeDecorator.param_mappingRange.numberValue = 0.03+precision * 0.27;
 					
 					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_SIZE_INV;
 					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SPEED_INV;
@@ -526,10 +526,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
 					bumpDecorator.param_bumpInfluence.numberValue = 0.9;
-					bumpDecorator.param_bumpiness.numberValue = 0.45 ;
-					bumpDecorator.param_bumpinessRange.numberValue = 0.3 ;
+					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
+					bumpDecorator.param_bumpinessRange.numberValue = 0.20 ;
 					bumpDecorator.param_glossiness.numberValue = 0.9  ;
 					bumpDecorator.param_shininess.numberValue = 0.9  ;
+					bumpDecorator.param_noBumpProbability.numberValue=0.5;
+
 					
 					break;
 				/*
