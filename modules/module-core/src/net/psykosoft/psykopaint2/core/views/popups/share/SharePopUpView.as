@@ -31,8 +31,10 @@ public class SharePopUpView extends PopUpViewBase
 	public var paintingMask:Sprite;
 
 	private var _rightButton:IconButtonAlt;
+	private var _bmd:BitmapData;
 
 	public var popUpWantsToCloseSignal:Signal = new Signal();
+	public var popUpWantsToShareSignal:Signal = new Signal();
 
 	public function SharePopUpView() {
 		super();
@@ -46,6 +48,7 @@ public class SharePopUpView extends PopUpViewBase
 	}
 
 	private function onRightBtnClick( event:MouseEvent ):void {
+		popUpWantsToShareSignal.dispatch(_bmd, facebookChk.selected, twitterChk.selected);
 		popUpWantsToCloseSignal.dispatch();
 	}
 
@@ -53,6 +56,8 @@ public class SharePopUpView extends PopUpViewBase
 
 		_rightButton.removeEventListener( MouseEvent.CLICK, onRightBtnClick );
 		_rightButton.dispose();
+
+		if(_bmd) _bmd.dispose();
 
 		super.onDisabled();
 	}
@@ -63,10 +68,10 @@ public class SharePopUpView extends PopUpViewBase
 
 	override public function set data( data:Array ):void {
 
-		var bmd:BitmapData = data[0];
+		_bmd = data[0];
 //		trace("SharePopUpView - received bmd: " + bmd.width + "x" + bmd.height);
 
-		var bit:Bitmap = new Bitmap(bmd); // frame size: 296x221
+		var bit:Bitmap = new Bitmap(_bmd); // frame size: 296x221
 		bit.width = paintingMask.width;
 		bit.scaleY = bit.scaleX;
 		paintingPlaceHolder.x = paintingMask.x;
