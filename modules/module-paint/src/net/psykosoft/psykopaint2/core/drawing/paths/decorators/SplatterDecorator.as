@@ -51,8 +51,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const INDEX_MAPPING_EXPONENTIAL:int = 9;
 		
 		public var param_minOffset:PsykoParameter;
+		/* @ splatFactor: maximum offset based on speed */
 		public var param_splatFactor:PsykoParameter;
 		public var param_sizeFactor:PsykoParameter;
+		/* @ offsetAngleRange: random angle range around perpendicular angle*/
 		public var param_offsetAngleRange:PsykoParameter;
 		public var param_mappingMode:PsykoParameter;
 		public var param_mappingFunction:PsykoParameter;

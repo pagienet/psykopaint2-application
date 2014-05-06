@@ -45,6 +45,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public var param_maxSpeed:PsykoParameter;
 		public var param_applyColorMatrix:PsykoParameter;
 		public var param_pickOffsetFactor:PsykoParameter;
+		
+		/* DEFINE THE SAMPE SIZE : the area from which the color average is picked. If 0 means no blur/average */
 		public var param_smoothFactor:PsykoParameter;
 		public var param_color:PsykoParameter;
 		
