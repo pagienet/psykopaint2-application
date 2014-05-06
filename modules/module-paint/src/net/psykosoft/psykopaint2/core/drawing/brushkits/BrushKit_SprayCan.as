@@ -459,7 +459,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					splatterDecorator.active=false;
 					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_SIZE_INV;
-					splatterDecorator.param_mappingFunction.index = SplatterDecorator.INDEX_MAPPING_LINEAR;
+					splatterDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
 					splatterDecorator.param_splatFactor.numberValue = 20;
 					splatterDecorator.param_minOffset.numberValue = 0;
 					splatterDecorator.param_offsetAngleRange.degrees = 360;
