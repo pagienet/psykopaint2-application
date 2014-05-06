@@ -140,7 +140,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Spray","sponge","Digital","Halo","Freckles","Splatter"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Spray","sponge","Digital","Halo","BloodSplat","Splatter"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -192,6 +192,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			splatterDecorator.active = true;
 			callbackDecorator.active = false;
 			
+			
+			
 			//DEFAULTS			
 			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
 			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCQUAD_IN;
@@ -226,6 +228,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			spawnDecorator.param_maxOffset.numberValue = 16;
 			spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -(120 + precision * 60);
 			spawnDecorator.param_offsetAngleRange.upperDegreesValue = 120 + precision * 60;
+			spawnDecorator.param_autorotate.booleanValue = false;
 			
 			gridDecorator.param_stepX.numberValue = 0;
 			gridDecorator.param_stepY.numberValue = 0;
@@ -435,20 +438,19 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
 					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
-					sizeDecorator.param_mappingFactor.numberValue = 0.10;
+					sizeDecorator.param_mappingFactor.numberValue = 0.1;
 					sizeDecorator.param_mappingRange.numberValue = 0.09;
 					
-					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_RANDOM;
-					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SIZE_INV;
-					spawnDecorator.param_maxOffset.numberValue = 0.01+precision * 200;
+					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_SIZE_INV;
+					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SPEED_INV;
+					spawnDecorator.param_maxOffset.numberValue = 0.01+precision * 20;
 					spawnDecorator.param_minOffset.numberValue = 0.01;
-					spawnDecorator.param_maxSize.numberValue = 0.20;
-					spawnDecorator.param_multiples.lowerRangeValue = 1;
-					spawnDecorator.param_multiples.upperRangeValue = 50;
-					spawnDecorator.param_bristleVariation.numberValue=0.5;
+					spawnDecorator.param_maxSize.numberValue = 0.2;
+					spawnDecorator.param_multiples.lowerRangeValue = 2;
+					spawnDecorator.param_multiples.upperRangeValue = 10;
+					spawnDecorator.param_bristleVariation.numberValue=0;
 					spawnDecorator.param_offsetAngleRange.lowerDegreesValue=-180;
 					spawnDecorator.param_offsetAngleRange.upperDegreesValue=180;
-					
 					
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.4;
 					colorDecorator.param_pickRadius.upperRangeValue = 0.4;
@@ -484,13 +486,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					sizeDecorator.param_mappingFactor.numberValue = 0.4+precision * 0.2;
 					sizeDecorator.param_mappingRange.numberValue = 0.1+precision * 0.05;
 					
-					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_FIXED;
+					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_SIZE_INV;
 					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SPEED_INV;
 					spawnDecorator.param_maxOffset.numberValue = 0.1+precision * 50;
 					spawnDecorator.param_minOffset.numberValue = 0.1+precision * 10;
 					spawnDecorator.param_maxSize.numberValue = 50;
 					spawnDecorator.param_multiples.lowerRangeValue = 1+precision*4;
 					spawnDecorator.param_multiples.upperRangeValue = 4+precision*8;
+					spawnDecorator.param_sizeFactor.numberValue=1;
 					
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;

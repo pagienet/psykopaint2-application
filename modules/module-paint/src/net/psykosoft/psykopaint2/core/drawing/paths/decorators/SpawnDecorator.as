@@ -113,6 +113,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					case INDEX_MODE_RANDOM:
 						distance *= Math.random();
 					break;
+					case INDEX_MODE_SIZE:
+						distance *=  points[j].size/param_maxSize.numberValue;
+						break;
+					case INDEX_MODE_SIZE_INV:
+						distance /= points[j].size/param_maxSize.numberValue;
+						break;
 					case INDEX_MODE_SPEED:
 						distance *=  points[j].speed / ms;
 						break;
