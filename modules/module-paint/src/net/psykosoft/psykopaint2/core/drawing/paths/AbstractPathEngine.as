@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_sampledPoints = new Vector.<SamplePoint>();
 			nextIndex = 0;
 			_minSamplesPerStep = new PsykoParameter( PsykoParameter.IntParameter,PARAMETER_MIN_SAMPLES,1,1,10);
-			_outputStepSize = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_OUTPUT_STEP,2,0.05,200);
+			_outputStepSize = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_OUTPUT_STEP,2,0.05,2000);
 			_sendTaps = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_SEND_TAPS,false);
 			_speedSmoothing = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_SPEED_SMOOTHING,0.9,0,1);
 			_parameters = new Vector.<PsykoParameter>();

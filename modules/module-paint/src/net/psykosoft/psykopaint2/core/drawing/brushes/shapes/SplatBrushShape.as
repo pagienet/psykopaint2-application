@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		public function SplatBrushShape(context3D : Context3D)
 		{
 			super(context3D, "splat", SourceImage, SourceNormalSpecularMap, 512, 2, 3 );
-			_rotationRange = 0.05;
+			_rotationRange = Math.PI*2;
 		}
 
 	}

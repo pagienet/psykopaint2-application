@@ -126,7 +126,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpiness.numberValue = 0;
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","line","splotch","paint1"]);
+			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","line","splat","paint1"]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -175,6 +175,21 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function onStyleChanged(event:Event):void
 		{
+			//HAVE TO SET THE OFFSET BEFORE ASSIGNING NEW SHAPE
+			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
+			switch ( param_style.index )
+			{
+				
+				case STYLE_VAN_GOGH:
+					break;
+				
+				case STYLE_PISSARO:
+					brushEngine.param_quadOffsetRatio.numberValue = 0;
+					break;
+				default:
+					break;
+					
+			}
 			
 			brushEngine.param_shapes.index = param_style.index;			
 			onPrecisionChanged(null);
@@ -187,13 +202,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			callbackDecorator.active=false;
 			splatterDecorator.active=true;
+			spawnDecorator.active=true;
 			
 			//BRUSH ENGINE
 			brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
 			brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 4;
 			brushEngine.pathManager.pathEngine.sendTaps = false;
 			brushEngine.textureScaleFactor = 1;
-			brushEngine.param_quadOffsetRatio.numberValue = 0;
+			
 			
 
 			
@@ -238,6 +254,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			colorDecorator.param_pickRadius.lowerRangeValue = 0.25;
 			colorDecorator.param_pickRadius.upperRangeValue = 0.33;
 			colorDecorator.param_smoothFactor.lowerRangeValue = 0.8;
+			colorDecorator.param_applyColorMatrix.booleanValue=false;
 			
 			//SPLATTER
 			splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_SPEED;
@@ -253,9 +270,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				
 				case STYLE_VAN_GOGH:
 					
-					trace("van Gogh");
-					brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-					
+					trace("van Gogh");					
 				
 					callbackDecorator.active = false;
 					forceRotationAngle = 0;
@@ -268,6 +283,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					bumpDecorator.param_glossiness.numberValue = 0.5 ;
 					bumpDecorator.param_shininess.numberValue = 0.3;
+					
+					colorDecorator.param_applyColorMatrix.booleanValue=false;
 					
 					break;
 				/*case STYLE_PAINTSTROKES_FIREWORKS:
@@ -305,9 +322,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				case STYLE_PISSARO:
 					trace("STYLE_PISSARO");
 					brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
-					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 12000;
-					//brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-					//brushEngine.textureScaleFactor = 0.4;
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 1000;
 					
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
 					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCULAR_IN;
@@ -337,9 +352,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_pickRadius.upperRangeValue = 0.01;
 					colorDecorator.param_colorBlending.upperRangeValue = 0.1;
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.04;
-					colorDecorator.param_saturationAdjustment.lowerRangeValue = 1;
-					colorDecorator.param_saturationAdjustment.upperRangeValue = 10;
-					colorDecorator.param_brightnessAdjustment.lowerRangeValue = 1;
+					colorDecorator.param_saturationAdjustment.lowerRangeValue = 0;
+					colorDecorator.param_saturationAdjustment.upperRangeValue = 5;
+					colorDecorator.param_brightnessAdjustment.lowerRangeValue = 0;
 					colorDecorator.param_brightnessAdjustment.upperRangeValue= 2;
 					//colorDecorator.param_brushOpacity.numberValue = 0.8;
 					//colorDecorator.param_brushOpacityRange.numberValue = 0.15;
@@ -347,6 +362,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_brushOpacityRange.numberValue = 0.05;
 					colorDecorator.param_colorBlending.upperRangeValue = 1;
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.98;
+					colorDecorator.param_applyColorMatrix.booleanValue=true;
 					
 					spawnDecorator.active=false;
 					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_RANDOM;
@@ -356,8 +372,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_minOffset.numberValue =  0;
 					spawnDecorator.param_maxOffset.numberValue =  0+precision * 50;
 					spawnDecorator.param_maxOffset.numberValue =  0;
-					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -90;
-					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 90;
+					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -3;
+					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 3;
 					//spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -2;
 					//spawnDecorator.param_offsetAngleRange.upperDegreesValue = 2;
 					spawnDecorator.param_bristleVariation.numberValue = 0;
@@ -366,7 +382,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					break;
 				
 				case STYLE_MANET:
-					brushEngine.param_quadOffsetRatio.numberValue = 0.4;
 					brushEngine.param_curvatureSizeInfluence.numberValue = 1;
 					brushEngine.textureScaleFactor = 1;
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 8;
@@ -409,10 +424,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					//spawnDecorator.param_offsetAngleRange.upperDegreesValue = 120 + precision * 60;
 					spawnDecorator.param_maxSize.numberValue = 0.05 + precision * 0.36;
 					spawnDecorator.param_maxOffset.numberValue = 16 + precision * 40;
-					
-					
-					
-					
 					
 					
 					
@@ -463,7 +474,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					//splatterDecorator.param_sizeFactor.numberValue = intensity*4;
 					
 					
-					//brushEngine.param_quadOffsetRatio.numberValue = 0.4;
 					//brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + intensity * 3;
 					
 					//sizeDecorator.param_mappingFactor.numberValue = 0.05 + intensity * 0.25;
