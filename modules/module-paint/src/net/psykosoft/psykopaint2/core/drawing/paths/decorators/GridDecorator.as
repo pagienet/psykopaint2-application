@@ -58,7 +58,20 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				if ( sy > 0 ) 
 					p.y += (col * param_offsetCol.numberValue) % sy;
 				
-				if ( param_angleStep.degrees > 0 ) p.angle = p.angle - (p.angle  % param_angleStep.numberValue) + param_angleOffset.numberValue;
+				if ( param_angleStep.degrees > 0 ) 
+				{
+					var mod:Number = p.angle  % param_angleStep.numberValue;
+					if (mod < param_angleStep.numberValue * 0.5)
+					{
+						if (mod < -param_angleStep.numberValue*0.5)
+							p.angle +=  -param_angleStep.numberValue - mod;
+						else
+							p.angle -= mod;
+					} else
+						p.angle += param_angleStep.numberValue - mod;
+					
+					p.angle += param_angleOffset.numberValue;
+				}
 				if ( i > 0 )
 				{
 					if ( p.x == points[int(i-1)].x && p.y == points[int(i-1)].y )
@@ -67,6 +80,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 						i--;
 					}
 				}
+			
 			}
 			return points;
 		}
