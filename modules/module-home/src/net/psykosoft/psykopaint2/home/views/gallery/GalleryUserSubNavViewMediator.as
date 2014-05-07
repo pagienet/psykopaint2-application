@@ -1,5 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
+	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
@@ -19,6 +21,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private var _isFollowing : Boolean;
 		private var _userID : int = -1;
+		private var _lastVisitedGalleryType:uint;
+		private var _galleryTypeNavStateMap:Vector.<String> = new <String>[null, NavigationStateType.GALLERY_BROWSE_FOLLOWING, NavigationStateType.GALLERY_BROWSE_YOURS, NavigationStateType.GALLERY_BROWSE_MOST_RECENT, NavigationStateType.GALLERY_BROWSE_MOST_LOVED, null];
 
 		public function GalleryUserSubNavViewMediator()
 		{
@@ -47,13 +51,18 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function updateUI() : void
 		{
+			var activePainting : GalleryImageProxy = activePaintingModel.painting;
+
 			view.enableButtonWithId(GalleryUserSubNavView.ID_FOLLOW, false);
 
-			if (_userID != activePaintingModel.painting.userID) {
-				_userID = activePaintingModel.painting.userID;
+			if (_userID != activePainting.userID) {
+				_userID = activePainting.userID;
 				loggedInUser.getIsFollowingUser(_userID, onGetIsFollowingUserResult, onGetIsFollowingUserError);
 			}
 
+			if (activePainting.collectionType != GalleryType.NONE && activePainting.collectionType != GalleryType.USER) {
+				_lastVisitedGalleryType = activePainting.collectionType;
+			}
 		}
 
 		private function onGetIsFollowingUserResult(isFollowing : Boolean) : void
@@ -94,7 +103,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 					toggleFollowing();
 					break;
 				case GalleryUserSubNavView.ID_BACK:
-					goBack();
+					requestNavigationStateChange(_galleryTypeNavStateMap[_lastVisitedGalleryType]);
 					break;
 			}
 		}
@@ -115,11 +124,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function onToggleFollowingFailed(errorCode : uint, reason : String) : void
 		{
 			setFollowing(_isFollowing);
-		}
-
-		private function goBack() : void
-		{
-			requestNavigationStateChange(NavigationStateType.GALLERY_PAINTING);
 		}
 	}
 }
