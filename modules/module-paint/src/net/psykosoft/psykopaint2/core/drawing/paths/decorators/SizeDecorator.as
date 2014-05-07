@@ -25,11 +25,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const PARAMETER_B_INVERT_MAPPING:String = "Invert Mapping";
 		static public const PARAMETER_N_MAXIMUM_SPEED:String  = "Maximum Speed";
 		
-		static public const INDEX_MODE_FIXED:int = 0;
+		static public const INDEX_MODE_RANDOM:int = 0;
 		static public const INDEX_MODE_SPEED:int = 1;
-		static public const INDEX_MODE_PRESSURE_SPEED:int = 2;
-		static public const INDEX_MODE_MULTIPLY:int = 3;
-		static public const INDEX_MODE_ADD:int = 4;
+		static public const INDEX_MODE_SPEED_INV:int = 2;
+		static public const INDEX_MODE_PRESSURE_SPEED:int = 3;
+		static public const INDEX_MODE_MULTIPLY:int = 4;
+		static public const INDEX_MODE_ADD:int = 5;
 		
 		
 		
@@ -46,7 +47,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public function SizeDecorator()
 		{
 			super();
-			param_mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,INDEX_MODE_FIXED,["Fixed","Speed","Pressure/Speed","Multiply","Add"]);
+			param_mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,INDEX_MODE_RANDOM,["Fixed","Speed","Pressure/Speed","Multiply","Add"]);
 			param_mappingFactor   = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_FACTOR,0.5,0,1);
 			param_mappingRange   = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_RANGE,0.5,0,1);
 			
@@ -75,7 +76,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			for ( var i:int = 0; i < points.length; i++ )
 			{
 				var point:SamplePoint = points[i];
-				if ( mode == INDEX_MODE_FIXED)
+				if ( mode == INDEX_MODE_RANDOM)
 				{
 					applyArray[0] = Math.random();
 					point.size = mapping.apply( null, applyArray);
@@ -86,6 +87,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					applyArray[0] = Math.min(point.speed,ms) / ms;
 					point.size = mapping.apply( null, applyArray);
 					if ( inv ) point.size = 1 - point.size;
+					point.size = minFactor + point.size * (maxFactor - minFactor );
+				} else if ( mode == INDEX_MODE_SPEED_INV )
+				{
+					applyArray[0] = Math.min(point.speed,ms) / ms;
+					point.size = mapping.apply( null, applyArray);
+					point.size = 1 - point.size;
 					point.size = minFactor + point.size * (maxFactor - minFactor );
 				}  else if ( mode == INDEX_MODE_PRESSURE_SPEED )
 				{

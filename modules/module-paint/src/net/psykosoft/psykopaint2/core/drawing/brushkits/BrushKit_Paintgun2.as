@@ -63,7 +63,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
 			
 			sizeDecorator = new SizeDecorator();
-			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
+			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
 			sizeDecorator.param_mappingFactor.numberValue = 0.08;
 			sizeDecorator.param_mappingRange.numberValue = 0.001;
 			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;

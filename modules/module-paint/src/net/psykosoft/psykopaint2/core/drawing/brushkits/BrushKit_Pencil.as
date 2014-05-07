@@ -213,7 +213,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.25;
 					
 					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
-					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
 					//sizeDecorator.param_invertMapping.booleanValue = true;
 					sizeDecorator.param_mappingRange.numberValue = 0.01;
 					sizeDecorator.param_mappingFactor.numberValue = 0.04;
