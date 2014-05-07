@@ -139,8 +139,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				{
 					bmp = Math.random() < nbp ? 0 : param_mappingFactor.randomValue;
 				} 
-				
-				bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] = param_glossiness.numberValue;
+				//MATHIEU I ADDED THE "1-" TO MAKE A HIGHER NUMBER THE GLOSSIER... SINCE DAVID IS NOT CONVINVED IT's INVERTED
+				bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] = 1-param_glossiness.numberValue;
 				bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] = param_bumpiness.numberValue - param_bumpinessRange.numberValue + (  param_bumpinessRange.numberValue * 2 * bmp );
 				bumpFactors[2] = bumpFactors[6] = bumpFactors[10] = bumpFactors[14] = param_shininess.numberValue;
 				bumpFactors[3] = bumpFactors[7] = bumpFactors[11] = bumpFactors[15] = param_bumpInfluence.numberValue;
