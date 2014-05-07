@@ -94,16 +94,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				var point:SamplePoint = points[i];
 				var bumpFactors:Vector.<Number> = point.bumpFactors;
 				var bmp:Number = bumpFactors[1];
-				if ( mode == 0)
+				if ( mode == INDEX_MODE_FIXED)
 				{
 					bmp = param_mappingFactor.randomValue;
-				} else if ( mode == 1 )
+				} else if ( mode == INDEX_MODE_SPEED )
 				{
 					applyArray[0] = Math.min(point.speed,ms) / ms;
 					bmp = mapping.apply( null, applyArray);
 					if ( inv ) bmp = 1 -bmp;
 					bmp = minFactor + bmp * (maxFactor - minFactor );
-				}  else if ( mode == 2 )
+				}  else if ( mode == INDEX_MODE_PRESSURE )
 				{
 					if ( point.pressure > 0 )
 					{
@@ -114,7 +114,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					} else {
 						bmp = minFactor;
 					}
-				} else if ( mode == 3 )
+				} else if ( mode == INDEX_MODE_PRESSURE_SPEED )
 				{
 					if ( point.pressure > 0 )
 					{
@@ -126,16 +126,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					}
 					if ( inv ) bmp = 1 - bmp;
 					bmp = minFactor + bmp * (maxFactor - minFactor );
-				}  else if ( mode == 4 )
+				}  else if ( mode == INDEX_MODE_MULTIPLY )
 				{
 					bmp *= param_mappingFactor.randomValue;
-				} else if ( mode == 5 )
+				} else if ( mode == INDEX_MODE_ADD )
 				{
 					bmp += param_mappingFactor.randomValue;
-				}  else if ( mode == 6 )
+				}  else if ( mode == INDEX_MODE_RANDOM )
 				{
 					bmp = param_mappingFactor.randomValue;
-				} else if ( mode == 7 )
+				} else if ( mode == INDEX_MODE_RANDOM2 )
 				{
 					bmp = Math.random() < nbp ? 0 : param_mappingFactor.randomValue;
 				} 
