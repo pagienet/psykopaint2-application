@@ -9,11 +9,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
-	public class WetBrushShape extends AbstractBrushShape
+	public class WetBrushShape2 extends AbstractBrushShape
 	{
-		public function WetBrushShape(context3D : Context3D)
+		public function WetBrushShape2(context3D : Context3D)
 		{
-			super(context3D, "wet", 3.0);
+			super(context3D, "wet2", 3.0);
 		}
 
 		override protected function uploadBrushTexture(texture : Texture) : void
@@ -25,8 +25,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			shp.graphics.drawCircle(size * .5, size * .5, size * .5 / _scaleFactor);
 			shp.graphics.endFill();
 			bitmapData.draw(shp);
-			//var blur : BlurFilter = new BlurFilter(size * .25, size * .25, 3);
-			//bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(), blur);
+			var blur : BlurFilter = new BlurFilter(size * .25, size * .25, 3);
+			bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(), blur);
 			texture.uploadFromBitmapData(bitmapData);
 			bitmapData.dispose();
 		}

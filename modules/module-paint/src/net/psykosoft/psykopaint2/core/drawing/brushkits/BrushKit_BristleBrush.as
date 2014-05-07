@@ -426,7 +426,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				
 				default:
 
-					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
 					sizeDecorator.param_mappingRange.numberValue = 0.001;
 					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
 					
