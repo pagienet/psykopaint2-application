@@ -123,13 +123,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var applyMatrix:Boolean = param_applyColorMatrix.booleanValue;
 			var applyArray:Array = _applyArray;
 			
-			if ( applyMatrix )
-			{
-				cm.reset();
-				cm.adjustSaturation( param_saturationAdjustment.randomValue + 1 );
-				cm.adjustHue( param_hueAdjustment.randomValue * 180);
-				cm.adjustBrightness( param_brightnessAdjustment.randomValue * 255 );
-			}
+			
 			
 			var radiusMode:int = param_pickRadiusMode.index;
 			var minPickRadius:Number = param_pickRadius.lowerRangeValue;
@@ -171,8 +165,13 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					prgba[3] = prgba[7] = prgba[11] = prgba[15] = 1;
 				}
 					*/
-				//TODO: this could be skipped if there is no color adjustment:
-				if ( applyMatrix ) cm.applyMatrixToVector( prgba );
+				if ( applyMatrix ) {
+					
+					cm.adjustSaturation( param_saturationAdjustment.randomValue + 1 );
+					cm.adjustHue( param_hueAdjustment.randomValue * 180);
+					cm.adjustBrightness( param_brightnessAdjustment.randomValue * 255 );
+					cm.applyMatrixToVector( prgba );
+				}
 				
 				var lrgba:Vector.<Number> = lastRGBA;
 				
