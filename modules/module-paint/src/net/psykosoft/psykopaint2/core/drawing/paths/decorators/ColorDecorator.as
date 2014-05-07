@@ -29,6 +29,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PARAMETER_N_PICK_RANDOM_OFFSET_FACTOR:String  = "Random Pick Offset";
 		public static const PARAMETER_SL_HUE_RANDOMIZATION_MODE:String  = "Hue Randomization Mode";
 		
+		public static const HUE_MODE_RANDOM:int  = 0;
+		public static const HUE_MODE_COMPLIMENTARY:int  = 1;
+		public static const HUE_MODE_ANALOGUOUS:int  = 2;
+		public static const HUE_MODE_TRIAD:int  = 3;
+		public static const HUE_MODE_SPLIT_COMPLIMENTARY :int  = 4;
+		public static const HUE_MODE_SPLIT_RECTANGLE :int  = 5;
+		public static const HUE_MODE_SPLIT_SQUARE :int  = 6;
+
+		
+		
 		public static const INDEX_MODE_PICK_COLOR:int = 0;
 		public static const INDEX_MODE_FIXED_COLOR:int = 1;
 		
@@ -102,7 +112,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private const lastRGBA:Vector.<Number> = new Vector.<Number>(16,true);
 		private const _applyArray:Array = [];
 		
-		private const hueHarmonyAngles:Array = [[],[90],[-30,30],[-120,120],[-150,150],[-60,120,180],[60,-120,180],[90,-90,180]];
+		private const hueHarmonyAngles:Array = [[],[180],[-30,30],[-120,120],[-150,150],[-60,120,180],[60,-120,180],[90,-90,180]];
 			
 			
 		

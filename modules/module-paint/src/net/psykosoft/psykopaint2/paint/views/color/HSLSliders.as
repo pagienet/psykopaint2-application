@@ -38,9 +38,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var hslSliderHolder:Sprite;
 		
 		private var activeHSLSliderIndex:int;
-		private var HSLSliderPaddingLeft:Number = 16;
-		private var HSLSliderRange:Number = 239 - HSLSliderPaddingLeft;
-		private var HSLSliderOffset:int = - 14;
+		private var HSLSliderPaddingLeft:Number = 28;
+		private var HSLSliderRange:Number = 268 - HSLSliderPaddingLeft;
+		private var HSLSliderOffset:int = - 20;
 		private var saturationSliderValues:Array;
 		
 		private var _userPaintSettings:UserPaintSettingsModel;
@@ -149,15 +149,15 @@ package net.psykosoft.psykopaint2.paint.views.color
 			h.hue =0 ;
 			
 			var w:Number = 0;
-			var wd:Number = 100 / satLightnessMap.height; 
-			vd = 100 / 256; 
+			var wd:Number = 1 / satLightnessMap.height; 
+			vd = 1 / 256; 
 			for ( var y:int = 0; y < satLightnessMap.height; y++ )
 			{
 				v = 0;
-				h.value = 100 - w ;
+				h.value = (1 - (w*w))*100 ;
 				for ( var x:int = 0; x < 256; x++ )
 				{
-					h.saturation = v;
+					h.saturation = v*v*100;
 					satLightnessMap.setPixel(x,y,ColorConverter.HSVtoUINT(h));
 					v+=vd;
 				}
@@ -195,7 +195,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 		{
 			if ( hslSliderHolder.mouseX < 0 || hslSliderHolder.mouseX > 256 || hslSliderHolder.mouseY < 0) return;
 			activeHSLSliderIndex = hslSliderHolder.mouseY / 59;
-			if ( activeHSLSliderIndex > 2 || hslSliderHolder.mouseY % 59 > 41 ) return;
+			trace(activeHSLSliderIndex);
+			if ( activeHSLSliderIndex > 2 || (activeHSLSliderIndex== 0 && hslSliderHolder.mouseY % 59 > 41 )) return;
 			
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onHSLSliderMouseMove );
 			stage.addEventListener(MouseEvent.MOUSE_UP, onHSLSliderMouseUp );
@@ -211,7 +212,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			switch ( activeHSLSliderIndex )
 			{
 				case 0: //hue
-					hueHandle.x = hslSliderHolder.x  + HSLSliderPaddingLeft + sx * HSLSliderRange;
+					hueHandle.x = HSLSliderOffset + hslSliderHolder.x  + HSLSliderPaddingLeft + sx * HSLSliderRange;
 					_userPaintSettings.hue = sx * 359;
 					
 					colorMatrix.reset();
@@ -222,8 +223,16 @@ package net.psykosoft.psykopaint2.paint.views.color
 					break;
 				case 1:
 				case 2:
-					var c:uint = satLightnessMap.getPixel(satLightnessMapHolder.mouseX, satLightnessMapHolder.mouseY);
-					_userPaintSettings.setCurrentColor( colorMatrix.applyMatrix(c));
+					var c:uint = colorMatrix.applyMatrix(satLightnessMap.getPixel(
+						Math.min(Math.max(0,satLightnessMapHolder.mouseX),satLightnessMap.width-1), 
+						Math.min(Math.max(0,satLightnessMapHolder.mouseY),satLightnessMap.height-1)));
+					var hsv:HSV = ColorConverter.UINTtoHSV( c );
+					//hsv.hue = _userPaintSettings.hue;
+					if ( isNaN(_userPaintSettings.hue) ) _userPaintSettings.hue = 0;
+					_userPaintSettings.lightness = hsv.value;
+					_userPaintSettings.saturation = hsv.saturation;
+					_userPaintSettings.updateCurrentColorFromHSV();
+					//_userPaintSettings.setCurrentColor( colorMatrix.applyMatrix(c));
 					break;
 				
 				/*

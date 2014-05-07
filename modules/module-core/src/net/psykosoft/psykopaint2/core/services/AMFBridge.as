@@ -155,7 +155,9 @@ package net.psykosoft.psykopaint2.core.services
 
 		private function hashPassword(email : String, password : String) : String
 		{
-			return MD5.hash(email + MD5.hash(password));
+			var hashed:String = MD5.hash(email + MD5.hash(password));
+			trace("AMFBridge - hashed pass: " + hashed);
+			return hashed;
 		}
 
 		public function setProfileImage(sessionId:String, imageBytes:ByteArray, thumbnailBytes:ByteArray) : void
