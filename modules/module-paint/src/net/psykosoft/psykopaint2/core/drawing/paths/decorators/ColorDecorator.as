@@ -167,6 +167,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					*/
 				if ( applyMatrix ) {
 					
+					cm.reset();
 					cm.adjustSaturation( param_saturationAdjustment.randomValue + 1 );
 					cm.adjustHue( param_hueAdjustment.randomValue * 180);
 					cm.adjustBrightness( param_brightnessAdjustment.randomValue * 255 );
