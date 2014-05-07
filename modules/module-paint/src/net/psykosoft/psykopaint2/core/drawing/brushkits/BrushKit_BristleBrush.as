@@ -118,9 +118,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			//CREATE SPRAY CAN BRUSH ENGINE
 			brushEngine = new SprayCanBrush();
-			brushEngine.param_bumpiness.numberValue = 0;
-			brushEngine.param_bumpInfluence.numberValue = 0.8;
+			brushEngine.param_bumpiness.numberValue = 1;
+			brushEngine.param_bumpInfluence.numberValue =1;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
+			brushEngine.param_shininess.numberValue=1;
+			brushEngine.param_glossiness.numberValue=1;
 			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","line","splotch","paint1"]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
@@ -198,6 +200,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			callbackDecorator.active=false;
 			splatterDecorator.active=true;
 			spawnDecorator.active=true;
+			colorDecorator.active=true;
 			
 			//BRUSH ENGINE
 			brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
@@ -242,14 +245,23 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			bumpDecorator.param_noBumpProbability.numberValue = 0.6;
 			
 			//COLOR
-			colorDecorator.param_brushOpacity.numberValue = 1;
-			colorDecorator.param_brushOpacityRange.numberValue = 0;
+			colorDecorator.param_brushOpacity.numberValue = 0.98;
+			colorDecorator.param_brushOpacityRange.numberValue = 0.02;
 			colorDecorator.param_colorBlending.upperRangeValue = 1;
 			colorDecorator.param_colorBlending.lowerRangeValue = 0.95;
-			colorDecorator.param_pickRadius.lowerRangeValue = 0.25;
-			colorDecorator.param_pickRadius.upperRangeValue = 0.33;
+			colorDecorator.param_pickRadius.lowerRangeValue = 0.0;
+			colorDecorator.param_pickRadius.upperRangeValue = 0.53;
 			colorDecorator.param_smoothFactor.lowerRangeValue = 0.8;
+			colorDecorator.param_saturationAdjustment.lowerRangeValue = 0;
+			colorDecorator.param_saturationAdjustment.upperRangeValue = 0;
+			colorDecorator.param_hueAdjustment.lowerRangeValue = 0;
+			colorDecorator.param_hueAdjustment.upperRangeValue = 0;
+			colorDecorator.param_brightnessAdjustment.lowerRangeValue = 0;
+			colorDecorator.param_brightnessAdjustment.upperRangeValue= 0;		
 			colorDecorator.param_applyColorMatrix.booleanValue=false;
+			
+			//colorDecorator.param_applyColorMatrix.booleanValue=false;
+			
 			
 			//SPLATTER
 			splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_SPEED;
@@ -276,10 +288,30 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_maxSize.numberValue = 0.05 + precision * 0.36;
 					spawnDecorator.param_maxOffset.numberValue = 16 + precision * 40;
 					
-					bumpDecorator.param_glossiness.numberValue = 0.5 ;
-					bumpDecorator.param_shininess.numberValue = 0.3;
 					
-					colorDecorator.param_applyColorMatrix.booleanValue=false;
+					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
+					bumpDecorator.param_invertMapping.booleanValue = true;
+					bumpDecorator.param_bumpiness.numberValue = 0.16;
+					bumpDecorator.param_bumpinessRange.numberValue = 0.12;
+					bumpDecorator.param_bumpInfluence.numberValue = 0.2;
+					bumpDecorator.param_noBumpProbability.numberValue = 0.4;
+					bumpDecorator.param_glossiness.numberValue = 0.3;
+					bumpDecorator.param_shininess.numberValue = 0.35;
+					
+					colorDecorator.param_brushOpacity.numberValue = 0.98;
+					colorDecorator.param_brushOpacityRange.numberValue = 0.02;
+					colorDecorator.param_colorBlending.upperRangeValue = 1;
+					colorDecorator.param_colorBlending.lowerRangeValue = 0.95;
+					colorDecorator.param_pickRadius.lowerRangeValue = 0.0;
+					colorDecorator.param_pickRadius.upperRangeValue = 0.53;
+					colorDecorator.param_smoothFactor.lowerRangeValue = 0.8;
+					colorDecorator.param_saturationAdjustment.lowerRangeValue = -0.1;
+					colorDecorator.param_saturationAdjustment.upperRangeValue = 0.1;
+					colorDecorator.param_hueAdjustment.lowerRangeValue = -0.1;
+					colorDecorator.param_hueAdjustment.upperRangeValue = 0.1;
+					colorDecorator.param_brightnessAdjustment.lowerRangeValue = -0.1;
+					colorDecorator.param_brightnessAdjustment.upperRangeValue= 0.1;		
+					colorDecorator.param_applyColorMatrix.booleanValue=true;
 					
 					break;
 				/*case STYLE_PAINTSTROKES_FIREWORKS:
@@ -336,9 +368,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					splatterDecorator.param_sizeFactor.numberValue = 0.5+precision * 6;
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
-					bumpDecorator.param_bumpiness.numberValue = 0.3;
-					bumpDecorator.param_bumpinessRange.numberValue = 0.2;
-					bumpDecorator.param_bumpInfluence.numberValue = 0.12;
+					bumpDecorator.param_bumpiness.numberValue = 1;
+					bumpDecorator.param_bumpinessRange.numberValue = 0.0;
+					bumpDecorator.param_bumpInfluence.numberValue = 1;
 					bumpDecorator.param_noBumpProbability.numberValue = 0.6;
 					bumpDecorator.param_glossiness.numberValue = 0.35 ;
 					bumpDecorator.param_shininess.numberValue = 0.2;
@@ -394,12 +426,19 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
-					bumpDecorator.param_bumpiness.numberValue = 0.3;
-					bumpDecorator.param_bumpinessRange.numberValue = 0.2;
-					bumpDecorator.param_bumpInfluence.numberValue = 0.5;
+					bumpDecorator.param_bumpiness.numberValue = Math.random()*100;
+					bumpDecorator.param_bumpinessRange.numberValue = Math.random();
+					bumpDecorator.param_bumpInfluence.numberValue = Math.random()*100;
 					bumpDecorator.param_noBumpProbability.numberValue = 0.6;
-					bumpDecorator.param_glossiness.numberValue = 0.9 ;
-					bumpDecorator.param_shininess.numberValue = 0.4;
+					bumpDecorator.param_glossiness.numberValue = Math.random() ;
+					bumpDecorator.param_shininess.numberValue = Math.random();
+					trace("/////////////////////////////////////");
+					trace("bumpDecorator.param_bumpiness.numberValue",bumpDecorator.param_bumpiness.numberValue);
+					trace("bumpDecorator.param_bumpinessRange.numberValue",bumpDecorator.param_bumpinessRange.numberValue);
+					trace("bumpDecorator.param_bumpInfluence",	bumpDecorator.param_bumpInfluence.numberValue);
+					trace("bumpDecorator.param_noBumpProbability.numberValue",bumpDecorator.param_bumpiness.numberValue);
+					trace("bumpDecorator.param_glossiness.numberValue",bumpDecorator.param_glossiness.numberValue);
+					trace("bumpDecorator.param_shininess.numberValue",bumpDecorator.param_shininess.numberValue);
 					
 					
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.25;
