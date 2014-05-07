@@ -215,6 +215,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		private function onPopUpWantsToLogIn( email:String, password:String ):void {
+			trace("LoginPopUpViewMediator - onPopUpWantsToLogIn - email: >" + email + "<, password: >" + password + "<");
 			_loggingIn = true;
 			view.loginSubView.loginBtn.spin();
 			view.loginSubView.canRequestLogin = false;
