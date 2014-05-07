@@ -349,11 +349,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_colorBlending.upperRangeValue = 0.1;
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.04;
 					colorDecorator.param_saturationAdjustment.lowerRangeValue = 0;
-					colorDecorator.param_saturationAdjustment.upperRangeValue = 5;
-					colorDecorator.param_brightnessAdjustment.lowerRangeValue = 0;
-					colorDecorator.param_brightnessAdjustment.upperRangeValue= 2;
-					//colorDecorator.param_brushOpacity.numberValue = 0.8;
-					//colorDecorator.param_brushOpacityRange.numberValue = 0.15;
+					colorDecorator.param_saturationAdjustment.upperRangeValue = 1;
+					colorDecorator.param_brightnessAdjustment.lowerRangeValue = -0.2;
+					colorDecorator.param_brightnessAdjustment.upperRangeValue= 0.2;
 					colorDecorator.param_brushOpacity.numberValue = 0.95;
 					colorDecorator.param_brushOpacityRange.numberValue = 0.05;
 					colorDecorator.param_colorBlending.upperRangeValue = 1;
@@ -408,6 +406,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_pickRadius.upperRangeValue = 0.33;
 					colorDecorator.param_colorBlending.upperRangeValue = 1;
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.95;
+					colorDecorator.param_saturationAdjustment.lowerRangeValue = 0;
+					colorDecorator.param_saturationAdjustment.upperRangeValue = 1;
+					colorDecorator.param_brightnessAdjustment.lowerRangeValue = -0.2;
+					colorDecorator.param_brightnessAdjustment.upperRangeValue= 0.2;
+					colorDecorator.param_brushOpacity.numberValue = 0.95;
+					colorDecorator.param_brushOpacityRange.numberValue = 0.05;
+					colorDecorator.param_colorBlending.upperRangeValue = 1;
+					colorDecorator.param_colorBlending.lowerRangeValue = 0.98;
+					colorDecorator.param_applyColorMatrix.booleanValue=true;
 					
 					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SIZE_INV;
 					spawnDecorator.param_maxSize.numberValue = 1;
