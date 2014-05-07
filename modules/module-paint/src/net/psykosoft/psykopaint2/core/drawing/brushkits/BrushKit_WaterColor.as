@@ -119,7 +119,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			sizeDecorator = new SizeDecorator();
 			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_SPEED;
 			sizeDecorator.param_invertMapping.booleanValue = true;
-			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
+			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_EXPONENTIAL_OUT;
 			sizeDecorator.param_mappingFactor.numberValue = .2;
 			sizeDecorator.param_mappingRange.numberValue = .8;
 			
@@ -269,7 +269,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			for ( var i:int = points.length; --i > -1; )
 			{
 				var chance : Number = _minSplatterChance + points[i].speed * splatterRange / _splatterSpeedNorm;
-				trace (chance);
+				//trace (chance);
 				if ( Math.random() > chance )
 				{
 					PathManager.recycleSamplePoint( points.splice(i,1)[0] );
