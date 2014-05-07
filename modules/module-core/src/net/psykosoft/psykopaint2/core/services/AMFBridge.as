@@ -157,6 +157,9 @@ package net.psykosoft.psykopaint2.core.services
 		{
 			var hashed:String = MD5.hash(email + MD5.hash(password));
 			trace("AMFBridge - hashed pass: " + hashed);
+			// KEEP COMMENTED - temporarily overcoming the endianness problem
+			// to be able to login on the ipad.
+//			hashed = "b553c0f171522a15991225e6030695cc"; // Logs li@psykosoft.net in.
 			return hashed;
 		}
 
