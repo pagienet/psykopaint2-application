@@ -73,8 +73,24 @@ public class SharePopUpViewMediator extends MediatorBase
 	private function doShareFacebook():void {
 		if(_shareFacebook && _shareBmd) {
 			trace("sharing on facebook...");
+			socialSharingManager.addEventListener(GVFacebookEvent.FB_REQUEST_RESPONSE, onFaceBookRequestResponseEvent);
+			socialSharingManager.addEventListener(GVFacebookEvent.FB_REQUEST_FAILED, onFaceBookRequestFailedEvent);
 			socialSharingManager.postPhotoFacebook(_shareBmd);
 		}
+	}
+
+	private function onFaceBookRequestFailedEvent( event:GVFacebookEvent ):void {
+		trace("FB post failed.");
+		socialSharingManager.removeEventListener(GVFacebookEvent.FB_REQUEST_RESPONSE, onFaceBookRequestResponseEvent);
+		socialSharingManager.removeEventListener(GVFacebookEvent.FB_REQUEST_FAILED, onFaceBookRequestFailedEvent);
+		requestHidePopUpSignal.dispatch();
+	}
+
+	private function onFaceBookRequestResponseEvent( event:GVFacebookEvent ):void {
+		trace("FB post success.");
+		socialSharingManager.removeEventListener(GVFacebookEvent.FB_REQUEST_RESPONSE, onFaceBookRequestResponseEvent);
+		socialSharingManager.removeEventListener(GVFacebookEvent.FB_REQUEST_FAILED, onFaceBookRequestFailedEvent);
+		requestHidePopUpSignal.dispatch();
 	}
 
 	private function onFaceBookLoggedInEvent(event:GVFacebookEvent):void {
@@ -90,7 +106,7 @@ public class SharePopUpViewMediator extends MediatorBase
 	}
 
 	private function onPopUpWantsToClose():void {
-//		requestHidePopUpSignal.dispatch();
+		requestHidePopUpSignal.dispatch();
 	}
 }
 }

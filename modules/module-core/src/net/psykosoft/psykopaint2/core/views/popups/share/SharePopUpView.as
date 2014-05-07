@@ -49,7 +49,6 @@ public class SharePopUpView extends PopUpViewBase
 
 	private function onRightBtnClick( event:MouseEvent ):void {
 		popUpWantsToShareSignal.dispatch(_bmd, facebookChk.selected, twitterChk.selected);
-		popUpWantsToCloseSignal.dispatch();
 	}
 
 	override protected function onDisabled():void {
