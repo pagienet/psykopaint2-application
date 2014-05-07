@@ -55,7 +55,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 			view.enableButtonWithId(GalleryUserSubNavView.ID_FOLLOW, false);
 
-			if (_userID != activePainting.userID) {
+			if (loggedInUser.userID == activePainting.userID) {
+				setFollowing(false);
+				view.enableButtonWithId(GalleryUserSubNavView.ID_FOLLOW, false);
+			}
+			else if (_userID != activePainting.userID) {
 				_userID = activePainting.userID;
 				loggedInUser.getIsFollowingUser(_userID, onGetIsFollowingUserResult, onGetIsFollowingUserError);
 			}
