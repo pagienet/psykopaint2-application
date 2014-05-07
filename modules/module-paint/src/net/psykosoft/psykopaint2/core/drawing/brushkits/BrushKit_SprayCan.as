@@ -4,7 +4,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	
 	import flash.display3D.Context3DBlendFactor;
 	import flash.events.Event;
+	import flash.geom.Matrix3D;
+	import flash.geom.Vector3D;
 	
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SketchBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
@@ -22,7 +25,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
+	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
+	
+	import robotlegs.bender.framework.impl.ConfigManager;
 
 	public class BrushKit_SprayCan extends BrushKit
 	{
@@ -32,7 +38,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private static const STYLE_HALO_SPRAY:int = 3;
 		private static const STYLE_BLOODSPLAT:int = 4;
 		private static const STYLE_FRECKLES2:int = 5;
-		//private static const STYLE_ERASER:int = 6;
+		private static const STYLE_DROPPING:int = 6;
 		
 		
 		
@@ -49,6 +55,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var gridDecorator:GridDecorator;
 		private var callbackDecorator:CallbackDecorator;
 		private var eraserMode:Boolean;
+		private var _persistentPoints:Object;
 		
 		
 		public function BrushKit_SprayCan()
@@ -69,7 +76,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
 			brushEngine.param_curvatureSizeInfluence.numberValue = 0;
-			brushEngine.param_shapes.stringList = Vector.<String>(["noisy","almost circular rough","almost circular hard","splatspray","splatspray","almost circular hard"]);
+			brushEngine.param_shapes.stringList = Vector.<String>(["noisy","almost circular rough","almost circular hard","splatspray","splatspray","almost circular hard","splatspray"]);
 			
 
 			
@@ -140,7 +147,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Spray","sponge","Digital","Halo","BloodSplat","Splatter"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Spray","sponge","Digital","Halo","BloodSplat","Splatter","Dropping"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -158,6 +165,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			SprayCanBrush(brushEngine).param_strokeAlpha.numberValue = param_intensity.numberValue;
 			
 			eraserMode = false; 
+			
+			_persistentPoints = new Vector.<SamplePoint>(2);
 			
 			
 			onStyleChanged(null);
@@ -540,6 +549,54 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 					
 					break;
+				
+				case STYLE_DROPPING:
+					
+					
+					callbackDecorator.active=true;
+					splatterDecorator.active=false;
+					
+					brushEngine.textureScaleFactor = 2;
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 10 + precision * 15;
+					
+					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
+					bumpDecorator.param_bumpInfluence.numberValue = 0.55;
+					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
+					bumpDecorator.param_bumpinessRange.numberValue = 0.3 ;
+					bumpDecorator.param_glossiness.numberValue = 0.90  ;
+					bumpDecorator.param_shininess.numberValue = 0.16  ;
+					
+					
+					colorDecorator.param_colorBlending.upperRangeValue = 0.9;
+					colorDecorator.param_colorBlending.lowerRangeValue = 0.65;
+					colorDecorator.param_pickRadius.lowerRangeValue = 0.0;
+					colorDecorator.param_pickRadius.upperRangeValue = 0.33;
+					colorDecorator.param_brushOpacity.numberValue = 0.93;
+					colorDecorator.param_brushOpacityRange.numberValue = 0.06;
+					
+					
+					
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
+					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_STRONG_IN;
+					sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.75;
+					sizeDecorator.param_mappingRange.numberValue = 0.04+precision * 0.74;
+					
+					
+					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_SIZE_INV;
+					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SPEED_INV;
+					spawnDecorator.param_maxOffset.numberValue = 0.1+precision * 30;
+					spawnDecorator.param_minOffset.numberValue = 0.1+precision * 5;
+					spawnDecorator.param_multiples.lowerRangeValue = 1;
+					spawnDecorator.param_multiples.upperRangeValue = 7;
+					
+					
+				
+					
+					
+					
+					
+					break;
+				
 				/*
 				case STYLE_FRECKLESOLD:
 					trace("STYLE_FRECKLES2");
@@ -636,15 +693,77 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function processPoints(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
-			//only active for pixelate style
+			
+			var addedPoints:Vector.<SamplePoint> = new Vector.<SamplePoint>();
+			
+			var gyro:Matrix3D = GyroscopeManager.orientationMatrix;
+			var vector:Vector.<Vector3D> = GyroscopeManager.orientationMatrix.decompose();
+			//vector[1] is rotation vector
+			
+			//TESTING ON DESKTOP
+			if(!CoreSettings.RUNNING_ON_iPAD)
+			{vector[1].y=Math.random()*0.3-0.15;
+			vector[1].x=0.7;}
+			
+			//ADD A BIT OF TURBULENCE
+			vector[1].x+=Math.random()*0.3-0.15;
+			vector[1].y+=Math.random()*0.3-0.15;
+			
+			//trace(vector[1]);
+			
 			for ( var i:int = 0; i < points.length; i++ )
 			{
-				if ( Math.random() < 0.10 )
+				/*if ( Math.random() < 0.10 )
 				{
 					points[i].x += (Math.random()-Math.random()) * gridDecorator.param_stepX.numberValue;
 					points[i].y += (Math.random()-Math.random()) * gridDecorator.param_stepY.numberValue;
+				}*/
+				
+				if(i==0){
+					//var newPoint :SamplePoint = points[i].getClone();
+					//var newPoint :SamplePoint = points[i];
+					if(Math.random()<0.06){
+						_persistentPoints[0] = points[0].getClone();
+						trace("create point")
+					}else {
+						if(_persistentPoints[0]){
+							//points[0] = _persistentPoints[0].getClone() ;
+							_persistentPoints[0].x += vector[1].y*10;
+							_persistentPoints[0].y += vector[1].x*10;
+							points[0].x = _persistentPoints[0].x ;
+							points[0].y = _persistentPoints[0].y ;
+							points[0].size = 0.1*Math.random()+0.1;
+						}
+					 	
+					}
+					//newPoint.size = 0.2-i*0.15/2;
+					
+					
+					
+					//newPoint.x += vector[1].x*i*40;
+					//newPoint.y+= vector[1].y*i*40;
+					
+					
+					//_persistentPoints[i]=(newPoint);
+					//trace("added points");
 				}
+				
+				
+				//if ( Math.random() < 0.25 ){
+					
+					//addedPoints.push(newPoint);
+				
+					
+					//newPoint.x += vector[1].x*200;
+					//newPoint.y += vector[1].y*200;
+					
+					
+				//}
+				
+				
 			}
+			//points.concat(_persistentPoints);
+			
 			
 			return points;
 		}

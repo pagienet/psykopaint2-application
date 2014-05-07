@@ -97,12 +97,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
 			
-			param_precision = new PsykoParameter( PsykoParameter.NumberParameter,"Precision",0.5,0,1);
+			param_precision = new PsykoParameter( PsykoParameter.NumberParameter,"Precision",0.25,0,1);
 			param_precision.showInUI = 1;
 			param_precision.addEventListener( Event.CHANGE, onPrecisionChanged );
 			_parameterMapping.addParameter(param_precision);
 			
-			param_intensity = new PsykoParameter( PsykoParameter.NumberParameter,"Intensity",0.25,0,1);
+			param_intensity = new PsykoParameter( PsykoParameter.NumberParameter,"Intensity",0.50,0,1);
 			param_intensity.showInUI = 2;
 			param_intensity.addEventListener( Event.CHANGE, onIntensityChanged );
 			_parameterMapping.addParameter(param_intensity);
