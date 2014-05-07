@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
@@ -44,7 +45,12 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var saturationSliderValues:Array;
 		
 		private var _userPaintSettings:UserPaintSettingsModel;
-		private var colorMatrix:ColorMatrix;
+		private var colorMarker:Bitmap;
+		
+		[Embed(source="../../../../../../../../../modules/module-paint/assets/embedded/images/hsb_mask.png")]
+		public static var HSBMask:Class;
+		
+		private var hsb_mask:BitmapData;
 		
 		public function HSLSliders()
 		{
@@ -57,9 +63,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 		//	satMap = new TrackedBitmapData(256,1,false,0);
 		//	lightnessMap = new TrackedBitmapData(256,1,false,0);
 			satLightnessMap = new TrackedBitmapData(256,100,false,0);
+			
+			hsb_mask = (new HSBMask() as Bitmap).bitmapData;
+			
 			generateHueAndLightnessSliders();
 			
-			colorMatrix = new ColorMatrix();
 			
 			hslSliderHolder = new Sprite();
 			hslSliderHolder.x = 2;
@@ -69,7 +77,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			hueMapHolder = new Bitmap(hueMap,"auto",false);
 			hueMapHolder.height = 41;
-			hueMapHolder.y = hueOverlay.y - hslSliderHolder.y - 26;
+			hueMapHolder.y = 60.5+ 59; 
+			hueOverlay.y  = hueMapHolder.y + hslSliderHolder.y + 26 + 59;
+			hueHandle.y = lightnessHandle.y;
 			hslSliderHolder.addChild(hueMapHolder);
 			
 			/*
@@ -79,11 +89,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 			hslSliderHolder.addChild(satMapHolder);
 			*/
 			
-			satLightnessMapHolder = new Bitmap(satLightnessMap,"auto",false);
-			satLightnessMapHolder.y = saturationOverlay.y - hslSliderHolder.y  - 26;
-			satLightnessMapHolder.filters = [colorMatrix.filter];
-			hslSliderHolder.addChild(satLightnessMapHolder);
 			
+			satLightnessMapHolder = new Bitmap(satLightnessMap,"auto",false);
+			satLightnessMapHolder.y = 5.5;
+			
+			hslSliderHolder.addChild(satLightnessMapHolder);
 			/*
 			lightnessMapHolder = new Bitmap(lightnessMap,"auto",false);
 			lightnessMapHolder.height = 41;
@@ -106,6 +116,18 @@ package net.psykosoft.psykopaint2.paint.views.color
 			lightnessHandle.visible = 
 			saturationOverlay.visible = 
 			lightnessOverlay.visible = false;
+			
+			var colorMarkerMap:BitmapData = new BitmapData(32,32,true,0);
+			var shp:Shape = new Shape();
+			shp.graphics.lineStyle(0,0x000000);
+			shp.graphics.drawCircle(16,16,14);
+			shp.graphics.lineStyle(0,0xffffff);
+			shp.graphics.drawCircle(16,16,15);
+			colorMarkerMap.draw(shp,null,null,"normal",null,true);
+			colorMarker = new Bitmap(colorMarkerMap);
+			colorMarker.x = satLightnessMapHolder.x-16;
+			colorMarker.y = satLightnessMapHolder.y-16;
+			hslSliderHolder.addChild(colorMarker);
 		}
 		
 		public function onEnabled():void
@@ -133,7 +155,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		{
 			hueMap.lock();
 			//lightnessMap.lock();
-			satLightnessMap.lock();
+			
 			
 			var h:HSV = new HSV(0,100,100);
 			var vd:Number = 1 / 256; 
@@ -146,27 +168,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 				v+=vd;
 			}
 			
-			h.hue =0 ;
-			
-			var w:Number = 0;
-			var wd:Number = 1 / satLightnessMap.height; 
-			vd = 1 / 256; 
-			for ( var y:int = 0; y < satLightnessMap.height; y++ )
-			{
-				v = 0;
-				h.value = (1 - (w*w))*100 ;
-				for ( var x:int = 0; x < 256; x++ )
-				{
-					h.saturation = v*v*100;
-					satLightnessMap.setPixel(x,y,ColorConverter.HSVtoUINT(h));
-					v+=vd;
-				}
-				w+=wd;
-			}
 			
 			hueMap.unlock();
 			//lightnessMap.unlock();
-			satLightnessMap.unlock();
+			
 		}
 		
 		/*
@@ -195,8 +200,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		{
 			if ( hslSliderHolder.mouseX < 0 || hslSliderHolder.mouseX > 256 || hslSliderHolder.mouseY < 0) return;
 			activeHSLSliderIndex = hslSliderHolder.mouseY / 59;
-			trace(activeHSLSliderIndex);
-			if ( activeHSLSliderIndex > 2 || (activeHSLSliderIndex== 0 && hslSliderHolder.mouseY % 59 > 41 )) return;
+			if ( activeHSLSliderIndex > 2 || (activeHSLSliderIndex== 2 && hslSliderHolder.mouseY % 59 > 41 )) return;
 			
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onHSLSliderMouseMove );
 			stage.addEventListener(MouseEvent.MOUSE_UP, onHSLSliderMouseUp );
@@ -211,21 +215,26 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			switch ( activeHSLSliderIndex )
 			{
-				case 0: //hue
+				case 2: //hue
 					hueHandle.x = HSLSliderOffset + hslSliderHolder.x  + HSLSliderPaddingLeft + sx * HSLSliderRange;
 					_userPaintSettings.hue = sx * 359;
 					
-					colorMatrix.reset();
-					if ( !isNaN(_userPaintSettings.hue) ) colorMatrix.adjustHue(_userPaintSettings.hue );
-					satLightnessMapHolder.filters = [colorMatrix.filter];
-					
+					satLightnessMap.lock();
+					satLightnessMap.fillRect( satLightnessMap.rect,ColorConverter.HSVtoUINT(new HSV(isNaN(_userPaintSettings.hue) ? 0 : _userPaintSettings.hue,100,100) ));
+					satLightnessMap.draw( hsb_mask );
+					satLightnessMap.unlock();
 					//updateSaturationSlider();
 					break;
+				case 0:
 				case 1:
-				case 2:
-					var c:uint = colorMatrix.applyMatrix(satLightnessMap.getPixel(
-						Math.min(Math.max(0,satLightnessMapHolder.mouseX),satLightnessMap.width-1), 
-						Math.min(Math.max(0,satLightnessMapHolder.mouseY),satLightnessMap.height-1)));
+					
+					var mx:Number = Math.min(Math.max(0,satLightnessMapHolder.mouseX),satLightnessMap.width-1);
+					var my:Number = Math.min(Math.max(0,satLightnessMapHolder.mouseY),satLightnessMap.height-1);
+					
+					colorMarker.x = mx-16;
+					colorMarker.y = satLightnessMapHolder.y+my-16;
+					
+					var c:uint = satLightnessMap.getPixel(mx,my);
 					var hsv:HSV = ColorConverter.UINTtoHSV( c );
 					//hsv.hue = _userPaintSettings.hue;
 					if ( isNaN(_userPaintSettings.hue) ) _userPaintSettings.hue = 0;
@@ -264,9 +273,13 @@ package net.psykosoft.psykopaint2.paint.views.color
 			hueHandle.x = HSLSliderOffset + hslSliderHolder.x + HSLSliderPaddingLeft + (isNaN( _userPaintSettings.hue ) ? 0 : _userPaintSettings.hue) / 360 * HSLSliderRange;
 			//saturationHandle.x = HSLSliderOffset + hslSliderHolder.x +  HSLSliderPaddingLeft + _userPaintSettings.saturation / 100 * HSLSliderRange;
 			//lightnessHandle.x = HSLSliderOffset + hslSliderHolder.x +  HSLSliderPaddingLeft + _userPaintSettings.lightness / 100 * HSLSliderRange;
-			colorMatrix.reset();
-			if ( !isNaN(_userPaintSettings.hue) )colorMatrix.adjustHue(_userPaintSettings.hue );
-			satLightnessMapHolder.filters = [colorMatrix.filter];
+			satLightnessMap.lock();
+			satLightnessMap.fillRect( satLightnessMap.rect,ColorConverter.HSVtoUINT(new HSV(isNaN(_userPaintSettings.hue) ? 0 : _userPaintSettings.hue,100,100) ));
+			satLightnessMap.draw( hsb_mask );
+			satLightnessMap.unlock();
+			colorMarker.x =  (_userPaintSettings.saturation / 100 * 256) -16;
+			colorMarker.y = satLightnessMapHolder.y+(100-_userPaintSettings.lightness) -16;
+			
 		}
 	}
 }
