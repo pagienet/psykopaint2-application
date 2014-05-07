@@ -307,8 +307,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_smoothFactor.lowerRangeValue = 0.8;
 					colorDecorator.param_saturationAdjustment.lowerRangeValue = -0.1;
 					colorDecorator.param_saturationAdjustment.upperRangeValue = 0.1;
-					colorDecorator.param_hueAdjustment.lowerRangeValue = -0.1;
-					colorDecorator.param_hueAdjustment.upperRangeValue = 0.1;
+					//colorDecorator.param_hueAdjustment.lowerRangeValue = -0.1;
+					//colorDecorator.param_hueAdjustment.upperRangeValue = 0.1;
+					colorDecorator.param_hueRandomizationMode.index = 2;
+					colorDecorator.param_colorMatrixChance.numberValue = 0.15;
 					colorDecorator.param_brightnessAdjustment.lowerRangeValue = -0.1;
 					colorDecorator.param_brightnessAdjustment.upperRangeValue= 0.1;		
 					colorDecorator.param_applyColorMatrix.booleanValue=true;
