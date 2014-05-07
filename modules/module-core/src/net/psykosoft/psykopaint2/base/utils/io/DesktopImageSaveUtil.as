@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 	import by.blooddy.crypto.image.PNG24Encoder;
 
 	import flash.display.BitmapData;
+	import flash.display.PNGEncoderOptions;
 	import flash.events.Event;
 	import flash.filesystem.File;
 	import flash.utils.ByteArray;
@@ -17,7 +18,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 			_onCompleteCallback = onComplete;
 
 			// Encode to jpeg or png.
-			var pngBytes:ByteArray = PNG24Encoder.encode( bmd );
+			var pngBytes:ByteArray = bmd.encode(bmd.rect, new PNGEncoderOptions(true));
 
 			// Generate a dated image name.
 			var nowDate:Date = new Date();

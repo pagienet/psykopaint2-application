@@ -1,9 +1,6 @@
 package net.psykosoft.psykopaint2.core.services
 {
-	import by.blooddy.crypto.MD5;
-	import by.blooddy.crypto.SHA1;
-	import by.blooddy.crypto.SHA224;
-	import by.blooddy.crypto.SHA256;
+	import com.adobe.crypto.MD5;
 
 	import flash.events.AsyncErrorEvent;
 	import flash.events.IOErrorEvent;
