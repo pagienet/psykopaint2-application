@@ -261,17 +261,17 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function get specularColorR() : Number
 		{
-			return _lightColorR * _specularStrength;
+			return Math.min(_lightColorR * _specularStrength, 1.0);
 		}
 
 		public function get specularColorG() : Number
 		{
-			return _lightColorG * _specularStrength;
+			return Math.min(_lightColorG * _specularStrength, 1.0);
 		}
 
 		public function get specularColorB() : Number
 		{
-			return _lightColorB * _specularStrength;
+			return Math.min(_lightColorB * _specularStrength, 1.0);
 		}
 
 		public function get ambientColorR() : Number

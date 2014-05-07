@@ -30,10 +30,10 @@ package net.psykosoft.psykopaint2.core.utils
 			for (var y : int = 0; y < _height; ++y) {
 				for (var x : int = 0; x < _width; ++x) {
 					_lookUpFunction(x/_width, y/_height, color);
-					ba.writeByte((color[2]*0xff) & 0xff);
-					ba.writeByte((color[1]*0xff) & 0xff);
-					ba.writeByte((color[0]*0xff) & 0xff);
-					ba.writeByte((color[3]*0xff) & 0xff);
+					ba.writeByte(int(color[2]*0xff) & 0xff);
+					ba.writeByte(int(color[1]*0xff) & 0xff);
+					ba.writeByte(int(color[0]*0xff) & 0xff);
+					ba.writeByte(int(color[3]*0xff) & 0xff);
 				}
 			}
 

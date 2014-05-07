@@ -303,7 +303,7 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function getInitFragmentCode() : String
 		{
-			return    "tex ft7, v0, fs2 <2d, clamp, linear, mipnone>\n" +
+			return  "tex ft7, v0, fs2 <2d, clamp, linear, mipnone>\n" +
 					"sub ft0.xy, ft7.xy, fc0.x\n" +
 					"mul ft0.xy, ft0.xy, fc0.w\n" +	// multiply by bumpiness
 
