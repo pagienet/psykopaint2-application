@@ -15,6 +15,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	final public class ColorDecorator extends AbstractPointDecorator
 	{
 		public static const PARAMETER_B_COLORMATRIX:String = "Appy Color Matrix";
+		public static const PARAMETER_N_COLORMATRIX_CHANCE:String = "Color Matrix Application Chance";
 		public static const PARAMETER_NR_SATURATION:String = "Saturation";
 		public static const PARAMETER_NR_HUE:String = "Hue";
 		public static const PARAMETER_NR_BRIGHTNESS:String = "Brightness";
@@ -26,14 +27,20 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PARAMETER_NR_SMOOTH_FACTOR:String = "Color Smooth Factor";
 		public static const PARAMETER_N_MAXIMUM_SPEED:String  = "Maximum Speed";
 		public static const PARAMETER_N_PICK_RANDOM_OFFSET_FACTOR:String  = "Random Pick Offset";
+		public static const PARAMETER_SL_HUE_RANDOMIZATION_MODE:String  = "Hue Randomization Mode";
 		
 		public static const INDEX_MODE_PICK_COLOR:int = 0;
 		public static const INDEX_MODE_FIXED_COLOR:int = 1;
 		
-		// "Appy Color Matrix" - Boolean
+		// "Apply Color Matrix" - Boolean
 		// if set to true a color matrix will be applied to the sampled color values
 		// the matrix is defined by the following 3 parameters
 		public var param_applyColorMatrix:PsykoParameter;
+		
+		//"Color Matrix Application Chance" - NumberValue
+		//If "Apply Color Matrix" is true then this value will define how likely it is
+		//that a point's color gets changed
+		public var param_colorMatrixChance:PsykoParameter;
 		
 		// "Saturation" - NumberRange
 		// the saturation is changed randomly within the given range
@@ -42,6 +49,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		// "Hue" - NumberRange
 		// the hue is changed randomly within the given range
 		public var param_hueAdjustment:PsykoParameter;
+		
+		// "Hue Randomization Mode" - StringList
+		// sets what kind of random hues are generated
+		public var param_hueRandomizationMode:PsykoParameter;
 		
 		// "Brightness" - NumberRange
 		// the brightness is changed randomly within the given range
@@ -91,12 +102,17 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private const lastRGBA:Vector.<Number> = new Vector.<Number>(16,true);
 		private const _applyArray:Array = [];
 		
+		private const hueHarmonyAngles:Array = [[],[90],[-30,30],[-120,120],[-150,150],[-60,120,180],[60,-120,180],[90,-90,180]];
+			
+			
+		
 		public function ColorDecorator()
 		{
 			super();
 			//colorMode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_COLOR_MODE,0,["Pick Color","Fixed Color"] );
 			
 			param_applyColorMatrix  = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_COLORMATRIX,false);
+			param_colorMatrixChance  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_COLORMATRIX_CHANCE,0.25,0,1);
 			
 			param_saturationAdjustment  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_SATURATION,0,0,-10, 10);
 			param_hueAdjustment  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_HUE,0,0,-1, 1);
@@ -113,6 +129,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			param_smoothFactor  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_SMOOTH_FACTOR,1,1,0,1);
 			param_maxSpeed  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			
+			param_hueRandomizationMode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_PICK_RADIUS_MODE,0,["Free","Complementary","Analogous","Triad","Split-Complementary","Rectangle 1","Rectangle 2","Square"] );
+			
 			
 			_parameters.push(param_applyColorMatrix,param_saturationAdjustment, param_hueAdjustment, param_brightnessAdjustment,param_colorBlending,param_brushOpacity,param_brushOpacityRange,param_pickRadius,param_pickRadiusMode,param_smoothFactor,param_maxSpeed,param_pickOffsetFactor);
 			cm = new ColorMatrix();
@@ -124,7 +142,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var applyArray:Array = _applyArray;
 			
 			
-			
+			var cm_chance:PsykoParameter = param_colorMatrixChance;
 			var radiusMode:int = param_pickRadiusMode.index;
 			var minPickRadius:Number = param_pickRadius.lowerRangeValue;
 			var pickRadiusRange:Number = param_pickRadius.rangeValue;
@@ -132,7 +150,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var pof:Number = param_pickOffsetFactor.numberValue;
 			var bo:Number = Quad.easeIn(param_brushOpacity.numberValue,0,1,1);
 			var bor:Number = param_brushOpacityRange.numberValue;
-			
+			var hrm:int = param_hueRandomizationMode.index;
+			var hueAngles:Array = hueHarmonyAngles[hrm];
+			var hl:int =  hueAngles.length;
+			var useHarmony:Boolean = hl > 0;
 			var cb:PathManagerCallbackInfo = manager.callbacks;
 			for ( var i:int = 0; i < points.length; i++ )
 			{
@@ -165,11 +186,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					prgba[3] = prgba[7] = prgba[11] = prgba[15] = 1;
 				}
 					*/
-				if ( applyMatrix ) {
+				if ( applyMatrix && cm_chance.chance) {
 					
 					cm.reset();
 					cm.adjustSaturation( param_saturationAdjustment.randomValue + 1 );
-					cm.adjustHue( param_hueAdjustment.randomValue * 180);
+					cm.adjustHue( useHarmony ? hueAngles[int(Math.random() * hl)] : param_hueAdjustment.randomValue * 180);
 					cm.adjustBrightness( param_brightnessAdjustment.randomValue * 255 );
 					cm.applyMatrixToVector( prgba );
 				}
