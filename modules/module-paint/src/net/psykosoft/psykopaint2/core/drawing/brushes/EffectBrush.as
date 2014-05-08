@@ -26,11 +26,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			super(true);
 			type = BrushType.EFFECT;
 			
-			param_shininess.numberValue = .3;
 			param_glossiness.numberValue = .25;
 			param_bumpiness.numberValue = .6;
-			
-			
 		}
 
 		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer, paintSettingsModel : UserPaintSettingsModel) : void

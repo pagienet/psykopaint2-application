@@ -58,7 +58,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpiness.numberValue = 1;
 			brushEngine.param_bumpInfluence.numberValue =1;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-			brushEngine.param_shininess.numberValue=1;
 			brushEngine.param_glossiness.numberValue=1;
 			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","line","splotch","paint1"]);
 			

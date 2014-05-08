@@ -75,7 +75,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		protected var _parameters:Vector.<PsykoParameter>;
 
 		public var param_sizeFactor:PsykoParameter;
-		public var param_shininess:PsykoParameter;
 		public var param_glossiness:PsykoParameter;
 		public var param_bumpiness:PsykoParameter;
 		public var param_bumpInfluence:PsykoParameter;
@@ -104,7 +103,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			param_quadOffsetRatio = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_QUAD_OFFSET_RATIO, 0, -0.5, 0.5);
 			param_curvatureSizeInfluence = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_CURVATURE_INFLUENCE, 1, 0, 1);
 
-			param_shininess = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_SHININESS, 0.4, 0, 1);
 			param_glossiness = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_GLOSSINESS, 0.4, 0.01, 1);
 			param_bumpiness = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS, 1, 0, 1);
 			param_bumpInfluence = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_BUMP_INFLUENCE, 0.6, 0, 1);
@@ -113,7 +111,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			_parameters.push(param_shapes, param_sizeFactor, param_blendModeSource, param_blendModeTarget, param_quadOffsetRatio);
 			if (drawNormalsOrSpecular)
-				_parameters.push(param_shininess, param_glossiness, param_bumpiness, param_bumpInfluence);
+				_parameters.push(param_glossiness, param_bumpiness, param_bumpInfluence);
 
 			_bounds = new Rectangle();
 
@@ -418,7 +416,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		protected function drawBrushNormalsAndSpecular():void
 		{
-			_brushMesh.drawNormalsAndSpecular(_context, _canvasModel, param_shininess.numberValue, param_glossiness.numberValue, param_bumpiness.numberValue, param_bumpInfluence.numberValue);
+			_brushMesh.drawNormalsAndSpecular(_context, _canvasModel, param_glossiness.numberValue, param_bumpiness.numberValue, param_bumpInfluence.numberValue);
 		}
 
 		public function getParameterSetAsXML(path:Array):XML

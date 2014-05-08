@@ -325,8 +325,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		// default code expects a height map + alpha map
 		// texture input is:
 		// R = height
-		// G = specular occlusion
-		// output should be (normalX, normalY, specular | gloss, influence(alpha))
+		// G = gloss modulation
+		// output should be (normalX, normalY, gloss, influence (alpha))
 		// analytical solutions may be more optimal if possible
 		protected function getNormalSpecularFragmentCode() : String
 		{
@@ -372,18 +372,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 			// ft0.xy now contains blurred map + new map
 
-			// set specular
-			code +=	"mul ft0.z, ft1.y, v4.z\n" +
-					"mov ft0.w, v4.x\n";
+			// set glossiness, scaled by texture
+			code +=	"mul ft0.z, ft1.y, v4.x\n" +
 
 			// lerp based on height, not really robust
-			code += "sub ft0, ft0, ft6\n" +
-					"mul ft1.x, ft1.x, fc0.z\n" +	// brush height * 50
-					"sat ft1.x, ft1.x\n" +
-					"mul ft0, ft0, ft1.x\n" +
-					"add ft0, ft0, ft6\n";
-			
-			code +=	"mov oc, ft0";
+					"mul ft0.w, ft1.x, fc0.z\n" +	// brush height as alpha * 50
+					"mov oc, ft0";
 
 			return code;
 		}
@@ -487,7 +481,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		}
 
 		// default height mapping expects default vertex layout: pos=0, brush uv=1, rotation vectors = 2
-		public function drawNormalsAndSpecular(context3d : Context3D, canvas : CanvasModel, shininess : Number, glossiness : Number, bumpiness : Number, influence : Number ) : void
+		public function drawNormalsAndSpecular(context3d : Context3D, canvas : CanvasModel, glossiness : Number, bumpiness : Number, influence : Number ) : void
 		{
 			var vertexBuffer : VertexBuffer3D = getVertexBuffer(context3d);
 
@@ -507,7 +501,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			
 			_normalSpecularVertexData[12] = glossiness;
 			_normalSpecularVertexData[13] = bumpiness;
-			_normalSpecularVertexData[14] = shininess;
 			_normalSpecularVertexData[15] = influence;
 
 			context3d.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _normalSpecularVertexData, 4);

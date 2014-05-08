@@ -154,6 +154,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			_snapshot.drawNormalsSpecular();
+			_context.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			drawBrushNormalsAndSpecular();
 
 			_canvasModel.swapNormalSpecularLayer();

@@ -1,5 +1,5 @@
 nrm ft4.xyz, v5
 dp3 ft4.x, ft4.xyz, ft0.xyz
 
-mov ft4.y, ft7.w
+mov ft4.y, ft7.z
 tex ft4, ft4.xyxy, fs3 <linear, nomip, clamp>

@@ -123,9 +123,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context.clear();
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-
 			CopyTexture.copy(_canvasModel.normalSpecularMap, _context);
 
+			_context.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			drawBrushNormalsAndSpecular();
 
 			_canvasModel.swapNormalSpecularLayer();
