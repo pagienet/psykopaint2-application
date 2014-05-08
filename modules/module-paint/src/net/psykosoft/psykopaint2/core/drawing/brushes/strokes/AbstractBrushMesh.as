@@ -372,7 +372,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 			// ft0.xy now contains blurred map + new map
 
-					// set specular
+			// set specular
 			code +=	"mul ft0.z, ft1.y, v4.z\n" +
 					"mov ft0.w, v4.x\n";
 

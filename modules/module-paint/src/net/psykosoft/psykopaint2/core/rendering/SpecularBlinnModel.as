@@ -73,11 +73,12 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function getSpecularColor(nDotH : Number, y : Number, color : Vector.<Number>) : void
 		{
-			var exponent : Number = 5.0 + y*_glossiness;
+			var exponent : Number = 1.0 + y*_glossiness;
 			var specularStrength : Number = Math.pow(nDotH, exponent);
-			color[0] = _specularColorR * specularStrength;
-			color[1] = _specularColorG * specularStrength;
-			color[2] = _specularColorB * specularStrength;
+			var norm : Number = (exponent  + 8) / 25.132741;	// 25.132741 ~= 8 * PI
+			color[0] = _specularColorR * specularStrength * norm;
+			color[1] = _specularColorG * specularStrength * norm;
+			color[2] = _specularColorB * specularStrength * norm;
 			color[3] = 0;
 		}
 	}
