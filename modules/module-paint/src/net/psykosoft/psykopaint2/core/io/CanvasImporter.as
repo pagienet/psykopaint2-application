@@ -32,14 +32,16 @@ package net.psykosoft.psykopaint2.core.io
 				canvas.setSourceBitmapData(null);
 
 			canvas.colorTexture.uploadFromByteArray(paintingData.colorData, 0);
-			canvas.normalSpecularMap.uploadFromByteArray(paintingData.normalSpecularData, 0);
+
+			if (paintingData.normalSpecularData)
+				canvas.normalSpecularMap.uploadFromByteArray(paintingData.normalSpecularData, 0);
+			else
+				// new painting:
+				canvas.normalSpecularMap.uploadFromBitmapData(paintingData.normalSpecularOriginal);
 
 			canvas.setNormalSpecularOriginal(paintingData.normalSpecularOriginal);
 			canvas.setColorBackgroundOriginal(paintingData.colorBackgroundOriginal);
 
-			// transfer of ownership so this does not get disposed
-			if (paintingData.normalSpecularData == paintingData.normalSpecularOriginal)
-				paintingData.normalSpecularData = null;
 			paintingData.normalSpecularOriginal = null;
 			paintingData.colorBackgroundOriginal = null;
 		}

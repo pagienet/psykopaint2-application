@@ -1,8 +1,5 @@
 package net.psykosoft.psykopaint2.base.utils.io
 {
-
-	import by.blooddy.crypto.image.PNG24Encoder;
-
 	import flash.display.BitmapData;
 	import flash.display.PNGEncoderOptions;
 	import flash.events.Event;

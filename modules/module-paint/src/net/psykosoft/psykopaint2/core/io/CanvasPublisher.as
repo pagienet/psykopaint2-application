@@ -7,26 +7,21 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.display.StageQuality;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
-	import flash.display3D.textures.RectangleTexture;
-	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-	import flash.system.ApplicationDomain;
-	import flash.utils.ByteArray;
-	
-	import avm2.intrinsics.memory.li8;
-	import avm2.intrinsics.memory.si8;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.images.ImageDataUtils;
+
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
+	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 	import net.psykosoft.psykopaint2.paint.utils.CopyColorAndSourceToBitmapDataUtil;
 	import net.psykosoft.psykopaint2.paint.utils.CopyColorToBitmapDataUtil;
 
@@ -76,11 +71,7 @@ package net.psykosoft.psykopaint2.core.io
 			_jpegQuality = jpegQuality;
 			_exportingStages = [
 				saveColorFlat,
-
-				extractNormalsColor,
-				extractNormalsAlpha,
-				mergeNormalData,
-				compressNormalData
+				saveNormalsFlat
 			];
 
 			if (canvas.hasSourceImage())
@@ -115,9 +106,6 @@ package net.psykosoft.psykopaint2.core.io
 			_paintingData.width = _canvas.width;
 			_paintingData.height = _canvas.height;
 
-			_paintingData.normalSpecularOriginal = _canvas.getNormalSpecularOriginal();
-			_paintingData.colorBackgroundOriginal = _canvas.getColorBackgroundOriginal();
-
 			_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 
@@ -143,32 +131,18 @@ package net.psykosoft.psykopaint2.core.io
 				_copyColorAndSourceToBitmapData.execute(_canvas, _workerBitmapData);
 			else
 				_copyColorToBitmapData.execute(_canvas, _workerBitmapData);
+
 			_paintingData.colorData = _workerBitmapData.encode(_workerBitmapData.rect, new JPEGEncoderOptions(_jpegQuality));
 		}
 
-		private function extractNormalsColor() : void
+		private function saveNormalsFlat() : void
 		{
-//			ConsoleView.instance.log( this, "extractNormalsColor stage..." );
-			_mergeBuffer = new TrackedByteArray();
-			_mergeBuffer.length = _canvas.width * _canvas.height * 8;
-			extractChannels(_mergeBuffer, 0, _canvas.normalSpecularMap, _copySubTextureChannelsRGB);
-		}
-
-		private function extractNormalsAlpha() : void
-		{
-//			ConsoleView.instance.log( this, "extractNormalsAlpha stage..." );
-			extractChannels(_mergeBuffer, _canvas.width * _canvas.height * 4, _canvas.normalSpecularMap, _copySubTextureChannelsA);
-		}
-
-		private function mergeNormalData() : void
-		{
-//			ConsoleView.instance.log( this, "mergeNormalData stage..." );
-			_paintingData.normalSpecularData = mergeRGBAData();
-		}
-
-		private function compressNormalData() : void
-		{
-			_paintingData.normalSpecularData.compress();
+			_context3D.setRenderToBackBuffer();
+			_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+			_context3D.clear(0, 0, 0, 1);
+			CopyTexture.copy(_canvas.normalSpecularMap, _context3D);
+			_context3D.drawToBitmapData(_workerBitmapData);
+			_paintingData.normalSpecularData = _workerBitmapData.encode(_workerBitmapData.rect, new PNGEncoderOptions());
 		}
 
 		private function saveSourceDataToThumb() : void
@@ -199,65 +173,6 @@ package net.psykosoft.psykopaint2.core.io
 			_workerBitmapData = null;
 
 			dispatchEvent(new CanvasPublishEvent(CanvasPublishEvent.COMPLETE, _paintingData));
-		}
-
-		private function mergeRGBAData() : TrackedByteArray
-		{
-//			var time : int = getTimer();
-			var len : int = _canvas.width * _canvas.height * 4;
-
-			if( CoreSettings.RUNNING_ON_iPAD ) {
-				// Pick 1.
-				_ioAne.extension.mergeRgbaPerByte( _mergeBuffer ); // Takes about 30ms
-//		    	_ioAne.extension.mergeRgbaPerInt( _mergeBuffer ); // TODO: this method is producing bad results ( a shade of gray ) but could be faster, about 5ms
-			}
-			else {
-//				MergeUtil.mergeRGBAData(_mergeBuffer,len);
-				mergeRGBADataAS3Pure(len);
-			}
-
-			var buffer : TrackedByteArray = _mergeBuffer;
-			_mergeBuffer = null;
-			buffer.length = len;
-			return buffer;
-		}
-
-		private function mergeRGBADataAS3Pure( len:int ):void {
-			var rOffset : int = 1;
-			var gOffset : int = 2;
-			var bOffset : int = 3;
-			var aOffset : int = len + 3;
-
-			var tmp:ByteArray = ApplicationDomain.currentDomain.domainMemory;
-			ApplicationDomain.currentDomain.domainMemory = _mergeBuffer;
-			for (var i : int = 0; i < len; i += 4) {
-				var r : uint = li8(int(i + rOffset));
-				var g : uint = li8(int(i + gOffset));
-				var b : uint = li8(int(i + bOffset));
-				var a : uint = li8(int(i + aOffset));
-
-				si8(b, i);
-				si8(g, int(i+1));
-				si8(r, int(i+2));
-				si8(a, int(i+3));
-			}
-
-			ApplicationDomain.currentDomain.domainMemory = tmp;
-		}
-		
-		private function extractChannels(target : ByteArray, offset : uint, layer : RectangleTexture, copier : CopySubTextureChannels) : void
-		{
-			_context3D.setRenderToBackBuffer();
-			_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-
-			_context3D.clear(0, 0, 0, 1);
-			copier.copy(layer, _sourceRect, _destRect, _context3D);
-//			var time : int = getTimer();
-			_context3D.drawToBitmapData(_workerBitmapData);
-//			ConsoleView.instance.log( this, "extractChannels - gpu read back - " + String( getTimer() - time ) );
-
-			target.position = offset;
-			_workerBitmapData.copyPixelsToByteArray(_workerBitmapData.rect, target);
 		}
 	}
 }

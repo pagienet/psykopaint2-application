@@ -40,7 +40,6 @@ package net.psykosoft.psykopaint2.home.commands
 			else
 				vo.colorData = ByteArrayUtil.createBlankColorData(vo.width, vo.height, 0xffffffff);
 
-			vo.normalSpecularData = surface.normalSpecular;
 			vo.normalSpecularOriginal = surface.normalSpecular;
 
 			requestOpenPaintingDataVOSignal.dispatch(vo);

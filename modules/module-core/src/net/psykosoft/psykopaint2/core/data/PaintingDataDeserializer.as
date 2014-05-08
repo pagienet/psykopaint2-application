@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.core.data
 {
 
+	import flash.display.BitmapData;
+
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 
 	public class PaintingDataDeserializer
@@ -31,7 +33,10 @@ package net.psykosoft.psykopaint2.core.data
 			// Read painting surfaces.
 			vo.colorData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
 			vo.normalSpecularData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
-			vo.normalSpecularOriginal = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
+			var temp : TrackedByteArray = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
+			vo.normalSpecularOriginal = new BitmapData(vo.width, vo.height, false);
+			vo.normalSpecularOriginal.setPixels(vo.normalSpecularOriginal.rect, temp);
+			temp.clear();
 
 			if (isPhotoPainting)
 				vo.sourceImageData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);

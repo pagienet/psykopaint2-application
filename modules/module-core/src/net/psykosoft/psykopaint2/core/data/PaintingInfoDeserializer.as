@@ -40,9 +40,6 @@ package net.psykosoft.psykopaint2.core.data
 			_vo.height = bytes.readInt();
 			_vo.lastSavedOnDateMs = bytes.readFloat();
 			var thumbnailBytesLength : uint = bytes.readUnsignedInt();
-
-			// Read and decode thumb.
-			trace (thumbnailBytesLength);
 			PaintingFileUtils.decodePNG(bytes, thumbnailBytesLength, onDecodePNGComplete);
 		}
 
@@ -55,7 +52,6 @@ package net.psykosoft.psykopaint2.core.data
 			// Read low res surfaces.
 			_vo.colorPreviewData = PaintingFileUtils.decodeImage(_bytes, _vo.width, _vo.height);
 			_vo.normalSpecularPreviewData = PaintingFileUtils.decodeImage(_bytes, _vo.width, _vo.height);
-
 			_bytes.clear();
 			_bytes = null;
 			dispatchEvent(new Event(Event.COMPLETE));

@@ -1,12 +1,13 @@
 package net.psykosoft.psykopaint2.paint.commands
 {
 
-	import flash.utils.ByteArray;
-	import flash.utils.getTimer;
-	
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.Loader;
+	import flash.events.Event;
+	import flash.net.URLRequest;
+
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
-	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
@@ -27,10 +28,8 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var notifySurfaceLoadedSignal:NotifySurfaceLoadedSignal;
 
-		private var _byteLoader:BinaryLoader;
-		private var _loadedSurfaceData:SurfaceDataVO;
 		private var _assetSize:String;
-		private var _time:uint;
+		private var _loader:Loader;
 
 		public function LoadSurfaceCommand() {
 			super();
@@ -40,54 +39,29 @@ package net.psykosoft.psykopaint2.paint.commands
 			super.execute();
 
 			ConsoleView.instance.log( this, "execute()" );
-			_time = getTimer();
 
 			context.detain( this );
 
 			_assetSize = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? "2048" : "1024";
-			_loadedSurfaceData = new SurfaceDataVO();
-			loadColorData();
-		}
-
-		private function loadColorData():void {
-			_byteLoader = new BinaryLoader();
-			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_color_" + index + "_" + _assetSize + ".surf",
-					onColorDataLoaded,
-					onColorDataError );
-		}
-
-		private function onColorDataError():void {
-			_byteLoader.dispose();
-			_byteLoader = null;
-			trace( "Error loading '/core-packaged/images/surfaces/canvas_color_" + index + "_" + _assetSize + ".surf'" );
-			loadNormalSpecularData();
-		}
-
-		private function onColorDataLoaded( bytes:ByteArray ):void {
-			bytes.uncompress();
-			_loadedSurfaceData.color = bytes;
-
-			_byteLoader.dispose();
-			_byteLoader = null;
 			loadNormalSpecularData();
 		}
 
 		private function loadNormalSpecularData():void {
-			_byteLoader = new BinaryLoader();
-			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_" + _assetSize + ".surf", onSurfaceLoaded );
+			_loader = new Loader();
+			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onSurfaceLoaded);
+			_loader.load( new URLRequest("/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_" + _assetSize + ".png" ));
 		}
 
-		private function onSurfaceLoaded( bytes:ByteArray ):void {
-			var unCompressTime:uint = getTimer();
-			bytes.uncompress();
-			ConsoleView.instance.log( this, "onSurfaceLoaded - un-compress time - " + String( getTimer() - unCompressTime ) );
-			_loadedSurfaceData.normalSpecular = bytes;
-			_byteLoader.dispose();
-			_byteLoader = null;
-			notifySurfaceLoadedSignal.dispatch(_loadedSurfaceData);
-			context.release( this );
+		private function onSurfaceLoaded(event : Event):void
+		{
+			_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onSurfaceLoaded);
 
-			ConsoleView.instance.log( this, "done - " + String( getTimer() - _time ) );
+			var surfaceData : SurfaceDataVO = new SurfaceDataVO();
+			surfaceData.normalSpecular = Bitmap(_loader.content).bitmapData;
+			_loader = null;
+
+			notifySurfaceLoadedSignal.dispatch(surfaceData);
+			context.release( this );
 		}
 	}
 }

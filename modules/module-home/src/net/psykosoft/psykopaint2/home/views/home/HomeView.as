@@ -220,6 +220,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_light.ambient = 1;
 			_light.color = 0x989589;
 			_light.ambientColor = 0x808088;
+			_light.specular = .25;
 		}
 
 		public function renderScene(target : Texture) : void

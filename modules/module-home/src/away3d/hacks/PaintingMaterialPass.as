@@ -6,7 +6,6 @@ package away3d.hacks
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.lights.PointLight;
 	import away3d.materials.passes.MaterialPassBase;
-	import away3d.textures.Texture2DBase;
 
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DCompareMode;
@@ -43,7 +42,7 @@ package away3d.hacks
 			_numUsedTextures = 2;
 			_matrix = new Matrix3D();
 			_vertexData = Vector.<Number>([0, 0, 0, 1, 0, 0, 0, 1]);
-			_fragmentData = Vector.<Number>([.5, 0, 0, 1, _bumpiness, _gloss, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0]);
+			_fragmentData = Vector.<Number>([.5, 0, 0, 1, _bumpiness, _gloss, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 8, 1/(8*Math.PI), 0, 0]);
 		}
 
 		public function get ambientColor() : uint
@@ -207,10 +206,15 @@ package away3d.hacks
 					"dp3 ft4.x, ft2.xyz, ft4.xyz\n" +
 					"max ft4.x, ft4.x, fc0.y\n" +
 
-					"mul ft7.x, fc1.y, ft6.w\n" +
+					"mul ft7.x, fc1.y, ft6.z\n" +
 					"pow ft4.x, ft4.x, ft7.x\n" +
+
+				// normalize brdf
+					"add ft5.x, ft7.x, fc5.x\n" +	// g + 8
+					"mul ft5.x, ft5.x, fc5.y\n" +	// (g + 8) / ( 8 * PI)
+					"mul ft4.x, ft4.x, ft5.x\n" +
+
 					"mul ft4, ft4.x, fc4.xyz\n" +
-					"mul ft4, ft4, ft6.z\n" +
 
 					"add oc, ft4, ft0\n";
 
@@ -247,7 +251,7 @@ package away3d.hacks
 				context.setStencilReferenceValue(_stencilReferenceValue);
 				context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, _stencilCompareMode, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP);
 			}
-			context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentData, 5);
+			context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentData, 6);
 		}
 
 		/**

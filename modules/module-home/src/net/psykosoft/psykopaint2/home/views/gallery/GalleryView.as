@@ -102,7 +102,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private static var _occluderMaterial:ColorMaterial;
 		private static var _highQualityMaterial:PaintingMaterial;
 
-		private var _highQualityNormalSpecularTexture:ByteArrayRectTexture;
+		private var _highQualityNormalSpecularTexture:BitmapRectTexture;
 		private var _stillLoadingNormalSpecularTexture:BitmapRectTexture;
 		private var _highQualityColorTexture:BitmapRectTexture;
 		private var _showHighQuality:Boolean;
@@ -198,7 +198,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 			//BookMaterialsProxy.getBitmapDataById(BookMaterialsProxy.THUMBNAIL_LOADING)
 			_highQualityColorTexture = new TrackedBitmapRectTexture(null);
-			_highQualityNormalSpecularTexture = new ByteArrayRectTexture(null, 0, 0);
+			_highQualityNormalSpecularTexture = new TrackedBitmapRectTexture(null);
 			_stillLoadingNormalSpecularTexture = new BitmapRectTexture(emptyNormalMap);
 			_stillLoadingNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
 			emptyNormalMap.dispose();
@@ -713,7 +713,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onSurfaceDataComplete(galleryVO:PaintingGalleryVO):void
 		{
-			_highQualityNormalSpecularTexture.setByteArray(galleryVO.normalSpecularData, galleryVO.colorData.width, galleryVO.colorData.height);
+			_highQualityNormalSpecularTexture.bitmapData  = galleryVO.normalSpecularData;
 			_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
 
 			_highQualityMaterial.normalSpecularTexture = _highQualityNormalSpecularTexture;

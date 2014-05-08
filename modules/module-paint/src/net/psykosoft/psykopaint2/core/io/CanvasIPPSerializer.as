@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
+	import net.psykosoft.psykopaint2.base.utils.images.ImageDataUtils;
 
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -51,10 +52,12 @@ package net.psykosoft.psykopaint2.core.io
 				mergeColor(canvas);
 			else
 				reduceSurface(dpp, width, height, position);	// color data
+
 			reduceSurface(dpp, width, height, position + len);	// normal specular data
 
 			dpp.position = 0;
 			_output.position = 0;
+
 			return cleanUpAndReturn();
 		}
 
@@ -64,7 +67,7 @@ package net.psykosoft.psykopaint2.core.io
 			var bitmapData : BitmapData = new BitmapData(canvas.width / SURFACE_PREVIEW_SHRINK_FACTOR, canvas.height / SURFACE_PREVIEW_SHRINK_FACTOR, false);
 			_copyColorAndSourceToBitmapData.execute(canvas, bitmapData);
 			bitmapData.copyPixelsToByteArray(bitmapData.rect, _output);
-			ARGBtoBGRA(canvas.width * canvas.height * 4, offset);
+			ImageDataUtils.ARGBtoBGRA(_output, bitmapData.width * bitmapData.height * 4, offset);
 			bitmapData.dispose();
 
 			_output.position = _output.length;
@@ -106,31 +109,6 @@ package net.psykosoft.psykopaint2.core.io
 			return scaledThumbnail;
 		}
 
-		private function ARGBtoBGRA(len : int, offset : int) : void
-		{
-			var tmp:ByteArray = ApplicationDomain.currentDomain.domainMemory;
-			len += offset;
-			_output.length = len;
-			ApplicationDomain.currentDomain.domainMemory = _output;
-
-			for (var i : int = offset; i < len; i += 4) {
-				var offset1 : int = int(i + 1);
-				var offset2 : int = int(i + 2);
-				var offset3 : int = int(i + 3);
-				var a : uint = li8(i);
-				var r : uint = li8(offset1);
-				var g : uint = li8(offset2);
-				var b : uint = li8(offset3);
-
-				si8(b, i);
-				si8(g, offset1);
-				si8(r, offset2);
-				si8(a, offset3);
-			}
-
-			ApplicationDomain.currentDomain.domainMemory = tmp;
-		}
-
 		private function reduceSurface(sourceData : ByteArray, sourceWidth : uint, sourceHeight : uint, offset : uint) : void
 		{
 			var outputWidth : uint = sourceWidth / SURFACE_PREVIEW_SHRINK_FACTOR;
@@ -141,7 +119,8 @@ package net.psykosoft.psykopaint2.core.io
 				sampleX = 0;
 				for (var x : uint = 0; x < outputWidth; ++x) {
 					sourceData.position = offset + ((sampleX + sampleY * sourceWidth) << 2);
-					_output.writeUnsignedInt(sourceData.readUnsignedInt());
+					var value : uint = sourceData.readUnsignedInt();
+					_output.writeUnsignedInt(value);
 					sampleX += SURFACE_PREVIEW_SHRINK_FACTOR;
 				}
 				sampleY += SURFACE_PREVIEW_SHRINK_FACTOR;
