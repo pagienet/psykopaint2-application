@@ -33,14 +33,14 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function randomizeLabelColor():void {
-			//return; // TODO: Feature disabled by M's request - remove method if not used
 			var randomHue:int = Math.random() * 360;
-			var randomSat:Number = Math.random() + 1;
-			
+//			var randomSat:Number = Math.random() + 1;
 			TweenLite.to( _background, 0, { colorMatrixFilter: { hue: randomHue } } );
 		}
 
 		public function colorizeBackground( color:uint ):void {
+
+//			trace("BackgroundLabel - colorizeBackground: " + color);
 
 			// Hex -> RGB
 			var r:uint = ((color & 0xFF0000) >> 16) / 255;

@@ -27,7 +27,7 @@ public class IconButtonPaperFold extends MovieClip
 		public  function set fold(value:Boolean):void{
 			
 			
-			trace("fold = "+value);
+//			trace("fold = "+value);
 			if(value==true){
 				_folded = true;
 				/*resetPoints();
