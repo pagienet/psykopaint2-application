@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
 	import com.greensock.TweenLite;
-	import com.greensock.easing.Expo;
 	import com.greensock.easing.Quad;
 
 	import flash.display.BitmapData;
@@ -20,7 +19,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import away3d.entities.Mesh;
 	import away3d.events.Object3DEvent;
 	import away3d.hacks.BitmapRectTexture;
-	import away3d.hacks.ByteArrayRectTexture;
 	import away3d.hacks.MaskingMethod;
 	import away3d.hacks.PaintingMaterial;
 	import away3d.hacks.RectTextureBase;
@@ -34,7 +32,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import away3d.textures.BitmapTexture;
 	import away3d.textures.Texture2DBase;
 	
-	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
@@ -44,8 +41,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
 	import net.psykosoft.psykopaint2.home.model.GalleryImageCache;
-	import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
-	
+
 	import org.osflash.signals.Signal;
 
 	public class GalleryView extends Sprite
@@ -119,7 +115,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache = new GalleryImageCache(_stage3DProxy);
 			_imageCache.thumbnailLoaded.add(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
-			_imageCache.loadingComplete.add(onThumbnailLoadingComplete);
+			_imageCache.loadingComplete.add(onAllThumbnailsLoaded);
 			_container = new ObjectContainer3D();
 			_container.x = -PAINTING_OFFSET;
 			_container.y = PAINTING_Y;
@@ -529,7 +525,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			_imageCache.thumbnailLoaded.remove(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.remove(onThumbnailDisposed);
-			_imageCache.loadingComplete.remove(onThumbnailLoadingComplete);
 			disposePaintings();
 			_visibleEndIndex = -1;
 			_visibleStartIndex = 0;
@@ -630,6 +625,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_container.dispose();
 			_imageCache.thumbnailDisposed.removeAll();
 			_imageCache.thumbnailLoaded.removeAll();
+			_imageCache.loadingComplete.remove(onAllThumbnailsLoaded);
 			_imageCache.clear();
 			_paintingGeometry.dispose();
 			_loadingTexture.dispose();
@@ -691,7 +687,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			}
 		}
 
-		private function onThumbnailLoadingComplete():void
+		private function onAllThumbnailsLoaded():void
 		{
 			// we can load the high resolution now for
 			if (_showHighQuality){
@@ -706,6 +702,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 			_highQualityMaterial.normalSpecularTexture = _stillLoadingNormalSpecularTexture;
 
+			_highQualityIndex = _activeImageProxy.index;
+
 			// it may have been disposed before load finished?
 			if (_paintings[_activeImageProxy.index])
 				_paintings[_activeImageProxy.index].material = _highQualityMaterial;
@@ -717,8 +715,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
 
 			_highQualityMaterial.normalSpecularTexture = _highQualityNormalSpecularTexture;
-
-			_highQualityIndex = _activeImageProxy.index;
 
 			_loadingHQ = false;
 			galleryVO.dispose();
