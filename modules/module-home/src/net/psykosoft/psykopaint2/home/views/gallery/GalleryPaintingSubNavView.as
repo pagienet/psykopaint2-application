@@ -11,7 +11,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import flash.net.URLRequest;
 	import flash.text.TextField;
 
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+import flashx.textLayout.elements.GlobalSettings;
+
+import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
@@ -33,9 +35,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			super();
 			_container = new PhotoFrameAsset();
-			_container.scaleX = _container.scaleY = .5 * CoreSettings.GLOBAL_SCALING;
-			_container.x = -_container.width / 2 + 2 * CoreSettings.GLOBAL_SCALING;
-			_container.y = -_container.height / 2 + 4 * CoreSettings.GLOBAL_SCALING;
+			_container.scaleX = _container.scaleY = .5/* * CoreSettings.GLOBAL_SCALING */;
+			_container.x = -_container.width / 2 + 2/* * CoreSettings.GLOBAL_SCALING */;
+			_container.y = -_container.height / 2 + 4/* * CoreSettings.GLOBAL_SCALING */;
 		}
 
 		public function setUserProfile(name:String, url:String):void
