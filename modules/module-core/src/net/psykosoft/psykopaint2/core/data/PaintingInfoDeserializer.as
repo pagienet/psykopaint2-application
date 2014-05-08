@@ -3,7 +3,8 @@ package net.psykosoft.psykopaint2.core.data
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	
+	import flash.utils.Endian;
+
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 
 	public class PaintingInfoDeserializer extends EventDispatcher

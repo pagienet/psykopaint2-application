@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 
 			var dateMs:Number = new Date().getTime();
 			// todo: if there's already an id associated with the painting, we need to use that again
-			var paintingDate:Number = saveVO && saveVO.paintingId? Number( saveVO.paintingId.split( "-" )[ 1 ] ) : Number.NaN;
+			var paintingDate:Number = saveVO.paintingId? Number( saveVO.paintingId.split( "-" )[ 1 ] ) : Number.NaN;
 			// eww:
 			if (isNaN(paintingDate))
 				saveVO.paintingId = "psyko-" + dateMs;

@@ -1,12 +1,7 @@
 package net.psykosoft.psykopaint2.core.io
 {
-	import avm2.intrinsics.memory.li8;
-	import avm2.intrinsics.memory.si8;
-
 	import flash.display.BitmapData;
 	import flash.display.PNGEncoderOptions;
-	import flash.system.ApplicationDomain;
-	import flash.utils.ByteArray;
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
@@ -64,7 +59,7 @@ package net.psykosoft.psykopaint2.core.io
 		private function mergeColor(canvas:CanvasModel):void
 		{
 			var offset : int = _output.position;
-			var bitmapData : BitmapData = new BitmapData(canvas.width / SURFACE_PREVIEW_SHRINK_FACTOR, canvas.height / SURFACE_PREVIEW_SHRINK_FACTOR, false);
+			var bitmapData : BitmapData = new BitmapData(canvas.width / SURFACE_PREVIEW_SHRINK_FACTOR, canvas.height / SURFACE_PREVIEW_SHRINK_FACTOR, true, 0);
 			_copyColorAndSourceToBitmapData.execute(canvas, bitmapData);
 			bitmapData.copyPixelsToByteArray(bitmapData.rect, _output);
 			ImageDataUtils.ARGBtoBGRA(_output, bitmapData.width * bitmapData.height * 4, offset);
