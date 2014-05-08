@@ -32,10 +32,9 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			var label:BackgroundLabel = _label as BackgroundLabel;
 			//label.colorizeBackground( _selected ? 0xFF0000 : 0xFFFFFF );
 			if(_selected)
-			label.colorizeBackground(  0x00FF00 );
+				label.colorizeBackground(  /*0x00FF00*/0 );
 			else 
-			label.randomizeLabelColor();
-			
+				label.randomizeLabelColor();
 		}
 	}
 }

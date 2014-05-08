@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var callbackObject:Object;
 		private var callbackFunction:Function;
 		private var callbackArray:Array;
+		public var keepActive:Boolean = false;
 		
 		public function CallbackDecorator( callbackObject:Object, callbackFunction:Function )
 		{
@@ -32,6 +33,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			var result:XML = <CallbackDecorator/>;
 			return result;
+		}
+		
+		override public function hasActivePoints():Boolean
+		{
+			return keepActive;
 		}
 	}
 }

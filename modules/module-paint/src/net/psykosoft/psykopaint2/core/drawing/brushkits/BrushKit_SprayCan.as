@@ -1,16 +1,13 @@
 package net.psykosoft.psykopaint2.core.drawing.brushkits
 {
-	import com.greensock.easing.Expo;
-	
-	import flash.display3D.Context3DBlendFactor;
 	import flash.events.Event;
+	import flash.geom.Matrix3D;
+	import flash.geom.Vector3D;
 	
-	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.SketchBrush;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
-	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.AbstractPointDecorator;
@@ -18,11 +15,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.CallbackDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.GridDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
-	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.StationaryDecorator;
+	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 
 	public class BrushKit_SprayCan extends BrushKit
 	{
@@ -30,9 +27,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private static const STYLE_SPONGE:int = 1;
 		private static const STYLE_DIGITAL:int = 2;
 		private static const STYLE_HALO_SPRAY:int = 3;
-		private static const STYLE_BLOODSPLAT:int = 4;
-		private static const STYLE_FRECKLES2:int = 5;
-		//private static const STYLE_ERASER:int = 6;
+		//private static const STYLE_BLOODSPLAT:int = 4;
+		//private static const STYLE_FRECKLES2:int = 5;
+		private static const STYLE_DROPPING:int = 4;
 		
 		
 		
@@ -49,6 +46,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var gridDecorator:GridDecorator;
 		private var callbackDecorator:CallbackDecorator;
 		private var eraserMode:Boolean;
+		private var _persistentPoints:Object;
+		private var stationaryDecorator:StationaryDecorator;
+		private var precision:Number;
 		
 		
 		public function BrushKit_SprayCan()
@@ -69,7 +69,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
 			brushEngine.param_curvatureSizeInfluence.numberValue = 0;
-			brushEngine.param_shapes.stringList = Vector.<String>(["noisy","almost circular rough","almost circular hard","splatspray","splatspray","almost circular hard"]);
+			brushEngine.param_shapes.stringList = Vector.<String>(["noisy","almost circular rough","almost circular hard","splatspray","splatspray"]);
 			
 
 			
@@ -79,6 +79,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
 			pathManager.pathEngine.outputStepSize.numberValue = 4;
 			pathManager.pathEngine.sendTaps = false;
+			
+			
+			stationaryDecorator = new StationaryDecorator();
+			stationaryDecorator.param_delay.numberValue=10;
+			stationaryDecorator.param_maxOffset.numberValue=20;
+			stationaryDecorator.param_sizeRange.lowerRangeValue=1;
+			stationaryDecorator.param_sizeRange.upperRangeValue=1;
+			pathManager.addPointDecorator(stationaryDecorator);
+
 			
 			sizeDecorator = new SizeDecorator();
 			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
@@ -135,12 +144,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			pathManager.addPointDecorator( colorDecorator );
 			
 			callbackDecorator = new CallbackDecorator( this, processPoints );
+			callbackDecorator.hasActivePoints()
 			pathManager.addPointDecorator( callbackDecorator );
 			
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Spray","sponge","Digital","Halo","BloodSplat","Splatter"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Spray","sponge","Digital","Halo","Dropping"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -158,6 +168,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			SprayCanBrush(brushEngine).param_strokeAlpha.numberValue = param_intensity.numberValue;
 			
 			eraserMode = false; 
+			
+			_persistentPoints = new Vector.<SamplePoint>(2);
 			
 			
 			onStyleChanged(null);
@@ -184,13 +196,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function onPrecisionChanged(event:Event):void
 		{
-			var precision:Number = param_precision.numberValue;
+			precision = param_precision.numberValue;
 			
 			
 			gridDecorator.active = false;
 			spawnDecorator.active = true;
 			splatterDecorator.active = true;
 			callbackDecorator.active = false;
+			stationaryDecorator.active=false;
+			
 			
 			
 			
@@ -242,6 +256,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			colorDecorator.param_pickRadius.lowerRangeValue = 0.25;
 			colorDecorator.param_pickRadius.upperRangeValue = 0.33;
 			colorDecorator.param_smoothFactor.lowerRangeValue = 0.8;
+			colorDecorator.param_applyColorMatrix.booleanValue=false;
 			
 			//CHANGE ENGINE
 			//brushEngine = _sprayCanBrushEngine;
@@ -261,7 +276,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					//DISTANCE BETWEEN STEPS : THE LESS, THE MORE DENSE IT WILL BE
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 3 ;
-
+					brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
+					//brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 3 - precision * 2.5;
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 2.5;
+					
+					
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_FIXED;
 					bumpDecorator.param_bumpInfluence.numberValue = 0.45;
@@ -285,26 +304,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					sizeDecorator.param_maxSpeed.numberValue = 200;
 					
 					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
-					splatterDecorator.param_splatFactor.numberValue = 0.01+0.4 * precision;
+					splatterDecorator.param_splatFactor.numberValue = 0.01+0.9 * precision;
 					//splatterDecorator.param_splatFactor.numberValue = 1;
+
 					
-					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_FIXED;
-					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_FIXED;
-					spawnDecorator.param_maxSize.numberValue = 0.3;
-					spawnDecorator.param_multiples.lowerRangeValue = 1;
-					spawnDecorator.param_multiples.upperRangeValue = 1;
-					spawnDecorator.param_maxOffset.numberValue = precision *5;
-					spawnDecorator.param_minOffset.numberValue = 2;
-					spawnDecorator.param_autorotate.booleanValue = false;
-					spawnDecorator.param_bristleVariation.numberValue = 0.2;
-					
-					
-					
-					
-					brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
-					//brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 3 - precision * 2.5;
-					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 2.5;
-					
+				
 					
 					break;
 				
@@ -392,15 +396,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				
 				
 				case STYLE_HALO_SPRAY:
-					
+					stationaryDecorator.active=true;
+						
 					brushEngine.textureScaleFactor = 2;
-					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 10 + precision * 15;
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 1 + precision * 15;
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
 					bumpDecorator.param_bumpInfluence.numberValue = 0.55;
 					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
 					bumpDecorator.param_bumpinessRange.numberValue = 0.3 ;
-					bumpDecorator.param_glossiness.numberValue = 0.90  ;
+					bumpDecorator.param_glossiness.numberValue = 0.70  ;
 					bumpDecorator.param_shininess.numberValue = 0.16  ;
 					
 					
@@ -408,23 +413,27 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.65;
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.0;
 					colorDecorator.param_pickRadius.upperRangeValue = 0.33;
-					colorDecorator.param_brushOpacity.numberValue = 0.93;
-					colorDecorator.param_brushOpacityRange.numberValue = 0.06;
-					
+					colorDecorator.param_brushOpacity.numberValue = 0.90;
+					colorDecorator.param_brushOpacityRange.numberValue = 0.1;
+					colorDecorator.param_saturationAdjustment.lowerRangeValue = -0.05;
+					colorDecorator.param_saturationAdjustment.upperRangeValue = 0.05;
+					colorDecorator.param_brightnessAdjustment.lowerRangeValue = -0.05;
+					colorDecorator.param_brightnessAdjustment.upperRangeValue= 0.05;		
+					colorDecorator.param_applyColorMatrix.booleanValue=true;
 					
 					
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
-					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_STRONG_IN;
-					sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.75;
-					sizeDecorator.param_mappingRange.numberValue = 0.04+precision * 0.74;
+					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_QUINTIC_IN;
+					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.60;
+					sizeDecorator.param_mappingRange.numberValue = 0.025+precision * 0.55;
 					
 					
 					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_SIZE_INV;
 					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SPEED_INV;
-					spawnDecorator.param_maxOffset.numberValue = 0.1+precision * 30;
-					spawnDecorator.param_minOffset.numberValue = 0.1+precision * 5;
-					spawnDecorator.param_multiples.lowerRangeValue = 1;
-					spawnDecorator.param_multiples.upperRangeValue = 7;
+					spawnDecorator.param_maxOffset.numberValue = 0.1+precision * 40;
+					spawnDecorator.param_minOffset.numberValue = 0.1+precision * 30;
+					spawnDecorator.param_multiples.lowerRangeValue = 2;
+					spawnDecorator.param_multiples.upperRangeValue = 6;
 					
 					
 					splatterDecorator.active=false;
@@ -433,11 +442,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					
 					break;
-				
+				/*
 				case STYLE_BLOODSPLAT:
 					
 					
 					trace("STYLE_BLOODSPLAT");
+					//USE "splatspray"
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.4 + precision * 3;
 					//brushEngine.textureScaleFactor = 1.5;
 					
@@ -490,6 +500,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 
 					trace("STYLE_FRECKLES2");
+					//USE almost circular hard
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 2 + precision * 10;
 					//brushEngine.textureScaleFactor = 1.5;
 					
@@ -539,7 +550,55 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_noBumpProbability.numberValue=0.5;
 
 					
+					break;*/
+				
+				case STYLE_DROPPING:
+					
+					stationaryDecorator.active=true;
+					callbackDecorator.active=true;
+					splatterDecorator.active=false;
+					
+					brushEngine.textureScaleFactor = 2;
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 10 + precision * 15;
+					
+					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
+					bumpDecorator.param_bumpInfluence.numberValue = 0.55;
+					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
+					bumpDecorator.param_bumpinessRange.numberValue = 0.3 ;
+					bumpDecorator.param_glossiness.numberValue = 0.90  ;
+					bumpDecorator.param_shininess.numberValue = 0.16  ;
+					
+					
+					colorDecorator.param_colorBlending.upperRangeValue = 0.9;
+					colorDecorator.param_colorBlending.lowerRangeValue = 0.65;
+					colorDecorator.param_pickRadius.lowerRangeValue = 0.0;
+					colorDecorator.param_pickRadius.upperRangeValue = 0.33;
+					colorDecorator.param_brushOpacity.numberValue = 0.93;
+					colorDecorator.param_brushOpacityRange.numberValue = 0.06;
+					
+					
+					
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
+					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_STRONG_IN;
+					sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.8;
+					sizeDecorator.param_mappingRange.numberValue = 0.04+precision * 0.78;
+					
+					
+					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_SIZE_INV;
+					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SPEED_INV;
+					spawnDecorator.param_maxOffset.numberValue = 0.1+precision * 30;
+					spawnDecorator.param_minOffset.numberValue = 0.1+precision * 5;
+					spawnDecorator.param_multiples.lowerRangeValue = 1+precision * 3;
+					spawnDecorator.param_multiples.upperRangeValue = 7+precision * 4;
+					
+					
+				
+					
+					
+					
+					
 					break;
+				
 				/*
 				case STYLE_FRECKLESOLD:
 					trace("STYLE_FRECKLES2");
@@ -636,15 +695,80 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function processPoints(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
-			//only active for pixelate style
+			
+			var addedPoints:Vector.<SamplePoint> = new Vector.<SamplePoint>();
+			
+			var gyro:Matrix3D = GyroscopeManager.orientationMatrix;
+			var vector:Vector.<Vector3D> = GyroscopeManager.orientationMatrix.decompose();
+			//vector[1] is rotation vector
+			
+			//TESTING ON DESKTOP
+			if(!CoreSettings.RUNNING_ON_iPAD)
+			{vector[1].y=Math.random()*0.3-0.15;
+			vector[1].x=0.7;}
+			
+			//ADD A BIT OF TURBULENCE
+			vector[1].x+=Math.random()*0.3-0.15;
+			vector[1].y+=Math.random()*0.3-0.15;
+			
+			//trace(vector[1]);
+			
 			for ( var i:int = 0; i < points.length; i++ )
 			{
-				if ( Math.random() < 0.10 )
+				/*if ( Math.random() < 0.10 )
 				{
 					points[i].x += (Math.random()-Math.random()) * gridDecorator.param_stepX.numberValue;
 					points[i].y += (Math.random()-Math.random()) * gridDecorator.param_stepY.numberValue;
+				}*/
+				
+				if(i==0){
+					//var newPoint :SamplePoint = points[i].getClone();
+					//var newPoint :SamplePoint = points[i];
+					if(Math.random()<0.1){
+						_persistentPoints[0] = points[0].getClone();
+						_persistentPoints[0].size = 0.02*Math.random()+0.01 + precision*(Math.random()*0.02+0.05);
+						trace("create point")
+					}else {
+						if(_persistentPoints[0]){
+							//points[0] = _persistentPoints[0].getClone() ;
+							_persistentPoints[0].x += vector[1].y*100*_persistentPoints[0].size;
+							_persistentPoints[0].y += vector[1].x*100*_persistentPoints[0].size;
+							points[0].x = _persistentPoints[0].x ;
+							points[0].y = _persistentPoints[0].y ;
+							points[0].size = _persistentPoints[0].size;
+							//_persistentPoints[0].size *= (1+0.05-Math.random()*0.05);
+							//_persistentPoints[0].size *= 0.995;
+						}
+					 	
+					}
+					//newPoint.size = 0.2-i*0.15/2;
+					
+					
+					
+					//newPoint.x += vector[1].x*i*40;
+					//newPoint.y+= vector[1].y*i*40;
+					
+					
+					//_persistentPoints[i]=(newPoint);
+					//trace("added points");
 				}
+				
+				
+				//if ( Math.random() < 0.25 ){
+					
+					//addedPoints.push(newPoint);
+				
+					
+					//newPoint.x += vector[1].x*200;
+					//newPoint.y += vector[1].y*200;
+					
+					
+				//}
+				
+				
 			}
+			//points.concat(_persistentPoints);
+			
 			
 			return points;
 		}

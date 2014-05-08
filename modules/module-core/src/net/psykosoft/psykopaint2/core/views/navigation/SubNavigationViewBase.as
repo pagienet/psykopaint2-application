@@ -186,6 +186,19 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			var displayObject : DisplayObject = getItemRendererForElementWithId(id);
 			displayObject.visible = visible;
 		}
+		
+		
+		public function hideAllButtons():void {
+			
+			var dataProvider:Vector.<ISnapListData> = _scroller.dataProvider;
+			if( dataProvider ) {
+				var numData:uint = dataProvider.length;
+				for( var i:uint = 0; i < numData; i++ ) {
+					var data:ButtonData = dataProvider[ i ] as ButtonData;
+					getItemRendererForElementWithId(data.id).visible = false;
+				}
+			}
+		}
 
 		public function enableButtonWithId( id:String, enabled:Boolean ):void {
 			var targetData:ButtonData;

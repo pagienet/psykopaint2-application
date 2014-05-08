@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.managers.social
 	
 	import flash.display.BitmapData;
 import flash.events.EventDispatcher;
+import flash.utils.describeType;
 
 import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	
@@ -49,6 +50,8 @@ import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 			
 			trace("SocialSharingManager:Init facebook...");
 			// as of April 2013, Facebook is dropping support for iOS devices with a version below 5.  You can check this with isFacebookSupported():
+			trace("SocialSharingManager - instance: " + GoViral.goViral);
+//			trace(describeType(GoViral.goViral));
 			if (GoViral.goViral.isFacebookSupported())
 			{
 				GoViral.goViral.initFacebook(FACEBOOK_APP_ID, "");

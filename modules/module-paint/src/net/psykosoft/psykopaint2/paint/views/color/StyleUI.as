@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 {
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
+	import com.greensock.events.TweenEvent;
 	
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -105,13 +106,18 @@ package net.psykosoft.psykopaint2.paint.views.color
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onStyleMouseMove );
 			stage.addEventListener(MouseEvent.MOUSE_UP, onStyleMouseUp );
 			
-			previewDelay = setTimeout(showStylePreview,200);
+			//previewDelay = setTimeout(showStylePreview,200);
+			//MATHIEU NO DELAY ANYMORE
+			showStylePreview();
 			onStyleMouseMove();
 		}
 		
 		private function showStylePreview():void
 		{
 			styleBar.addChild(previewIcon);
+			TweenLite.killTweensOf(previewIcon);
+			previewIcon.alpha=0;
+			TweenLite.to(previewIcon,0.1,{overwrite:false,ease:Expo.easeOut,alpha:1});
 		}
 		
 		protected function onStyleMouseMove( event:MouseEvent = null ):void
@@ -129,7 +135,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 				
 				var spacing:Number = sliderRange / (styleParameter.stringList.length - 1);
 				//styleSelector.x = sliderOffset + styleBar.x + index * spacing;
-				TweenLite.to(styleSelector,0.2,{ease:Expo.easeOut,x:sliderOffset + styleBar.x + index * spacing});
+				TweenLite.to(styleSelector,0.2,{overwrite:false,ease:Expo.easeOut,x:sliderOffset + styleBar.x + index * spacing});
 				styleParameter.index = index;
 				
 				updateStyleSliderShuffling();
@@ -166,8 +172,12 @@ package net.psykosoft.psykopaint2.paint.views.color
 		{
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onStyleMouseMove );
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onStyleMouseUp );
-			if ( styleBar.contains(previewIcon)) styleBar.removeChild(previewIcon);
-			clearTimeout(previewDelay);
+			//if ( styleBar.contains(previewIcon)) styleBar.removeChild(previewIcon);
+			
+			TweenLite.to(previewIcon,0.3,{overwrite:false,delay:0.4,ease:Expo.easeOut,alpha:0,onComplete:function(){
+				if ( styleBar.contains(previewIcon)) styleBar.removeChild(previewIcon);
+			}});
+			//clearTimeout(previewDelay);
 		}
 		
 		protected function onSlider1MouseDown( event:MouseEvent ):void

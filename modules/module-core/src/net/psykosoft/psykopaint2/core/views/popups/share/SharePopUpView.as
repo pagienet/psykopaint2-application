@@ -29,6 +29,8 @@ public class SharePopUpView extends PopUpViewBase
 	public var twitterChk:CheckBox;
 	public var paintingPlaceHolder:Sprite;
 	public var paintingMask:Sprite;
+	public var twitterChkBg:Sprite;
+	public var facebookChkBg:Sprite;
 
 	private var _rightButton:IconButtonAlt;
 	private var _bmd:BitmapData;
@@ -45,11 +47,13 @@ public class SharePopUpView extends PopUpViewBase
 		_rightButton.label.visible = false;
 		_rightButton.addEventListener( MouseEvent.CLICK, onRightBtnClick );
 		rightSide.visible = false;
+
+		// Disabled for the time being.
+		twitterChk.visible = twitterChkBg.visible = false;
 	}
 
 	private function onRightBtnClick( event:MouseEvent ):void {
 		popUpWantsToShareSignal.dispatch(_bmd, facebookChk.selected, twitterChk.selected);
-		popUpWantsToCloseSignal.dispatch();
 	}
 
 	override protected function onDisabled():void {

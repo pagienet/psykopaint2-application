@@ -184,6 +184,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onIntroComplete() : void
 		{
 			notifyHomeViewIntroZoomComplete.dispatch();
+			view.activateCameraControl();
 		}
 
 		override protected function onStateChange(newState : String) : void

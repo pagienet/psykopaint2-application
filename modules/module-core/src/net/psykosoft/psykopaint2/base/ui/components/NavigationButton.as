@@ -65,10 +65,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_icon.stop();
 		}
 
-		protected function updateSelected():void {
-			transform.colorTransform = _selected ? selectedCtf : enabledCtf;
-		}
-
 		// ---------------------------------------------------------------------
 		// Public.
 		// ---------------------------------------------------------------------
@@ -83,11 +79,15 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function set selected( value:Boolean ):void {
-//			trace( this, "selected: " + value + ", " + _label.text );
+//			trace( this, "selected: " + value + ", " + _label.text + ", selectable: " + _selectable );
 			if( !_selectable ) return;
 			_selected = value;
 			mouseInteractive = _disableMouseInteractivityWhenSelected ? !_selected && _enabled : _enabled;
 			updateSelected();
+		}
+
+		protected function updateSelected():void {
+			transform.colorTransform = _selected ? selectedCtf : enabledCtf;
 		}
 
 		public function get selected():Boolean {

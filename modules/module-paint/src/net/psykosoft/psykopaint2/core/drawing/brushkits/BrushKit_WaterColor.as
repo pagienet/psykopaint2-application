@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.brushkits
 {
 	import flash.events.Event;
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
@@ -11,6 +12,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.CallbackDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.StationaryDecorator;
 
 	public class BrushKit_WaterColor extends BrushKit
 	{
@@ -67,6 +69,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var _minSplatterChance : Number = .1;
 		private var _maxSplatterChance : Number = 1.0;
 		private var _splatterSpeedNorm:Number = 40 * CoreSettings.GLOBAL_SCALING;
+		private var stationaryDecorator:StationaryDecorator;
 
 		
 		public function BrushKit_WaterColor()
@@ -97,12 +100,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
 			
-			param_precision = new PsykoParameter( PsykoParameter.NumberParameter,"Precision",0.5,0,1);
+			param_precision = new PsykoParameter( PsykoParameter.NumberParameter,"Precision",0.25,0,1);
 			param_precision.showInUI = 1;
 			param_precision.addEventListener( Event.CHANGE, onPrecisionChanged );
 			_parameterMapping.addParameter(param_precision);
 			
-			param_intensity = new PsykoParameter( PsykoParameter.NumberParameter,"Intensity",0.25,0,1);
+			param_intensity = new PsykoParameter( PsykoParameter.NumberParameter,"Intensity",0.50,0,1);
 			param_intensity.showInUI = 2;
 			param_intensity.addEventListener( Event.CHANGE, onIntensityChanged );
 			_parameterMapping.addParameter(param_intensity);
@@ -119,15 +122,24 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			sizeDecorator = new SizeDecorator();
 			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_SPEED;
 			sizeDecorator.param_invertMapping.booleanValue = true;
-			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
+			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_EXPONENTIAL_OUT;
 			sizeDecorator.param_mappingFactor.numberValue = .2;
 			sizeDecorator.param_mappingRange.numberValue = .8;
 			
 			callbackDecorator = new CallbackDecorator( this, processPoints );
 			
+			
+			stationaryDecorator = new StationaryDecorator();
+			stationaryDecorator.param_delay.numberValue=10;
+			stationaryDecorator.param_maxOffset.numberValue=50;
+			stationaryDecorator.param_sizeRange.lowerRangeValue=1;
+			stationaryDecorator.param_sizeRange.upperRangeValue=1;
+			
+			pathManager.addPointDecorator(stationaryDecorator);
 			pathManager.addPointDecorator(callbackDecorator);
 			pathManager.addPointDecorator(sizeDecorator);
 			pathManager.addPointDecorator(splatterDecorator);
+			
 			
 
 			onStyleChanged(null);
@@ -269,7 +281,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			for ( var i:int = points.length; --i > -1; )
 			{
 				var chance : Number = _minSplatterChance + points[i].speed * splatterRange / _splatterSpeedNorm;
-				trace (chance);
+				//trace (chance);
 				if ( Math.random() > chance )
 				{
 					PathManager.recycleSamplePoint( points.splice(i,1)[0] );

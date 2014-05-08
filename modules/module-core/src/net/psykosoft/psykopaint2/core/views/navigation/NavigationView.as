@@ -82,17 +82,18 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public function updateSubNavigation( subNavType:Class ):void {
 
 			//THE DIRECTION OF THE TRANSITION CHANGE IF WE CLICK ON BACK BUTTON
-			var tweenDirection:int = (_clickedButton && _clickedButton.id =="Back")?-1:1;
-			
-			var navigationView:NavigationView = this;
-			
-			
+//			var tweenDirection:int = (_clickedButton && _clickedButton.id =="Back")?-1:1;
+//			var navigationView:NavigationView = this;
+
 			// Keep current nav when incoming class is the abstract one.
 			// TODO: review...
 			if( subNavType == SubNavigationViewBase ) {
 				//loadingView.visible = true;
 				return;
 			}
+
+//			trace("Class: " + Object(_currentSubNavView).constructor);
+			if(subNavType == Object(_currentSubNavView).constructor ) return;
 
 			trace( this, "updating sub-nav: " + subNavType );
 			
@@ -174,8 +175,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				showNewSubNavigationView(subNavType);
 				//loadingView.visible=false;
 			}
-		
-			
 		}
 		
 		private function showNewSubNavigationView(subNavType:Class):void{

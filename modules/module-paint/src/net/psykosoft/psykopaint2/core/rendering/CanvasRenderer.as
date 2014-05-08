@@ -191,6 +191,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			// transformation matrix originalRect -> renderRect
 			var scaleX : Number = _renderRect.width / _backgroundBaseRect.width;
 			var scaleY : Number = _renderRect.height / _backgroundBaseRect.height;
+			
 			var tx : Number = _renderRect.x - scaleX*_backgroundBaseRect.x;
 			var ty : Number = _renderRect.y - scaleY*_backgroundBaseRect.y;
 
