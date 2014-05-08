@@ -37,7 +37,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		private var _stage:Stage;
 		private var _delegate:GestureDelegate;
 		
-		private static var _gesturesEnabled:Boolean = true;
+		private static var _gesturesEnabled:Boolean = false;
 		
 		
 		private var _swipeGestureRight:SwipeGesture;
@@ -130,27 +130,22 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			_panGestureHorizontal.minNumTouchesRequired = _panGestureHorizontal.maxNumTouchesRequired = 1;
 			_panGestureHorizontal.direction = PanGestureDirection.HORIZONTAL;
 			_panGestureHorizontal.addEventListener( GestureEvent.GESTURE_BEGAN, onHorizontalPanGestureBegan );
-			_panGestureHorizontal.addEventListener( GestureEvent.GESTURE_ENDED, onHorizontalPanGestureEnded );
-			//_panGestureHorizontal.addEventListener( GestureEvent.GESTURE_CHANGED, onHorizontalPanGestureUpdating );
 			_panGestureHorizontal.delegate = _delegate;
 		}
 
 		private function onHorizontalPanGestureBegan( event:GestureEvent ):void {
 //			trace( this, "onHorizontalPanGestureBegan" );
 			if ( _gesturesEnabled )
+			{
+				_panGestureHorizontal.addEventListener( GestureEvent.GESTURE_ENDED, onHorizontalPanGestureEnded );
 				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_BEGAN, event );
+			}
 		}
 		
-		private function onHorizontalPanGestureUpdating( event:GestureEvent ):void {
-			//trace( this, "onHorizontalPanGestureUpdating" );
-			if ( _gesturesEnabled )
-				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_UPDATED, event );
-		}
-
 		private function onHorizontalPanGestureEnded( event:GestureEvent ):void {
 //			trace( this, "onHorizontalPanGestureEnded" );
-		//	if ( _gesturesEnabled )
-				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_ENDED, event );
+			_panGestureHorizontal.removeEventListener( GestureEvent.GESTURE_ENDED, onHorizontalPanGestureEnded );
+			notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_ENDED, event );
 		}
 
 		// ---------------------------------------------------------------------
@@ -162,20 +157,22 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			_panGestureVertical.minNumTouchesRequired = _panGestureVertical.maxNumTouchesRequired = 1;
 			_panGestureVertical.direction = PanGestureDirection.VERTICAL;
 			_panGestureVertical.addEventListener( GestureEvent.GESTURE_BEGAN, onVerticalPanGestureBegan );
-			_panGestureVertical.addEventListener( GestureEvent.GESTURE_ENDED, onVerticalPanGestureEnded );
 			_panGestureVertical.delegate = _delegate;
 		}
 
 		private function onVerticalPanGestureBegan( event:GestureEvent ):void {
 //			trace( this, "onVerticalPanGestureBegan" );
 			if ( _gesturesEnabled )
+			{
+				_panGestureVertical.addEventListener( GestureEvent.GESTURE_ENDED, onVerticalPanGestureEnded );
 				notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_BEGAN, event );
+			}
 		}
 
 		private function onVerticalPanGestureEnded( event:GestureEvent ):void {
 //			trace( this, "onVerticalPanGestureEnded" );
-		//	if ( gesturesEnabled )
-				notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_ENDED, event );
+			_panGestureVertical.removeEventListener( GestureEvent.GESTURE_ENDED, onVerticalPanGestureEnded );
+			notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_ENDED, event );
 		}
 
 		
@@ -229,7 +226,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			_longTapGesture.minPressDuration = 300;//170;
 			_longTapGesture.slop = 0.01;
 			_longTapGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onLongTapGestureBegan );
-			_longTapGesture.addEventListener( GestureEvent.GESTURE_ENDED, onLongTapGestureEnded );
 			
 			
 			_tapGesture = new TapGesture( _stage );
@@ -246,7 +242,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		
 		private function onTapGestureRecognized( event:GestureEvent ):void {
 //			trace( this, "onTapGestureRecognized" );
-			notifyGlobalGestureSignal.dispatch( GestureType.TAP_GESTURE_RECOGNIZED, event );
+			if ( _gesturesEnabled )
+				notifyGlobalGestureSignal.dispatch( GestureType.TAP_GESTURE_RECOGNIZED, event );
 		}
 		
 		private function onLongTapGestureBegan( event:GestureEvent ):void {
@@ -255,22 +252,30 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			//var obj:Array = target.getObjectsUnderPoint(LongPressGesture(event.target).location);
 			//if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
 			//{
+			if ( _gesturesEnabled )
+			{
 				notifyGlobalGestureSignal.dispatch( GestureType.LONG_TAP_GESTURE_BEGAN, event );
+				_longTapGesture.addEventListener( GestureEvent.GESTURE_ENDED, onLongTapGestureEnded );
+			}
 			//}
 		}
 		
 		private function onLongTapGestureEnded( event:GestureEvent ):void {
+			_longTapGesture.removeEventListener( GestureEvent.GESTURE_ENDED, onLongTapGestureEnded );
 			notifyGlobalGestureSignal.dispatch( GestureType.LONG_TAP_GESTURE_ENDED, event );
 			
 		}
 		
 		private function onTwoFingerTapGestureRecognized( event:GestureEvent ):void {
 //			trace( this, "onTwoFingerTapGestureRecognized" );
-			var target:Stage =  Stage(TapGesture(event.target).target);
-			var obj:Array = target.getObjectsUnderPoint(TapGesture(event.target).location);
-			if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
+			if ( _gesturesEnabled )
 			{
-				notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_TAP_GESTURE_RECOGNIZED, event );
+				var target:Stage =  Stage(TapGesture(event.target).target);
+				var obj:Array = target.getObjectsUnderPoint(TapGesture(event.target).location);
+				if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
+				{
+					notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_TAP_GESTURE_RECOGNIZED, event );
+				}
 			}
 		}
 		
