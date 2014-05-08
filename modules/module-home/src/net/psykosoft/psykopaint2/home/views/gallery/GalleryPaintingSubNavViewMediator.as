@@ -67,9 +67,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function updateMenu() : void
 		{
-			trace("GPSNVM - updateMenu()");
-			trace("LOOKING AT NEW PAINTING, user: " + activePaintingModel.painting.userID);
-			trace("BEING: " + loggedInUser.userID);
+//			trace("GPSNVM - updateMenu()");
+//			trace("LOOKING AT NEW PAINTING, user: " + activePaintingModel.painting.userID);
+//			trace("BEING: " + loggedInUser.userID);
 
 			if (!activePaintingModel.painting || activePaintingModel.painting.collectionType == GalleryType.NONE)
 				showButtons(false);
