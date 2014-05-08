@@ -16,6 +16,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			super();
 		}
 
+		private var _startWithSelectedId:String;
+		private var _buttonsCreated:Boolean;
+		public function set startWithSelectedId(value:String):void {
+			_startWithSelectedId = value;
+			if(_buttonsCreated) selectButtonWithLabel(_startWithSelectedId);
+		}
+
 		override protected function onEnabled():void {
 			setHeader( "" );
 			//setLeftButton( ID_BACK, ID_BACK );
@@ -23,11 +30,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		override protected function onSetup():void {
 			super.onSetup();
-			createCenterButton( ID_FOLLOWING, ID_FOLLOWING, ButtonIconType.FRIENDS );
-			createCenterButton( ID_YOURS, ID_YOURS, ButtonIconType.YOURS );
-			createCenterButton( ID_MOST_RECENT, ID_MOST_RECENT, ButtonIconType.MOST_RECENT );
-			createCenterButton( ID_MOST_LOVED, ID_MOST_LOVED, ButtonIconType.MOST_LOVED );
+			createCenterButton( ID_FOLLOWING, ID_FOLLOWING, ButtonIconType.FRIENDS, null, null, true );
+			createCenterButton( ID_YOURS, ID_YOURS, ButtonIconType.YOURS, null, null, true );
+			createCenterButton( ID_MOST_RECENT, ID_MOST_RECENT, ButtonIconType.MOST_RECENT, null, null, true );
+			createCenterButton( ID_MOST_LOVED, ID_MOST_LOVED, ButtonIconType.MOST_LOVED, null, null, true );
 			validateCenterButtons();
+			selectButtonWithLabel(_startWithSelectedId);
+			_buttonsCreated = true;
 		}
 	}
 }
