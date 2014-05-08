@@ -68,6 +68,11 @@ public class SharePopUpViewMediator extends MediatorBase
 		if(shareTwitter) {
 			// TODO
 		}
+
+		// Nothing to wait for, close.
+		if(!shareFacebook && !shareTwitter) {
+			requestHidePopUpSignal.dispatch();
+		}
 	}
 
 	private function doShareFacebook():void {
