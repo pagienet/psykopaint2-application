@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.brushkits
 {
 	import flash.events.Event;
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
@@ -11,6 +12,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.CallbackDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.StationaryDecorator;
 
 	public class BrushKit_WaterColor extends BrushKit
 	{
@@ -67,6 +69,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var _minSplatterChance : Number = .1;
 		private var _maxSplatterChance : Number = 1.0;
 		private var _splatterSpeedNorm:Number = 40 * CoreSettings.GLOBAL_SCALING;
+		private var stationaryDecorator:StationaryDecorator;
 
 		
 		public function BrushKit_WaterColor()
@@ -125,9 +128,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			callbackDecorator = new CallbackDecorator( this, processPoints );
 			
+			
+			stationaryDecorator = new StationaryDecorator();
+			stationaryDecorator.param_delay.numberValue=10;
+			stationaryDecorator.param_maxOffset.numberValue=50;
+			stationaryDecorator.param_sizeRange.lowerRangeValue=1;
+			stationaryDecorator.param_sizeRange.upperRangeValue=1;
+			
+			pathManager.addPointDecorator(stationaryDecorator);
 			pathManager.addPointDecorator(callbackDecorator);
 			pathManager.addPointDecorator(sizeDecorator);
 			pathManager.addPointDecorator(splatterDecorator);
+			
 			
 
 			onStyleChanged(null);

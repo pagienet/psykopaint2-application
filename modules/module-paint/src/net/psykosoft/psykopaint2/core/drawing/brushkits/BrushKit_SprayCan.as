@@ -1,19 +1,13 @@
 package net.psykosoft.psykopaint2.core.drawing.brushkits
 {
-	import com.greensock.easing.Expo;
-	
-	import flash.display3D.Context3DBlendFactor;
 	import flash.events.Event;
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.SketchBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
-	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.AbstractPointDecorator;
@@ -21,14 +15,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.CallbackDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.GridDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.StationaryDecorator;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
-	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
-	
-	import robotlegs.bender.framework.impl.ConfigManager;
 
 	public class BrushKit_SprayCan extends BrushKit
 	{
@@ -56,6 +47,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var callbackDecorator:CallbackDecorator;
 		private var eraserMode:Boolean;
 		private var _persistentPoints:Object;
+		private var stationaryDecorator:StationaryDecorator;
 		
 		
 		public function BrushKit_SprayCan()
@@ -86,6 +78,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
 			pathManager.pathEngine.outputStepSize.numberValue = 4;
 			pathManager.pathEngine.sendTaps = false;
+			
+			
+			stationaryDecorator = new StationaryDecorator();
+			stationaryDecorator.param_delay.numberValue=10;
+			stationaryDecorator.param_maxOffset.numberValue=20;
+			stationaryDecorator.param_sizeRange.lowerRangeValue=1;
+			stationaryDecorator.param_sizeRange.upperRangeValue=1;
+			pathManager.addPointDecorator(stationaryDecorator);
+
 			
 			sizeDecorator = new SizeDecorator();
 			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
@@ -142,6 +143,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			pathManager.addPointDecorator( colorDecorator );
 			
 			callbackDecorator = new CallbackDecorator( this, processPoints );
+			callbackDecorator.hasActivePoints()
 			pathManager.addPointDecorator( callbackDecorator );
 			
 			_parameterMapping = new PsykoParameterMapping();
@@ -200,6 +202,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			spawnDecorator.active = true;
 			splatterDecorator.active = true;
 			callbackDecorator.active = false;
+			stationaryDecorator.active=false;
 			
 			
 			
@@ -270,7 +273,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					//DISTANCE BETWEEN STEPS : THE LESS, THE MORE DENSE IT WILL BE
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 3 ;
-
+					brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
+					//brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 3 - precision * 2.5;
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 2.5;
+					
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_FIXED;
 					bumpDecorator.param_bumpInfluence.numberValue = 0.45;
@@ -293,27 +299,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					sizeDecorator.param_mappingRange.numberValue = 0.01;
 					sizeDecorator.param_maxSpeed.numberValue = 200;
 					
-					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
-					splatterDecorator.param_splatFactor.numberValue = 0.01+0.4 * precision;
-					//splatterDecorator.param_splatFactor.numberValue = 1;
-					
-					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_FIXED;
-					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_FIXED;
-					spawnDecorator.param_maxSize.numberValue = 0.3;
-					spawnDecorator.param_multiples.lowerRangeValue = 1;
-					spawnDecorator.param_multiples.upperRangeValue = 1;
-					spawnDecorator.param_maxOffset.numberValue = precision *5;
-					spawnDecorator.param_minOffset.numberValue = 2;
-					spawnDecorator.param_autorotate.booleanValue = false;
-					spawnDecorator.param_bristleVariation.numberValue = 0.2;
 					
 					
-					
-					
-					brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
-					//brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 3 - precision * 2.5;
-					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 2.5;
-					
+				
 					
 					break;
 				
@@ -401,7 +389,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				
 				
 				case STYLE_HALO_SPRAY:
-					
+					stationaryDecorator.active=true;
+						
 					brushEngine.textureScaleFactor = 2;
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 10 + precision * 15;
 					
@@ -552,7 +541,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				
 				case STYLE_DROPPING:
 					
-					
+					stationaryDecorator.active=true;
 					callbackDecorator.active=true;
 					splatterDecorator.active=false;
 					
