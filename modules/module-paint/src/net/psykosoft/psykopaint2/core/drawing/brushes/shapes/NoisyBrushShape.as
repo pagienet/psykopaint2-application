@@ -75,7 +75,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			
 			m.createGradientBox( size* _variationFactors[2], size * _variationFactors[3]);
 			alphaMask.graphics.beginGradientFill(GradientType.RADIAL,[0x7f7f00,0x7f7f00],[0,1],[0,255],m);
-			alphaMask.graphics.drawRect(0,0,size * _variationFactors[2], size* _variationFactors[3]);
+			//alphaMask.graphics.drawRect(0,0,size * _variationFactors[2], size* _variationFactors[3]);
+			alphaMask.graphics.drawCircle(size * _variationFactors[2]/2,size* _variationFactors[3]/2,size * _variationFactors[2]);
 			alphaMask.graphics.endFill();
 			
 			m.identity();

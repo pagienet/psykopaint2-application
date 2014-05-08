@@ -93,9 +93,9 @@ package net.psykosoft.psykopaint2.core.model
 				styleBlendParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Style Blend Factor",0.5,0,1);
 				previewMixtureParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Preview Blending",0.5,0,1);
 				setupColorTransfer(0);
-				
-				_colorPalettes.push( Vector.<uint>([0x0b0b0b,0x01315a,0x00353b,0x026d01,0x452204,
-					0x7a1023,0xa91606,0xbd9c01,0xdedddb,0x04396c]));
+				//DEFAULT PALETTE COLORS
+				_colorPalettes.push( Vector.<uint>([0x231f20/*BLACK*/,0x00aeef/*CYAN BLUE*/,0xf4202f/*RED*/,0xfaf716/*YELLOW*/,0x84e626/*GREEN*/,
+					0x88fb19/*UNUSED, USERD FOR ERASER*/,0xfbcfac/* SKIN COLOR */,0x583520/* DARK BROWN */,0xfafafa/*WHITE*/,0xffffff/*SAMPLE SWATCH*/]));
 				
 				
 				
