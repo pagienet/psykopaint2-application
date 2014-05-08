@@ -82,7 +82,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["splat","paint ball","confettis","crayator","autopaint","splotch"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Splat","Paint ball","Confettis","Crayator","Autopaint","Splotch"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
