@@ -63,7 +63,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					delayTriggered = false;
 				}
 			} else {
-				if ( lastX != points[points.length-1].x || lastY != points[points.length-1].y ) delayTriggered = false;
+				if ( points[0].first || lastX != points[points.length-1].x || lastY != points[points.length-1].y ) delayTriggered = false;
 				lastX = points[points.length-1].x;
 				lastY = points[points.length-1].y;
 				lastAngle = points[points.length-1].angle;
@@ -85,6 +85,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		override public function hasActivePoints():Boolean
 		{
 			return false;
+		}
+		
+		public function resetLastPoint():void
+		{
+			delayTriggered = false;
 		}
 		
 		

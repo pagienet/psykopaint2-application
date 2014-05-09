@@ -55,7 +55,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			result[0] = new Vector.<SamplePoint>();
 			result[1] = new Vector.<SamplePoint>();
 			
-			var cb:PathManagerCallbackInfo =  manager.callbacks;
 			var conditionIndex:int = param_testProperty.index
 			
 			for ( var i:int = 0; i < points.length; i++ )

@@ -79,6 +79,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
 			pathManager.pathEngine.outputStepSize.numberValue = 4;
 			pathManager.pathEngine.sendTaps = false;
+			pathManager.addCallback( this,null,onPathStart,onPathEnd );
 			
 			
 			stationaryDecorator = new StationaryDecorator();
@@ -144,7 +145,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			pathManager.addPointDecorator( colorDecorator );
 			
 			callbackDecorator = new CallbackDecorator( this, processPoints );
-			callbackDecorator.hasActivePoints()
+			
+			//this is not how it is used:
+			//callbackDecorator.hasActivePoints()
+			callbackDecorator.keepActive = false; //or true, but it should only be true under controlled circumstances and not permanently.
 			pathManager.addPointDecorator( callbackDecorator );
 			
 			_parameterMapping = new PsykoParameterMapping();
@@ -173,6 +177,21 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			
 			onStyleChanged(null);
+		}
+		
+		private function onPathStart():void
+		{
+			if (  _persistentPoints[0] != null ) {
+				PathManager.recycleSamplePoint(_persistentPoints[0]);
+				_persistentPoints[0] = null;
+			}
+			stationaryDecorator.resetLastPoint();
+		}
+		
+		private function onPathEnd():void
+		{
+			
+			
 		}
 		
 		protected function onStyleChanged(event:Event):void
@@ -722,9 +741,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				}*/
 				
 				if(i==0){
+					
 					//var newPoint :SamplePoint = points[i].getClone();
 					//var newPoint :SamplePoint = points[i];
 					if(Math.random()<0.1){
+						//the way you stored the persistent points creates a memory leak.
+						//you should use always use PathManager.recycleSamplePoint() before you overwrite
+						//and old point, like this:
+						if ( _persistentPoints[0] != null ) PathManager.recycleSamplePoint(_persistentPoints[0]);
 						_persistentPoints[0] = points[0].getClone();
 						_persistentPoints[0].size = 0.02*Math.random()+0.01 + precision*(Math.random()*0.02+0.05);
 						trace("create point")

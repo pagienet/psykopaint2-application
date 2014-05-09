@@ -92,7 +92,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var _view : DisplayObject;
 		private var _active : Boolean;
 		private var _pathEngine : IPathEngine;
-		private var _callbacks : PathManagerCallbackInfo;
+		private var _callbacks : Vector.<PathManagerCallbackInfo>;
 		private var _accumulatedResults:Vector.<SamplePoint>;
 		private var _touchID : int;
 		private var _pointDecorators : Vector.<IPointDecorator>;
@@ -134,16 +134,25 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_accumulatedResults = new Vector.<SamplePoint>();
 			_pointDecorators = new Vector.<IPointDecorator>();
 			recordedData = new Vector.<Number>();
+			_callbacks = new Vector.<PathManagerCallbackInfo>();
 		}
 		
-		public function setCallbacks( callbackObject : Object, onPathPoints : Function, onPathStart : Function = null, onPathEnd : Function = null, onPickColor : Function = null) : void
+		public function addCallback( callbackObject : Object, onPathPoints : Function, onPathStart : Function = null, onPathEnd : Function = null, onPickColor : Function = null) : void
 		{
-			_callbacks = new PathManagerCallbackInfo(callbackObject, onPathPoints, onPathStart, onPathEnd, onPickColor );
+			_callbacks.push( new PathManagerCallbackInfo(callbackObject, onPathPoints, onPathStart, onPathEnd, onPickColor ));
+		}
+		
+		public function removeCallback( callbackObject : Object) : void
+		{
+			for ( var i:int = _callbacks.length; --i >-1;)
+			{
+				if ( _callbacks[i].callbackObject == callbackObject ) _callbacks.splice(i,1);
+			}
 		}
 
 		public function clearCallbacks() : void
 		{
-			_callbacks = null
+			_callbacks.length = 0;
 		}
 		
 		public function removeAllPointDecorators():void
@@ -164,17 +173,24 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		protected function sendPointsCallbacks(points : Vector.<SamplePoint>) : void
 		{
-			if(_callbacks.onPathPoints) {
-				_applyArray[0] = points;
-				_callbacks.onPathPoints.apply(_callbacks.callbackObject, _applyArray );
-				PathManager.recycleSamplePoints(points);
+			for ( var i:int = 0; i < _callbacks.length; i++ )
+			{
+				if(_callbacks[i].onPathPoints) 
+				{
+					_applyArray[0] = points;
+					_callbacks[i].onPathPoints.apply(_callbacks[i].callbackObject, _applyArray );
+				}
 			}
+			PathManager.recycleSamplePoints(points);
 		}
 
 		protected function sendStartCallbacks() : void
 		{
 			_startCallbacksSent = true;
-			if (_callbacks.onPathStart) _callbacks.onPathStart.apply(_callbacks.callbackObject);
+			for ( var i:int = 0; i < _callbacks.length; i++ )
+			{
+				if (_callbacks[i].onPathStart) _callbacks[i].onPathStart.apply(_callbacks[i].callbackObject);
+			}
 		}
 
 		protected function sendEndCallbacks() : void
@@ -182,7 +198,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			if (!_strokeInProgress)
 				_view.stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame, false );
 		
-			if (_startCallbacksSent && _callbacks.onPathEnd) _callbacks.onPathEnd.apply(_callbacks.callbackObject);
+			for ( var i:int = 0; i < _callbacks.length; i++ )
+			{
+				if (_startCallbacksSent && _callbacks[i].onPathEnd) _callbacks[i].onPathEnd.apply(_callbacks[i].callbackObject);
+			}
 			_startCallbacksSent = false;
 			
 			
@@ -624,9 +643,18 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			}
 		}
 		
-		public function get callbacks():PathManagerCallbackInfo
+		public function get callbacks():Vector.<PathManagerCallbackInfo>
 		{
 			return _callbacks;
+		}
+		
+		public function getFirstColorPickCallback():PathManagerCallbackInfo
+		{
+			for ( var i:int = 0; i < _callbacks.length; i++ )
+			{
+				if (_callbacks[i].onPickColor ) return _callbacks[i];
+			}
+			return null;
 		}
 
 		public function setCanvasMatrix(matrix : Matrix) : void
