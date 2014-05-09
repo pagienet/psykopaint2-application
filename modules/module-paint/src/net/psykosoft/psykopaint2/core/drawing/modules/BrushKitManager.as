@@ -477,7 +477,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			singleTapDelay = getTimer();
 			_view.removeEventListener(Event.ENTER_FRAME, onPaintOverNavCheck );
 			
-			if ( !userConfig.userConfig.hasFullVersion && _activeBrushKit.isPurchasable )
+			//TODO: this has to change once we are starting to sell single brushes!!!!
+			if ( !userConfig.userConfig.hasBrushKit1 && _activeBrushKit.isPurchasable )
 			{
 				notifyTogglePaintingEnableSignal.dispatch(false);
 				clearTimeout( _revealNavigationTimeout );
