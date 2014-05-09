@@ -22,9 +22,7 @@ package net.psykosoft.psykopaint2.crop.views.crop
 		private var _baseTextureSize:int;
 		private var _canvasWidth:int;
 		private var _canvasHeight:int;
-		private var _background : RefCountedRectTexture;
-		private var _sourceMap:BitmapData;
-		
+
 		public function CropView() {
 			super();
 		}
@@ -43,29 +41,5 @@ package net.psykosoft.psykopaint2.crop.views.crop
 		{
 			super.disable();
 		}
-
-		public function render(context3D : Context3D):void
-		{
-			if (_background) {
-				context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-				context3D.setDepthTest(false, Context3DCompareMode.ALWAYS);
-
-				CopyTexture.copy(_background.texture, context3D);
-//				CopyTexture.copy(_background.texture, context3D, widthRatio, heightRatio);
-				context3D.setDepthTest(true, Context3DCompareMode.LESS);
-			}
-		}
-
-		public function get background() : RefCountedRectTexture
-		{
-			return _background;
-		}
-
-		public function set background(background : RefCountedRectTexture) : void
-		{
-			if (_background) _background.dispose();
-			_background = background;
-		}
-		
 	}
 }

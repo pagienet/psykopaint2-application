@@ -6,7 +6,6 @@ package net.psykosoft.psykopaint2.app.commands
 
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.managers.rendering.SnapshotPromise;
-	import net.psykosoft.psykopaint2.crop.signals.RequestSetCropBackgroundSignal;
 
 	public class CreateCropBackgroundCommand
 	{
@@ -15,9 +14,6 @@ package net.psykosoft.psykopaint2.app.commands
 
 		[Inject]
 		public var notifyFrozenBackgroundCreatedSignal : NotifyFrozenBackgroundCreatedSignal;
-
-		[Inject]
-		public var requestSetCropBackgroundSignal : RequestSetCropBackgroundSignal;
 
 		private var _snapshotPromise : SnapshotPromise;
 
@@ -31,7 +27,6 @@ package net.psykosoft.psykopaint2.app.commands
 		{
 			_snapshotPromise.removeEventListener(SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot);
 			notifyFrozenBackgroundCreatedSignal.dispatch(_snapshotPromise.texture);
-			requestSetCropBackgroundSignal.dispatch(_snapshotPromise.texture.newReference());
 			_snapshotPromise.dispose();
 			_snapshotPromise = null;
 		}

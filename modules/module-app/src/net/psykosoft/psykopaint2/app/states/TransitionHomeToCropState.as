@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.app.states
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
-	import net.psykosoft.psykopaint2.app.signals.RequestCreateCropBackgroundSignal;
+	import net.psykosoft.psykopaint2.app.signals.RequestCreatePaintingBackgroundSignal;
 
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
@@ -11,9 +11,6 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestForceHomeSectionSignal;
-	import net.psykosoft.psykopaint2.home.views.home.HomeView;
-
 
 	use namespace ns_state_machine;
 
@@ -29,20 +26,10 @@ package net.psykosoft.psykopaint2.app.states
 		public var notifyCropModuleSetUpSignal : NotifyCropModuleSetUpSignal;
 
 		[Inject]
-		public var notifyBackgroundSetSignal : NotifyFrozenBackgroundCreatedSignal;
-
-		[Inject]
-		public var requestCreateCropBackgroundSignal : RequestCreateCropBackgroundSignal;
-
-		[Inject]
 		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
-
-		[Inject]
-		public var forceHomeSectionSignal : RequestForceHomeSectionSignal;
 
 		private var _bitmapData : BitmapData;
 		private var _orientation : int;
-		private var _background : RefCountedRectTexture;
 
 		public function TransitionHomeToCropState()
 		{
@@ -55,29 +42,18 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			_bitmapData = BitmapData(data.map);
 			_orientation = int( data.orientation );
-			// force position focused on easel in case we're going to quick for tweens to finish
-			forceHomeSectionSignal.dispatch(HomeView.EASEL);
-			notifyBackgroundSetSignal.addOnce(onBackgroundSet);
-			requestCreateCropBackgroundSignal.dispatch();
-		}
 
-		private function onBackgroundSet(background : RefCountedRectTexture) : void
-		{
-			if (_background) _background.dispose();
-			_background = background.newReference();
 			notifyCropModuleSetUpSignal.addOnce(onCropModuleSetUp);
 			requestSetupCropModuleSignal.dispatch(_bitmapData, _orientation);
 		}
 
 		private function onCropModuleSetUp() : void
 		{
-			stateMachine.setActiveState(cropState, {bitmapData: _bitmapData, background: _background.newReference(), orientation:_orientation});
+			stateMachine.setActiveState(cropState, {bitmapData: _bitmapData, orientation:_orientation});
 		}
 
 		override ns_state_machine function deactivate() : void
 		{
-			if (_background) _background.dispose();
-			_background = null;
 			_bitmapData = null;
 			_orientation = 0;
 		}

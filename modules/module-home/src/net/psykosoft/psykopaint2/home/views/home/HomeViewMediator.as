@@ -22,7 +22,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestForceHomeSectionSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 
 	public class HomeViewMediator extends MediatorBase

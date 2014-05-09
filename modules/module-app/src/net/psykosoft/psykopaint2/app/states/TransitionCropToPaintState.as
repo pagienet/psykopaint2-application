@@ -1,7 +1,10 @@
 package net.psykosoft.psykopaint2.app.states
 {
 	import flash.display.BitmapData;
-	
+
+	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
+	import net.psykosoft.psykopaint2.app.signals.RequestCreatePaintingBackgroundSignal;
+
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
@@ -64,9 +67,14 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var notifyHomeModuleDestroyedSignal:NotifyHomeModuleDestroyedSignal;
 
+		[Inject]
+		public var requestCreatePaintingBackgroundSignal : RequestCreatePaintingBackgroundSignal;
+
+		[Inject]
+		public var notifyBackgroundSetSignal : NotifyFrozenBackgroundCreatedSignal;
+
 		private var _croppedBitmapData : BitmapData;
 		private var _background : RefCountedRectTexture;
-		private var _surfaceData:SurfaceDataVO;
 
 		public function TransitionCropToPaintState()
 		{
@@ -84,8 +92,16 @@ package net.psykosoft.psykopaint2.app.states
 		override ns_state_machine function activate(data : Object = null) : void
 		{
 			_croppedBitmapData = BitmapData(data.bitmapData);
-			_background = RefCountedRectTexture(data.background);
-			
+			// force position focused on easel in case we're going to quick for tweens to finish
+			notifyBackgroundSetSignal.addOnce(onBackgroundSet);
+			requestCreatePaintingBackgroundSignal.dispatch();
+		}
+
+		private function onBackgroundSet(background : RefCountedRectTexture) : void
+		{
+			if (_background) _background.dispose();
+			_background = background.newReference();
+
 			notifySurfaceLoadedSignal.addOnce(onSurfaceLoaded);
 			requestLoadSurfaceSignal.dispatch(0);
 		}
