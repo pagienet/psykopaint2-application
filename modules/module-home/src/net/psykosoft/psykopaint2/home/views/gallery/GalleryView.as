@@ -1,50 +1,54 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Quad;
 
-	import flash.display.BitmapData;
-	import flash.display.Sprite;
-	import flash.display3D.Context3DCompareMode;
-	import flash.display3D.Context3DStencilAction;
-	import flash.events.Event;
-	import flash.geom.Rectangle;
-	import flash.geom.Vector3D;
-	import flash.utils.getTimer;
-	
-	import away3d.containers.ObjectContainer3D;
-	import away3d.containers.View3D;
-	import away3d.core.base.Geometry;
-	import away3d.core.managers.Stage3DProxy;
-	import away3d.entities.Mesh;
-	import away3d.events.Object3DEvent;
-	import away3d.hacks.BitmapRectTexture;
-	import away3d.hacks.MaskingMethod;
-	import away3d.hacks.PaintingMaterial;
-	import away3d.hacks.RectTextureBase;
-	import away3d.hacks.StencilMethod;
-	import away3d.hacks.TrackedBitmapRectTexture;
-	import away3d.lights.LightBase;
-	import away3d.materials.ColorMaterial;
-	import away3d.materials.TextureMaterial;
-	import away3d.materials.lightpickers.StaticLightPicker;
-	import away3d.primitives.PlaneGeometry;
-	import away3d.textures.BitmapTexture;
-	import away3d.textures.Texture2DBase;
-	
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
-	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
-	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
-	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
-	import net.psykosoft.psykopaint2.core.models.GalleryType;
-	import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
-	import net.psykosoft.psykopaint2.home.model.GalleryImageCache;
+import away3d.containers.ObjectContainer3D;
+import away3d.containers.View3D;
+import away3d.core.base.Geometry;
+import away3d.core.managers.Stage3DProxy;
+import away3d.entities.Mesh;
+import away3d.events.Object3DEvent;
+import away3d.hacks.BitmapRectTexture;
+import away3d.hacks.MaskingMethod;
+import away3d.hacks.PaintingMaterial;
+import away3d.hacks.RectTextureBase;
+import away3d.hacks.StencilMethod;
+import away3d.hacks.TrackedBitmapRectTexture;
+import away3d.lights.LightBase;
+import away3d.materials.ColorMaterial;
+import away3d.materials.TextureMaterial;
+import away3d.materials.lightpickers.StaticLightPicker;
+import away3d.primitives.PlaneGeometry;
+import away3d.textures.BitmapTexture;
+import away3d.textures.Texture2DBase;
 
-	import org.osflash.signals.Signal;
+import com.greensock.TweenLite;
 
-	public class GalleryView extends Sprite
+import com.greensock.easing.Quad;
+
+import flash.display.BitmapData;
+import flash.display.Sprite;
+import flash.display3D.Context3DCompareMode;
+import flash.display3D.Context3DStencilAction;
+import flash.events.Event;
+import flash.geom.Rectangle;
+import flash.geom.Vector3D;
+import flash.utils.getTimer;
+
+import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
+import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
+import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
+import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+import net.psykosoft.psykopaint2.core.models.GalleryType;
+import net.psykosoft.psykopaint2.core.models.PaintMode;
+import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
+import net.psykosoft.psykopaint2.home.model.GalleryImageCache;
+import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
+
+import org.osflash.signals.Signal;
+
+public class GalleryView extends Sprite
 	{
 		public static const CAMERA_FAR_POSITION:Vector3D = new Vector3D(-814, -40.14, 450);
 		public static var CAMERA_NEAR_POSITION:Vector3D = null;
@@ -106,6 +110,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _dragStartX:Number;
 		private var _dragStartY:Number;
 		private var _highQualityIndex:int = -1;
+		private var _ribbon:Mesh;
 
 		public function GalleryView(view:View3D, light:LightBase, stage3dProxy:Stage3DProxy)
 		{
@@ -115,6 +120,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache = new GalleryImageCache(_stage3DProxy);
 			_imageCache.thumbnailLoaded.add(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
+			_paintingModes = new Vector.<int>();
+			var ribbonMaterial:TextureMaterial = HomeMaterialsCache.getTextureMaterialById(HomeMaterialsCache.ICON_PAINTINGMODE);
+			_ribbon = new Mesh(new PlaneGeometry(50, 50, 1, 1, false, true), ribbonMaterial);
+			_ribbon.x = -80;
+			_ribbon.y = 53;
+			_ribbon.z = -2;
 			_imageCache.loadingComplete.add(onAllThumbnailsLoaded);
 			_container = new ObjectContainer3D();
 			_container.x = -PAINTING_OFFSET;
@@ -531,7 +542,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.clear();
 			_imageCache.thumbnailLoaded.add(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
+			_paintingModes = new Vector.<int>();
 		}
+
+		private var _paintingModes:Vector.<int>;
 
 		public function setImageCollection(collection:GalleryImageCollection):void
 		{
@@ -543,6 +557,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 			if (collection.type == GalleryType.NONE)
 				_activeImageProxy = null;
+
+			_paintingModes = new Vector.<int>();
+			for(var i:uint; i < collection.images.length; i++) {
+				_paintingModes[i] = collection.images[i].paintingMode;
+			}
+//			trace("-----> " + _paintingModes);
 
 			_minSwipe = -PAINTING_OFFSET;
 			_maxSwipe = -(PAINTING_OFFSET - (_numPaintings - 1) * PAINTING_SPACING);
@@ -599,13 +619,14 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			
 			_paintings[index] = new GalleryPaintingView(_paintingGeometry, material);
 			_paintings[index].x = index * PAINTING_SPACING;
-			
-			
+
+			if(_paintingModes && index < _paintingModes.length)
+				_paintings[index].showRibbon(_paintingModes[index] == PaintMode.COLOR_MODE, _ribbon);
+
 			// in case the active painting was moved out of sight and disposed, reset the HQ material
 			// UNLESS it hasn't finished loading!
 			if (!_loadingHQ && _showHighQuality && _highQualityIndex == index) {
 				_paintings[index].material = _highQualityMaterial;
-				
 			}
 
 			_container.addChild(_paintings[index]);
@@ -627,10 +648,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.thumbnailLoaded.removeAll();
 			_imageCache.loadingComplete.remove(onAllThumbnailsLoaded);
 			_imageCache.clear();
+			_paintingModes = null;
 			_paintingGeometry.dispose();
 			_loadingTexture.dispose();
 			if ( _paintingOccluder.geometry )_paintingOccluder.geometry.dispose();
 			_paintingOccluder.dispose();
+			_ribbon.material.dispose();
+			_ribbon.geometry.dispose();
 			disposeHighQualityMaterial();
 			stopInteraction();
 		}
@@ -671,8 +695,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onThumbnailLoaded(imageProxy:GalleryImageProxy, thumbnail:RectTextureBase):void
 		{
-			if (_paintings[imageProxy.index])
+			if (_paintings[imageProxy.index]) {
 				_lowQualityMaterials[imageProxy.index].texture = thumbnail;
+				_paintings[imageProxy.index].showRibbon(_paintingModes[imageProxy.index] == PaintMode.COLOR_MODE, _ribbon);
+			}
 		}
 
 		private function onThumbnailDisposed(imageProxy:GalleryImageProxy):void

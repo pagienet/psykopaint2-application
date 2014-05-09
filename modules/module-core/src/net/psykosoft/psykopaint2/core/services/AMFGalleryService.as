@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.core.services
 {
-	import net.psykosoft.psykopaint2.core.models.*;
+
+import flash.utils.describeType;
+
+import net.psykosoft.psykopaint2.core.models.*;
 
 	public class AMFGalleryService implements GalleryService
 	{
@@ -114,7 +117,10 @@ package net.psykosoft.psykopaint2.core.services
 			var len : int = array.length;
 			for (var i : int = 0; i < len; ++i) {
 				var obj : Object = array[i];
+//				for(var prop:* in obj) trace("property: " + prop + ", value: " + obj[prop]); // Uncomment to see dynamic props of incoming object
 				var vo : FileGalleryImageProxy = new FileGalleryImageProxy();
+				// TODO: "is_photo_painting" seems to always be 1 even if the painting was created in color mode
+				vo.paintingMode = PaintMode.COLOR_MODE; //obj["is_photo_painting"] == 1 ? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
 				vo.id = obj["id"];
 				vo.index = index + i;
 				vo.collectionType = type;

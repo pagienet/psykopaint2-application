@@ -27,7 +27,9 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		
 		
 		/** Sample Product IDs, must match iTunes Connect Items */
-		public static const FULL_UPGRADE_PRODUCT_ID:String="com.psykopaint.ipad.fullVersionUpgrade";
+		//public static const FULL_UPGRADE_PRODUCT_ID:String="com.psykopaint.ipad.fullVersionUpgrade";
+		public static const BRUSHKIT1_PRODUCT_ID:String="com.psykopaint.app.brushkit1";
+		
 		
 		/** Shared Object.  Used in this example to remember what we've bought. */
 		private var sharedObject:SharedObject;
@@ -97,7 +99,7 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			
 			// the list of ids is passed in as an as3 vector (typed Array.)
 			var productIdList:Vector.<String>=new Vector.<String>();
-			productIdList.push(FULL_UPGRADE_PRODUCT_ID);
+			productIdList.push(BRUSHKIT1_PRODUCT_ID);
 			
 			
 			// when this is done, we'll get a PRODUCT_DETAILS_LOADED or PRODUCT_DETAILS_FAILED event and go on from there...
@@ -122,9 +124,9 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			} else {
 				
 				var inventory:Object=sharedObject.data["inventory"];
-				if( inventory[FULL_UPGRADE_PRODUCT_ID]=="purchased")
+				if( inventory[BRUSHKIT1_PRODUCT_ID]=="purchased")
 				{
-					userConfigModel.userConfig.hasFullVersion = true;
+					userConfigModel.userConfig.hasBrushKit1 = true;
 				}
 			}
 			
@@ -144,18 +146,18 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			}
 			
 			// for this to work, you must have added the value of LEVELPACK_PRODUCT_ID in the iTunes Connect website
-			trace("InAppPurchaseManager: start purchase of non-consumable '"+FULL_UPGRADE_PRODUCT_ID+"'...");
+			trace("InAppPurchaseManager: start purchase of non-consumable '"+BRUSHKIT1_PRODUCT_ID+"'...");
 			
 			// we won't let you purchase it if its already in your inventory!
 			var inventory:Object=sharedObject.data["inventory"];
-			if (inventory[FULL_UPGRADE_PRODUCT_ID]!=null)
+			if (inventory[BRUSHKIT1_PRODUCT_ID]!=null)
 			{
-				notifyPurchaseStatusSignal.dispatch(FULL_UPGRADE_PRODUCT_ID,STATUS_PURCHASE_NOT_REQUIRED);
-				trace("InAppPurchaseManager: You already have a level pack!");
+				notifyPurchaseStatusSignal.dispatch(BRUSHKIT1_PRODUCT_ID,STATUS_PURCHASE_NOT_REQUIRED);
+				trace("InAppPurchaseManager: You already have bought Brush Kit 1!");
 				return;
 			}
 			
-			StoreKit.storeKit.purchaseProduct(FULL_UPGRADE_PRODUCT_ID);
+			StoreKit.storeKit.purchaseProduct(BRUSHKIT1_PRODUCT_ID);
 		}
 		
 		/** Example of how to restore transactions */
@@ -223,8 +225,8 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			var inventory:Object=sharedObject.data["inventory"];
 			switch(e.productId)
 			{
-				case FULL_UPGRADE_PRODUCT_ID:
-					inventory[FULL_UPGRADE_PRODUCT_ID]="purchased";
+				case BRUSHKIT1_PRODUCT_ID:
+					inventory[BRUSHKIT1_PRODUCT_ID]="purchased";
 					break;
 				
 				default:

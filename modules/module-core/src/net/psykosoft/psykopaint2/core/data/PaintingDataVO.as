@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.data
 		public var width:uint;
 		public var height:uint;
 		public var loadedFileName:String;
+		public var colorPalettes:Vector.<Vector.<uint>>;
 
 		public function PaintingDataVO()
 		{
@@ -38,6 +39,7 @@ package net.psykosoft.psykopaint2.core.data
 			sourceImageData = null;
 			normalSpecularOriginal = null;
 			colorBackgroundOriginal = null;
+			colorPalettes = null;
 		}
 	}
 }

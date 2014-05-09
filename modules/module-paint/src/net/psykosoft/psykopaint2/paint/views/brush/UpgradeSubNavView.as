@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			setHeader( "Try or Buy" );
 			
 			createCenterButton( ID_CANCEL,ID_CANCEL, ButtonIconType.CANCEL_UPGRADE, IconButton, null, true, true, false );
-			createCenterButton( ID_BUY,ID_BUY, ButtonIconType.BUY_UPGRADE, IconButton, null, true, true, false, MouseEvent.MOUSE_UP, this, onUpgradeIconReady );
+			createCenterButton( ID_BUY,"Purchase", ButtonIconType.BUY_UPGRADE, IconButton, null, true, true, false, MouseEvent.MOUSE_UP, this, onUpgradeIconReady );
 			validateCenterButtons();
 		
 		}

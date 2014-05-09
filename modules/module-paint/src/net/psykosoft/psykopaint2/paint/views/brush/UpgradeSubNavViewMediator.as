@@ -109,7 +109,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				case InAppPurchaseManager.STATUS_PURCHASE_COMPLETE:
 				case InAppPurchaseManager.STATUS_PURCHASE_NOT_REQUIRED:
 					//as long as we have a single buy in product this is okayish:
-					userConfig.userConfig.hasFullVersion = true;
+					userConfig.userConfig.hasBrushKit1 = true;
 					break;
 				
 				case InAppPurchaseManager.STATUS_STORE_UNAVAILABLE:
@@ -117,7 +117,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					//for testing on desktop you always get the brushes:
 					if ( !CoreSettings.RUNNING_ON_iPAD)  
 					{
-						userConfig.userConfig.hasFullVersion = true;
+						userConfig.userConfig.hasBrushKit1 = true;
 					} else {
 						requestUndoSignal.dispatch();
 						requestShowPopUpSignal.dispatch( PopUpType.ERROR )

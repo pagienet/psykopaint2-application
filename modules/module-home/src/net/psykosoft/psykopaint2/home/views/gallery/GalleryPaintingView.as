@@ -1,22 +1,16 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
-	import away3d.containers.ObjectContainer3D;
-	import away3d.core.base.Geometry;
-	import away3d.entities.Mesh;
-	import away3d.hacks.PaintingMaterial;
-	import away3d.materials.ColorMaterial;
-	import away3d.materials.MaterialBase;
-	import away3d.materials.TextureMaterial;
-	import away3d.primitives.PlaneGeometry;
-	import away3d.textures.BitmapTexture;
-	
-	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.home.views.book.HomeGeometryCache;
-	import net.psykosoft.psykopaint2.home.views.book.HomeGeometryCache;
-	import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
-	
-	public class GalleryPaintingView extends ObjectContainer3D
+
+import away3d.containers.ObjectContainer3D;
+import away3d.core.base.Geometry;
+import away3d.entities.Mesh;
+import away3d.materials.MaterialBase;
+import away3d.materials.TextureMaterial;
+
+import net.psykosoft.psykopaint2.home.views.book.HomeGeometryCache;
+import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
+
+public class GalleryPaintingView extends ObjectContainer3D
 	{
 		private var _mesh:Mesh;
 		private var _material:MaterialBase;
@@ -42,8 +36,21 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			//BookMaterialsProxy.onCompleteSignal.addOnce(loadTexture);
 			loadTexture();
 		}
-		
-		
+
+		private var _ribbon:Mesh;
+		public function showRibbon(value:Boolean, mesh:Mesh = null):void {
+//			trace("GalleryPaintingView - showPaintingBadge: " + value);
+			if(value) {
+				_ribbon = mesh.clone() as Mesh;
+				addChild(_ribbon);
+			}
+			else if(_ribbon) {
+				removeChild(_ribbon);
+				_ribbon = null;
+			}
+
+		}
+
 		private function loadTexture():void{
 			
 			var isframe:Boolean = (Math.random()>0.9);
@@ -91,6 +98,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 //			if(_loadingMesh.parent){
 //				removeChild(_loadingMesh);
 //			}
+			if(_ribbon) {
+				removeChild(_ribbon);
+			}
+			_ribbon = null;
 			_mesh.dispose();
 		}
 	}

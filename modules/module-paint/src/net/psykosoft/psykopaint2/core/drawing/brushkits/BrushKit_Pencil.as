@@ -210,7 +210,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				case STYLE_DEFAULT:
 					splatterDecorator.active=false;
 					
-					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.25;
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.7;
 					
 					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
@@ -314,8 +314,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 80;
 					spawnDecorator.param_minOffset.numberValue = 0.01+precision * 4;
 					spawnDecorator.param_maxOffset.numberValue = 0.01+precision * 10;
-					spawnDecorator.param_multiples.lowerRangeValue = 5+precision * 2;
-					spawnDecorator.param_multiples.upperRangeValue = 5+precision * 16;
+					spawnDecorator.param_multiples.lowerRangeValue = 3+precision * 2;
+					spawnDecorator.param_multiples.upperRangeValue = 3+precision * 8;
 					
 
 					
@@ -331,7 +331,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_minOffset.numberValue =  5* precision;
 					spawnDecorator.param_maxOffset.numberValue = 1 + 23* precision;
 					spawnDecorator.param_brushAngleRange.degrees=360;
+					spawnDecorator.param_multiples.lowerRangeValue = 8;
+					spawnDecorator.param_multiples.upperRangeValue = 8;
 					
+					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -1;
+					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 1;
+					spawnDecorator.param_brushAngleRange.lowerDegreesValue = -2;
+					spawnDecorator.param_brushAngleRange.upperDegreesValue = 2;
+					spawnDecorator.param_bristleVariation.numberValue = 1;
 					spawnDecorator.active=true;
 					
 					splatterDecorator.active=false;

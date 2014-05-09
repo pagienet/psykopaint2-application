@@ -3,14 +3,14 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
 
 	import flash.display.Stage;
-
-	import net.psykosoft.psykopaint2.core.io.CanvasSerializationEvent;
-
+	
+	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
+	
 	import net.psykosoft.psykopaint2.core.io.CanvasDPPSerializer;
+	import net.psykosoft.psykopaint2.core.io.CanvasSerializationEvent;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
-
 	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
@@ -31,9 +31,10 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 
 		[Inject]
 		public var canvasModel : CanvasModel;
-
+		
 		[Inject]
 		public var paintSettings : UserPaintSettingsModel;
+
 
 		override public function execute() : void
 		{
