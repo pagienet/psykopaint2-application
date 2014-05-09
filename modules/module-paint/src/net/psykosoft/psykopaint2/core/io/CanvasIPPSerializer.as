@@ -46,11 +46,7 @@ package net.psykosoft.psykopaint2.core.io
 
 			var position : int = dpp.position;
 			var len : int = width * height * 4;
-			if (paintSettings.hasSourceImage)
-				mergeColor(canvas);
-			else
-				reduceSurface(dpp, width, height, position);	// color data
-
+			mergeColor(canvas);
 			reduceSurface(dpp, width, height, position + len);	// normal specular data
 
 			dpp.position = 0;
@@ -64,7 +60,6 @@ package net.psykosoft.psykopaint2.core.io
 			var offset : int = _output.position;
 			var largeBitmapData : BitmapData = _copyColorAndSourceToBitmapData.execute(canvas);
 			var smallBitmapData : BitmapData = new BitmapData(canvas.width / SURFACE_PREVIEW_SHRINK_FACTOR, canvas.height / SURFACE_PREVIEW_SHRINK_FACTOR, false);
-
 			smallBitmapData.draw(largeBitmapData, new Matrix(1.0/SURFACE_PREVIEW_SHRINK_FACTOR, 0, 0, 1.0/SURFACE_PREVIEW_SHRINK_FACTOR));
 			largeBitmapData.dispose();
 			smallBitmapData.copyPixelsToByteArray(smallBitmapData.rect, _output);
