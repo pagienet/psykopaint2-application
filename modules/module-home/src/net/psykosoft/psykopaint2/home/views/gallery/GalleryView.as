@@ -1,6 +1,10 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
-	import com.greensock.TweenLite;
+
+import away3d.primitives.CubeGeometry;
+import away3d.primitives.SphereGeometry;
+
+import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
 	import com.greensock.easing.Quad;
 
@@ -42,7 +46,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
-	import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
+import net.psykosoft.psykopaint2.core.models.PaintMode;
+import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
 	import net.psykosoft.psykopaint2.home.model.GalleryImageCache;
 	import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
 	
@@ -110,6 +115,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _dragStartX:Number;
 		private var _dragStartY:Number;
 		private var _highQualityIndex:int = -1;
+		private var _ribbon:Mesh;
 
 		public function GalleryView(view:View3D, light:LightBase, stage3dProxy:Stage3DProxy)
 		{
@@ -120,6 +126,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.thumbnailLoaded.add(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
 			_imageCache.loadingComplete.add(onThumbnailLoadingComplete);
+			_paintingModes = new Vector.<int>();
+			var ribbonMaterial:TextureMaterial = HomeMaterialsCache.getTextureMaterialById(HomeMaterialsCache.ICON_PAINTINGMODE);
+			_ribbon = new Mesh(new PlaneGeometry(50, 50, 1, 1, false, true), ribbonMaterial);
+			_ribbon.x = -80;
+			_ribbon.y = 53;
+			_ribbon.z = -2;
 			_container = new ObjectContainer3D();
 			_container.x = -PAINTING_OFFSET;
 			_container.y = PAINTING_Y;
@@ -536,7 +548,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.clear();
 			_imageCache.thumbnailLoaded.add(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
+			_paintingModes = new Vector.<int>();
 		}
+
+		private var _paintingModes:Vector.<int>;
 
 		public function setImageCollection(collection:GalleryImageCollection):void
 		{
@@ -548,6 +563,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 			if (collection.type == GalleryType.NONE)
 				_activeImageProxy = null;
+
+			_paintingModes = new Vector.<int>();
+			for(var i:uint; i < collection.images.length; i++) {
+				_paintingModes[i] = collection.images[i].paintingMode;
+			}
+//			trace("-----> " + _paintingModes);
 
 			_minSwipe = -PAINTING_OFFSET;
 			_maxSwipe = -(PAINTING_OFFSET - (_numPaintings - 1) * PAINTING_SPACING);
@@ -604,13 +625,14 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			
 			_paintings[index] = new GalleryPaintingView(_paintingGeometry, material);
 			_paintings[index].x = index * PAINTING_SPACING;
-			
-			
+
+			if(_paintingModes && index < _paintingModes.length)
+				_paintings[index].showRibbon(_paintingModes[index] == PaintMode.COLOR_MODE, _ribbon);
+
 			// in case the active painting was moved out of sight and disposed, reset the HQ material
 			// UNLESS it hasn't finished loading!
 			if (!_loadingHQ && _showHighQuality && _highQualityIndex == index) {
 				_paintings[index].material = _highQualityMaterial;
-				
 			}
 
 			_container.addChild(_paintings[index]);
@@ -631,10 +653,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.thumbnailDisposed.removeAll();
 			_imageCache.thumbnailLoaded.removeAll();
 			_imageCache.clear();
+			_paintingModes = null;
 			_paintingGeometry.dispose();
 			_loadingTexture.dispose();
 			if ( _paintingOccluder.geometry )_paintingOccluder.geometry.dispose();
 			_paintingOccluder.dispose();
+			_ribbon.material.dispose();
+			_ribbon.geometry.dispose();
 			disposeHighQualityMaterial();
 			stopInteraction();
 		}
@@ -675,8 +700,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onThumbnailLoaded(imageProxy:GalleryImageProxy, thumbnail:RectTextureBase):void
 		{
-			if (_paintings[imageProxy.index])
+			if (_paintings[imageProxy.index]) {
 				_lowQualityMaterials[imageProxy.index].texture = thumbnail;
+				_paintings[imageProxy.index].showRibbon(_paintingModes[imageProxy.index] == PaintMode.COLOR_MODE, _ribbon);
+			}
 		}
 
 		private function onThumbnailDisposed(imageProxy:GalleryImageProxy):void
