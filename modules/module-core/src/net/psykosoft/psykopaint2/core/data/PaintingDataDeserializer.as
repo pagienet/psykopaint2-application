@@ -29,7 +29,12 @@ package net.psykosoft.psykopaint2.core.data
 			trace( this, "width: " + vo.width + ", height: " + vo.height );
 
 			var isPhotoPainting : Boolean = bytes.readBoolean();
-
+			trace( this, "isPhotoPainting",isPhotoPainting );
+			var hasColorBackgroundOriginal : Boolean = bytes.readBoolean();
+			trace( this, "hasColorBackgroundOriginal",hasColorBackgroundOriginal );
+			
+			vo.colorPalettes = PaintingFileUtils.readColorPalettes(bytes);
+			
 			// Read painting surfaces.
 			vo.colorData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
 			vo.normalSpecularData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
@@ -39,11 +44,13 @@ package net.psykosoft.psykopaint2.core.data
 			temp.clear();
 
 			if (isPhotoPainting)
+			{
 				vo.sourceImageData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
-
-			if (bytes.bytesAvailable > 0)
+			}
+			if (hasColorBackgroundOriginal){
 				vo.colorBackgroundOriginal = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
-
+			}
+			
 			//Hopefully this is okay to do here:
 			bytes.clear();
 			

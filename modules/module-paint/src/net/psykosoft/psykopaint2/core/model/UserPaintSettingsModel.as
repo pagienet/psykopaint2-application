@@ -51,6 +51,7 @@ package net.psykosoft.psykopaint2.core.model
 		private var _colorMode:int;
 		private var _eraserMode:Boolean;
 		private var _currentHSV:HSV;
+		private var _hasLoadedPalette:Boolean;
 		
 		public function UserPaintSettingsModel()
 		{
@@ -69,6 +70,7 @@ package net.psykosoft.psykopaint2.core.model
 				colorStyleParameter = null;
 				styleBlendParameter = null;
 				previewMixtureParameter = null;
+				_hasLoadedPalette = false;
 			}
 		}
 		
@@ -76,14 +78,19 @@ package net.psykosoft.psykopaint2.core.model
 		{
 			if ( !initialized )
 			{
-				_colorPalettes = new Vector.<Vector.<uint>>();
 				pipetteIsEmpty = true;
+				
+				if ( !_hasLoadedPalette) _colorPalettes = new Vector.<Vector.<uint>>();
+				
 				if ( hasSourceImage )
 				{
-					_colorPalettes.push( canvasModel.getColorPaletteFromSource(8));
-					_colorPalettes[0].unshift(0x0b0b0b);
-					_colorPalettes[0].push(0xdedddb);
-					while(_colorPalettes[0].length < 10 ) _colorPalettes[0].push( int(Math.random() * 0xffffff));
+					if ( !_hasLoadedPalette)
+					{
+						_colorPalettes.push( canvasModel.getColorPaletteFromSource(8));
+						_colorPalettes[0].unshift(0x0b0b0b);
+						_colorPalettes[0].push(0xdedddb);
+						while(_colorPalettes[0].length < 10 ) _colorPalettes[0].push( int(Math.random() * 0xffffff));
+					}
 					selectedSwatchIndex = 4;
 					_colorMode = PaintMode.PHOTO_MODE;
 				} else {
@@ -93,9 +100,11 @@ package net.psykosoft.psykopaint2.core.model
 				styleBlendParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Style Blend Factor",0.5,0,1);
 				previewMixtureParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Preview Blending",0.5,0,1);
 				setupColorTransfer(0);
+				
 				//DEFAULT PALETTE COLORS
-				_colorPalettes.push( Vector.<uint>([0x231f20/*BLACK*/,0x00aeef/*CYAN BLUE*/,0xf4202f/*RED*/,0xfaf716/*YELLOW*/,0x84e626/*GREEN*/,
-					0x88fb19/*UNUSED, USERD FOR ERASER*/,0xfbcfac/* SKIN COLOR */,0x583520/* DARK BROWN */,0xfafafa/*WHITE*/,0xffffff/*SAMPLE SWATCH*/]));
+				if ( !_hasLoadedPalette)
+					_colorPalettes.push( Vector.<uint>([0x231f20/*BLACK*/,0x00aeef/*CYAN BLUE*/,0xf4202f/*RED*/,0xfaf716/*YELLOW*/,0x84e626/*GREEN*/,
+						0x88fb19/*UNUSED, USERD FOR ERASER*/,0xfbcfac/* SKIN COLOR */,0x583520/* DARK BROWN */,0xfafafa/*WHITE*/,0xffffff/*SAMPLE SWATCH*/]));
 				
 				
 				
@@ -300,6 +309,19 @@ package net.psykosoft.psykopaint2.core.model
 		public function get lightness():Number
 		{
 			return _currentHSV.value;
+		}
+		
+		public function setPalettes(colorPalettes:Vector.<Vector.<uint>>):void
+		{
+			if ( _colorPalettes == null )
+			{
+				_colorPalettes = new Vector.<Vector.<uint>>();
+			}
+			for ( var i:int = 0; i < colorPalettes.length; i++ )
+			{
+				_colorPalettes[i] = colorPalettes[i].concat();
+			}
+			_hasLoadedPalette = true;
 		}
 	}
 }

@@ -14,14 +14,14 @@ package net.psykosoft.psykopaint2.core.io
 	
 	import avm2.intrinsics.memory.li8;
 	import avm2.intrinsics.memory.si8;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.images.ImageDataUtils;
-
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
@@ -44,6 +44,7 @@ package net.psykosoft.psykopaint2.core.io
 
 		private var _output : ByteArray;
 		private var _colorDataOffset : uint;
+		private var _userPaintSettings:UserPaintSettingsModel;
 
 		public function CanvasDPPSerializer(stage : Stage, ioAne : IOAneManager)
 		{
@@ -54,32 +55,31 @@ package net.psykosoft.psykopaint2.core.io
 			_copySubTextureChannelsA ||= new CopySubTextureChannels("w", "z");
 		}
 
-		public function serialize(canvas : CanvasModel) : void
+		public function serialize(canvas : CanvasModel, userPaintSettings:UserPaintSettingsModel) : void
 		{
 			_exportingStages = [
+				writeColorPalette,
 				saveColorRGB,
 				saveColorAlpha,
 				mergeColorData,
-
 				copyNormalSpecular,
-
 				writeNormalSpecularOriginal
 			];
 
 			if (canvas.hasSourceImage())
 				_exportingStages.push(saveSourceDataToByteArray);
 
-			if (canvas.getColorBackgroundOriginal())
+			if (canvas.getColorBackgroundOriginal() != null)
 				_exportingStages.push(writeColorBackgroundOriginal);
 
-			doExport(canvas);
+			doExport(canvas, userPaintSettings);
 		}
 
-		private function doExport(canvas : CanvasModel) : void
+		private function doExport(canvas : CanvasModel, userPaintSettings : UserPaintSettingsModel) : void
 		{
 			if (_canvas) throw "Export already in progress!";
 			_canvas = canvas;
-
+			_userPaintSettings = userPaintSettings;
 			init();
 
 			_exportingStage = 0;
@@ -109,17 +109,20 @@ package net.psykosoft.psykopaint2.core.io
 			// 4 byte-string for DPP2
 			// width, height (4 bytes each)
 			// boolean (1 byte)
-			// = 17
+			// boolean (1 byte)
+			// = 18
 			var canvasBytes : int = _canvas.width * _canvas.height * 4;
-			var size : int = 17 + PaintingFileUtils.PAINTING_FILE_VERSION.length;
+			var size : int = 18 + PaintingFileUtils.PAINTING_FILE_VERSION.length;
 			size += canvasBytes * 3;	// color data, normal data, normal specular original
 
 			if (_canvas.hasSourceImage())
 				size += canvasBytes;
 
-			if (_canvas.getColorBackgroundOriginal())
+			if (_canvas.getColorBackgroundOriginal() != null)
 				size += canvasBytes;
-
+			
+			//TODO: calculate length of color palettes here
+			
 			return size;
 		}
 
@@ -135,6 +138,8 @@ package net.psykosoft.psykopaint2.core.io
 			// write isPhotoPainting flag
 			_output.writeBoolean(_canvas.hasSourceImage());
 
+			// write hasColorBackgroundOriginal flag
+			_output.writeBoolean(_canvas.getColorBackgroundOriginal() != null);
 		}
 
 		private function onEnterFrame(event : Event) : void
@@ -198,7 +203,22 @@ package net.psykosoft.psykopaint2.core.io
 
 		private function writeColorBackgroundOriginal() : void
 		{
-			_output.writeBytes(_canvas.getColorBackgroundOriginal(), 0, _canvas.width*_canvas.height*4);
+			var data:ByteArray = _canvas.getColorBackgroundOriginal();
+			_output.writeBytes(data, 0, data.length);
+		}
+		
+		private function writeColorPalette() : void
+		{
+			var palettes:Vector.<Vector.<uint>> = _userPaintSettings.colorPalettes;
+			_output.writeUnsignedInt(palettes.length )
+			for ( var i:int = 0; i < palettes.length; i++ )
+			{
+				_output.writeUnsignedInt(palettes[i].length );
+				for ( var j:int = 0; j < palettes[i].length; j++ )
+				{
+					_output.writeUnsignedInt(palettes[i][j] )
+				}
+			}
 		}
 
 		private function onComplete() : void
@@ -210,7 +230,7 @@ package net.psykosoft.psykopaint2.core.io
 			_sourceRect = null;
 			_destRect = null;
 			_ioAne = null;
-
+			_userPaintSettings = null;
 			dispatchEvent(new CanvasSerializationEvent(CanvasSerializationEvent.COMPLETE, _output));
 		}
 

@@ -127,6 +127,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			userPaintSettingModel.setColorMode(initPaintingVO.sourceImageData ? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE );
 			userPaintSettingModel.hasSourceImage = initPaintingVO.sourceImageData != null;
 			userPaintSettingModel.isContinuedPainting = (initPaintingVO.loadedFileName != null);
+			if ( initPaintingVO.colorPalettes) userPaintSettingModel.setPalettes(initPaintingVO.colorPalettes);
 			initPaintingVO.dispose();
 		
 		}

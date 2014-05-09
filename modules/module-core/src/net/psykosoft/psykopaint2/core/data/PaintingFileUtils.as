@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.core.data
 
 	public class PaintingFileUtils
 	{
-		public static const PAINTING_FILE_VERSION:String = "14";
+		public static const PAINTING_FILE_VERSION:String = "15";
 		public static const PAINTING_INFO_FILE_EXTENSION:String = ".ipp2";
 		public static const PAINTING_DATA_FILE_EXTENSION:String = ".dpp2";
 
@@ -24,6 +24,23 @@ package net.psykosoft.psykopaint2.core.data
 			// Decode.
 			var decoder:PngDecodeUtil = new PngDecodeUtil();
 			decoder.decode( pngBytesOnly, onComplete, true );
+		}
+		
+		static public function readColorPalettes( bytes:TrackedByteArray ):Vector.<Vector.<uint>> {
+			
+			var l:uint = bytes.readUnsignedInt();
+			var palettes:Vector.<Vector.<uint>> = new Vector.<Vector.<uint>>(l);
+			for ( var i:int = 0; i <l; i++ )
+			{
+				var c:uint =  bytes.readUnsignedInt();
+				palettes[i] = new Vector.<uint>(c);
+				for ( var j:int = 0; j < c; j++ )
+				{
+					palettes[i][j] = bytes.readUnsignedInt();
+				}
+			}
+			
+			return palettes;
 		}
 	}
 }
