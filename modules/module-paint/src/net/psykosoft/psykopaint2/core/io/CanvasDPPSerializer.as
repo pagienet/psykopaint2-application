@@ -23,11 +23,9 @@ package net.psykosoft.psykopaint2.core.io
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
-	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
-	import net.psykosoft.psykopaint2.paint.utils.CopyColorToBitmapDataUtil;
 
 	public class CanvasDPPSerializer extends EventDispatcher
 	{
@@ -60,6 +58,7 @@ package net.psykosoft.psykopaint2.core.io
 		public function serialize(canvas : CanvasModel, paintSettings : UserPaintSettingsModel) : void
 		{
 			_exportingStages = [
+				writeColorPalette,
 				saveColorRGB,
 				saveColorAlpha,
 				mergeColorData,

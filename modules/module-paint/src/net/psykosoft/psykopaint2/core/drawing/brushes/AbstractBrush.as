@@ -36,7 +36,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		public static const PARAMETER_IL_SHAPES:String = "Shapes";
 		public static const PARAMETER_NR_SIZE_FACTOR:String = "Size Factor";
-		public static const PARAMETER_N_SHININESS:String = "Shininess";
 		public static const PARAMETER_N_GLOSSINESS:String = "Glossiness";
 		public static const PARAMETER_N_BUMPINESS:String = "Bumpiness";
 		public static const PARAMETER_N_BUMP_INFLUENCE:String = "Bump Influence";
