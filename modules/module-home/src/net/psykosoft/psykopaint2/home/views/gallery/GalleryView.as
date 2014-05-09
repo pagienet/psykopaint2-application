@@ -121,11 +121,7 @@ public class GalleryView extends Sprite
 			_imageCache.thumbnailLoaded.add(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
 			_paintingModes = new Vector.<int>();
-			var ribbonMaterial:TextureMaterial = HomeMaterialsCache.getTextureMaterialById(HomeMaterialsCache.ICON_PAINTINGMODE);
-			_ribbon = new Mesh(new PlaneGeometry(50, 50, 1, 1, false, true), ribbonMaterial);
-			_ribbon.x = -80;
-			_ribbon.y = 53;
-			_ribbon.z = -2;
+			createRibbon();
 			_imageCache.loadingComplete.add(onAllThumbnailsLoaded);
 			_container = new ObjectContainer3D();
 			_container.x = -PAINTING_OFFSET;
@@ -142,6 +138,21 @@ public class GalleryView extends Sprite
 			initHighQualityMaterial();
 			updateSwipeInteractionRect();
 //			showInteractionRect();
+		}
+
+		private function createRibbon():void {
+
+			var ribbonMaterial:TextureMaterial = HomeMaterialsCache.getTextureMaterialById(HomeMaterialsCache.ICON_PAINTINGMODE);
+
+			var stencilMethod:StencilMethod = new StencilMethod();
+			stencilMethod.referenceValue = 40;
+			stencilMethod.compareMode = Context3DCompareMode.NOT_EQUAL;
+			ribbonMaterial.addMethod(stencilMethod);
+
+			_ribbon = new Mesh(new PlaneGeometry(50, 50, 1, 1, false, true), ribbonMaterial);
+			_ribbon.x = -80;
+			_ribbon.y = 53;
+			_ribbon.z = -2;
 		}
 
 		private function calculateCameraNearPosition():Vector3D
