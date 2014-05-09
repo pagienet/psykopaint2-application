@@ -1,8 +1,8 @@
 package net.psykosoft.psykopaint2.core.data
 {
+	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 	
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.debug.UndisposedObjects;
 
@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.core.data
 		public var colorData:ByteArray;
 		public var normalSpecularData:ByteArray;
 		public var sourceImageData:ByteArray;
-		public var normalSpecularOriginal:ByteArray;
+		public var normalSpecularOriginal:BitmapData;
 		public var colorBackgroundOriginal:ByteArray;
 		public var width:uint;
 		public var height:uint;
@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.core.data
 			colorData.clear();
 			if (normalSpecularData) normalSpecularData.clear();
 			if (sourceImageData) sourceImageData.clear();
-			if (normalSpecularOriginal) normalSpecularOriginal.clear();
+			if (normalSpecularOriginal) normalSpecularOriginal.dispose();
 			if (colorBackgroundOriginal) colorBackgroundOriginal.clear();
 			colorData = null;
 			normalSpecularData = null;

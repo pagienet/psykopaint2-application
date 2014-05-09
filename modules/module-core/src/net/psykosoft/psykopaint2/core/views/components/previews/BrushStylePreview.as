@@ -4,9 +4,13 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 	import flash.display.MovieClip;
 	import flash.text.TextField;
 	
+	import net.psykosoft.psykopaint2.base.ui.components.PsykoLabel;
+	
 	public class BrushStylePreview extends MovieClip
 	{
-		public var txt:TextField;
+		//public var txt:TextField;
+		public var label:PsykoLabel;
+		
 		
 		/*private static var styleToFrame:Array = [
 			"paint1","basic","splat","line","sumi",
@@ -33,14 +37,15 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 		
 		public function showIcon( id:String ):void
 		{
-			if ( txt ) txt.text = "";
+			if ( label ) label.text = "";
 			//var idx:int = styleToFrame.indexOf(id);
 			if ( movieClipHasLabel(this,id))
 				gotoAndStop(id);
+				if ( label ) label.text = id.toUpperCase();
 			else
 			{
 				gotoAndStop(1);
-				if ( txt ) txt.text = id.toUpperCase();
+				if ( label ) label.text = id.toUpperCase();
 			}
 				//throw("no icon for style '"+id+"'");
 		}

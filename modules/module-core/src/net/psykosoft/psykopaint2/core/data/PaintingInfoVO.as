@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.core.data
 		public var colorPreviewData:ByteArray;
 		public var colorPreviewBitmap:BitmapData;
 		public var normalSpecularPreviewData:ByteArray;
+		public var normalSpecularPreviewBitmap:BitmapData;
 		public var lastSavedOnDateMs:Number;
 		public var surfaceID : uint;	// currently only used when id == DEFAULT_VO_ID
 
@@ -45,8 +46,14 @@ package net.psykosoft.psykopaint2.core.data
 			}
 			if (colorPreviewBitmap) clone.colorPreviewBitmap = colorPreviewBitmap.clone();
 
-			clone.normalSpecularPreviewData = new TrackedByteArray();
-			clone.normalSpecularPreviewData.writeBytes(normalSpecularPreviewData);
+			if (normalSpecularPreviewData) {
+				clone.normalSpecularPreviewData = new TrackedByteArray();
+				clone.normalSpecularPreviewData.writeBytes(normalSpecularPreviewData);
+			}
+
+			if (normalSpecularPreviewBitmap)
+				clone.normalSpecularPreviewBitmap = normalSpecularPreviewBitmap.clone();
+
 			clone.lastSavedOnDateMs = lastSavedOnDateMs;
 			clone.fileVersion = fileVersion;
 			clone.id = id;
@@ -103,11 +110,17 @@ package net.psykosoft.psykopaint2.core.data
 			if (colorPreviewBitmap)
 				colorPreviewBitmap.dispose();
 
-			normalSpecularPreviewData.clear();
+			if (normalSpecularPreviewData)
+				normalSpecularPreviewData.clear();
+
+			if (normalSpecularPreviewBitmap)
+				normalSpecularPreviewBitmap.dispose();
+
 			if (thumbnail) thumbnail.dispose();
 			colorPreviewData = null;
 			colorPreviewBitmap = null;
 			normalSpecularPreviewData = null;
+			normalSpecularPreviewBitmap = null;
 			thumbnail = null;
 		}
 	}

@@ -104,7 +104,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			userPaintSettings = null;
 			renderer = null;
 			_navigation.leftBtnSide.x += 50;
-			_navigation.leftBtnSide.y += 30;
+			_navigation.leftBtnSide.y += 0;
 			hslSliders.onDisabled();
 			brushStyleUI.onDisabled();
 			photoStyleUI.onDisabled();
@@ -133,7 +133,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		{
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK_SLIM, false );
 			_navigation.leftBtnSide.x -= 50;
-			_navigation.leftBtnSide.y -= 30;
+			_navigation.leftBtnSide.y -= 0;
 			setBgType( NavigationBg.BG_TYPE_WOOD );
 			setHeader("Paint Settings");
 			hslSliders.onEnabled();

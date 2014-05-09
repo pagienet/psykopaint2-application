@@ -25,9 +25,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private static const STYLE_DEFAULT:int=0;
 		private static const STYLE_PASTEL:int=1;
 		private static const STYLE_CHARCOAL:int = 2;
-		private static const STYLE_AUTO_GRID:int = 3;
-		private static const STYLE_QUILL:int = 4;
-		private static const STYLE_COOLINK2:int = 5;
+		private static const STYLE_SKETCH:int = 3;
+		private static const STYLE_CRAYS:int = 4;
+		private static const STYLE_QUILL:int = 5;
 		
 		
 		private var sizeDecorator:SizeDecorator;
@@ -122,7 +122,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Pencil","Pastels","Charcoal","Sketch","Quill","Cool Ink"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Pencil","Pastel","Charcoal","Sketch","Crayons","Quill"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -210,7 +210,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				case STYLE_DEFAULT:
 					splatterDecorator.active=false;
 					
-					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.25;
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.7;
 					
 					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
@@ -248,7 +248,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					splatterDecorator.param_brushAngleOffsetRange.degrees = 2;
 					
 					
-					
+					//PASTELS SHOULD BE WET: TODO
+					//NO DEPTH BUT WET
 					
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_SPEED;					
 					sizeDecorator.param_mappingFactor.numberValue = 0.25;
@@ -313,14 +314,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 80;
 					spawnDecorator.param_minOffset.numberValue = 0.01+precision * 4;
 					spawnDecorator.param_maxOffset.numberValue = 0.01+precision * 10;
-					spawnDecorator.param_multiples.lowerRangeValue = 5+precision * 2;
-					spawnDecorator.param_multiples.upperRangeValue = 5+precision * 16;
+					spawnDecorator.param_multiples.lowerRangeValue = 3+precision * 2;
+					spawnDecorator.param_multiples.upperRangeValue = 3+precision * 8;
 					
 
 					
 					break;
 				
-				case STYLE_AUTO_GRID:
+				case STYLE_SKETCH:
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 1;
 					
 					
@@ -330,7 +331,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_minOffset.numberValue =  5* precision;
 					spawnDecorator.param_maxOffset.numberValue = 1 + 23* precision;
 					spawnDecorator.param_brushAngleRange.degrees=360;
+					spawnDecorator.param_multiples.lowerRangeValue = 8;
+					spawnDecorator.param_multiples.upperRangeValue = 8;
 					
+					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -1;
+					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 1;
+					spawnDecorator.param_brushAngleRange.lowerDegreesValue = -2;
+					spawnDecorator.param_brushAngleRange.upperDegreesValue = 2;
+					spawnDecorator.param_bristleVariation.numberValue = 1;
 					spawnDecorator.active=true;
 					
 					splatterDecorator.active=false;
@@ -382,7 +390,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_minOffset.numberValue = 0.02+precision*10;
 					spawnDecorator.param_autorotate.booleanValue=true;
 					break;
-				case STYLE_COOLINK2:
+				case STYLE_CRAYS:
 					trace("STYLE STYLE_COOLINK2");
 					
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 3;

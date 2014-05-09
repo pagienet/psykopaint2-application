@@ -3,7 +3,8 @@ package net.psykosoft.psykopaint2.core.data
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	
+	import flash.utils.Endian;
+
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 
 	public class PaintingInfoDeserializer extends EventDispatcher
@@ -40,9 +41,6 @@ package net.psykosoft.psykopaint2.core.data
 			_vo.height = bytes.readInt();
 			_vo.lastSavedOnDateMs = bytes.readFloat();
 			var thumbnailBytesLength : uint = bytes.readUnsignedInt();
-
-			// Read and decode thumb.
-			trace (thumbnailBytesLength);
 			PaintingFileUtils.decodePNG(bytes, thumbnailBytesLength, onDecodePNGComplete);
 		}
 
@@ -55,7 +53,6 @@ package net.psykosoft.psykopaint2.core.data
 			// Read low res surfaces.
 			_vo.colorPreviewData = PaintingFileUtils.decodeImage(_bytes, _vo.width, _vo.height);
 			_vo.normalSpecularPreviewData = PaintingFileUtils.decodeImage(_bytes, _vo.width, _vo.height);
-
 			_bytes.clear();
 			_bytes = null;
 			dispatchEvent(new Event(Event.COMPLETE));

@@ -49,7 +49,7 @@ package net.psykosoft.psykopaint2.core.model
 		private var _colorTransfer : ColorTransfer;
 
 		// TODO: should originals be a string path to packaged asset?
-		private var _normalSpecularOriginal : ByteArray;		// used during export (reference)
+		private var _normalSpecularOriginal : BitmapData;		// used during export (reference)
 		private var _colorBackgroundOriginal : ByteArray;		// used during export (reference)
 
 		public function CanvasModel()
@@ -185,10 +185,10 @@ package net.psykosoft.psykopaint2.core.model
 				_normalSpecularMap = createCanvasTexture(true);
 		}
 
-		public function setNormalSpecularOriginal(value : ByteArray) : void
+		public function setNormalSpecularOriginal(value : BitmapData) : void
 		{
-			if (_normalSpecularOriginal)
-				_normalSpecularOriginal.clear();
+			if (_normalSpecularOriginal && _normalSpecularOriginal != value)
+				_normalSpecularOriginal.dispose();
 
 			_normalSpecularOriginal = value;
 		}
@@ -213,7 +213,7 @@ package net.psykosoft.psykopaint2.core.model
 			if (_colorTexture) _colorTexture.dispose();
 			if (_normalSpecularMap) _normalSpecularMap.dispose();
 			if (_sourceTexture) _sourceTexture.dispose();
-			if (_normalSpecularOriginal) _normalSpecularOriginal.clear();
+			if (_normalSpecularOriginal) _normalSpecularOriginal.dispose();
 			if (_colorBackgroundOriginal) _colorBackgroundOriginal.clear();
 			_colorTexture = null;
 			_normalSpecularMap = null;
@@ -277,7 +277,7 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function clearNormalSpecularTexture() : void
 		{
-			_normalSpecularMap.texture.uploadFromByteArray(_normalSpecularOriginal, 0);
+			_normalSpecularMap.texture.uploadFromBitmapData(_normalSpecularOriginal);
 		}
 
 		public function getColorBackgroundOriginal() : ByteArray
@@ -285,7 +285,7 @@ package net.psykosoft.psykopaint2.core.model
 			return _colorBackgroundOriginal;
 		}
 
-		public function getNormalSpecularOriginal() : ByteArray
+		public function getNormalSpecularOriginal() : BitmapData
 		{
 			return _normalSpecularOriginal;
 		}

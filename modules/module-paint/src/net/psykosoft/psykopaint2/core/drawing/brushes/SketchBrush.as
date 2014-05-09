@@ -31,7 +31,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			type = BrushType.SKETCH;
 
 			param_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_SURFACE_INFLUENCE, .6, 0, 1.0);
-			param_shininess.numberValue = .3;
 			param_glossiness.numberValue = .25;
 			param_bumpiness.numberValue = .6;
 			_parameters.push(param_surfaceRelief);

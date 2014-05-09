@@ -26,7 +26,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			type = BrushType.SPRAY_CAN;
 			rng = new LCG(Math.random() * 0xffffff);
 			
-			param_shininess.numberValue = .3;
 			param_glossiness.numberValue = .25;
 			param_bumpiness.numberValue = .6;
 			

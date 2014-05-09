@@ -25,14 +25,15 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 			ConsoleView.instance.log( this, "execute()" );
 
 			var dateMs:Number = new Date().getTime();
-			// todo: if there's already an id associated with the painting, we need to use that again
+			
+			if ( saveVO.paintingId == null ) saveVO.paintingId = "psyko-" + dateMs
 			var paintingDate:Number = Number( saveVO.paintingId.split( "-" )[ 1 ] );
 			// eww:
 			if (isNaN(paintingDate))
 				saveVO.paintingId = "psyko-" + dateMs;
 
 			var serializer:CanvasIPPSerializer = new CanvasIPPSerializer();
-			saveVO.infoBytes = serializer.serialize(saveVO.paintingId, dateMs, canvas, canvasRenderer, saveVO.dataBytes);
+			saveVO.infoBytes = serializer.serialize(saveVO.paintingId, paintingDate, canvas, canvasRenderer, saveVO.dataBytes);
 			dispatchComplete(true);
 		}
 	}

@@ -132,7 +132,7 @@ package net.psykosoft.psykopaint2.app.states
 			}
 			else
 				vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);
-			vo.normalSpecularData = surface.normalSpecular;
+			vo.normalSpecularData = null;
 			vo.normalSpecularOriginal = surface.normalSpecular;
 			return vo;
 		}

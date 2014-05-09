@@ -14,7 +14,9 @@ package net.psykosoft.psykopaint2.core.io
 	
 	import avm2.intrinsics.memory.li8;
 	import avm2.intrinsics.memory.si8;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.images.ImageDataUtils;
+
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
@@ -22,13 +24,13 @@ package net.psykosoft.psykopaint2.core.io
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
+	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 	import net.psykosoft.psykopaint2.paint.utils.CopyColorToBitmapDataUtil;
 
 	public class CanvasDPPSerializer extends EventDispatcher
 	{
 		private static var _copySubTextureChannelsRGB : CopySubTextureChannels;
 		private static var _copySubTextureChannelsA : CopySubTextureChannels;
-		private static var _copyColorToBitmapData : CopyColorToBitmapDataUtil;
 
 		private var _canvas : CanvasModel;
 		private var _exportingStage : int;
@@ -42,7 +44,6 @@ package net.psykosoft.psykopaint2.core.io
 
 		private var _output : ByteArray;
 		private var _colorDataOffset : uint;
-		private var _normalSpecularOffset : uint;
 
 		public function CanvasDPPSerializer(stage : Stage, ioAne : IOAneManager)
 		{
@@ -51,7 +52,6 @@ package net.psykosoft.psykopaint2.core.io
 
 			_copySubTextureChannelsRGB ||= new CopySubTextureChannels("xyz", "xyz");
 			_copySubTextureChannelsA ||= new CopySubTextureChannels("w", "z");
-			_copyColorToBitmapData ||= new CopyColorToBitmapDataUtil();
 		}
 
 		public function serialize(canvas : CanvasModel) : void
@@ -61,9 +61,7 @@ package net.psykosoft.psykopaint2.core.io
 				saveColorAlpha,
 				mergeColorData,
 
-				extractNormalsColor,
-				extractNormalsAlpha,
-				mergeNormalData,
+				copyNormalSpecular,
 
 				writeNormalSpecularOriginal
 			];
@@ -171,26 +169,26 @@ package net.psykosoft.psykopaint2.core.io
 			_output.position = _colorDataOffset + _canvas.width * _canvas.height * 4;
 		}
 
-		private function extractNormalsColor() : void
+		private function copyNormalSpecular() : void
 		{
-			_normalSpecularOffset = _output.position;
-			extractChannels(_canvas.normalSpecularMap, _copySubTextureChannelsRGB);
-		}
-
-		private function extractNormalsAlpha() : void
-		{
-			extractChannels(_canvas.normalSpecularMap, _copySubTextureChannelsA);
-		}
-
-		private function mergeNormalData() : void
-		{
-			mergeRGBAData(_normalSpecularOffset);
-			_output.position = _normalSpecularOffset + _canvas.width * _canvas.height * 4;
+			var normalSpecularOffset : int = _output.position;
+			_context3D.setRenderToBackBuffer();
+			_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+			_context3D.clear(0, 0, 0, 1);
+			CopyTexture.copy(_canvas.normalSpecularMap, _context3D);
+			var bitmapData : BitmapData = new TrackedBitmapData(_canvas.width, _canvas.height, false);
+			_context3D.drawToBitmapData(bitmapData);
+			bitmapData.copyPixelsToByteArray(bitmapData.rect, _output);
+			bitmapData.dispose();
+			var len : int =  _canvas.width * _canvas.height * 4;
+			ImageDataUtils.ARGBtoBGRA(_output, len, normalSpecularOffset);
+			_output.position = normalSpecularOffset + len;
 		}
 
 		private function writeNormalSpecularOriginal() : void
 		{
-			_output.writeBytes(_canvas.getNormalSpecularOriginal(), 0, _canvas.width*_canvas.height*4);
+			var original : BitmapData = _canvas.getNormalSpecularOriginal();
+			original.copyPixelsToByteArray(original.rect, _output);
 		}
 
 		private function saveSourceDataToByteArray() : void
@@ -245,7 +243,7 @@ package net.psykosoft.psykopaint2.core.io
 			var gOffset : int = 2;
 			var bOffset : int = 3;
 			var aOffset : int = len + 3;
-			
+
 			var tmp:ByteArray = ApplicationDomain.currentDomain.domainMemory;
 			ApplicationDomain.currentDomain.domainMemory = _output;
 

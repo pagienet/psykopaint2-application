@@ -1,12 +1,16 @@
 package net.psykosoft.psykopaint2.home.commands
 {
 
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.Loader;
+	import flash.display.LoaderInfo;
+	import flash.events.Event;
+	import flash.net.URLRequest;
 	import flash.utils.ByteArray;
 	
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
-	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
@@ -29,9 +33,8 @@ package net.psykosoft.psykopaint2.home.commands
 
 		private static var _busy:Boolean;
 
-		private var _byteLoader:BinaryLoader;
-		private var _loadedNormalSpecularData:ByteArray;
-		private var _loadedColorData:ByteArray;
+		private var _loader:Loader;
+		private var _loadedNormalSpecularData:BitmapData;
 
 		public function LoadSurfacePreviewCommand() {
 			super();
@@ -42,9 +45,9 @@ package net.psykosoft.psykopaint2.home.commands
 
 			// Need to cancel previous active load?
 			if( _busy ) {
-			    if( _byteLoader ) {
-					_byteLoader.dispose();
-					_byteLoader = null;
+				if (_loader) {
+					_loader.close();
+					_loader = null;
 				}
 				_busy = false;
 			}
@@ -52,41 +55,18 @@ package net.psykosoft.psykopaint2.home.commands
 				context.detain( this );
 				_busy = true;
 			}
-
-			disposeSurface();
-			loadColorData();
-		}
-
-		private function loadColorData():void {
-			_byteLoader = new BinaryLoader();
-			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_color_" + index + "_512.surf",
-					onColorDataLoaded, onColorDataError);
-		}
-
-		private function onColorDataError() : void
-		{
-			_byteLoader.dispose();
-			_byteLoader = null;
-			_loadedColorData = null;
-			loadNormalSpecularData();
-		}
-
-		private function onColorDataLoaded( bytes:ByteArray ):void {
-			_loadedColorData = bytes;
-			_byteLoader.dispose();
-			_byteLoader= null;
-			loadNormalSpecularData();
 		}
 
 		private function loadNormalSpecularData():void {
-			_byteLoader = new BinaryLoader();
-			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_512.surf", onSurfaceLoaded );
+			_loader = new Loader();
+			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onSurfaceLoaded);
+			_loader.load( new URLRequest("/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_512.png" ));
 		}
 
-		private function onSurfaceLoaded( bytes:ByteArray ):void {
-			_loadedNormalSpecularData = bytes;
-			_byteLoader.dispose();
-			_byteLoader = null;
+		private function onSurfaceLoaded(event : Event):void {
+			_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onSurfaceLoaded);
+			_loadedNormalSpecularData = Bitmap(_loader.content).bitmapData;
+			_loader = null;
 
 			var vo:PaintingInfoVO = createPaintingVO();
 			requestEaselPaintingUpdateSignal.dispatch( vo, true, onEaselUpdateComplete );
@@ -102,34 +82,14 @@ package net.psykosoft.psykopaint2.home.commands
 			paintingVO.dispose();
 		}
 
-		private function disposeSurface():void {
-			if( _loadedColorData ) {
-				_loadedColorData.clear();
-				_loadedColorData = null;
-			}
-			if( _loadedNormalSpecularData ) {
-				_loadedNormalSpecularData.clear();
-				_loadedNormalSpecularData = null;
-			}
-		}
-
 		private function createPaintingVO():PaintingInfoVO {
 			var vo:PaintingInfoVO = new PaintingInfoVO();
 			vo.width = 512;
 			vo.height = 384;
 			vo.surfaceID = index;
-			if( _loadedColorData ) {
-				vo.colorPreviewData = _loadedColorData;
-				vo.colorPreviewData.uncompress();
-				_loadedColorData = null;
-			}
-			else {
-				vo.colorPreviewData = new TrackedByteArray();
-				vo.colorPreviewData.length = vo.width * vo.height * 4;	// will fill with zeroes
-			}
-			vo.normalSpecularPreviewData = new TrackedByteArray();
-			vo.normalSpecularPreviewData = _loadedNormalSpecularData;
-			vo.normalSpecularPreviewData.uncompress();
+			vo.colorPreviewData = new TrackedByteArray();
+			vo.colorPreviewData.length = vo.width * vo.height * 4;	// will fill with zeroes
+			vo.normalSpecularPreviewBitmap = _loadedNormalSpecularData;
 			_loadedNormalSpecularData = null;
 			// nothing else necessary
 			return vo;

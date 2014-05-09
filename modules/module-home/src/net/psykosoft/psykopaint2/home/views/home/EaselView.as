@@ -32,6 +32,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	
 	import net.psykosoft.psykopaint2.base.utils.gpu.CopyMeshToBitmapDataUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.CameraRollImageOrientation;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	
@@ -577,7 +578,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function updateTexturesFromBitmapData(bitmapData:BitmapData) : void
 		{
 			_diffuseTexture.texture.uploadFromBitmapData(bitmapData);
-			_normalSpecularTexture.texture.uploadFromBitmapData(new BitmapData(1,1,false,0x808080));
+			var temp : BitmapData = new TrackedBitmapData(1,1,false,0x808080);
+			_normalSpecularTexture.texture.uploadFromBitmapData(temp);
+			temp.dispose();
 		}
 		
 		public function onTransformGesture(event:GestureEvent):void

@@ -164,7 +164,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var hueAngles:Array = hueHarmonyAngles[hrm];
 			var hl:int =  hueAngles.length;
 			var useHarmony:Boolean = hl > 0;
-			var cb:PathManagerCallbackInfo = manager.callbacks;
+			var cb:PathManagerCallbackInfo = manager.getFirstColorPickCallback();
 			for ( var i:int = 0; i < points.length; i++ )
 			{
 				var point:SamplePoint = points[i];

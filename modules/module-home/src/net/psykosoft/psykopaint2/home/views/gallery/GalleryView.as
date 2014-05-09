@@ -1,59 +1,54 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
 
-import away3d.primitives.CubeGeometry;
-import away3d.primitives.SphereGeometry;
+import away3d.containers.ObjectContainer3D;
+import away3d.containers.View3D;
+import away3d.core.base.Geometry;
+import away3d.core.managers.Stage3DProxy;
+import away3d.entities.Mesh;
+import away3d.events.Object3DEvent;
+import away3d.hacks.BitmapRectTexture;
+import away3d.hacks.MaskingMethod;
+import away3d.hacks.PaintingMaterial;
+import away3d.hacks.RectTextureBase;
+import away3d.hacks.StencilMethod;
+import away3d.hacks.TrackedBitmapRectTexture;
+import away3d.lights.LightBase;
+import away3d.materials.ColorMaterial;
+import away3d.materials.TextureMaterial;
+import away3d.materials.lightpickers.StaticLightPicker;
+import away3d.primitives.PlaneGeometry;
+import away3d.textures.BitmapTexture;
+import away3d.textures.Texture2DBase;
 
 import com.greensock.TweenLite;
-	import com.greensock.easing.Expo;
-	import com.greensock.easing.Quad;
 
-	import flash.display.BitmapData;
-	import flash.display.Sprite;
-	import flash.display3D.Context3DCompareMode;
-	import flash.display3D.Context3DStencilAction;
-	import flash.events.Event;
-	import flash.geom.Rectangle;
-	import flash.geom.Vector3D;
-	import flash.utils.getTimer;
-	
-	import away3d.containers.ObjectContainer3D;
-	import away3d.containers.View3D;
-	import away3d.core.base.Geometry;
-	import away3d.core.managers.Stage3DProxy;
-	import away3d.entities.Mesh;
-	import away3d.events.Object3DEvent;
-	import away3d.hacks.BitmapRectTexture;
-	import away3d.hacks.ByteArrayRectTexture;
-	import away3d.hacks.MaskingMethod;
-	import away3d.hacks.PaintingMaterial;
-	import away3d.hacks.RectTextureBase;
-	import away3d.hacks.StencilMethod;
-	import away3d.hacks.TrackedBitmapRectTexture;
-	import away3d.lights.LightBase;
-	import away3d.materials.ColorMaterial;
-	import away3d.materials.TextureMaterial;
-	import away3d.materials.lightpickers.StaticLightPicker;
-	import away3d.primitives.PlaneGeometry;
-	import away3d.textures.BitmapTexture;
-	import away3d.textures.Texture2DBase;
-	
-	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
-	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
-	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
-	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
-	import net.psykosoft.psykopaint2.core.models.GalleryType;
+import com.greensock.easing.Quad;
+
+import flash.display.BitmapData;
+import flash.display.Sprite;
+import flash.display3D.Context3DCompareMode;
+import flash.display3D.Context3DStencilAction;
+import flash.events.Event;
+import flash.geom.Rectangle;
+import flash.geom.Vector3D;
+import flash.utils.getTimer;
+
+import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
+import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
+import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
+import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+import net.psykosoft.psykopaint2.core.models.GalleryType;
 import net.psykosoft.psykopaint2.core.models.PaintMode;
 import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
-	import net.psykosoft.psykopaint2.home.model.GalleryImageCache;
-	import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
-	
-	import org.osflash.signals.Signal;
+import net.psykosoft.psykopaint2.home.model.GalleryImageCache;
+import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
 
-	public class GalleryView extends Sprite
+import org.osflash.signals.Signal;
+
+public class GalleryView extends Sprite
 	{
 		public static const CAMERA_FAR_POSITION:Vector3D = new Vector3D(-814, -40.14, 450);
 		public static var CAMERA_NEAR_POSITION:Vector3D = null;
@@ -107,7 +102,7 @@ import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
 		private static var _occluderMaterial:ColorMaterial;
 		private static var _highQualityMaterial:PaintingMaterial;
 
-		private var _highQualityNormalSpecularTexture:ByteArrayRectTexture;
+		private var _highQualityNormalSpecularTexture:BitmapRectTexture;
 		private var _stillLoadingNormalSpecularTexture:BitmapRectTexture;
 		private var _highQualityColorTexture:BitmapRectTexture;
 		private var _showHighQuality:Boolean;
@@ -125,13 +120,13 @@ import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
 			_imageCache = new GalleryImageCache(_stage3DProxy);
 			_imageCache.thumbnailLoaded.add(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
-			_imageCache.loadingComplete.add(onThumbnailLoadingComplete);
 			_paintingModes = new Vector.<int>();
 			var ribbonMaterial:TextureMaterial = HomeMaterialsCache.getTextureMaterialById(HomeMaterialsCache.ICON_PAINTINGMODE);
 			_ribbon = new Mesh(new PlaneGeometry(50, 50, 1, 1, false, true), ribbonMaterial);
 			_ribbon.x = -80;
 			_ribbon.y = 53;
 			_ribbon.z = -2;
+			_imageCache.loadingComplete.add(onAllThumbnailsLoaded);
 			_container = new ObjectContainer3D();
 			_container.x = -PAINTING_OFFSET;
 			_container.y = PAINTING_Y;
@@ -210,7 +205,7 @@ import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
 
 			//BookMaterialsProxy.getBitmapDataById(BookMaterialsProxy.THUMBNAIL_LOADING)
 			_highQualityColorTexture = new TrackedBitmapRectTexture(null);
-			_highQualityNormalSpecularTexture = new ByteArrayRectTexture(null, 0, 0);
+			_highQualityNormalSpecularTexture = new TrackedBitmapRectTexture(null);
 			_stillLoadingNormalSpecularTexture = new BitmapRectTexture(emptyNormalMap);
 			_stillLoadingNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
 			emptyNormalMap.dispose();
@@ -541,7 +536,6 @@ import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
 		{
 			_imageCache.thumbnailLoaded.remove(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.remove(onThumbnailDisposed);
-			_imageCache.loadingComplete.remove(onThumbnailLoadingComplete);
 			disposePaintings();
 			_visibleEndIndex = -1;
 			_visibleStartIndex = 0;
@@ -652,6 +646,7 @@ import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
 			_container.dispose();
 			_imageCache.thumbnailDisposed.removeAll();
 			_imageCache.thumbnailLoaded.removeAll();
+			_imageCache.loadingComplete.remove(onAllThumbnailsLoaded);
 			_imageCache.clear();
 			_paintingModes = null;
 			_paintingGeometry.dispose();
@@ -718,7 +713,7 @@ import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
 			}
 		}
 
-		private function onThumbnailLoadingComplete():void
+		private function onAllThumbnailsLoaded():void
 		{
 			// we can load the high resolution now for
 			if (_showHighQuality){
@@ -733,6 +728,8 @@ import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
 
 			_highQualityMaterial.normalSpecularTexture = _stillLoadingNormalSpecularTexture;
 
+			_highQualityIndex = _activeImageProxy.index;
+
 			// it may have been disposed before load finished?
 			if (_paintings[_activeImageProxy.index])
 				_paintings[_activeImageProxy.index].material = _highQualityMaterial;
@@ -740,12 +737,10 @@ import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
 
 		private function onSurfaceDataComplete(galleryVO:PaintingGalleryVO):void
 		{
-			_highQualityNormalSpecularTexture.setByteArray(galleryVO.normalSpecularData, galleryVO.colorData.width, galleryVO.colorData.height);
+			_highQualityNormalSpecularTexture.bitmapData  = galleryVO.normalSpecularData;
 			_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
 
 			_highQualityMaterial.normalSpecularTexture = _highQualityNormalSpecularTexture;
-
-			_highQualityIndex = _activeImageProxy.index;
 
 			_loadingHQ = false;
 			galleryVO.dispose();
