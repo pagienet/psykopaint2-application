@@ -30,8 +30,7 @@ package net.psykosoft.psykopaint2.paint.utils
 							"tex ft1, v0, fs1 <2d, nearest, mipnone>\n" +  // paint
 							"mul ft0, ft0, fc0.z\n" +  //multiply source with source alpha
 							"mul ft1, ft1, fc0.w\n" +  //multiply paint with paint alpha
-							"mov ft2, fc0\n"+  // copy constants
-							"sub ft2.y, ft2.y, ft1.w\n"+  //1 - paint alpha
+							"sub ft2.y, fc0.y, ft1.w\n"+  //1 - paint alpha
 							"mul ft0.xyz, ft0.xyz, ft2.y\n"+  //source color * (1 - paint alpha)
 							"add ft0.xyz, ft1.xyz, ft0.xyz\n"+ // source color + paint color
 							"mul ft0.w, ft0.w, ft2.y\n"+  //source alpha * (1- paint alpha)

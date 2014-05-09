@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.io
 {
 	import flash.display.BitmapData;
 	import flash.display.PNGEncoderOptions;
+	import flash.geom.Matrix;
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
@@ -43,7 +44,7 @@ package net.psykosoft.psykopaint2.core.io
 
 			var position : int = dpp.position;
 			var len : int = width * height * 4;
-			if (canvas.sourceTexture)
+			if (canvas.hasSourceImage())
 				mergeColor(canvas);
 			else
 				reduceSurface(dpp, width, height, position);	// color data
@@ -59,11 +60,14 @@ package net.psykosoft.psykopaint2.core.io
 		private function mergeColor(canvas:CanvasModel):void
 		{
 			var offset : int = _output.position;
-			var bitmapData : BitmapData = new BitmapData(canvas.width / SURFACE_PREVIEW_SHRINK_FACTOR, canvas.height / SURFACE_PREVIEW_SHRINK_FACTOR, true, 0);
-			_copyColorAndSourceToBitmapData.execute(canvas, bitmapData);
-			bitmapData.copyPixelsToByteArray(bitmapData.rect, _output);
-			ImageDataUtils.ARGBtoBGRA(_output, bitmapData.width * bitmapData.height * 4, offset);
-			bitmapData.dispose();
+			var largeBitmapData : BitmapData = _copyColorAndSourceToBitmapData.execute(canvas);
+			var smallBitmapData : BitmapData = new BitmapData(canvas.width / SURFACE_PREVIEW_SHRINK_FACTOR, canvas.height / SURFACE_PREVIEW_SHRINK_FACTOR, false);
+
+			smallBitmapData.draw(largeBitmapData, new Matrix(1.0/SURFACE_PREVIEW_SHRINK_FACTOR, 0, 0, 1.0/SURFACE_PREVIEW_SHRINK_FACTOR));
+			largeBitmapData.dispose();
+			smallBitmapData.copyPixelsToByteArray(smallBitmapData.rect, _output);
+			ImageDataUtils.ARGBtoBGRA(_output, smallBitmapData.width * smallBitmapData.height * 4, offset);
+			smallBitmapData.dispose();
 
 			_output.position = _output.length;
 		}

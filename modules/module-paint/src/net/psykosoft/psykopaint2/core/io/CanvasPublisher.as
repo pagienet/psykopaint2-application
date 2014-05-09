@@ -12,8 +12,6 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 
-	import net.psykosoft.psykopaint2.base.utils.images.ImageDataUtils;
-
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
@@ -42,7 +40,6 @@ package net.psykosoft.psykopaint2.core.io
 		private var _paintingData : PaintingDataVO;
 		private var _exportingStage : int;
 		private var _workerBitmapData : BitmapData;
-		private var _mergeBuffer : TrackedByteArray;
 		private var _context3D : Context3D;
 		private var _sourceRect : Rectangle;
 		private var _destRect : Rectangle;

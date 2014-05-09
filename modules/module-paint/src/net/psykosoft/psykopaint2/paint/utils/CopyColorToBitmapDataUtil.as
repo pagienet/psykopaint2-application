@@ -3,7 +3,9 @@ package net.psykosoft.psykopaint2.paint.utils
 	import com.adobe.utils.AGALMiniAssembler;
 
 	import flash.display.BitmapData;
+	import flash.display.BlendMode;
 	import flash.display3D.Context3D;
+	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
 	import flash.display3D.IndexBuffer3D;
@@ -29,6 +31,7 @@ package net.psykosoft.psykopaint2.paint.utils
 		{
 			target ||= new TrackedBitmapData(canvas.width, canvas.height, false);
 			var context3D : Context3D = canvas.stage3D.context3D;
+			context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			context3D.setRenderToBackBuffer();
 			context3D.clear();
 			copy(canvas, context3D, target.width / canvas.width, target.height / canvas.height);
