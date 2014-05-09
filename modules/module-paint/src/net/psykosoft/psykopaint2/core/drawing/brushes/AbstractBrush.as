@@ -181,7 +181,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_pathManager = new PathManager(int(data.@type));
 			_pathManager.updateParametersFromXML(data);
 
-			_pathManager.setCallbacks(this, onPathPoints, onPathStart, onPathEnd, onPickColor);
+			_pathManager.addCallback(this, onPathPoints, onPathStart, onPathEnd, onPickColor);
 			for (var i:int = 0; i < data.children().length(); i++) {
 				if (XML(data.children()[i]).name() != "parameter") {
 					_pathManager.addPointDecorator(PointDecoratorFactory.fromXML(data.children()[i]));
@@ -193,7 +193,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function set pathManager(value:PathManager):void
 		{
 			_pathManager = value;
-			pathManager.setCallbacks(this, onPathPoints, onPathStart, onPathEnd, onPickColor);
+			pathManager.addCallback(this, onPathPoints, onPathStart, onPathEnd, onPickColor);
 		}
 
 		public function get pathManager():PathManager
