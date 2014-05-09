@@ -1,16 +1,15 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
+	import away3d.containers.ObjectContainer3D;
+	import away3d.core.base.Geometry;
+	import away3d.entities.Mesh;
+	import away3d.materials.MaterialBase;
+	import away3d.materials.TextureMaterial;
 
-import away3d.containers.ObjectContainer3D;
-import away3d.core.base.Geometry;
-import away3d.entities.Mesh;
-import away3d.materials.MaterialBase;
-import away3d.materials.TextureMaterial;
+	import net.psykosoft.psykopaint2.home.views.book.HomeGeometryCache;
+	import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
 
-import net.psykosoft.psykopaint2.home.views.book.HomeGeometryCache;
-import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
-
-public class GalleryPaintingView extends ObjectContainer3D
+	public class GalleryPaintingView extends ObjectContainer3D
 	{
 		private var _mesh:Mesh;
 		private var _material:MaterialBase;
@@ -19,7 +18,7 @@ public class GalleryPaintingView extends ObjectContainer3D
 		
 
 		private var _paintingGeometry:Geometry;
-		 
+
 		
 		public function GalleryPaintingView(paintingGeometry:Geometry,material:MaterialBase)
 		{
