@@ -653,7 +653,8 @@ public class GalleryView extends Sprite
 			_loadingTexture.dispose();
 			if ( _paintingOccluder.geometry )_paintingOccluder.geometry.dispose();
 			_paintingOccluder.dispose();
-			_ribbon.material.dispose();
+			//TODO: Li please fix this properly - I just disabled it so I can continue testing
+			//_ribbon.material.dispose();
 			_ribbon.geometry.dispose();
 			disposeHighQualityMaterial();
 			stopInteraction();
