@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.core.io
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
@@ -62,7 +63,7 @@ package net.psykosoft.psykopaint2.core.io
 		}
 
 		// in this case, color will contain JPEG data, sourceImage will contain PNG Thumbnail, and normal data will be compressed with zlib
-		public function exportForPublish(canvas : CanvasModel, jpegQuality : Number = 80, sourceThumbWidth : Number = 200) : void
+		public function exportForPublish(canvas : CanvasModel, paintSettings : UserPaintSettingsModel, jpegQuality : Number = 80, sourceThumbWidth : Number = 200) : void
 		{
 			_sourceThumbWidth = sourceThumbWidth;
 			_jpegQuality = jpegQuality;
@@ -71,7 +72,7 @@ package net.psykosoft.psykopaint2.core.io
 				saveNormalsFlat
 			];
 
-			if (canvas.hasSourceImage())
+			if (paintSettings.hasSourceImage)
 				_exportingStages.push(saveSourceDataToThumb);
 
 			doExport(canvas);

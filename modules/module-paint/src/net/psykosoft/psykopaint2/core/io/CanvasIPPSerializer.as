@@ -10,6 +10,8 @@ package net.psykosoft.psykopaint2.core.io
 
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.paint.utils.CopyColorAndSourceToBitmapDataUtil;
 
@@ -28,7 +30,7 @@ package net.psykosoft.psykopaint2.core.io
 			_copyColorAndSourceToBitmapData ||= new CopyColorAndSourceToBitmapDataUtil();
 		}
 
-		public function serialize(paintingID : String, lastSavedOnDateMs : Number, canvas : CanvasModel, canvasRenderer : CanvasRenderer, dpp : ByteArray) : ByteArray
+		public function serialize(paintingID : String, lastSavedOnDateMs : Number, canvas : CanvasModel, canvasRenderer : CanvasRenderer, paintSettings : UserPaintSettingsModel, dpp : ByteArray) : ByteArray
 		{
 			_output = new ByteArray();
 			dpp.position = 0;
@@ -44,7 +46,7 @@ package net.psykosoft.psykopaint2.core.io
 
 			var position : int = dpp.position;
 			var len : int = width * height * 4;
-			if (canvas.hasSourceImage())
+			if (paintSettings.hasSourceImage)
 				mergeColor(canvas);
 			else
 				reduceSurface(dpp, width, height, position);	// color data

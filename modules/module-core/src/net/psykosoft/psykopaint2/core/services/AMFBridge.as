@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.services
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.models.UserRegistrationVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
 
@@ -120,13 +121,13 @@ package net.psykosoft.psykopaint2.core.services
 			_connection.call("Main/logout", new Responder(onSuccess, onFail), sessionID);
 		}
 
-		public function publishPainting(sessionID : String, paintingDataVO : PaintingDataVO, compositeData : ByteArray, onSuccess : Function, onFail : Function) : void
+		public function publishPainting(sessionID : String, paintingDataVO : PaintingDataVO, compositeData : ByteArray, hasSourceImage : Boolean, onSuccess : Function, onFail : Function) : void
 		{
 			// TODO: pass in a frameID
 			_connection.call("Main/publishPainting", new Responder(onSuccess, onFail),
 					sessionID,
 					0,
-					Boolean(paintingDataVO.sourceImageData),
+					int(hasSourceImage),
 					paintingDataVO.normalSpecularData,
 					paintingDataVO.colorData,
 					paintingDataVO.sourceImageData,

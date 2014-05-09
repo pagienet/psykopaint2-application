@@ -1,7 +1,5 @@
 package net.psykosoft.psykopaint2.paint.commands.saving
 {
-	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
-
 	import flash.display.BitmapData;
 	import flash.display.JPEGEncoderOptions;
 
@@ -14,13 +12,14 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 	import net.psykosoft.psykopaint2.core.io.CanvasPublisher;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
-import net.psykosoft.psykopaint2.core.signals.NotifyDataForPopUpSignal;
-import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
-import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyDataForPopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerSucceededSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
@@ -76,6 +75,9 @@ import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
 		[Inject]
 		public var notifyDataForPopUpSignal:NotifyDataForPopUpSignal;
 
+		[Inject]
+		public var paintSettings:UserPaintSettingsModel;
+
 		private var _paintingData : PaintingDataVO;
 		private var _compositeData : ByteArray;
 		private var _bitmapData:BitmapData;
@@ -91,7 +93,7 @@ import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
 			// dispatch notify started signal
 			var canvasExporter:CanvasPublisher = new CanvasPublisher( stage, ioAne );
 			canvasExporter.addEventListener( CanvasPublishEvent.COMPLETE, onExportComplete );
-			canvasExporter.exportForPublish( canvasModel, CoreSettings.PUBLISH_JPEG_QUALITY );
+			canvasExporter.exportForPublish( canvasModel, paintSettings, CoreSettings.PUBLISH_JPEG_QUALITY );
 		}
 
 		private function onExportComplete( event:CanvasPublishEvent ):void {
@@ -111,7 +113,7 @@ import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
 		private function publish() : void
 		{
 			notifyAMFConnectionFailed.add(onPublishFail);
-			amfBridge.publishPainting(loggedInUserProxy.sessionID, _paintingData, _compositeData, onPublishComplete, onPublishFail);
+			amfBridge.publishPainting(loggedInUserProxy.sessionID, _paintingData, _compositeData, paintSettings.hasSourceImage, onPublishComplete, onPublishFail);
 		}
 
 		private function onPublishComplete(data : Object) : void

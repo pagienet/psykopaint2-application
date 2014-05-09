@@ -22,6 +22,8 @@ package net.psykosoft.psykopaint2.core.io
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
@@ -44,6 +46,7 @@ package net.psykosoft.psykopaint2.core.io
 
 		private var _output : ByteArray;
 		private var _colorDataOffset : uint;
+		private var _paintSettings:UserPaintSettingsModel;
 
 		public function CanvasDPPSerializer(stage : Stage, ioAne : IOAneManager)
 		{
@@ -54,7 +57,7 @@ package net.psykosoft.psykopaint2.core.io
 			_copySubTextureChannelsA ||= new CopySubTextureChannels("w", "z");
 		}
 
-		public function serialize(canvas : CanvasModel) : void
+		public function serialize(canvas : CanvasModel, paintSettings : UserPaintSettingsModel) : void
 		{
 			_exportingStages = [
 				saveColorRGB,
@@ -66,19 +69,20 @@ package net.psykosoft.psykopaint2.core.io
 				writeNormalSpecularOriginal
 			];
 
-			if (canvas.hasSourceImage())
+			if (paintSettings.hasSourceImage)
 				_exportingStages.push(saveSourceDataToByteArray);
 
 			if (canvas.getColorBackgroundOriginal())
 				_exportingStages.push(writeColorBackgroundOriginal);
 
-			doExport(canvas);
+			doExport(canvas, paintSettings);
 		}
 
-		private function doExport(canvas : CanvasModel) : void
+		private function doExport(canvas : CanvasModel, paintSettings : UserPaintSettingsModel) : void
 		{
 			if (_canvas) throw "Export already in progress!";
 			_canvas = canvas;
+			_paintSettings = paintSettings;
 
 			init();
 
@@ -114,7 +118,7 @@ package net.psykosoft.psykopaint2.core.io
 			var size : int = 17 + PaintingFileUtils.PAINTING_FILE_VERSION.length;
 			size += canvasBytes * 3;	// color data, normal data, normal specular original
 
-			if (_canvas.hasSourceImage())
+			if (_paintSettings.hasSourceImage)
 				size += canvasBytes;
 
 			if (_canvas.getColorBackgroundOriginal())
@@ -133,7 +137,7 @@ package net.psykosoft.psykopaint2.core.io
 			_output.writeInt(_canvas.height);
 
 			// write isPhotoPainting flag
-			_output.writeBoolean(_canvas.hasSourceImage());
+			_output.writeBoolean(_paintSettings.hasSourceImage);
 
 		}
 

@@ -9,17 +9,13 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.RectangleTexture;
-	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
-	import flash.utils.setTimeout;
-	
+
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedRectTexture;
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.colortransfer.ColorTransfer;
 	import net.psykosoft.psykopaint2.core.intrinsics.PyramidMapIntrinsics;
@@ -49,7 +45,8 @@ package net.psykosoft.psykopaint2.core.model
 
 		// TODO: should originals be a string path to packaged asset?
 		private var _normalSpecularOriginal : BitmapData;		// used during export (reference)
-		private var _colorBackgroundOriginal : ByteArray;		// used during export (reference)
+		private var _colorBackgroundOriginal : ByteArray;
+		// used during export (reference)
 
 		public function CanvasModel()
 		{
@@ -289,11 +286,6 @@ package net.psykosoft.psykopaint2.core.model
 			return _normalSpecularOriginal;
 		}
 
-		public function hasSourceImage() : Boolean
-		{
-			return _pyramidMap != null;
-		}
-		
 		public function getColorPaletteFromSource( colorCount:int ):Vector.<uint>
 		{
 			return RGBProximityQuantizer.getPalette( _pyramidMap,colorCount,3);

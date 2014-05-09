@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 	import net.psykosoft.psykopaint2.core.io.CanvasDPPSerializer;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 
 	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
@@ -31,6 +32,9 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 		[Inject]
 		public var canvasModel : CanvasModel;
 
+		[Inject]
+		public var paintSettings : UserPaintSettingsModel;
+
 		override public function execute() : void
 		{
 			ConsoleView.instance.log( this, "execute()" );
@@ -39,7 +43,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 
 			var serializer : CanvasDPPSerializer = new CanvasDPPSerializer(stage, ioAne);
 			serializer.addEventListener(CanvasSerializationEvent.COMPLETE, onSerializationComplete);
-			serializer.serialize(canvasModel);
+			serializer.serialize(canvasModel, paintSettings);
 		}
 
 		private function onSerializationComplete(event : CanvasSerializationEvent) : void

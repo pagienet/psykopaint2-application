@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 
 	import net.psykosoft.psykopaint2.core.io.CanvasIPPSerializer;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
@@ -20,6 +21,9 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 		[Inject]
 		public var canvas:CanvasModel;
 
+		[Inject]
+		public var paintSettings : UserPaintSettingsModel;
+
 		override public function execute() : void
 		{
 			ConsoleView.instance.log( this, "execute()" );
@@ -33,7 +37,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 				saveVO.paintingId = "psyko-" + dateMs;
 
 			var serializer:CanvasIPPSerializer = new CanvasIPPSerializer();
-			saveVO.infoBytes = serializer.serialize(saveVO.paintingId, paintingDate, canvas, canvasRenderer, saveVO.dataBytes);
+			saveVO.infoBytes = serializer.serialize(saveVO.paintingId, paintingDate, canvas, canvasRenderer, paintSettings, saveVO.dataBytes);
 			dispatchComplete(true);
 		}
 	}
