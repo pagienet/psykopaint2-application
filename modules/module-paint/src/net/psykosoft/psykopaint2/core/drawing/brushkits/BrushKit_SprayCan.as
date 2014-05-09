@@ -65,7 +65,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			//CREATE SPRAY CAN BRUSH ENGINE
 			brushEngine = new SprayCanBrush();
-			brushEngine.param_bumpiness.numberValue = 0;
+			brushEngine.param_bumpiness.numberValue = 1;
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
 			brushEngine.param_curvatureSizeInfluence.numberValue = 0;
@@ -306,7 +306,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
 					bumpDecorator.param_bumpinessRange.numberValue = -0.20 ;
 					bumpDecorator.param_glossiness.numberValue = 0.8  ;
-					bumpDecorator.param_shininess.numberValue = 0.25  ;
 					
 					colorDecorator.param_colorBlending.upperRangeValue = 0.1;
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.2;
@@ -361,7 +360,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_noBumpProbability.numberValue=0.4;
 					//MAKE IT WET
 					bumpDecorator.param_glossiness.numberValue = 0.95  ;
-					bumpDecorator.param_shininess.numberValue = 0.96  ;
 					
 					
 					gridDecorator.active=true;
@@ -400,7 +398,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
 					bumpDecorator.param_bumpinessRange.numberValue = 0.04 ;
 					bumpDecorator.param_glossiness.numberValue = 0.55  ;
-					bumpDecorator.param_shininess.numberValue = 0.26  ;
 					bumpDecorator.param_noBumpProbability.numberValue=0.94;
 					
 
@@ -425,7 +422,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
 					bumpDecorator.param_bumpinessRange.numberValue = 0.3 ;
 					bumpDecorator.param_glossiness.numberValue = 0.70  ;
-					bumpDecorator.param_shininess.numberValue = 0.16  ;
 					
 					
 					colorDecorator.param_colorBlending.upperRangeValue = 0.9;
@@ -585,7 +581,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
 					bumpDecorator.param_bumpinessRange.numberValue = 0.3 ;
 					bumpDecorator.param_glossiness.numberValue = 0.90  ;
-					bumpDecorator.param_shininess.numberValue = 0.16  ;
 					
 					
 					colorDecorator.param_colorBlending.upperRangeValue = 0.9;

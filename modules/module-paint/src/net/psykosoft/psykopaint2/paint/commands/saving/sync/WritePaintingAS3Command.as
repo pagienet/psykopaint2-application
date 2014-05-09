@@ -37,7 +37,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 			ConsoleView.instance.log( this, "execute()" );
 			_time = getTimer();
 
-			requestUpdateMessagePopUpSignal.dispatch( "Saving: Writing...", "" );
+			requestUpdateMessagePopUpSignal.dispatch( "Saving: Storing...", "" );
 			stage.addEventListener( Event.ENTER_FRAME, onOneFrame );
 		}
 

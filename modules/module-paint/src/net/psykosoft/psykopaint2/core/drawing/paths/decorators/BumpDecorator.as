@@ -45,7 +45,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		
 		private const _applyArray:Array = [0,0,1,1];
 		
-		public var param_shininess:PsykoParameter;
 		public var param_glossiness:PsykoParameter;
 		public var param_bumpiness:PsykoParameter;
 		public var param_bumpinessRange:PsykoParameter;
@@ -67,13 +66,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			param_invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_INVERT_MAPPING,0);
 			param_maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			
-			param_shininess     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_SHININESS, 0.4, 0, 5);
 			param_glossiness    = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_GLOSSINESS, 0.4, 0.01, 5);
 			param_bumpiness     = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS, 1, -10, 10 );
 			param_bumpinessRange  = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS_RANGE, 0.2, 0, 10 );
 			param_bumpInfluence = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMP_INFLUENCE, 0.6, -5, 5 );
 			param_noBumpProbability     = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_NO_BUMP_PROB, 0.5, 0, 1 );
-			_parameters.push(param_shininess, param_glossiness, param_bumpiness, param_bumpinessRange,param_bumpInfluence, param_mappingMode,param_mappingFactor,param_mappingFunction,param_invertMapping,param_maxSpeed,param_noBumpProbability);
+			_parameters.push( param_glossiness, param_bumpiness, param_bumpinessRange,param_bumpInfluence, param_mappingMode,param_mappingFactor,param_mappingFunction,param_invertMapping,param_maxSpeed,param_noBumpProbability);
 			
 		}
 		
@@ -139,10 +137,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				{
 					bmp = Math.random() < nbp ? 0 : param_mappingFactor.randomValue;
 				} 
-				//MATHIEU I ADDED THE "1-" TO MAKE A HIGHER NUMBER THE GLOSSIER... SINCE DAVID IS NOT CONVINVED IT's INVERTED
-				bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] = 1-param_glossiness.numberValue;
+				bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] = param_glossiness.numberValue;
 				bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] = param_bumpiness.numberValue - param_bumpinessRange.numberValue + (  param_bumpinessRange.numberValue * 2 * bmp );
-				bumpFactors[2] = bumpFactors[6] = bumpFactors[10] = bumpFactors[14] = param_shininess.numberValue;
+				//bumpFactors[2] = bumpFactors[6] = bumpFactors[10] = bumpFactors[14] = param_shininess.numberValue;
 				bumpFactors[3] = bumpFactors[7] = bumpFactors[11] = bumpFactors[15] = param_bumpInfluence.numberValue;
 			}
 			

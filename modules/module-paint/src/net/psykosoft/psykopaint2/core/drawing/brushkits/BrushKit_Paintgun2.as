@@ -214,7 +214,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			bumpDecorator.param_bumpinessRange.numberValue = 0.2 * intensity;
 			
 			bumpDecorator.param_glossiness.numberValue = 0.3 + 0.2 * intensity;
-			bumpDecorator.param_shininess.numberValue = 0.1 + 0.2 * intensity;
 		}
 		
 		

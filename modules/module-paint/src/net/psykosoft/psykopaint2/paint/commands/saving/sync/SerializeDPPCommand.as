@@ -40,7 +40,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 		{
 			ConsoleView.instance.log( this, "execute()" );
 
-			requestUpdateMessagePopUpSignal.dispatch("Saving: Serializing...", "");
+			requestUpdateMessagePopUpSignal.dispatch("Saving: Packing...", "");
 
 			var serializer : CanvasDPPSerializer = new CanvasDPPSerializer(stage, ioAne);
 			serializer.addEventListener(CanvasSerializationEvent.COMPLETE, onSerializationComplete);

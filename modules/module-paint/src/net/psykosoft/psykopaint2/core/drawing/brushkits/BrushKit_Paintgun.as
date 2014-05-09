@@ -234,7 +234,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_bumpInfluence.numberValue = 0.25;
 					bumpDecorator.param_noBumpProbability.numberValue = 0.6;
 					bumpDecorator.param_glossiness.numberValue = 0.55 ;
-					bumpDecorator.param_shininess.numberValue = 0.4;
 					
 					break;
 				
@@ -264,7 +263,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_bumpInfluence.numberValue = 0.12;
 					bumpDecorator.param_noBumpProbability.numberValue = 0.6;
 					bumpDecorator.param_glossiness.numberValue = 0.35 ;
-					bumpDecorator.param_shininess.numberValue = 0.2;
 					
 					
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.001;
@@ -348,7 +346,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_bumpInfluence.numberValue = 0.25;
 					bumpDecorator.param_noBumpProbability.numberValue = 0.6;
 					bumpDecorator.param_glossiness.numberValue = 0.12 ;
-					bumpDecorator.param_shininess.numberValue = 0.8;
 					break;
 				case STYLE_CRAYATOR:
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 10;
@@ -385,7 +382,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_bumpInfluence.numberValue = 0.65;
 					bumpDecorator.param_noBumpProbability.numberValue = 0.8;
 					bumpDecorator.param_glossiness.numberValue = 0.82 ;
-					bumpDecorator.param_shininess.numberValue = 0.12;
 					
 					
 					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
@@ -427,7 +423,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_bumpInfluence.numberValue = 0.92;
 					bumpDecorator.param_noBumpProbability.numberValue = 0.9;
 					bumpDecorator.param_glossiness.numberValue = 0.35 ;
-					bumpDecorator.param_shininess.numberValue = 0.25;
 					
 					
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.0;
@@ -491,7 +486,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_bumpInfluence.numberValue = 0.12;
 					bumpDecorator.param_noBumpProbability.numberValue = 0.9;
 					bumpDecorator.param_glossiness.numberValue = 0.55 ;
-					bumpDecorator.param_shininess.numberValue = 0.15;
 					
 					
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.0;
