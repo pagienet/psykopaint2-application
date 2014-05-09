@@ -402,26 +402,40 @@ package net.psykosoft.psykopaint2.home.views.home
 			initTexturesFromBitmapData(bitmapData);
 			updateTexturesFromBitmapData(bitmapData);
 			
-			var scaleX:Number = (bitmapData.width-2) / _textureWidth;
-			var scaleY:Number = scaleX * ( _textureWidth / _textureHeight );
-			
-			//vertically center source image on canvas:
 			var sg:ISubGeometry = _canvas.geometry.subGeometries[0];
 			var uvData:Vector.<Number> = sg.UVData;
 			var uvOffset:int = sg.UVOffset;
 			var uvStride:int = sg.UVStride;
-			
 			var r:Rectangle = easelRect;
-			var missing:Number = (bitmapData.height * r.width / bitmapData.width - r.height) * 0.5 ;
-			var offsetV:Number =  missing * uvData[uvOffset+1] * scaleY / r.height;
-			
 			_tmpMatrix = new Matrix();
-			_tmpMatrix.scale(1.0, aspectRatio);
-			_tmpMatrix.scale(scaleX,scaleY);
-			_tmpMatrix.translate(0,offsetV);
-
+			
+			//vertically center source image on canvas:
+			var scaleX:Number = (bitmapData.width-2) / _textureWidth;
+			var scaleY:Number = scaleX * ( _textureWidth / _textureHeight );
+			var missing:Number = (bitmapData.height * r.width / bitmapData.width - r.height) * 0.5 ;
+			if ( missing >= 0 )
+			{
+				var offsetV:Number =  missing * uvData[uvOffset+1] * scaleY / r.height;
+				
+				_tmpMatrix.scale(1.0, aspectRatio);
+				_tmpMatrix.scale(scaleX,scaleY);
+				_tmpMatrix.translate(0,offsetV);
+			} else {
+				scaleY = (bitmapData.height-2) / _textureHeight / aspectRatio;
+				scaleX = scaleY * ( _textureHeight / _textureWidth );
+				missing = (bitmapData.width * r.height / bitmapData.height - r.width) * 0.5 ;
+				
+				var offsetU:Number =  missing * uvData[uvOffset] * scaleX / r.width;
+				
+				_tmpMatrix.scale(1.0, aspectRatio);
+				_tmpMatrix.scale(scaleX,scaleY);
+				_tmpMatrix.translate(offsetU,0);
+			}
 			_canvas.geometry.transformUV(_tmpMatrix);
 			
+			
+			
+		
 			
 			//orientation = CameraRollImageOrientation.ROTATION_270;
 			
