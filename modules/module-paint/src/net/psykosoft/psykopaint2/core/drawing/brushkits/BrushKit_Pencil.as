@@ -25,9 +25,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private static const STYLE_DEFAULT:int=0;
 		private static const STYLE_PASTEL:int=1;
 		private static const STYLE_CHARCOAL:int = 2;
-		private static const STYLE_SKETCH:int = 3;
-		private static const STYLE_CRAYS:int = 4;
-		private static const STYLE_QUILL:int = 5;
+		private static const STYLE_AUTO_GRID:int = 3;
+		private static const STYLE_QUILL:int = 4;
+		private static const STYLE_COOLINK2:int = 5;
 		
 		
 		private var sizeDecorator:SizeDecorator;
@@ -122,7 +122,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Pencil","Pastel","Charcoal","Sketch","Crayons","Quill"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Pencil","Pastels","Charcoal","Sketch","Quill","Cool Ink"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -248,8 +248,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					splatterDecorator.param_brushAngleOffsetRange.degrees = 2;
 					
 					
-					//PASTELS SHOULD BE WET: TODO
-					//NO DEPTH BUT WET
+					
 					
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_SPEED;					
 					sizeDecorator.param_mappingFactor.numberValue = 0.25;
@@ -321,7 +320,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					break;
 				
-				case STYLE_SKETCH:
+				case STYLE_AUTO_GRID:
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 1;
 					
 					
@@ -383,7 +382,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_minOffset.numberValue = 0.02+precision*10;
 					spawnDecorator.param_autorotate.booleanValue=true;
 					break;
-				case STYLE_CRAYS:
+				case STYLE_COOLINK2:
 					trace("STYLE STYLE_COOLINK2");
 					
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 3;
