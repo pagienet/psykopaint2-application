@@ -88,7 +88,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			pathManager.addPointDecorator( colorDecorator );
 			
 			bumpDecorator = new BumpDecorator();
-			bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
+			bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 			bumpDecorator.param_invertMapping.booleanValue = true;
 			//PENCILS ARE FLAT
 			bumpDecorator.param_bumpiness.numberValue = 0.01;

@@ -173,7 +173,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			
 			//BUMP
-			bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
+			bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 			bumpDecorator.param_invertMapping.booleanValue = true;
 			bumpDecorator.param_bumpiness.numberValue = 0.8;
 			bumpDecorator.param_bumpinessRange.numberValue = 0.5;
@@ -323,7 +323,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					splatterDecorator.param_offsetAngleRange.degrees = 1;
 					splatterDecorator.param_sizeFactor.numberValue = 0.5+precision * 6;
 					
-					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
+					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 					bumpDecorator.param_bumpiness.numberValue = 0.15;
 					bumpDecorator.param_bumpinessRange.numberValue = 0.01;
 					bumpDecorator.param_bumpInfluence.numberValue = 0.5;
@@ -379,7 +379,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					//splatterDecorator.active=false;
 					
 					
-					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
+					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 					bumpDecorator.param_bumpiness.numberValue = Math.random()*1;
 					bumpDecorator.param_bumpinessRange.numberValue = Math.random();
 					bumpDecorator.param_bumpInfluence.numberValue = Math.random()*1;
