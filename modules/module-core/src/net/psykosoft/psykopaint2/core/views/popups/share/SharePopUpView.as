@@ -53,7 +53,7 @@ public class SharePopUpView extends PopUpViewBase
 	}
 
 	private function onRightBtnClick( event:MouseEvent ):void {
-		popUpWantsToShareSignal.dispatch(_bmd, facebookChk.selected, twitterChk.selected);
+		popUpWantsToShareSignal.dispatch(_bmd);
 	}
 
 	override protected function onDisabled():void {
@@ -84,7 +84,7 @@ public class SharePopUpView extends PopUpViewBase
 		paintingPlaceHolder.addChild(bit);
 	}
 
-// -----------------------
+	// -----------------------
 	// Side btn animations.
 	// -----------------------
 
