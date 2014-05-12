@@ -659,7 +659,8 @@ public class GalleryView extends Sprite
 			_loadingTexture.dispose();
 			if ( _paintingOccluder.geometry )_paintingOccluder.geometry.dispose();
 			_paintingOccluder.dispose();
-			if(_ribbon.material)_ribbon.material.dispose();
+			//TO FIX. MAKES PROPBLEM WHEN STARTING A PAINTING
+			//if(_ribbon.material)_ribbon.material.dispose();
 			_ribbon.geometry.dispose();
 			disposeHighQualityMaterial();
 			stopInteraction();
