@@ -128,14 +128,7 @@ package net.psykosoft.psykopaint2.core.model
 			if ( step == 0 )
 			{
 				styleMatrices = new Vector.<Vector.<Number>>();
-				var cm:ColorMatrix = new ColorMatrix();
-				cm.adjustSaturation(4);
-				
-				var v:Vector.<Number> = Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4] / 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255,
-					cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4] / 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255,0.5,0]);
-				
-				styleMatrices.push(v);
-				 parameterList = ["Saturate"];
+				 parameterList = [];
 				 colorStyleParameter = new PsykoParameter( PsykoParameter.IconListParameter,"Color Style",0,parameterList);
 			}
 			
@@ -149,33 +142,42 @@ package net.psykosoft.psykopaint2.core.model
 				
 				var preset:XML = ColorStylePresets.getPreset(presets[i]);
 				parameterList.push(preset.@name);
-				colorTransfer.setFactors(0, preset );
-				colorTransfer.calculateColorMatrices();
-				cm1 = colorTransfer.getColorMatrix(0);
-				cm2 = colorTransfer.getColorMatrix(1);
-				/*
-				if ( threshold < 0 )
+				if ( !preset.hasOwnProperty("@colorMatrix") )
 				{
-					cm1.adjustSaturation(-1)
-					cm1.invert();
-					cm2.adjustSaturation(-1)
-					cm2.invert();
+					colorTransfer.setFactors(0, preset );
+					colorTransfer.calculateColorMatrices();
+					cm1 = colorTransfer.getColorMatrix(0);
+					cm2 = colorTransfer.getColorMatrix(1);
+					/*
+					if ( threshold < 0 )
+					{
+						cm1.adjustSaturation(-1)
+						cm1.invert();
+						cm2.adjustSaturation(-1)
+						cm2.invert();
+					}
+					*/
+					
+					var v:Vector.<Number> = Vector.<Number>([cm1.matrix[0],cm1.matrix[1],cm1.matrix[2],cm1.matrix[4] / 255,cm1.matrix[5],cm1.matrix[6],cm1.matrix[7],cm1.matrix[9]/ 255,cm1.matrix[10],cm1.matrix[11],cm1.matrix[12],cm1.matrix[14]/ 255,
+						cm2.matrix[0],cm2.matrix[1],cm2.matrix[2],cm2.matrix[4] / 255,cm2.matrix[5],cm2.matrix[6],cm2.matrix[7],cm2.matrix[9]/ 255,cm2.matrix[10],cm2.matrix[11],cm2.matrix[12],cm2.matrix[14]/ 255]);
+					
+					var blendIn:Number = preset.@blend_in;
+					var blendOut:Number =  preset.@blend_out;
+					var blendRange:Number = blendIn + blendOut;
+					var threshold:Number = colorTransfer.getThreshold(blendIn,blendOut);
+					v.push((threshold - blendRange *0.5 )/ 255.0 ,  255 / blendRange );
+				} else {
+					var colorMatrixData:Array = preset.@colorMatrix.toString().split(",");
+					v = Vector.<Number>([colorMatrixData[0],colorMatrixData[1],colorMatrixData[2],colorMatrixData[4] / 255,colorMatrixData[5],colorMatrixData[6],colorMatrixData[7],colorMatrixData[9]/ 255,colorMatrixData[10],colorMatrixData[11],colorMatrixData[12],colorMatrixData[14]/ 255,
+						colorMatrixData[0],colorMatrixData[1],colorMatrixData[2],colorMatrixData[4] / 255,colorMatrixData[5],colorMatrixData[6],colorMatrixData[7],colorMatrixData[9]/ 255,colorMatrixData[10],colorMatrixData[11],colorMatrixData[12],colorMatrixData[14]/ 255,0.5,0]);
+					
 				}
-				*/
-				
-				v = Vector.<Number>([cm1.matrix[0],cm1.matrix[1],cm1.matrix[2],cm1.matrix[4] / 255,cm1.matrix[5],cm1.matrix[6],cm1.matrix[7],cm1.matrix[9]/ 255,cm1.matrix[10],cm1.matrix[11],cm1.matrix[12],cm1.matrix[14]/ 255,
-					cm2.matrix[0],cm2.matrix[1],cm2.matrix[2],cm2.matrix[4] / 255,cm2.matrix[5],cm2.matrix[6],cm2.matrix[7],cm2.matrix[9]/ 255,cm2.matrix[10],cm2.matrix[11],cm2.matrix[12],cm2.matrix[14]/ 255]);
-				
-				var blendIn:Number = preset.@blend_in;
-				var blendOut:Number =  preset.@blend_out;
-				var blendRange:Number = blendIn + blendOut;
-				var threshold:Number = colorTransfer.getThreshold(blendIn,blendOut);
-				v.push((threshold - blendRange *0.5 )/ 255.0 ,  255 / blendRange );
 				styleMatrices.push( v );
 				
 				if ( step == 0 )
 				{
 					notifyColorStyleChangedSignal.dispatch( styleMatrices[0],styleBlendParameter.numberValue);
+					
 				}
 			//}
 			step++;

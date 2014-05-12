@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 {
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
+	import com.greensock.easing.Quad;
 	
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -34,6 +35,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		private var sliderSnap:Vector.<Vector.<Number>>;
 		private var sliderSnapDistance:Number = 0.05;
+		private var _showFirstTimeStyleSliderAnimation:Boolean = true;
 		
 		public function StyleUI()
 		{
@@ -131,6 +133,15 @@ package net.psykosoft.psykopaint2.paint.views.color
 				styleParameter.index = index;
 				
 				updateStyleSliderShuffling();
+				
+				if ( index!= 0 && _showFirstTimeStyleSliderAnimation && uiParameters[0].numberValue == 0 )
+				{
+					_showFirstTimeStyleSliderAnimation = false;
+					TweenLite.to(slider1Handle,0.25,{ease:Quad.easeInOut,x:sliderOffset + slider1Bar.x  + 0.5 * sliderRange,
+						onComplete:function():void{
+							uiParameters[0].numberValue = 0.5;
+						}});
+				}
 				
 				//styleIconHolder.setChildIndex( previewIcons[index], styleIconHolder.numChildren-1);
 				previewIcon.showIcon( styleParameter.stringValue );
