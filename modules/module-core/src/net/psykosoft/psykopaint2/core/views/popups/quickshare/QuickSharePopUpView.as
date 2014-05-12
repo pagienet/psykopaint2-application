@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core.views.popups.share
+package net.psykosoft.psykopaint2.core.views.popups.quickshare
 {
 
 import com.greensock.TweenLite;
@@ -12,6 +12,7 @@ import flash.display.MovieClip;
 
 import flash.display.Sprite;
 import flash.events.MouseEvent;
+import flash.text.TextField;
 
 import net.psykosoft.psykopaint2.core.views.components.button.IconButtonAlt;
 import net.psykosoft.psykopaint2.core.views.components.checkbox.CheckBox;
@@ -20,7 +21,7 @@ import net.psykosoft.psykopaint2.core.views.popups.base.PopUpViewBase;
 
 import org.osflash.signals.Signal;
 
-public class SharePopUpView extends PopUpViewBase
+public class QuickSharePopUpView extends PopUpViewBase
 {
 	// Declared in Flash.
 	public var bg:Sprite;
@@ -31,6 +32,7 @@ public class SharePopUpView extends PopUpViewBase
 	public var paintingMask:Sprite;
 	public var twitterChkBg:Sprite;
 	public var facebookChkBg:Sprite;
+	public var tf:TextField;
 
 	private var _rightButton:IconButtonAlt;
 	private var _bmd:BitmapData;
@@ -38,7 +40,7 @@ public class SharePopUpView extends PopUpViewBase
 	public var popUpWantsToCloseSignal:Signal = new Signal();
 	public var popUpWantsToShareSignal:Signal = new Signal();
 
-	public function SharePopUpView() {
+	public function QuickSharePopUpView() {
 		super();
 
 		_rightButton = rightSide.getChildByName( "btn" ) as IconButtonAlt;
@@ -53,7 +55,7 @@ public class SharePopUpView extends PopUpViewBase
 	}
 
 	private function onRightBtnClick( event:MouseEvent ):void {
-		popUpWantsToShareSignal.dispatch(_bmd);
+		popUpWantsToShareSignal.dispatch();
 	}
 
 	override protected function onDisabled():void {
@@ -109,6 +111,10 @@ public class SharePopUpView extends PopUpViewBase
 
 	private function onAnimateOutComplete( target:MovieClip ):void {
 		target.visible = false;
+	}
+
+	public function get bmd():BitmapData {
+		return _bmd;
 	}
 }
 }

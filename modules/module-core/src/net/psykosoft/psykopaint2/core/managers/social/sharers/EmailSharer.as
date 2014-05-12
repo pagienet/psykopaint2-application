@@ -16,7 +16,7 @@ public class EmailSharer extends SharerBase
 	override public function share(content:Array):void {
 		super.share( content );
 
-		trace("EmailSharer - share()");
+		trace("EmailSharer - quickshare()");
 
 		var bmd:BitmapData = _contentToBeShared[0];
 

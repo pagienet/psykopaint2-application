@@ -1,21 +1,17 @@
-package net.psykosoft.psykopaint2.core.views.popups.share
+package net.psykosoft.psykopaint2.core.views.popups.quickshare
 {
-
-import flash.display.BitmapData;
 
 import net.psykosoft.psykopaint2.core.managers.social.SocialSharingManager;
 import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-import net.psykosoft.psykopaint2.core.managers.social.sharers.EmailSharer;
-import net.psykosoft.psykopaint2.core.managers.social.sharers.ExportSharer;
 import net.psykosoft.psykopaint2.core.managers.social.sharers.FacebookSharer;
 import net.psykosoft.psykopaint2.core.managers.social.sharers.CompositeSharer;
 import net.psykosoft.psykopaint2.core.managers.social.sharers.TwitterSharer;
 
-public class SharePopUpViewMediator extends MediatorBase
+public class QuickSharePopUpViewMediator extends MediatorBase
 {
 	[Inject]
-	public var view:SharePopUpView;
+	public var view:QuickSharePopUpView;
 
 	[Inject]
 	public var requestHidePopUpSignal:RequestHidePopUpSignal;
@@ -24,7 +20,6 @@ public class SharePopUpViewMediator extends MediatorBase
 	public var socialSharingManager:SocialSharingManager;
 
 	private var _sharer:CompositeSharer;
-	private var _shareBmd:BitmapData;
 
 	override public function initialize():void {
 		super.initialize();
@@ -46,20 +41,20 @@ public class SharePopUpViewMediator extends MediatorBase
 
 	override public function destroy():void {
 		super.destroy();
-		if(_shareBmd) _shareBmd.dispose();
+		if(view.bmd) view.bmd.dispose();
 		_sharer.completedSignal.remove(onUtilCompleted);
 		_sharer.dispose();
 		view.popUpWantsToCloseSignal.remove( onPopUpWantsToClose );
 	}
 
-	private function onPopUpWantsToShare(bmd:BitmapData):void {
+	private function onPopUpWantsToShare():void {
 
 		if(view.facebookChk.selected) _sharer.addSharer(new FacebookSharer(socialSharingManager));
 		if(view.twitterChk.selected) _sharer.addSharer(new TwitterSharer(socialSharingManager));
 
 		// Nothing to wait for, close.
 		if(_sharer.numSharers == 0) requestHidePopUpSignal.dispatch();
-		else _sharer.share([_shareBmd = bmd]);
+		else _sharer.share([view.tf.text, view.bmd]);
 	}
 
 	private function onUtilCompleted():void {

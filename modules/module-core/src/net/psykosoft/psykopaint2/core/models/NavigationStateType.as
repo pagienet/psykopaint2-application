@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.core.models
 		public static const GALLERY_BROWSE_YOURS : String = "state/gallery/gallery_browse_yours";
 		public static const GALLERY_BROWSE_USER : String = "state/gallery/gallery_browse_user";
 		public static const GALLERY_PAINTING : String = "state/gallery/painting";
-		public static const GALLERY_SHARE : String = "state/gallery/share";
+		public static const GALLERY_SHARE : String = "state/gallery/quickshare";
 
 		public static const PAINT:String = "state/paint";
 		public static const PAINT_SELECT_BRUSH:String = "state/paint/select_brush";

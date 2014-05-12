@@ -86,7 +86,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const REWIND:String = "rewind";
 		public static const SAMPLES:String = "samples";
 		public static const SEND:String = "send";
-		public static const SHARE:String = "share";
+		public static const SHARE:String = "quickshare";
 		public static const SURFACE:String = "surface";
 		public static const TWEAK_BRUSH:String = "tweakBrush";
 		public static const TWITTER:String = "twitter";

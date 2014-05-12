@@ -103,7 +103,7 @@ var area:AutoFitArea = AutoFitArea.createAround(myImage);
 		/**
 		 * Constructor
 		 * 
-		 * @param parent The parent DisplayObjectContainer in which the AutoFitArea should be created. All objects that get attached must share the same parent.
+		 * @param parent The parent DisplayObjectContainer in which the AutoFitArea should be created. All objects that get attached must quickshare the same parent.
 		 * @param x x coordinate of the AutoFitArea's upper left corner
 		 * @param y y coordinate of the AutoFitArea's upper left corner
 		 * @param width width of the AutoFitArea
@@ -196,7 +196,7 @@ var area:AutoFitArea = AutoFitArea.createAround(myImage);
 		 */
 		public function attach(target:DisplayObject, vars:Object=null, ...args):void { 
 			if (target.parent != _parent) {
-				throw new Error("The parent of the DisplayObject " + target.name + " added to AutoFitArea " + this.name + " doesn't share the same parent.");
+				throw new Error("The parent of the DisplayObject " + target.name + " added to AutoFitArea " + this.name + " doesn't quickshare the same parent.");
 			}
 			if (vars == null || typeof(vars) == "string") {
 				//sensed old method - parse the params for backwards compatibility
