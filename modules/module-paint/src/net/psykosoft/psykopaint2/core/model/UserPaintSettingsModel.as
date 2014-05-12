@@ -163,7 +163,7 @@ package net.psykosoft.psykopaint2.core.model
 				}
 				*/
 				
-				var v:Vector.<Number> = Vector.<Number>([cm1.matrix[0],cm1.matrix[1],cm1.matrix[2],cm1.matrix[4] / 255,cm1.matrix[5],cm1.matrix[6],cm1.matrix[7],cm1.matrix[9]/ 255,cm1.matrix[10],cm1.matrix[11],cm1.matrix[12],cm1.matrix[14]/ 255,
+				v = Vector.<Number>([cm1.matrix[0],cm1.matrix[1],cm1.matrix[2],cm1.matrix[4] / 255,cm1.matrix[5],cm1.matrix[6],cm1.matrix[7],cm1.matrix[9]/ 255,cm1.matrix[10],cm1.matrix[11],cm1.matrix[12],cm1.matrix[14]/ 255,
 					cm2.matrix[0],cm2.matrix[1],cm2.matrix[2],cm2.matrix[4] / 255,cm2.matrix[5],cm2.matrix[6],cm2.matrix[7],cm2.matrix[9]/ 255,cm2.matrix[10],cm2.matrix[11],cm2.matrix[12],cm2.matrix[14]/ 255]);
 				
 				var blendIn:Number = preset.@blend_in;

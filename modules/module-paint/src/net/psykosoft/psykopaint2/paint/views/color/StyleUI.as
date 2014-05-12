@@ -2,22 +2,14 @@ package net.psykosoft.psykopaint2.paint.views.color
 {
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
-	import com.greensock.events.TweenEvent;
 	
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
-	import flash.utils.clearTimeout;
-	import flash.utils.setTimeout;
 	
-	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.previews.BrushStylePreview;
-	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
 	
 	public class StyleUI extends Sprite
 	{
@@ -174,7 +166,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onStyleMouseUp );
 			//if ( styleBar.contains(previewIcon)) styleBar.removeChild(previewIcon);
 			
-			TweenLite.to(previewIcon,0.3,{overwrite:false,delay:0.4,ease:Expo.easeOut,alpha:0,onComplete:function(){
+			TweenLite.to(previewIcon,0.3,{overwrite:false,delay:0.4,ease:Expo.easeOut,alpha:0,onComplete:function():void{
 				if ( styleBar.contains(previewIcon)) styleBar.removeChild(previewIcon);
 			}});
 			//clearTimeout(previewDelay);

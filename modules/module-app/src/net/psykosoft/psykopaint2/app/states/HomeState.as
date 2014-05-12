@@ -81,7 +81,6 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onRequestCropState(bitmapData : BitmapData, orientation:int ) : void
 		{
-			//TODO: handle orientation
 			stateMachine.setActiveState(transitionToCropState, {map:bitmapData, orientation:orientation });
 		}
 	}

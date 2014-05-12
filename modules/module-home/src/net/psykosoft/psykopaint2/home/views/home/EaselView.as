@@ -686,9 +686,6 @@ package net.psykosoft.psykopaint2.home.views.home
 					_tmpMatrix.translate(du,dv);
 					
 					_canvas.geometry.transformUV( _tmpMatrix );
-					
-					
-					
 				}
 			}
 		
@@ -711,7 +708,6 @@ package net.psykosoft.psykopaint2.home.views.home
 					cropTransformAccepted = false;
 				}
 			}
-			
 		}
 		
 		public function onTransformGestureEnded(event:GestureEvent):void
@@ -728,8 +724,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			var result:BitmapData = new BitmapData( CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT,false );
 			
 			result = util.execute( _canvas, _diffuseTexture.texture, result, _context3D );
-			//What is this? This blur does not make any sense. The color decorator has a "pick radius" option which uses the built in pyramid map to get smoothed colors
-			//result.applyFilter(result,new Rectangle(0,0,CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT),new Point(),new BlurFilter(15,15));
 			return result;
 		}
 	}

@@ -4,16 +4,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.display.MovieClip;
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.text.TextField;
 
-import flashx.textLayout.elements.GlobalSettings;
-
-import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
@@ -27,7 +23,7 @@ import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 		public static const PROFILE:String = "profile";
 
 		private var _userThumbnailURL:String;
-		private var _loader:Loader;
+		private var _userBitmapLoader:Loader;
 		private var _userBitmap:Bitmap;
 		private var _container:MovieClip;
 
@@ -62,10 +58,9 @@ import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 		override public function dispose():void
 		{
 			getRightButton().removeChild(_container);
-			if (_loader) {
-				_loader.close();
-				removeLoadListeners();
-			}
+			if (_userBitmapLoader)
+				closeLoader();
+
 			disposeUserBitmap();
 			super.dispose();
 		}
@@ -73,37 +68,53 @@ import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 		private function loadThumbnail():void
 		{
 			disposeUserBitmap();
-			if (_loader) _loader.close();
-			_loader = new Loader();
-			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
-			_loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-			_loader.load(new URLRequest(_userThumbnailURL));
+
+			if (_userBitmapLoader)
+				closeLoader();
+
+			_userBitmapLoader = new Loader();
+			_userBitmapLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
+			_userBitmapLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
+			_userBitmapLoader.load(new URLRequest(_userThumbnailURL));
+		}
+
+		private function closeLoader():void
+		{
+			try {
+				_userBitmapLoader.close();
+			}
+			catch (error:Error) {
+				// Sadly, there doesn't seem to be a proper fix for this thrown error. When closing quickly after opening a stream, seems like a Flash-internal race condition.
+				trace ("Caught closing error.");
+			}
+			removeLoadListeners();
+			_userBitmapLoader = null;
 		}
 
 		private function onLoadError(event:IOErrorEvent):void
 		{
 			removeLoadListeners();
-			_loader = null;
+			_userBitmapLoader = null;
 		}
 
 		private function onLoadComplete(event:Event):void
 		{
 			removeLoadListeners();
-			_userBitmap = Bitmap(_loader.content);
+			_userBitmap = Bitmap(_userBitmapLoader.content);
 			_userBitmap.x = 3;
 			_userBitmap.y = 7;
 			_userBitmap.smoothing = true;
 			_userBitmap.width = 168;
 			_userBitmap.height = 168;
 			_container.addChildAt(_userBitmap, 0);
-			_loader = null;
+			_userBitmapLoader = null;
 
 		}
 
 		private function removeLoadListeners():void
 		{
-			_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onLoadComplete);
-			_loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
+			_userBitmapLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onLoadComplete);
+			_userBitmapLoader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		}
 
 		override protected function onEnabled():void

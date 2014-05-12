@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 	import flash.utils.getTimer;
 	
-	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
@@ -18,7 +17,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestClosePaintViewSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 
 	public class CanvasSubNavViewMediator extends SubNavigationMediatorBase
@@ -43,9 +41,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		
 		[Inject]
 		public var userPaintSettingModel:UserPaintSettingsModel;
-
-		[Inject]
-		public var requestPaintingDeletionSignal:RequestPaintingDeletionSignal;
 
 		[Inject]
 		public var requestSavePaintingToServerSignal : RequestSavePaintingToServerSignal;

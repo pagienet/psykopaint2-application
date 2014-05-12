@@ -673,7 +673,7 @@ public class GalleryView extends Sprite
 
 		private function disposeHighQualityMaterial():void
 		{
-			if ( _activeImageProxy ) _activeImageProxy.cancelLoading();
+			removeHighQualityMaterial();
 			if (_highQualityColorTexture) {
 				_highQualityColorTexture.dispose();
 				_highQualityNormalSpecularTexture.dispose();
@@ -693,7 +693,8 @@ public class GalleryView extends Sprite
 		private function destroyPainting(i:int):void
 		{
 			var painting:GalleryPaintingView = _paintings[i];
-			_container.removeChild(painting);
+			if (_container.contains(painting))
+				_container.removeChild(painting);
 			painting.dispose();
 			_lowQualityMaterials[i].dispose();
 			_paintings[i] = null;
@@ -732,10 +733,13 @@ public class GalleryView extends Sprite
 
 		private function onSurfaceColorDataComplete(galleryVO:PaintingGalleryVO):void
 		{
-			_highQualityColorTexture.bitmapData = galleryVO.colorData;
-			_highQualityColorTexture.getTextureForStage3D(_stage3DProxy);
+			// if view disposed, sometimes loading doesn't close in time?
+			if (_highQualityColorTexture) {
+				_highQualityColorTexture.bitmapData = galleryVO.colorData;
+				_highQualityColorTexture.getTextureForStage3D(_stage3DProxy);
 
-			_highQualityMaterial.normalSpecularTexture = _stillLoadingNormalSpecularTexture;
+				_highQualityMaterial.normalSpecularTexture = _stillLoadingNormalSpecularTexture;
+			}
 
 			_highQualityIndex = _activeImageProxy.index;
 
@@ -746,11 +750,13 @@ public class GalleryView extends Sprite
 
 		private function onSurfaceDataComplete(galleryVO:PaintingGalleryVO):void
 		{
-			_highQualityNormalSpecularTexture.bitmapData  = galleryVO.normalSpecularData;
-			_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
+			// if view disposed, sometimes loading doesn't close in time?
+			if (_highQualityNormalSpecularTexture) {
+				_highQualityNormalSpecularTexture.bitmapData = galleryVO.normalSpecularData;
+				_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
 
-			_highQualityMaterial.normalSpecularTexture = _highQualityNormalSpecularTexture;
-
+				_highQualityMaterial.normalSpecularTexture = _highQualityNormalSpecularTexture;
+			}
 			_loadingHQ = false;
 			galleryVO.dispose();
 		}

@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 {
 
 	import net.psykosoft.psykopaint2.core.commands.ClearCanvasCommand;
-	import net.psykosoft.psykopaint2.paint.commands.saving.SavePaintingToServerCommand;
 	import net.psykosoft.psykopaint2.core.commands.UndoCanvasActionCommand;
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
@@ -26,13 +25,13 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSavePaintingToServerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
-	import net.psykosoft.psykopaint2.paint.commands.DeletePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.DestroyPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
 	import net.psykosoft.psykopaint2.paint.commands.LoadSurfaceCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetupPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.commands.saving.DiscardPaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.saving.SavePaintingCommand;
+	import net.psykosoft.psykopaint2.paint.commands.saving.SavePaintingToServerCommand;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToEaselViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
@@ -45,7 +44,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintRootViewRemovalSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDiscardSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetCanvasBackgroundSignal;
@@ -173,7 +171,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_commandMap.map( RequestCanvasExportSignal ).toCommand( ExportCanvasCommand );
 			_commandMap.map( RequestPaintingSaveSignal ).toCommand( SavePaintingCommand );
 			_commandMap.map( RequestPaintingDiscardSignal ).toCommand( DiscardPaintingCommand );
-			_commandMap.map( RequestPaintingDeletionSignal ).toCommand( DeletePaintingCommand );
+			
 			_commandMap.map( RequestSetupPaintModuleSignal ).toCommand( SetupPaintModuleCommand );
 			_commandMap.map( RequestDestroyPaintModuleSignal ).toCommand( DestroyPaintModuleCommand );
 
