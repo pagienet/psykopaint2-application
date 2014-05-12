@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 	import flash.display.Sprite;
 	
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.views.navigation.EmptySubNavView;
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.paint.views.alpha.AlphaSubNavView;
@@ -28,7 +29,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 			// Link sub-navigation views that are created dynamically by CrNavigationView
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT, CanvasSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_SELECT_BRUSH, SelectBrushSubNavView );
-			StateToSubNavLinker.linkSubNavToState( NavigationStateType.TRANSITION_TO_PAINT_MODE, SubNavigationViewBase );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.TRANSITION_TO_PAINT_MODE, EmptySubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_ADJUST_COLOR, ColorPickerSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_BUY_UPGRADE, UpgradeSubNavView );
 			//StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_ADJUST_ALPHA, AlphaSubNavView );

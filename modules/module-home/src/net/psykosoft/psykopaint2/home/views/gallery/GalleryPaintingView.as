@@ -1,24 +1,28 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
+	import away3d.containers.ObjectContainer3D;
+	import away3d.core.base.Geometry;
+	import away3d.entities.Mesh;
+	import away3d.materials.MaterialBase;
+	import away3d.materials.TextureMaterial;
 
-import away3d.containers.ObjectContainer3D;
-import away3d.core.base.Geometry;
-import away3d.entities.Mesh;
-import away3d.materials.MaterialBase;
-import away3d.materials.TextureMaterial;
+	import net.psykosoft.psykopaint2.home.views.book.HomeGeometryCache;
+	import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
+
 
 import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
-import net.psykosoft.psykopaint2.home.views.book.HomeGeometryCache;
-import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
 
 public class GalleryPaintingView extends ObjectContainer3D
+
 	{
 		private var _mesh:Mesh;
 		private var _material:MaterialBase;
 		private var _frameMesh:Mesh;
 		private var _paintingGeometry:Geometry;
+
 		private var _galleryImageProxy:GalleryImageProxy;
 		private var _ribbon:Mesh;
+
 
 		
 		public function GalleryPaintingView(paintingGeometry:Geometry,material:MaterialBase)
@@ -40,11 +44,13 @@ public class GalleryPaintingView extends ObjectContainer3D
 
 
 		public function set galleryImageProxy(value:GalleryImageProxy):void
+
 		{
 			_galleryImageProxy = value;
 		}
 
 		public function get galleryImageProxy():GalleryImageProxy
+
 		{
 			return _galleryImageProxy;
 		}

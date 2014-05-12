@@ -2,19 +2,12 @@ package net.psykosoft.psykopaint2.crop.views.crop
 {
 
 	import flash.display.Stage3D;
-	import flash.display3D.textures.Texture;
-	
-	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
-	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedRectTexture;
-	
+
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleSwipeGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleTransformGestureSignal;
-	
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
-	import net.psykosoft.psykopaint2.crop.signals.RequestSetCropBackgroundSignal;
-	
+	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+
 	
 	public class CropViewMediator extends MediatorBase
 	{
@@ -24,9 +17,6 @@ package net.psykosoft.psykopaint2.crop.views.crop
 		[Inject]
 		public var view:CropView;
 		
-		[Inject]
-		public var requestSetCropBackgroundSignal : RequestSetCropBackgroundSignal;
-
 		[Inject]
 		public var requestDestroyCropModuleSignal : RequestDestroyCropModuleSignal;
 
@@ -45,7 +35,6 @@ package net.psykosoft.psykopaint2.crop.views.crop
 //			registerEnablingState( NavigationStateType.CROP_SKIP );
 
 			// From app.
-			requestSetCropBackgroundSignal.add( onSetCropBackgroundSignal );
 			requestDestroyCropModuleSignal.add( onRequestDestroyCropModule );
 			
 			// From view.
@@ -54,14 +43,12 @@ package net.psykosoft.psykopaint2.crop.views.crop
 
 			// Enable view.
 			view.enable();
-			GpuRenderManager.addRenderingStep(render, GpuRenderingStepType.NORMAL,0);
 		}
 		
 		override public function destroy():void {
 
 			// Clean up listeners.
 			
-			requestSetCropBackgroundSignal.remove( onSetCropBackgroundSignal );
 			requestDestroyCropModuleSignal.remove( onRequestDestroyCropModule );
 			view.enabledSignal.remove( onEnabled );
 			view.disabledSignal.remove( onDisabled );
@@ -69,8 +56,6 @@ package net.psykosoft.psykopaint2.crop.views.crop
 
 			// Disable view.
 			view.disable();
-			GpuRenderManager.removeRenderingStep(render, GpuRenderingStepType.NORMAL);
-			view.background = null;
 
 			super.destroy();
 		}
@@ -90,19 +75,8 @@ package net.psykosoft.psykopaint2.crop.views.crop
 			notifyToggleSwipeGestureSignal.dispatch(true);
 		}
 
-		private function render(target:Texture) : void
-		{
-			view.render(stage3D.context3D);
-		}
-
 		private function onRequestDestroyCropModule() : void
 		{}
 
-		private function onSetCropBackgroundSignal(texture : RefCountedRectTexture) : void
-		{
-			view.background = texture;
-		}
-
-		
 	}
 }

@@ -5,8 +5,6 @@ package net.psykosoft.psykopaint2.app.states
 	
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
-	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
-	import net.psykosoft.psykopaint2.base.utils.io.CameraRollImageOrientation;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedRectTexture;
@@ -14,7 +12,6 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestCancelCropSignal;
-	import net.psykosoft.psykopaint2.crop.signals.RequestSetCropBackgroundSignal;
 
 	use namespace ns_state_machine;
 
@@ -35,8 +32,6 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var transitionCropToHomeState : TransitionCropToHomeState;
 
-		private var _background : RefCountedRectTexture;
-
 		public function CropState()
 		{
 		}
@@ -48,10 +43,6 @@ package net.psykosoft.psykopaint2.app.states
 		 */
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			
-			var bitmapData : BitmapData = BitmapData(data.bitmapData);
-			_background = RefCountedRectTexture(data.background);
-
 			requestCancelCropSignal.add(onRequestCancelCropSignal);
 			requestOpenCroppedBitmapDataSignal.add(onRequestOpenCroppedBitmapData);
 			/*
@@ -83,13 +74,11 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			requestCancelCropSignal.remove(onRequestCancelCropSignal);
 			requestOpenCroppedBitmapDataSignal.remove(onRequestOpenCroppedBitmapData);
-			_background.dispose();
-			_background = null;
 		}
 
 		private function onRequestOpenCroppedBitmapData(bitmapData : BitmapData) : void
 		{
-			stateMachine.setActiveState(transitionToPaintState, {bitmapData: bitmapData, background: _background.newReference()});
+			stateMachine.setActiveState(transitionToPaintState, {bitmapData: bitmapData });
 		}
 
 		private function onRequestCancelCropSignal() : void

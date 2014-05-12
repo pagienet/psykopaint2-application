@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.crop.configuration
 	import net.psykosoft.psykopaint2.crop.signals.RequestCancelCropSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestCropRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
-	import net.psykosoft.psykopaint2.crop.signals.RequestSetCropBackgroundSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
 	import net.psykosoft.psykopaint2.crop.signals.SetupCropModuleCommand;
 	import net.psykosoft.psykopaint2.crop.views.base.CropRootView;
@@ -81,7 +80,6 @@ package net.psykosoft.psykopaint2.crop.configuration
 			_injector.map( NotifyCropModuleSetUpSignal ).asSingleton();
 			_injector.map( NotifyCropModuleDestroyedSignal ).asSingleton();
 			_injector.map( RequestCancelCropSignal ).asSingleton();
-			_injector.map( RequestSetCropBackgroundSignal ).asSingleton();
 			_injector.map( RequestClosePaintViewSignal ).asSingleton();
 			_injector.map( RequestCropRootViewRemovalSignal ).asSingleton();
 		}
