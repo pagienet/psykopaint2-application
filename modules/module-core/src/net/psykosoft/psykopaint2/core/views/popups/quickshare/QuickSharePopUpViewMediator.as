@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.core.views.popups.quickshare
 {
 
+import com.milkmangames.nativeextensions.GoViral;
+
 import net.psykosoft.psykopaint2.core.managers.social.SocialSharingManager;
 import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -49,8 +51,8 @@ public class QuickSharePopUpViewMediator extends MediatorBase
 
 	private function onPopUpWantsToShare():void {
 
-		if(view.facebookChk.selected) _sharer.addSharer(new FacebookSharer(socialSharingManager));
-		if(view.twitterChk.selected) _sharer.addSharer(new TwitterSharer(socialSharingManager));
+		if(view.facebookChk.selected && GoViral.isSupported()) _sharer.addSharer(new FacebookSharer(socialSharingManager));
+		if(view.twitterChk.selected && GoViral.isSupported()) _sharer.addSharer(new TwitterSharer(socialSharingManager));
 
 		// Nothing to wait for, close.
 		if(_sharer.numSharers == 0) requestHidePopUpSignal.dispatch();

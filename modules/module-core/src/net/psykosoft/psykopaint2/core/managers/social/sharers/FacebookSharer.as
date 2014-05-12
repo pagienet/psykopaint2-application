@@ -36,6 +36,13 @@ public class FacebookSharer extends SharerBase
 		}
 	}
 
+	private function doShareFacebook():void {
+		trace("FacebookSharer - posting...");
+		_manager.goViral.addEventListener(GVFacebookEvent.FB_REQUEST_RESPONSE, onFaceBookRequestResponseEvent);
+		_manager.goViral.addEventListener(GVFacebookEvent.FB_REQUEST_FAILED, onFaceBookRequestFailedEvent);
+		_manager.goViral.facebookPostPhoto(_shareMsg, _shareBmd);
+	}
+
 	private function onFaceBookLoggedInEvent(event:GVFacebookEvent):void {
 		trace("FacebookSharer - logged in.");
 		_manager.goViral.removeEventListener(GVFacebookEvent.FB_LOGGED_IN, onFaceBookLoggedInEvent);
@@ -48,13 +55,6 @@ public class FacebookSharer extends SharerBase
 		_manager.goViral.removeEventListener(GVFacebookEvent.FB_LOGGED_IN, onFaceBookLoggedInEvent);
 		_manager.goViral.removeEventListener(GVFacebookEvent.FB_LOGIN_FAILED, onFaceBookLogInFailedEvent);
 		failedSignal.dispatch();
-	}
-
-	private function doShareFacebook():void {
-		trace("FacebookSharer - posting...");
-		_manager.goViral.addEventListener(GVFacebookEvent.FB_REQUEST_RESPONSE, onFaceBookRequestResponseEvent);
-		_manager.goViral.addEventListener(GVFacebookEvent.FB_REQUEST_FAILED, onFaceBookRequestFailedEvent);
-		_manager.goViral.facebookPostPhoto(_shareMsg, _shareBmd);
 	}
 
 	private function onFaceBookRequestFailedEvent( event:GVFacebookEvent ):void {
