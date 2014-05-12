@@ -27,14 +27,10 @@ public class SharePopUpView extends PopUpViewBase
 	public var rightSide:Sprite;
 	public var facebookChk:CheckBox;
 	public var twitterChk:CheckBox;
-	public var emailChk:CheckBox;
-	public var exportChk:CheckBox;
 	public var paintingPlaceHolder:Sprite;
 	public var paintingMask:Sprite;
 	public var twitterChkBg:Sprite;
 	public var facebookChkBg:Sprite;
-	public var emailChkBg:Sprite;
-	public var exportChkBg:Sprite;
 
 	private var _rightButton:IconButtonAlt;
 	private var _bmd:BitmapData;
@@ -88,7 +84,7 @@ public class SharePopUpView extends PopUpViewBase
 		paintingPlaceHolder.addChild(bit);
 	}
 
-// -----------------------
+	// -----------------------
 	// Side btn animations.
 	// -----------------------
 

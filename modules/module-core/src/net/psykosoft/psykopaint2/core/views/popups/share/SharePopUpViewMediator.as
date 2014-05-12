@@ -23,7 +23,7 @@ public class SharePopUpViewMediator extends MediatorBase
 	[Inject]
 	public var socialSharingManager:SocialSharingManager;
 
-	private var _util:CompositeSharer;
+	private var _sharer:CompositeSharer;
 	private var _shareBmd:BitmapData;
 
 	override public function initialize():void {
@@ -33,8 +33,8 @@ public class SharePopUpViewMediator extends MediatorBase
 		manageStateChanges = false;
 		manageMemoryWarnings = false;
 
-		_util = new CompositeSharer(socialSharingManager);
-		_util.completedSignal.add(onUtilCompleted);
+		_sharer = new CompositeSharer(socialSharingManager);
+		_sharer.completedSignal.add(onUtilCompleted);
 
 		// From app.
 		// ...
@@ -47,21 +47,19 @@ public class SharePopUpViewMediator extends MediatorBase
 	override public function destroy():void {
 		super.destroy();
 		if(_shareBmd) _shareBmd.dispose();
-		_util.completedSignal.remove(onUtilCompleted);
-		_util.dispose();
+		_sharer.completedSignal.remove(onUtilCompleted);
+		_sharer.dispose();
 		view.popUpWantsToCloseSignal.remove( onPopUpWantsToClose );
 	}
 
 	private function onPopUpWantsToShare(bmd:BitmapData):void {
 
-		if(view.facebookChk.selected) _util.addSharer(new FacebookSharer(socialSharingManager));
-		if(view.twitterChk.selected) _util.addSharer(new TwitterSharer(socialSharingManager));
-		if(view.emailChk.selected) _util.addSharer(new EmailSharer(socialSharingManager));
-		if(view.exportChk.selected) _util.addSharer(new ExportSharer(socialSharingManager));
+		if(view.facebookChk.selected) _sharer.addSharer(new FacebookSharer(socialSharingManager));
+		if(view.twitterChk.selected) _sharer.addSharer(new TwitterSharer(socialSharingManager));
 
 		// Nothing to wait for, close.
-		if(_util.numSharers == 0) requestHidePopUpSignal.dispatch();
-		else _util.share([_shareBmd = bmd]);
+		if(_sharer.numSharers == 0) requestHidePopUpSignal.dispatch();
+		else _sharer.share([_shareBmd = bmd]);
 	}
 
 	private function onUtilCompleted():void {
