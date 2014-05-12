@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDeletionSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewDeleteModeChangedSignal;
@@ -38,6 +39,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		
 		[Inject]
 		public var savingProcessModel:SavingProcessModel;
+		
+		[Inject]
+		public var requestPaintingDeletionSignal:RequestPaintingDeletionSignal;
 
 		override public function initialize():void {
 
@@ -148,6 +152,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 						}
 					} else {
 						view.removePainting( id );
+						requestPaintingDeletionSignal.dispatch("psyko-"+id);
 						var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
 						if( data && data.length > 0 ) {
 							view.selectButtonWithLabel(data[0].id.split("-")[1] );
@@ -155,6 +160,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 						} else {
 							requestEaselUpdateSignal.dispatch( null, true, null );
 						}
+						
 						
 					}
 				}

@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
+	import net.psykosoft.psykopaint2.core.commands.DeletePaintingCommand;
 	import net.psykosoft.psykopaint2.core.commands.LoadPaintingInfoFileCommand;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.commands.RetrieveAllPaintingDataCommand;
@@ -44,8 +45,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportEndedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
-import net.psykosoft.psykopaint2.core.signals.NotifyDataForPopUpSignal;
-import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyDataForPopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyFullUpgradePriceSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryZoomRatioSignal;
@@ -87,6 +88,7 @@ import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDeletionSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingInfoFileReadSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
@@ -114,9 +116,9 @@ import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.popups.messages.MessagePopUpViewMediator;
 	import net.psykosoft.psykopaint2.core.views.popups.notifications.NotificationSettingsView;
 	import net.psykosoft.psykopaint2.core.views.popups.notifications.NotificationSettingsViewMediator;
-import net.psykosoft.psykopaint2.core.views.popups.share.SharePopUpView;
-import net.psykosoft.psykopaint2.core.views.popups.share.SharePopUpViewMediator;
-import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
+	import net.psykosoft.psykopaint2.core.views.popups.share.SharePopUpView;
+	import net.psykosoft.psykopaint2.core.views.popups.share.SharePopUpViewMediator;
+	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketViewMediator;
 	import net.psykosoft.psykopaint2.core.views.splash.SplashView;
 	import net.psykosoft.psykopaint2.core.views.splash.SplashViewMediator;
@@ -295,6 +297,7 @@ import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 			_commandMap.map( RequestCoreModuleBootstrapSignal ).toCommand( BootstrapCoreModuleCommand );
 			_commandMap.map( RequestFrameUpdateSignal ).toCommand( UpdateFrameCommand );
 			_commandMap.map( RequestPaintingInfoFileReadSignal ).toCommand( LoadPaintingInfoFileCommand );
+			_commandMap.map( RequestPaintingDeletionSignal ).toCommand( DeletePaintingCommand );
 		}
 
 		// -----------------------

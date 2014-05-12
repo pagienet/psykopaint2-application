@@ -132,7 +132,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.setContent(paintingVO, animateIn, onUploadComplete);
 
 			// TODO: I'm not too fond of this
-			if (paintingVO.id == PaintingInfoVO.DEFAULT_VO_ID)
+			if (paintingVO && paintingVO.id == PaintingInfoVO.DEFAULT_VO_ID)
 				_selectedSurfaceID = paintingVO.surfaceID;
 		}
 
