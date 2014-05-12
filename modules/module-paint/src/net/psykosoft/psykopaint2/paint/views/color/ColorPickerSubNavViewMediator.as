@@ -85,8 +85,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			_stage = view.stage;
 			view.setParameters( paintModule.getCurrentBrushParameters() );
-			
-			
 		}
 		
 		private function onPaintModeChanged( paintMode:int):void

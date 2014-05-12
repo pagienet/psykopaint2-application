@@ -115,6 +115,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			
 			colorMarker.scaleX = colorMarker.scaleY = 0.5;
+			updateSliders();
 		}
 		
 		public function onEnabled():void

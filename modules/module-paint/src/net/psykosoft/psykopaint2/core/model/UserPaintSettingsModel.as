@@ -260,9 +260,9 @@ package net.psykosoft.psykopaint2.core.model
 			return _currentColor;
 		}
 		
-		public function setColorMode( value:int):void
+		public function setColorMode( value:int, forceSignalDispatch:Boolean = false):void
 		{
-			if ( _colorMode != value )
+			if ( forceSignalDispatch || _colorMode != value )
 			{
 				_colorMode = value;
 				notifyPaintModeChangedSignal.dispatch( _colorMode );

@@ -123,7 +123,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function setPaintMode(paintSettingsModel: UserPaintSettingsModel):void
 		{
-			paintSettingsModel.setColorMode( PaintMode.PHOTO_MODE );
+			paintSettingsModel.setColorMode( paintSettingsModel.colorMode, true ); //PaintMode.PHOTO_MODE 
 		}
 			
 		public function deactivate():void
