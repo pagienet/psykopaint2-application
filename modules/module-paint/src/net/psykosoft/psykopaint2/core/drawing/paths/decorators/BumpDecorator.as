@@ -91,9 +91,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				var point:SamplePoint = points[i];
 				var bumpFactors:Vector.<Number> = point.bumpFactors;
 				var bmp:Number = bumpFactors[1];
+				
+				
 				if ( mode == INDEX_MODE_FIXED)
 				{
-					bmp = param_mappingFactor.randomValue;
+					bmp = 0.5;
 				} else if ( mode == INDEX_MODE_SPEED )
 				{
 					applyArray[0] = Math.min(point.speed,ms) / ms;
@@ -125,26 +127,29 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					bmp = minFactor + bmp * (maxFactor - minFactor );
 				}  else if ( mode == INDEX_MODE_MULTIPLY )
 				{
-					bmp *= param_mappingFactor.randomValue;
+					applyArray[0] = param_mappingFactor.randomValue;
+					bmp *= mapping.apply( null, applyArray);
 				} else if ( mode == INDEX_MODE_ADD )
 				{
-					bmp += param_mappingFactor.randomValue;
+					applyArray[0] = param_mappingFactor.randomValue;
+					bmp += mapping.apply( null, applyArray);
 				}  else if ( mode == INDEX_MODE_RANDOM )
 				{
-					bmp = param_mappingFactor.randomValue;
+					applyArray[0] = param_mappingFactor.randomValue;
+					bmp = mapping.apply( null, applyArray);
 				} 
 				
 				
+				
+				
 				bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] = param_glossiness.numberValue;
+			//	bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] =Math.random();
 				//ADD CASE NO BUMP VALUE
-				bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] = (Math.random() < nbp)?0: param_bumpiness.numberValue - param_bumpinessRange.numberValue + (  param_bumpinessRange.numberValue  * bmp )* 2;
+				bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] = (Math.random() < nbp)?param_bumpiness.numberValue: param_bumpiness.numberValue - param_bumpinessRange.numberValue + (  param_bumpinessRange.numberValue  * bmp )* 2;
 				//bumpFactors[2] = bumpFactors[6] = bumpFactors[10] = bumpFactors[14] = param_shininess.numberValue;
 				bumpFactors[3] = bumpFactors[7] = bumpFactors[11] = bumpFactors[15] = param_bumpInfluence.numberValue;
 				
-				//bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] = param_glossiness.numberValue;
-				//bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] =  param_bumpiness.numberValue - param_bumpinessRange.numberValue + (  param_bumpinessRange.numberValue  * bmp )* 2;
-				//bumpFactors[2] = bumpFactors[6] = bumpFactors[10] = bumpFactors[14] = param_shininess.numberValue;
-				//bumpFactors[3] = bumpFactors[7] = bumpFactors[11] = bumpFactors[15] = param_bumpInfluence.numberValue;
+
 			}
 			
 			

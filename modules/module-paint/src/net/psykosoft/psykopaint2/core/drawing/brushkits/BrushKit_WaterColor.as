@@ -52,8 +52,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private static const STYLE_BASIC:int = 2;
 		//private static const STYLE_DRY_DROPS:int = 3;
 		//private static const STYLE_WET_DROPS:int = 4;
-		private static const STYLE_DAMAGE:int = 4;
-		private static const STYLE_DAMAGE_DROPS:int = 6;
+		private static const STYLE_DAMAGE:int = 3;
+		private static const STYLE_DAMAGE_DROPS:int = 4;
 
 		private var param_style:PsykoParameter;
 		private var param_precision:PsykoParameter;
@@ -230,6 +230,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 0.9;
 			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.010;
 			WaterColorBrush(brushEngine).param_pigmentGranulation.numberValue = .1;
+			WaterColorBrush(brushEngine).param_damageFlow.numberValue = .1 + 0.3 * param_intensity.numberValue;
+
 		}
 		
 		
@@ -237,12 +239,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			brushEngine.param_shapes.index = 1;
 			
-			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .2;
-			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .1;
+			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .02;
+			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .01;
 			WaterColorBrush(brushEngine).param_glossiness.numberValue = 0.4;
-			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 1.0;
-			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.006;
-			WaterColorBrush(brushEngine).param_pigmentGranulation.numberValue = .5;
+			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 0.2;
+			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.6;
+			WaterColorBrush(brushEngine).param_pigmentGranulation.numberValue = .8;
+			WaterColorBrush(brushEngine).param_damageFlow.numberValue = .1;
+
 		}
 
 		private function setValuesForWetBrush():void
@@ -255,6 +259,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 1.0;
 			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.8;
 			WaterColorBrush(brushEngine).param_pigmentGranulation.numberValue = .3;
+			WaterColorBrush(brushEngine).param_damageFlow.numberValue = .1 + 0.3 * param_intensity.numberValue;
+
 		}
 		
 		
@@ -278,8 +284,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		protected function onIntensityChanged(event:Event):void
 		{
 			//WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.07 * param_intensity.numberValue;
-			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.01 + 0.1 * param_intensity.numberValue;
-			WaterColorBrush(brushEngine).param_damageFlow.numberValue = .1 + 0.3 * param_intensity.numberValue;
+			//WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.01 + 0.1 * param_intensity.numberValue;
+			//WaterColorBrush(brushEngine).param_damageFlow.numberValue = .1 + 0.3 * param_intensity.numberValue;
 			
 		}
 		

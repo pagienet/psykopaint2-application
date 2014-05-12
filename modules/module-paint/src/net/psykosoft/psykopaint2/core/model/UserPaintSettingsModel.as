@@ -103,7 +103,7 @@ package net.psykosoft.psykopaint2.core.model
 				
 				//DEFAULT PALETTE COLORS
 				if ( !_hasLoadedPalette)
-					_colorPalettes.push( Vector.<uint>([0x231f20/*BLACK*/,0x00aeef/*CYAN BLUE*/,0xf4202f/*RED*/,0xfaf716/*YELLOW*/,0x84e626/*GREEN*/,
+					_colorPalettes.push( Vector.<uint>([0x07070a/*BLACK*/,0x00aeef/*CYAN BLUE*/,0xf4202f/*RED*/,0xfaf716/*YELLOW*/,0x84e626/*GREEN*/,
 						0x88fb19/*UNUSED, USERD FOR ERASER*/,0xfbcfac/* SKIN COLOR */,0x583520/* DARK BROWN */,0xfafafa/*WHITE*/,0xffffff/*SAMPLE SWATCH*/]));
 				
 				

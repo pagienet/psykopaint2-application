@@ -14,10 +14,7 @@ public class GalleryPaintingView extends ObjectContainer3D
 	{
 		private var _mesh:Mesh;
 		private var _material:MaterialBase;
-		
 		private var _frameMesh:Mesh;
-		
-
 		private var _paintingGeometry:Geometry;
 		 
 		

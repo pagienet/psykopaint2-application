@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.core.models
 {
 	import flash.display.BitmapData;
-	import flash.utils.ByteArray;
 
 	public class PaintingGalleryVO
 	{

@@ -49,12 +49,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 				}
 			}
 			if (_brushMap) _brushMap.dispose();
-			_brushMap = new TrackedBitmapData(size, size, true, 0);
+			_brushMap = new TrackedBitmapData(size, size, true, 0xFF000000);
 			_brushMap.perlinNoise(3, 3, 3, Math.random() * 0xffffff, false, true, 15, true);
 			
 			_brushMap.applyFilter(_brushMap, _brushMap.rect, origin, _alphaContrast);
 			_brushMap.copyChannel(_alphaMask,_brushMap.rect,origin,8,8);
 		
+			//TEST: 
 			CoreSettings.STAGE.addChild(new Bitmap(_brushMap));
 			
 			uploadMips(_textureSize, _brushMap, texture);
@@ -82,7 +83,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			alphaMask.graphics.drawCircle(size * _variationFactors[2]/2,size * _variationFactors[3]/2,Math.min(size * _variationFactors[2],size * _variationFactors[3]));
 			alphaMask.graphics.endFill();
 			
-			/*
+			
 			m.identity();
 			//DRAW FOR ALL VARIATIONS
 			for ( var y:int = 0; y < _variationFactors[1]; y++ )
@@ -94,14 +95,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 					//_brushMap.floodFill(size,size,0);
 					_brushMap.draw(alphaMask,m);
 				}
-			}*/
+			}
 			
 			//_brushMap.floodFill(size,size,0x000000);
 			_brushMap.draw(alphaMask);
 			
+			/*TEST:
 			var maskBm:Bitmap = new Bitmap(_brushMap);
 			maskBm.x = 500;
-			CoreSettings.STAGE.addChild(maskBm);
+			CoreSettings.STAGE.addChild(maskBm);*/
 			
 			
 			uploadMips(_textureSize, _brushMap, texture);
