@@ -173,7 +173,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_commandMap.map( RequestCanvasExportSignal ).toCommand( ExportCanvasCommand );
 			_commandMap.map( RequestPaintingSaveSignal ).toCommand( SavePaintingCommand );
 			_commandMap.map( RequestPaintingDiscardSignal ).toCommand( DiscardPaintingCommand );
-			_commandMap.map( RequestPaintingDeletionSignal ).toCommand( DeletePaintingCommand );
+			
 			_commandMap.map( RequestSetupPaintModuleSignal ).toCommand( SetupPaintModuleCommand );
 			_commandMap.map( RequestDestroyPaintModuleSignal ).toCommand( DestroyPaintModuleCommand );
 

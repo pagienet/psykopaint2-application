@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.paint.commands {
+package  net.psykosoft.psykopaint2.core.commands {
 
 	import flash.filesystem.File;
 
@@ -6,7 +6,6 @@ package net.psykosoft.psykopaint2.paint.commands {
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
-	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 
 	public class DeletePaintingCommand extends TracingCommand {
@@ -42,8 +41,10 @@ package net.psykosoft.psykopaint2.paint.commands {
 				dataFile = File.desktopDirectory.resolvePath( dataFileName );
 				infoFile = File.desktopDirectory.resolvePath( infoFileName );
 			}
-			dataFile.deleteFile();
-			infoFile.deleteFile();
+			if ( dataFile.exists ) dataFile.deleteFile();
+			else trace("ERROR: DeletePaintingCommand - file does not exist: "+dataFileName);
+			if ( infoFile.exists ) infoFile.deleteFile();
+			else trace("ERROR: DeletePaintingCommand - file does not exist: "+infoFileName);
 		}
 	}
 }

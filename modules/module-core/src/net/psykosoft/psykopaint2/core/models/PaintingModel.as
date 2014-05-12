@@ -3,15 +3,31 @@ package net.psykosoft.psykopaint2.core.models
 
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDeletionSignal;
 
 	public class PaintingModel
 	{
 		[Inject]
 		public var notifyPaintingDataSetSignal:NotifyPaintingDataSetSignal;
+		
+		[Inject]
+		public var requestPaintingDeletionSignal:RequestPaintingDeletionSignal;
 
-		private var _paintingData:Array;
+		private var _paintingData:Object;
 		private var _activePaintingId:String;
 
+		[PostConstruct]
+		public function init() : void
+		{
+			requestPaintingDeletionSignal.add( onPaintingDeleted );
+		}
+		
+		private function onPaintingDeleted( id:String ):void
+		{
+			PaintingInfoVO(_paintingData[id]).dispose()
+			delete _paintingData[id];
+		}
+		
 		public function disposePaintingCollection():void {
 			for each( var vo:PaintingInfoVO in _paintingData )
 				vo.dispose();
@@ -23,7 +39,7 @@ package net.psykosoft.psykopaint2.core.models
 
 			trace( this, "setPaintingCollection()" );
 
-			if( !_paintingData ) _paintingData = [];
+			if( !_paintingData ) _paintingData = {};
 
 			for( var i:uint = 0; i < data.length; ++i ) {
 				_paintingData[data[i].id] = data[i];
