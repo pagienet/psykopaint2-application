@@ -225,15 +225,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 		
 			
-			if ( !eraserMode )
+			if ( !super.eraserMode )
 			{
 				bumpDecorator.param_bumpInfluence.numberValue = 0;
 				bumpDecorator.param_bumpiness.numberValue = 0;
 				bumpDecorator.param_bumpinessRange.numberValue = 0;
-			}
-			
-			
-			if ( eraserMode )
+			}else if ( super.eraserMode )
 			{
 				bumpDecorator.param_bumpInfluence.numberValue = 1 - intensity;
 				bumpDecorator.param_bumpiness.numberValue = 0;
@@ -244,17 +241,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 	
 		
-		override public function setEraserMode( enabled:Boolean ):void
+		override public function set eraserMode( enabled:Boolean ):void
 		{
-			eraserMode = enabled;
-			if ( enabled )
-			{
-				brushEngine.param_blendModeSource.index = 1;
-				brushEngine.param_blendModeTarget.index = 3;
-			} else {
-				brushEngine.param_blendModeSource.index = 0; 
-				brushEngine.param_blendModeTarget.index = 3;
-			}
+			super.eraserMode = enabled;
 			onIntensityChanged(null);
 		}
 	}

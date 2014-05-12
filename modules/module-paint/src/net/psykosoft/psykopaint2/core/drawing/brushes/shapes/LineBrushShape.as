@@ -4,6 +4,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	
 	public class LineBrushShape extends EmbeddedBrushShape
 	{
+		public static const NAME:String = "line";
+
+		
 		[Embed(source="assets/lines3.png", mimeType="image/png")]
 		protected var SourceMap:Class;
 		
@@ -12,7 +15,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function LineBrushShape(context3D : Context3D)
 		{
-			super(context3D, "line", SourceMap,SourceNormalSpecularMap,128,4,16);
+			super(context3D, NAME, SourceMap,SourceNormalSpecularMap,128,4,16);
 			rotationRange = 0;
 		}
 	}

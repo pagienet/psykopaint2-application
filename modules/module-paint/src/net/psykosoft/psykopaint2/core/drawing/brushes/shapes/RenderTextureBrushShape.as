@@ -17,12 +17,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	public class RenderTextureBrushShape extends AbstractBrushShape
 	{
+		
+		public static const NAME:String = "render";
+
+		
 		public var _brushMap : BitmapData;
 		private const origin:Point = new Point();
 		
 		public function RenderTextureBrushShape(context3D : Context3D)
 		{
-			super(context3D, "render", 1,1024 * CoreSettings.GLOBAL_SCALING,1,1);
+			super(context3D, NAME, 1,1024 * CoreSettings.GLOBAL_SCALING,1,1);
 		}
 
 		override protected function uploadBrushTexture(texture : Texture) : void

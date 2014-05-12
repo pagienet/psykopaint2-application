@@ -4,8 +4,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 	
+	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AlmostCircularHardShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AlmostCircularRoughShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.EraserBrushShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.NoisyBrushShape2;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.SplatterSprayShape;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
@@ -30,9 +36,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		//private static const STYLE_BLOODSPLAT:int = 4;
 		//private static const STYLE_FRECKLES2:int = 5;
 		private static const STYLE_DROPPING:int = 4;
-		
-		
-		
+		private static const STYLE_ERASER:int = 5;
 		
 		private var param_style:PsykoParameter;
 		private var param_precision:PsykoParameter;
@@ -45,7 +49,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var colorDecorator:ColorDecorator;
 		private var gridDecorator:GridDecorator;
 		private var callbackDecorator:CallbackDecorator;
-		private var eraserMode:Boolean;
 		private var _persistentPoints:Object;
 		private var stationaryDecorator:StationaryDecorator;
 		private var precision:Number;
@@ -69,7 +72,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
 			brushEngine.param_curvatureSizeInfluence.numberValue = 0;
-			brushEngine.param_shapes.stringList = Vector.<String>(["noisy","almost circular rough","almost circular hard","splatspray","splatspray"]);
+			brushEngine.param_shapes.stringList = Vector.<String>([NoisyBrushShape2.NAME,AlmostCircularRoughShape.NAME,AlmostCircularHardShape.NAME,SplatterSprayShape.NAME,SplatterSprayShape.NAME,EraserBrushShape.NAME]);
 			
 			
 			
@@ -153,7 +156,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Spray","Sponge","Digital","Flare","Dropping"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Spray","Sponge","Digital","Flare","Dropping","Eraser"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -200,7 +203,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			switch ( param_style.index )
 			{
 				case STYLE_SPONGE:
-				brushEngine.param_quadOffsetRatio.numberValue = 0;
+					brushEngine.param_quadOffsetRatio.numberValue = 0;
 				break;
 				case STYLE_DIGITAL:
 					brushEngine.param_quadOffsetRatio.numberValue = 0.0;
@@ -225,8 +228,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			spawnDecorator.active = true;
 			splatterDecorator.active = true;
 			callbackDecorator.active = false;
-			stationaryDecorator.active=false;
-			
+			stationaryDecorator.active = false;
+			eraserMode= false;
 			
 			
 			
@@ -328,10 +331,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
 					splatterDecorator.param_splatFactor.numberValue = 0.01+0.9 * precision;
-					
-
-					
-				
 					
 					break;
 				
@@ -619,6 +618,44 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					
 					break;
+				case STYLE_ERASER:
+						brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.4 + precision  *4;
+						//brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 500;
+						eraserMode = true;
+						gridDecorator.active=false;
+						splatterDecorator.active=false;
+						spawnDecorator.active=false;
+						
+						sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
+						sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
+						sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
+						//sizeDecorator.param_mappingRange.numberValue = 0.001+precision * (0.1);
+						sizeDecorator.param_mappingRange.numberValue = 0;
+						sizeDecorator.param_maxSpeed.numberValue = 200;
+						
+						
+						
+						colorDecorator.param_pickRadius.lowerRangeValue = 0;
+						colorDecorator.param_pickRadius.upperRangeValue = 0;
+						colorDecorator.param_brushOpacity.numberValue = 0.91;
+						colorDecorator.param_brushOpacityRange.numberValue = 0.04;
+						colorDecorator.param_colorBlending.upperRangeValue = 0.98;
+						colorDecorator.param_colorBlending.lowerRangeValue = 0.90;
+						
+						
+						
+						bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
+						bumpDecorator.param_bumpInfluence.numberValue = 1;
+						bumpDecorator.param_bumpiness.numberValue = 0 ;
+						bumpDecorator.param_bumpinessRange.numberValue = 0.00 ;
+						bumpDecorator.param_noBumpProbability.numberValue=0.0;
+						//MAKE IT WET
+						bumpDecorator.param_glossiness.numberValue = 0.85  ;
+						
+						
+						
+					
+					break;
 				
 				/*
 				case STYLE_FRECKLESOLD:
@@ -702,7 +739,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			if ( eraserMode )
 			{
 				//THIS WILL MAKE SURE THAT ERASER ALSO REMOVE DEPTH
-				bumpDecorator.param_bumpInfluence.numberValue = - intensity;
+				//bumpDecorator.param_bumpInfluence.numberValue = - intensity;
 				//bumpDecorator.param_bumpiness.numberValue = 0;
 				//bumpDecorator.param_bumpinessRange.numberValue = 0;
 				
@@ -739,7 +776,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 						if ( _persistentPoints[0] != null ) PathManager.recycleSamplePoint(_persistentPoints[0]);
 						_persistentPoints[0] = points[0].getClone();
 						_persistentPoints[0].size = 0.02*Math.random()+0.01 + precision*(Math.random()*0.05+0.02);
-						//trace("create point")
+						SamplePoint(_persistentPoints[0]).colorsRGBA = _persistentPoints[0].colorsRGBA;
 					}else {
 						if(_persistentPoints[0]){
 							_persistentPoints[0].x += vector[1].y*100*_persistentPoints[0].size;
@@ -747,6 +784,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 							points[0].x = _persistentPoints[0].x ;
 							points[0].y = _persistentPoints[0].y ;
 							points[0].size = _persistentPoints[0].size;
+							//OVERRIDE COLORS
+							for ( i = 0; i < 16; i++ )
+							{
+								points[0].colorsRGBA [i] = _persistentPoints[0].colorsRGBA[i];
+							}
 							
 						}
 					 	
@@ -761,11 +803,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			return points;
 		}
 		
-		override public function setEraserMode( enabled:Boolean ):void
+		override public function set eraserMode( enabled:Boolean ):void
 		{
-			trace(this,"setEraserMode",enabled);
-			eraserMode = enabled;
-			super.setEraserMode(enabled);
+			super.eraserMode = (enabled);
 			onIntensityChanged(null);
 		}
 	}

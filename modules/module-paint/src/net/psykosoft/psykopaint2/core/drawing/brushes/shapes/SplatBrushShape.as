@@ -4,6 +4,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	public class SplatBrushShape extends EmbeddedBrushShapeATF
 	{
+		
+		public static const NAME:String = "splat";
+
+		
 		[Embed( source = "assets/brushset5.atf", mimeType="application/octet-stream")]
 		protected var SourceImage : Class;
 
@@ -12,7 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function SplatBrushShape(context3D : Context3D)
 		{
-			super(context3D, "splat", SourceImage, SourceNormalSpecularMap, 512, 2, 3 );
+			super(context3D, NAME, SourceImage, SourceNormalSpecularMap, 512, 2, 3 );
 			_rotationRange = Math.PI*2;
 		}
 

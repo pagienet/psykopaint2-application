@@ -10,6 +10,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	
 	public class NoisyBrushShape2 extends EmbeddedBrushShape
 	{
+		public static const NAME:String = "noisy";
+
+		
 		[Embed(source="assets/NoiseShape.png", mimeType="image/png")]
 		protected var SourceMap:Class;
 		
@@ -19,7 +22,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function NoisyBrushShape2(context3D : Context3D)
 		{
-			super(context3D, "noisy", SourceMap,SourceNormalSpecularMap,512,2,2);
+			super(context3D, NAME, SourceMap,SourceNormalSpecularMap,512,2,2);
 			rotationRange = Math.PI*2;
 		}
 	}

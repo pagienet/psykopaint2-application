@@ -4,6 +4,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	public class SplotchBrushShape extends EmbeddedBrushShape
 	{
+		
+		public static var NAME:String = "splotch";
+		
 		//[Embed(source="assets/brushset1.png", mimeType="application/octet-stream")]
 		[Embed(source="assets/brushset1.png", mimeType="image/png")]
 		protected var SourceMap:Class;
@@ -14,7 +17,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function SplotchBrushShape(context3D : Context3D)
 		{
-			super(context3D, "splotch", SourceMap, SourceNormalSpecularMap, 512, 4, 4);
+			super(context3D, NAME, SourceMap, SourceNormalSpecularMap, 512, 4, 4);
 			rotationRange = Math.PI*2;
 		}
 	}

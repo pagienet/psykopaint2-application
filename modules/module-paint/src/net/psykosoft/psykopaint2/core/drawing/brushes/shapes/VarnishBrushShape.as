@@ -10,6 +10,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	
 	public class VarnishBrushShape extends EmbeddedBrushShape
 	{
+		public static const NAME:String = "varnish";
+
 		[Embed(source="assets/varnish.png", mimeType="image/png")]
 		protected var SourceMap:Class;
 		
@@ -19,7 +21,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function VarnishBrushShape(context3D : Context3D)
 		{
-			super(context3D, "varnish", SourceMap,SourceNormalSpecularMap,256,1,1);
+			super(context3D, NAME, SourceMap,SourceNormalSpecularMap,256,1,1);
 			rotationRange = Math.PI*2;
 		}
 	}

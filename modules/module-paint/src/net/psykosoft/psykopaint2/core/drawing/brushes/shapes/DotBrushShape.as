@@ -11,9 +11,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	public class DotBrushShape extends AbstractBrushShape
 	{
+		public static const NAME:String = "dot";
+
+		
 		public function DotBrushShape(context3D : Context3D)
 		{
-			super(context3D, "dot", 1,8);
+			super(context3D, NAME, 1,8);
 			_rotationRange = 0;
 		}
 

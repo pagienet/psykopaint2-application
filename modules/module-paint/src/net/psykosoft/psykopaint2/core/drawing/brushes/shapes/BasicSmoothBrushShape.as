@@ -13,10 +13,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	public class BasicSmoothBrushShape extends AbstractBrushShape
 	{
 	//	private var _blurAmount : Number = .05;
+		public static const NAME:String = "basic smooth";
+
 
 		public function BasicSmoothBrushShape(context3D : Context3D)
 		{
-			super(context3D, "basic smooth", 128);
+			super(context3D, NAME, 128);
 		}
 
 		override protected function uploadBrushTexture(texture : Texture) : void

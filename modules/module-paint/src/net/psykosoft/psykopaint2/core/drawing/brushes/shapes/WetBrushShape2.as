@@ -11,6 +11,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	public class WetBrushShape2 extends AbstractBrushShape
 	{
+		public static const NAME:String="wet2";
+		
 		public function WetBrushShape2(context3D : Context3D)
 		{
 			super(context3D, "wet2", 3.0);

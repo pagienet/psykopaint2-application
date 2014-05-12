@@ -3,6 +3,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import flash.events.Event;
 	
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.CrayonShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.InkSplatsShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.SplatsShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.SplotchBrushShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.SprayShape;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
@@ -54,7 +59,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpiness.numberValue = 0;
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-			brushEngine.param_shapes.stringList = Vector.<String>(["inksplats","splats","spray","crayon","splotch","splotch"]);
+			brushEngine.param_shapes.stringList = Vector.<String>([InkSplatsShape.NAME,SplatsShape.NAME,SprayShape.NAME,CrayonShape.NAME,SplotchBrushShape.NAME,SplotchBrushShape.NAME]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -258,10 +263,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					splatterDecorator.param_sizeFactor.numberValue = 0.5+precision * 6;
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
-					bumpDecorator.param_bumpiness.numberValue = 0.3;
+					bumpDecorator.param_bumpiness.numberValue = 0.55;
 					bumpDecorator.param_bumpinessRange.numberValue = 0.2;
 					bumpDecorator.param_bumpInfluence.numberValue = 0.12;
-					bumpDecorator.param_noBumpProbability.numberValue = 0.6;
+					bumpDecorator.param_noBumpProbability.numberValue = 0.3;
 					bumpDecorator.param_glossiness.numberValue = 0.35 ;
 					
 					
@@ -275,8 +280,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_brightnessAdjustment.upperRangeValue= 0.2;
 					//colorDecorator.param_brushOpacity.numberValue = 0.8;
 					//colorDecorator.param_brushOpacityRange.numberValue = 0.15;
-					colorDecorator.param_brushOpacity.numberValue = 0.95;
-					colorDecorator.param_brushOpacityRange.numberValue = 0.05;
+					colorDecorator.param_brushOpacity.numberValue = 0.97;
+					colorDecorator.param_brushOpacityRange.numberValue = 0.03;
 					colorDecorator.param_colorBlending.upperRangeValue = 1;
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.98;
 					colorDecorator.param_applyColorMatrix.booleanValue=true;
@@ -515,18 +520,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			//colorDecorator.param_brushOpacity.numberValue = intensity;
 			(brushEngine as SprayCanBrush).param_strokeAlpha.numberValue = param_intensity.numberValue;
 			
-			
-			
-			
-			if ( !eraserMode )
-			{
-				bumpDecorator.param_bumpInfluence.numberValue = 0.4;
-				bumpDecorator.param_bumpiness.numberValue = 0.5 * intensity;
-				bumpDecorator.param_bumpinessRange.numberValue = 0.1;
-			}
-			
-			
-			
+
 			switch ( param_style.index )
 			{
 				
@@ -552,7 +546,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			}
 			
 			
-			if ( eraserMode )
+			
+			if ( !super.eraserMode )
+			{
+				bumpDecorator.param_bumpInfluence.numberValue = 0.4;
+				bumpDecorator.param_bumpiness.numberValue = 0.5 * intensity;
+				bumpDecorator.param_bumpinessRange.numberValue = 0.1;
+			}
+			else if ( super.eraserMode )
 			{
 				bumpDecorator.param_bumpInfluence.numberValue = 1 - intensity;
 				bumpDecorator.param_bumpiness.numberValue = 0;
@@ -563,17 +564,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		
 		
-		override public function setEraserMode( enabled:Boolean ):void
+		override public function set eraserMode( enabled:Boolean ):void
 		{
-			eraserMode = enabled;
-			if ( enabled )
-			{
-				brushEngine.param_blendModeSource.index = 1;
-				brushEngine.param_blendModeTarget.index = 3;
-			} else {
-				brushEngine.param_blendModeSource.index = 0; 
-				brushEngine.param_blendModeTarget.index = 3;
-			}
+			super.eraserMode = enabled;
 			onIntensityChanged(null);
 		}
 	}

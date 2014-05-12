@@ -6,6 +6,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SketchBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.DotsBrushShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.LineBrushShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.PaintBrushShape1;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.PencilSketchBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 	import net.psykosoft.psykopaint2.core.drawing.paths.AbstractPathEngine;
@@ -60,7 +64,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpiness.numberValue = 1;
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			//brushEngine.param_glossiness.numberValue=1;
-			brushEngine.param_shapes.stringList = Vector.<String>(["dots","line","pencilSketch","pencilSketch","paint1","paint1"]);
+			brushEngine.param_shapes.stringList = Vector.<String>([DotsBrushShape.NAME,LineBrushShape.NAME,PencilSketchBrushShape.NAME,PencilSketchBrushShape.NAME,PaintBrushShape1.NAME,PaintBrushShape1.NAME]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;

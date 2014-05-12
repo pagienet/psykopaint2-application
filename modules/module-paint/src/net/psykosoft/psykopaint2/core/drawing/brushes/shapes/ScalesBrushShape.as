@@ -5,6 +5,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	public class ScalesBrushShape extends EmbeddedBrushShape
 	{
+		public static const NAME:String = "scales";
+
+		
 		[Embed(source="assets/scales_color.png", mimeType="image/png")]
 		protected var SourceImage:Class;
 
@@ -13,7 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function ScalesBrushShape(context3D : Context3D)
 		{
-			super(context3D, "scales", SourceImage, SourceNormalSpecularMap,1,1);
+			super(context3D,NAME, SourceImage, SourceNormalSpecularMap,1,1);
 			
 		}
 	}

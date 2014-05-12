@@ -66,6 +66,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			return this;
 		}
 		
+		
+		
+		
 		public function getClone():SamplePoint
 		{
 			return PathManager.getSamplePoint(x,y,speed,size, angle, curvature, pressure, penButtonState, colorsRGBA, bumpFactors, first);

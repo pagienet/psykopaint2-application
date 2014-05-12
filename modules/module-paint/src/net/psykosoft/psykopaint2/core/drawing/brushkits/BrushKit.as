@@ -70,6 +70,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected var _brushEngine:AbstractBrush;
 		protected var _parameterMapping:PsykoParameterMapping;
+		protected var _eraserMode:Boolean=false;
 		
 
 		public function BrushKit() 
@@ -317,9 +318,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			return _brushEngine.pathManager.strokeInProgress;
 		}
 		
-		public function setEraserMode( enabled:Boolean ):void
+		public function get eraserMode():Boolean
 		{
-			if ( enabled )
+			return _eraserMode;
+		}
+		
+		public function set eraserMode(value:Boolean):void
+		{
+			_eraserMode = value;
+			if ( value )
 			{
 				brushEngine.param_blendModeSource.index = 1;
 				brushEngine.param_blendModeTarget.index = 3;
@@ -328,5 +335,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				brushEngine.param_blendModeTarget.index = 3;
 			}
 		}
+
+		
 	}
 }

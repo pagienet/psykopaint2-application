@@ -10,6 +10,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	
 	public class CrayonShape extends EmbeddedBrushShape
 	{
+		public static const NAME:String = "crayon";
+
+		
 		[Embed(source="assets/crayon.png", mimeType="image/png")]
 		protected var SourceMap:Class;
 		
@@ -18,7 +21,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function CrayonShape(context3D : Context3D)
 		{
-			super(context3D, "crayon", SourceMap,SourceNormalSpecularMap,256,2,2);
+			super(context3D,NAME, SourceMap,SourceNormalSpecularMap,256,2,2);
 			rotationRange = Math.PI;
 		}
 	}

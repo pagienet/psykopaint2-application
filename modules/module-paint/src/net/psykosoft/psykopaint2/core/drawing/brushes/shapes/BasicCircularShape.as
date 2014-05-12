@@ -11,9 +11,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	public class BasicCircularShape extends AbstractBrushShape
 	{
+		public static const NAME:String = "basic circular";
+
+		
 		public function BasicCircularShape(context3D : Context3D)
 		{
-			super(context3D, "basic circular", 512);
+			super(context3D, NAME, 512);
 		}
 
 		override protected function uploadBrushTexture(texture : Texture) : void

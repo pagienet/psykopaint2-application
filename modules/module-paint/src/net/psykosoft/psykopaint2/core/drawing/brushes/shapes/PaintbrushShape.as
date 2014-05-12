@@ -10,6 +10,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	
 	public class PaintbrushShape extends EmbeddedBrushShape
 	{
+		public static const NAME:String = "paintbrush";
+
 		[Embed(source="assets/paintbrush5x5.png", mimeType="image/png")]
 		protected var SourceMap:Class;
 		
@@ -18,7 +20,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function PaintbrushShape(context3D : Context3D)
 		{
-			super(context3D, "paintbrush", SourceMap,SourceNormalSpecularMap,1024,5,5);
+			super(context3D, NAME, SourceMap,SourceNormalSpecularMap,1024,5,5);
 			rotationRange = Math.PI;
 		}
 	}

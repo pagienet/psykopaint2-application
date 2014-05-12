@@ -10,6 +10,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	
 	public class InkSplatsShape extends EmbeddedBrushShape
 	{
+		public static const NAME:String = "inksplats";
+
+		
 		[Embed(source="assets/ink_splats.png", mimeType="image/png")]
 		protected var SourceMap:Class;
 		
@@ -18,7 +21,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function InkSplatsShape(context3D : Context3D)
 		{
-			super(context3D, "inksplats", SourceMap,SourceNormalSpecularMap,512,4,3);
+			super(context3D, NAME, SourceMap,SourceNormalSpecularMap,512,4,3);
 			rotationRange = Math.PI;
 		}
 	}

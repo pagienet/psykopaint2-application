@@ -3,6 +3,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import flash.events.Event;
 	
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.LineBrushShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.PaintBrushShape1;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.SplotchBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
@@ -59,7 +62,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpInfluence.numberValue =1;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
 			brushEngine.param_glossiness.numberValue=1;
-			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","line","splotch","paint1"]);
+			brushEngine.param_shapes.stringList = Vector.<String>([PaintBrushShape1.NAME,LineBrushShape.NAME,SplotchBrushShape.NAME,PaintBrushShape1.NAME]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -441,7 +444,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			{
 				
 				
-				case "STYLE TO ASSING":
+				case "STYLE TO ASSIGN":
 					
 					//ALPHA OF LAYER IS 1 HERE CAUSE WE DON'T WANT TO HAVE TRANSPARENCY ON THE LAYER SIDE
 					(brushEngine  as SprayCanBrush).param_strokeAlpha.numberValue = 1;

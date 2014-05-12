@@ -11,12 +11,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	public class BasicBrushShape extends AbstractBrushShape
 	{
+		public static const NAME:String = "basic";
+
+		
 		[Embed(source="assets/basic_normalmap3.png", mimeType="image/png")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function BasicBrushShape(context3D : Context3D)
 		{
-			super(context3D, "basic",512);
+			super(context3D, NAME,512);
 		}
 
 		override protected function uploadBrushTexture(texture : Texture) : void

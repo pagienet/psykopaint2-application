@@ -205,7 +205,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			if ( _activeBrushKit )
 			{
-				_activeBrushKit.setEraserMode( paintMode == PaintMode.ERASER_MODE );
+				_activeBrushKit.eraserMode = ( paintMode == PaintMode.ERASER_MODE );
 			}
 		}
 		

@@ -4,6 +4,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AlmostCircularHardShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.WetBrushShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.WetBrushShape2;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
@@ -91,7 +94,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			WaterColorBrush(brushEngine).param_gravityStrength.numberValue=0.3;
 			WaterColorBrush(brushEngine).param_surfaceRelief.numberValue=0;
 			
-			brushEngine.param_shapes.stringList = Vector.<String>(["wet2","wet","almost circular hard"]);
+			brushEngine.param_shapes.stringList = Vector.<String>([WetBrushShape2.NAME,WetBrushShape.NAME,AlmostCircularHardShape.NAME]);
 
 			pathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
