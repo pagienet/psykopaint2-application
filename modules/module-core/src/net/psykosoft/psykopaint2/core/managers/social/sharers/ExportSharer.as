@@ -1,18 +1,18 @@
-package net.psykosoft.psykopaint2.core.views.popups.share.util
+package net.psykosoft.psykopaint2.core.managers.social.sharers
 {
 
 import net.psykosoft.psykopaint2.core.managers.social.SocialSharingManager;
 
-public class TwitterSharer extends SharerBase
+public class ExportSharer extends SharerBase
 {
-	public function TwitterSharer(manager:SocialSharingManager) {
+	public function ExportSharer(manager:SocialSharingManager) {
 		super(manager);
 	}
 
 	override public function share(content:Array):void {
 		super.share( content );
 
-		trace("TwitterSharer - share()");
+		trace("ExportSharer - share()");
 		completedSignal.dispatch();
 	}
 }

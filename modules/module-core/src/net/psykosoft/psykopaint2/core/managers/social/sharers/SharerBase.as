@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core.views.popups.share.util
+package net.psykosoft.psykopaint2.core.managers.social.sharers
 {
 
 import net.psykosoft.psykopaint2.core.managers.social.SocialSharingManager;

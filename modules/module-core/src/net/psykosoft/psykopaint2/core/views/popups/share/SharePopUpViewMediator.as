@@ -6,11 +6,11 @@ import flash.display.BitmapData;
 import net.psykosoft.psykopaint2.core.managers.social.SocialSharingManager;
 import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-import net.psykosoft.psykopaint2.core.views.popups.share.util.EmailSharer;
-import net.psykosoft.psykopaint2.core.views.popups.share.util.ExportSharer;
-import net.psykosoft.psykopaint2.core.views.popups.share.util.FacebookSharer;
-import net.psykosoft.psykopaint2.core.views.popups.share.util.ShareUtil;
-import net.psykosoft.psykopaint2.core.views.popups.share.util.TwitterSharer;
+import net.psykosoft.psykopaint2.core.managers.social.sharers.EmailSharer;
+import net.psykosoft.psykopaint2.core.managers.social.sharers.ExportSharer;
+import net.psykosoft.psykopaint2.core.managers.social.sharers.FacebookSharer;
+import net.psykosoft.psykopaint2.core.managers.social.sharers.CompositeSharer;
+import net.psykosoft.psykopaint2.core.managers.social.sharers.TwitterSharer;
 
 public class SharePopUpViewMediator extends MediatorBase
 {
@@ -23,7 +23,7 @@ public class SharePopUpViewMediator extends MediatorBase
 	[Inject]
 	public var socialSharingManager:SocialSharingManager;
 
-	private var _util:ShareUtil;
+	private var _util:CompositeSharer;
 	private var _shareBmd:BitmapData;
 
 	override public function initialize():void {
@@ -33,7 +33,7 @@ public class SharePopUpViewMediator extends MediatorBase
 		manageStateChanges = false;
 		manageMemoryWarnings = false;
 
-		_util = new ShareUtil(socialSharingManager);
+		_util = new CompositeSharer(socialSharingManager);
 		_util.completedSignal.add(onUtilCompleted);
 
 		// From app.

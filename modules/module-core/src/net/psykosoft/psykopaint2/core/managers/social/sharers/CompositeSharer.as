@@ -1,16 +1,16 @@
-package net.psykosoft.psykopaint2.core.views.popups.share.util
+package net.psykosoft.psykopaint2.core.managers.social.sharers
 {
 
 import net.psykosoft.psykopaint2.core.managers.social.SocialSharingManager;
 
-public class ShareUtil extends SharerBase
+public class CompositeSharer extends SharerBase
 {
 	private var _sharers:Vector.<SharerBase>;
 
 	private var _activeSharer:SharerBase;
 	private var _activeSharerIndex:int = -1;
 
-	public function ShareUtil(manager:SocialSharingManager) {
+	public function CompositeSharer(manager:SocialSharingManager) {
 		super(manager);
 		_sharers = new Vector.<SharerBase>();
 	}
