@@ -45,6 +45,13 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 		private function onImagePicked( bmd:BitmapData, orientation:int ):void {
 			if( bmd ) {
+				if ( bmd.transparent )
+				{
+					var dummy:BitmapData = new BitmapData( bmd.width, bmd.height, false, 0xffffff );
+					dummy.draw(bmd );
+					bmd.dispose();
+					bmd = dummy;
+				}
 				requestCropSourceImageSignal.dispatch( bmd, orientation );
 			} else {
 				requestNavigationStateChange( NavigationStateType.PREVIOUS );
