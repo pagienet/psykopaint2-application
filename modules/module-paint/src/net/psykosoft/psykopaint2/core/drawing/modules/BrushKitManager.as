@@ -504,7 +504,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		protected function onPaintOverNavCheck(event:Event):void
 		{
-			if (_canvasMatrix.a > 0.74 && _view.mouseY > 550 )
+			if (_canvasMatrix.a > 0.78 && _view.mouseY > 560 )
 			{
 			
 				requestNavigationToggleSignal.dispatch(-1,false, true);
