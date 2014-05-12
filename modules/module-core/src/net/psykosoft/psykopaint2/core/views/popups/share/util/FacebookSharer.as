@@ -18,6 +18,8 @@ public class FacebookSharer extends SharerBase
 	override public function share(content:Array):void {
 	    super.share(content);
 
+		trace("FacebookSharer - share()");
+
 		_shareBmd = _contentToBeShared[0];
 
 		var loggedIn:Boolean = _manager.checkLoggedInFacebook();

@@ -1,23 +1,21 @@
 package net.psykosoft.psykopaint2.core.managers.social
 {
-	import com.milkmangames.nativeextensions.GVFacebookAppEvent;
-	import com.milkmangames.nativeextensions.GVFacebookFriend;
-	import com.milkmangames.nativeextensions.GVHttpMethod;
-	import com.milkmangames.nativeextensions.GVSocialServiceType;
-	import com.milkmangames.nativeextensions.GoViral;
-	import com.milkmangames.nativeextensions.events.GVFacebookEvent;
-	import com.milkmangames.nativeextensions.events.GVMailEvent;
-	import com.milkmangames.nativeextensions.events.GVShareEvent;
-	import com.milkmangames.nativeextensions.events.GVTwitterEvent;
-	
-	import flash.display.BitmapData;
+
+import com.milkmangames.nativeextensions.GVFacebookAppEvent;
+import com.milkmangames.nativeextensions.GVFacebookFriend;
+import com.milkmangames.nativeextensions.GVHttpMethod;
+import com.milkmangames.nativeextensions.GVSocialServiceType;
+import com.milkmangames.nativeextensions.GoViral;
+import com.milkmangames.nativeextensions.events.GVFacebookEvent;
+import com.milkmangames.nativeextensions.events.GVShareEvent;
+import com.milkmangames.nativeextensions.events.GVTwitterEvent;
+
+import flash.display.BitmapData;
 import flash.events.EventDispatcher;
-import flash.utils.describeType;
 
 import net.psykosoft.psykopaint2.core.models.UserConfigModel;
-	
 
-	public class SocialSharingManager extends EventDispatcher
+public class SocialSharingManager extends EventDispatcher
 	{
 		
 		public static const FACEBOOK_APP_ID:String="503384473059408";

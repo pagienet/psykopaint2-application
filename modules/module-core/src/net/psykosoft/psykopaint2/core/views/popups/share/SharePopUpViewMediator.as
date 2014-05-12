@@ -6,8 +6,11 @@ import flash.display.BitmapData;
 import net.psykosoft.psykopaint2.core.managers.social.SocialSharingManager;
 import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+import net.psykosoft.psykopaint2.core.views.popups.share.util.EmailSharer;
+import net.psykosoft.psykopaint2.core.views.popups.share.util.ExportSharer;
 import net.psykosoft.psykopaint2.core.views.popups.share.util.FacebookSharer;
 import net.psykosoft.psykopaint2.core.views.popups.share.util.ShareUtil;
+import net.psykosoft.psykopaint2.core.views.popups.share.util.TwitterSharer;
 
 public class SharePopUpViewMediator extends MediatorBase
 {
@@ -49,10 +52,12 @@ public class SharePopUpViewMediator extends MediatorBase
 		view.popUpWantsToCloseSignal.remove( onPopUpWantsToClose );
 	}
 
-	private function onPopUpWantsToShare(bmd:BitmapData, shareFacebook:Boolean, shareTwitter:Boolean):void {
+	private function onPopUpWantsToShare(bmd:BitmapData):void {
 
-		if(shareFacebook) _util.addSharer(new FacebookSharer(socialSharingManager));
-//		if(shareTwitter) //...
+		if(view.facebookChk.selected) _util.addSharer(new FacebookSharer(socialSharingManager));
+		if(view.twitterChk.selected) _util.addSharer(new TwitterSharer(socialSharingManager));
+		if(view.emailChk.selected) _util.addSharer(new EmailSharer(socialSharingManager));
+		if(view.exportChk.selected) _util.addSharer(new ExportSharer(socialSharingManager));
 
 		// Nothing to wait for, close.
 		if(_util.numSharers == 0) requestHidePopUpSignal.dispatch();
