@@ -35,6 +35,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			var uvBounds:Rectangle = appendVO.uvBounds;
 			var baseAngle:Number = appendVO.diagonalAngle; //Math.atan2(uvBounds.height,uvBounds.width);
 			var halfSize : Number = appendVO.size * appendVO.diagonalLength * 0.5;//appendVO.size * Math.SQRT1_2;
+			
 			var angle : Number = appendVO.point.angle;
 			var cos1 : Number = halfSize * Math.cos(  baseAngle + angle);
 			var sin1 : Number = halfSize * Math.sin(  baseAngle + angle);
@@ -61,8 +62,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if (vy < _minY) _minY = vy;
 			if (vy > _maxY) _maxY = vy;
 
-			data[0]  = vx;
-			data[1]  = vy;
+			data[0] = vx;
+			data[1] = vy;
 
 			vx = (pnx + cos2 + ox) * ndcScaleX - 1.0;
 			vy = -((pny + sin2 + oy) * ndcScaleY - 1.0);

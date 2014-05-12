@@ -41,7 +41,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const INDEX_MODE_MULTIPLY:int = 4;
 		static public const INDEX_MODE_ADD:int = 5;
 		static public const INDEX_MODE_RANDOM:int = 6;
-		static public const INDEX_MODE_RANDOM2:int = 7;
 		
 		private const _applyArray:Array = [0,0,1,1];
 		
@@ -70,7 +69,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			param_bumpiness     = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS, 1, -10, 10 );
 			param_bumpinessRange  = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS_RANGE, 0.2, 0, 10 );
 			param_bumpInfluence = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMP_INFLUENCE, 0.6, -5, 5 );
-			param_noBumpProbability     = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_NO_BUMP_PROB, 0.5, 0, 1 );
+			param_noBumpProbability     = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_NO_BUMP_PROB, 0.0, 0, 1 );
 			_parameters.push( param_glossiness, param_bumpiness, param_bumpinessRange,param_bumpInfluence, param_mappingMode,param_mappingFactor,param_mappingFunction,param_invertMapping,param_maxSpeed,param_noBumpProbability);
 			
 		}
@@ -92,9 +91,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				var point:SamplePoint = points[i];
 				var bumpFactors:Vector.<Number> = point.bumpFactors;
 				var bmp:Number = bumpFactors[1];
+				
+				
 				if ( mode == INDEX_MODE_FIXED)
 				{
-					bmp = param_mappingFactor.randomValue;
+					bmp = 0.5;
 				} else if ( mode == INDEX_MODE_SPEED )
 				{
 					applyArray[0] = Math.min(point.speed,ms) / ms;
@@ -126,21 +127,29 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					bmp = minFactor + bmp * (maxFactor - minFactor );
 				}  else if ( mode == INDEX_MODE_MULTIPLY )
 				{
-					bmp *= param_mappingFactor.randomValue;
+					applyArray[0] = param_mappingFactor.randomValue;
+					bmp *= mapping.apply( null, applyArray);
 				} else if ( mode == INDEX_MODE_ADD )
 				{
-					bmp += param_mappingFactor.randomValue;
+					applyArray[0] = param_mappingFactor.randomValue;
+					bmp += mapping.apply( null, applyArray);
 				}  else if ( mode == INDEX_MODE_RANDOM )
 				{
-					bmp = param_mappingFactor.randomValue;
-				} else if ( mode == INDEX_MODE_RANDOM2 )
-				{
-					bmp = Math.random() < nbp ? 0 : param_mappingFactor.randomValue;
+					applyArray[0] = param_mappingFactor.randomValue;
+					bmp = mapping.apply( null, applyArray);
 				} 
+				
+				
+				
+				
 				bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] = param_glossiness.numberValue;
-				bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] = param_bumpiness.numberValue - param_bumpinessRange.numberValue + (  param_bumpinessRange.numberValue * 2 * bmp );
+			//	bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] =Math.random();
+				//ADD CASE NO BUMP VALUE
+				bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] = (Math.random() < nbp)?param_bumpiness.numberValue: param_bumpiness.numberValue - param_bumpinessRange.numberValue + (  param_bumpinessRange.numberValue  * bmp )* 2;
 				//bumpFactors[2] = bumpFactors[6] = bumpFactors[10] = bumpFactors[14] = param_shininess.numberValue;
 				bumpFactors[3] = bumpFactors[7] = bumpFactors[11] = bumpFactors[15] = param_bumpInfluence.numberValue;
+				
+
 			}
 			
 			

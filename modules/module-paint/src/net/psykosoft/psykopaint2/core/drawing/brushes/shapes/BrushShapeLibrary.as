@@ -34,31 +34,32 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		private function registerDefaultShapes(context3D : Context3D) : void
 		{
-			registerShape(new SplatBrushShape(context3D));
-			registerShape(new PaintBrushShape1(context3D));
-			registerShape(new LineBrushShape(context3D));
-			registerShape(new PencilSketchBrushShape(context3D));
-			registerShape(new WetBrushShape(context3D));
-			registerShape(new WetBrushShape2(context3D));
-			registerShape(new BasicBrushShape(context3D));
-			registerShape(new BasicCircularShape(context3D));
-			registerShape(new SplotchBrushShape(context3D));
-			registerShape(new NoisyBrushShape(context3D));
-			registerShape(new ScalesBrushShape(context3D));
-			registerShape(new RenderTextureBrushShape(context3D));
-			registerShape(new BasicSmoothBrushShape(context3D));
 			registerShape(new AlmostCircularHardShape(context3D));
 			registerShape(new AlmostCircularRoughShape(context3D));
+			registerShape(new BasicBrushShape(context3D));
+			registerShape(new BasicCircularShape(context3D));
+			registerShape(new BasicSmoothBrushShape(context3D));
+			registerShape(new CrayonShape(context3D));
 			registerShape(new DotsBrushShape(context3D));
 			registerShape(new DotBrushShape(context3D));
-			registerShape(new SplatterSprayShape(context3D));
 			registerShape(new InkSplatsShape(context3D));
+			registerShape(new LineBrushShape(context3D));
+			registerShape(new NoisyBrushShape2(context3D));
+			registerShape(new PaintBrushShape1(context3D));
+			registerShape(new RenderTextureBrushShape(context3D));
 			registerShape(new SplatsShape(context3D));
+			registerShape(new SplatBrushShape(context3D));
+			registerShape(new SplatterSprayShape(context3D));
+			registerShape(new SplotchBrushShape(context3D));
 			registerShape(new SprayShape(context3D));
-			registerShape(new VectorSplatShape(context3D));
-			registerShape(new CrayonShape(context3D));
 			registerShape(new PaintbrushShape(context3D));
+			registerShape(new PencilSketchBrushShape(context3D));
+			registerShape(new ScalesBrushShape(context3D));
 			registerShape(new SumiShape(context3D));
+			registerShape(new VarnishBrushShape(context3D));
+			registerShape(new VectorSplatShape(context3D));
+			registerShape(new WetBrushShape(context3D));
+			registerShape(new WetBrushShape2(context3D));
 			/*
 			//disabled unused shapes
 			

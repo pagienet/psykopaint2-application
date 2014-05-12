@@ -4,9 +4,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
+import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
+import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
-	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
+import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
+import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 
 	public class GalleryUserSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -18,6 +20,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		[Inject]
 		public var activePaintingModel : ActiveGalleryPaintingModel;
+
+		[Inject]
+		public var requestShowPopUpSignal:RequestShowPopUpSignal;
 
 		private var _isFollowing : Boolean;
 		private var _userID : int = -1;
@@ -36,11 +41,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			super.initialize();
 
 			_userID = -1;
+		}
 
+		override protected function onViewSetup():void {
+			super.onViewSetup();
 			activePaintingModel.onUpdate.add(updateUI);
 			updateUI();
 		}
-
 
 		override public function destroy() : void
 		{
@@ -53,15 +60,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			var activePainting : GalleryImageProxy = activePaintingModel.painting;
 
-			view.enableButtonWithId(GalleryUserSubNavView.ID_FOLLOW, false);
-
-			if (loggedInUser.userID == activePainting.userID) {
-				setFollowing(false);
-				view.enableButtonWithId(GalleryUserSubNavView.ID_FOLLOW, false);
-			}
-			else if (_userID != activePainting.userID) {
-				_userID = activePainting.userID;
-				loggedInUser.getIsFollowingUser(_userID, onGetIsFollowingUserResult, onGetIsFollowingUserError);
+			var isSelfUser:Boolean = loggedInUser.userID == activePainting.userID;
+			view.setButtonVisibilityWithID(GalleryUserSubNavView.ID_FOLLOW, !isSelfUser);
+			if(!isSelfUser) {
+				if(_userID != activePainting.userID) {
+					_userID = activePainting.userID;
+					loggedInUser.getIsFollowingUser(_userID, onGetIsFollowingUserResult, onGetIsFollowingUserError);
+				}
 			}
 
 			if (activePainting.collectionType != GalleryType.NONE && activePainting.collectionType != GalleryType.USER) {
@@ -92,7 +97,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			}
 
 			view.relabelButtonWithId(GalleryUserSubNavView.ID_FOLLOW, label, icon);
-			view.enableButtonWithId(GalleryUserSubNavView.ID_FOLLOW, true);
+//			view.enableButtonWithId(GalleryUserSubNavView.ID_FOLLOW, true);
 		}
 
 		private function onGetIsFollowingUserError(errorCode : uint, reason : String) : void
@@ -114,6 +119,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function toggleFollowing() : void
 		{
+			if(!loggedInUser.isLoggedIn()) {
+				requestShowPopUpSignal.dispatch(PopUpType.LOGIN);
+				return;
+			}
+
 			if (_isFollowing)
 				loggedInUser.unfollowUser(activePaintingModel.painting.userID, onToggleFollowSuccess, onToggleFollowingFailed);
 			else

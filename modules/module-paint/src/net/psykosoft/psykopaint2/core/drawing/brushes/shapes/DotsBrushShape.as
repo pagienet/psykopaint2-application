@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		[Embed(source="assets/dots.png", mimeType="image/png")]
 		protected var SourceMap:Class;
 		
-		[Embed(source="assets/dots_height.png", mimeType="image/png")]
+		[Embed(source="assets/dots_height2.png", mimeType="image/png")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function DotsBrushShape(context3D : Context3D)

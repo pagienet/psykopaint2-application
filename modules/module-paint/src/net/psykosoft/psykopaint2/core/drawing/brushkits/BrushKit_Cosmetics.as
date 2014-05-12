@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private static const STYLE_LIGHTER:int = 1;
 		private static const STYLE_SATURATE:int = 2;
 		private static const STYLE_DESATURATE:int = 3;
+		private static const STYLE_VARNISH:int = 4;
 		
 		private var param_style:PsykoParameter;
 		private var param_precision:PsykoParameter;
@@ -154,6 +155,34 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorMatrix.adjustSaturation(0.95);
 					(brushEngine as EffectBrush).colorMatrixData = colorMatrix.toAGALVector();
 					break;
+				case STYLE_VARNISH:
+					trace("STYLE_VARNISH");
+					
+					
+					//DISTANCE BETWEEN STEPS : THE LESS, THE MORE DENSE IT WILL BE
+					brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 2000 ;
+					
+					
+					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
+					bumpDecorator.param_bumpInfluence.numberValue = 0;
+					bumpDecorator.param_bumpiness.numberValue = 0 ;
+					bumpDecorator.param_bumpinessRange.numberValue = 0 ;
+					bumpDecorator.param_glossiness.numberValue =0.1  ;
+					bumpDecorator.param_noBumpProbability.numberValue=0.0;
+					
+					
+					colorDecorator.param_pickRadius.lowerRangeValue = 0.0;
+					colorDecorator.param_pickRadius.upperRangeValue = 0.35;
+					colorDecorator.param_colorBlending.upperRangeValue = 0.99;
+					colorDecorator.param_colorBlending.lowerRangeValue = 0.97;
+					colorDecorator.param_brushOpacity.numberValue = 0;
+					colorDecorator.param_brushOpacityRange.numberValue = 0.0;
+					
+					
+					
+					break;
+				
 			}
 			
 			onPrecisionChanged(null);
@@ -172,6 +201,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.5;
 			sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 0.12;
 				
+			
+			
 		}
 		
 		protected function onIntensityChanged(event:Event):void
@@ -180,6 +211,19 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			//colorDecorator.param_brushOpacity.numberValue = intensity;
 			(brushEngine as EffectBrush).param_strokeAlpha.numberValue = param_intensity.numberValue;
 			bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_FIXED;
+			
+			
+			switch ( param_style.index )
+			{
+				case STYLE_VARNISH:
+					//NO OPACITY
+					(brushEngine as EffectBrush).param_strokeAlpha.numberValue = 0;
+					//INTENSITY IS THE GLOSSINESS
+					bumpDecorator.param_glossiness.numberValue =intensity  ;
+					break;
+			}
+			
+		
 			
 			if ( !eraserMode )
 			{

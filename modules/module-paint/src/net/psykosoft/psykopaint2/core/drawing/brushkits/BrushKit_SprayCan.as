@@ -71,7 +71,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_curvatureSizeInfluence.numberValue = 0;
 			brushEngine.param_shapes.stringList = Vector.<String>(["noisy","almost circular rough","almost circular hard","splatspray","splatspray"]);
 			
-
 			
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
@@ -108,7 +107,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			pathManager.addPointDecorator( splatterDecorator );
 			
 			bumpDecorator = new BumpDecorator();
-			bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
+			bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 			bumpDecorator.param_invertMapping.booleanValue = true;
 			bumpDecorator.param_bumpiness.numberValue = 0.5;
 			bumpDecorator.param_bumpinessRange.numberValue = 0.5;
@@ -208,6 +207,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					break;
 			}
 			
+			//REMOVE PERSISTENT POINTS THAT COULD REMAINS
+			if ( _persistentPoints[0] != null ) PathManager.recycleSamplePoint(_persistentPoints[0]);
+
+			
 			brushEngine.param_shapes.index = param_style.index;			
 			onPrecisionChanged(null);
 			onIntensityChanged(null);
@@ -294,25 +297,26 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					splatterDecorator.active = true;
 					
 					//DISTANCE BETWEEN STEPS : THE LESS, THE MORE DENSE IT WILL BE
-					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 3 ;
 					brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
 					//brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 3 - precision * 2.5;
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 2.5;
+
 					
 					
+					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
+					bumpDecorator.param_bumpInfluence.numberValue = 0.5;
+					bumpDecorator.param_bumpiness.numberValue = 0.4 ;
+					bumpDecorator.param_bumpinessRange.numberValue = 0.02 ;
+					bumpDecorator.param_glossiness.numberValue =0.3  ;
+					bumpDecorator.param_noBumpProbability.numberValue=0.0;
 					
-					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_FIXED;
-					bumpDecorator.param_bumpInfluence.numberValue = 0.45;
-					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
-					bumpDecorator.param_bumpinessRange.numberValue = -0.20 ;
-					bumpDecorator.param_glossiness.numberValue = 0.8  ;
 					
-					colorDecorator.param_colorBlending.upperRangeValue = 0.1;
-					colorDecorator.param_colorBlending.lowerRangeValue = 0.2;
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.0;
 					colorDecorator.param_pickRadius.upperRangeValue = 0.35;
 					colorDecorator.param_colorBlending.upperRangeValue = 0.99;
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.97;
+					colorDecorator.param_brushOpacity.numberValue = 0.95;
+					colorDecorator.param_brushOpacityRange.numberValue = 0.01;
 					
 					
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
@@ -321,9 +325,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					sizeDecorator.param_mappingRange.numberValue = 0.01;
 					sizeDecorator.param_maxSpeed.numberValue = 200;
 					
+					
 					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
 					splatterDecorator.param_splatFactor.numberValue = 0.01+0.9 * precision;
-					//splatterDecorator.param_splatFactor.numberValue = 1;
+					
 
 					
 				
@@ -353,7 +358,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					
 					
-					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
+					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 					bumpDecorator.param_bumpInfluence.numberValue = 0.25;
 					bumpDecorator.param_bumpiness.numberValue = 0.10 ;
 					bumpDecorator.param_bumpinessRange.numberValue = 0.04 ;
@@ -393,12 +398,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					sizeDecorator.param_mappingRange.numberValue = 0;
 					
 					
-					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
-					bumpDecorator.param_bumpInfluence.numberValue = 0.85;
-					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
-					bumpDecorator.param_bumpinessRange.numberValue = 0.04 ;
-					bumpDecorator.param_glossiness.numberValue = 0.55  ;
-					bumpDecorator.param_noBumpProbability.numberValue=0.94;
+					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_PRESSURE_SPEED;
+					bumpDecorator.param_invertMapping.booleanValue=true;
+					bumpDecorator.param_bumpInfluence.numberValue = 0.02;
+					bumpDecorator.param_bumpiness.numberValue = 0.005 ;
+					bumpDecorator.param_bumpinessRange.numberValue = 0.0 ;
+					bumpDecorator.param_glossiness.numberValue = 0.23  ;
+					bumpDecorator.param_noBumpProbability.numberValue=0.0;
 					
 
 					//NO SPLATTING
@@ -412,12 +418,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				
 				
 				case STYLE_HALO_SPRAY:
+
 					stationaryDecorator.active=true;
 						
 					brushEngine.textureScaleFactor = 2;
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 1 + precision * 15;
 					
-					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
+					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 					bumpDecorator.param_bumpInfluence.numberValue = 0.55;
 					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
 					bumpDecorator.param_bumpinessRange.numberValue = 0.3 ;
@@ -576,7 +583,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					brushEngine.textureScaleFactor = 2;
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 10 + precision * 15;
 					
-					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
+					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 					bumpDecorator.param_bumpInfluence.numberValue = 0.55;
 					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
 					bumpDecorator.param_bumpinessRange.numberValue = 0.3 ;
@@ -665,15 +672,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			switch ( param_style.index )
 			{
-//				case STYLE_SPLAT_SPRAY:
-//					brushEngine.pathManager.pathEngine.minSamplesPerStep.numberValue = 0.1;
-//					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 100-intensity*99;
-//					(brushEngine as SprayCanBrush).param_strokeAlpha.numberValue = 1;
-//				break;
 				/*case STYLE_WET:
 					colorDecorator.param_brushOpacity.numberValue = 0.25 + intensity * 0.75;
 					break;*/
-				case STYLE_DEFAULT:
+				/*case STYLE_DEFAULT:
 					
 					//ALPHA OF LAYER IS 1 HERE CAUSE WE DON'T WANT TO HAVE TRANSPARENCY ON THE LAYER SIDE
 					(brushEngine  as SprayCanBrush).param_strokeAlpha.numberValue = 1;
@@ -682,7 +684,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_bumpInfluence.numberValue = 0.15+intensity*0.25;
 					bumpDecorator.param_bumpinessRange.numberValue = 0.25+intensity*0.15;
 					
-					break;
+					break;*/
 				
 				//SIMPLE OPACITY BY DEFAULT
 				default:
@@ -714,7 +716,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			var gyro:Matrix3D = GyroscopeManager.orientationMatrix;
 			var vector:Vector.<Vector3D> = GyroscopeManager.orientationMatrix.decompose();
-			//vector[1] is rotation vector
 			
 			//TESTING ON DESKTOP
 			if(!CoreSettings.RUNNING_ON_iPAD)
@@ -724,71 +725,39 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			//ADD A BIT OF TURBULENCE
 			vector[1].x+=Math.random()*0.3-0.15;
 			vector[1].y+=Math.random()*0.3-0.15;
-			
-			//trace(vector[1]);
-			
+						
 			for ( var i:int = 0; i < points.length; i++ )
 			{
-				/*if ( Math.random() < 0.10 )
-				{
-					points[i].x += (Math.random()-Math.random()) * gridDecorator.param_stepX.numberValue;
-					points[i].y += (Math.random()-Math.random()) * gridDecorator.param_stepY.numberValue;
-				}*/
+
 				
 				if(i==0){
 					
-					//var newPoint :SamplePoint = points[i].getClone();
-					//var newPoint :SamplePoint = points[i];
 					if(Math.random()<0.1){
 						//the way you stored the persistent points creates a memory leak.
 						//you should use always use PathManager.recycleSamplePoint() before you overwrite
 						//and old point, like this:
 						if ( _persistentPoints[0] != null ) PathManager.recycleSamplePoint(_persistentPoints[0]);
 						_persistentPoints[0] = points[0].getClone();
-						_persistentPoints[0].size = 0.02*Math.random()+0.01 + precision*(Math.random()*0.02+0.05);
-						trace("create point")
+						_persistentPoints[0].size = 0.02*Math.random()+0.01 + precision*(Math.random()*0.05+0.02);
+						//trace("create point")
 					}else {
 						if(_persistentPoints[0]){
-							//points[0] = _persistentPoints[0].getClone() ;
 							_persistentPoints[0].x += vector[1].y*100*_persistentPoints[0].size;
 							_persistentPoints[0].y += vector[1].x*100*_persistentPoints[0].size;
 							points[0].x = _persistentPoints[0].x ;
 							points[0].y = _persistentPoints[0].y ;
 							points[0].size = _persistentPoints[0].size;
-							//_persistentPoints[0].size *= (1+0.05-Math.random()*0.05);
-							//_persistentPoints[0].size *= 0.995;
+							
 						}
 					 	
 					}
-					//newPoint.size = 0.2-i*0.15/2;
 					
-					
-					
-					//newPoint.x += vector[1].x*i*40;
-					//newPoint.y+= vector[1].y*i*40;
-					
-					
-					//_persistentPoints[i]=(newPoint);
-					//trace("added points");
 				}
 				
 				
-				//if ( Math.random() < 0.25 ){
-					
-					//addedPoints.push(newPoint);
-				
-					
-					//newPoint.x += vector[1].x*200;
-					//newPoint.y += vector[1].y*200;
-					
-					
-				//}
-				
 				
 			}
-			//points.concat(_persistentPoints);
-			
-			
+		
 			return points;
 		}
 		

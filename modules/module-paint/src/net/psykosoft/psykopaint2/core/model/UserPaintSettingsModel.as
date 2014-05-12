@@ -97,13 +97,13 @@ package net.psykosoft.psykopaint2.core.model
 					selectedSwatchIndex = 0;
 					_colorMode = PaintMode.COLOR_MODE;
 				}
-				styleBlendParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Style Blend Factor",0.5,0,1);
+				styleBlendParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Style Blend Factor",0,0,1);
 				previewMixtureParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Preview Blending",0.5,0,1);
 				setupColorTransfer(0);
 				
 				//DEFAULT PALETTE COLORS
 				if ( !_hasLoadedPalette)
-					_colorPalettes.push( Vector.<uint>([0x231f20/*BLACK*/,0x00aeef/*CYAN BLUE*/,0xf4202f/*RED*/,0xfaf716/*YELLOW*/,0x84e626/*GREEN*/,
+					_colorPalettes.push( Vector.<uint>([0x07070a/*BLACK*/,0x00aeef/*CYAN BLUE*/,0xf4202f/*RED*/,0xfaf716/*YELLOW*/,0x84e626/*GREEN*/,
 						0x88fb19/*UNUSED, USERD FOR ERASER*/,0xfbcfac/* SKIN COLOR */,0x583520/* DARK BROWN */,0xfafafa/*WHITE*/,0xffffff/*SAMPLE SWATCH*/]));
 				
 				
@@ -116,7 +116,7 @@ package net.psykosoft.psykopaint2.core.model
 				initialized = true;
 			} else {
 				colorStyleParameter.index = 0;
-				styleBlendParameter.numberValue = 0.5;
+				styleBlendParameter.numberValue = 0;
 				previewMixtureParameter.numberValue = 0.5;
 				
 			}
@@ -128,8 +128,14 @@ package net.psykosoft.psykopaint2.core.model
 			if ( step == 0 )
 			{
 				styleMatrices = new Vector.<Vector.<Number>>();
-				styleMatrices.push(null);
-				 parameterList = ["No Style"];
+				var cm:ColorMatrix = new ColorMatrix();
+				cm.adjustSaturation(4);
+				
+				var v:Vector.<Number> = Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4] / 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255,
+					cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4] / 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255,0.5,0]);
+				
+				styleMatrices.push(v);
+				 parameterList = ["Saturate"];
 				 colorStyleParameter = new PsykoParameter( PsykoParameter.IconListParameter,"Color Style",0,parameterList);
 			}
 			

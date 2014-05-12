@@ -27,6 +27,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
@@ -350,7 +351,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		protected function onKeyUp(event:KeyboardEvent):void
 		{
-			if ( event.keyCode == Keyboard.U )
+			if ( event.keyCode == Keyboard.U && GestureManager.gesturesEnabled )
 			{
 				requestUndoSignal.dispatch();
 			}
@@ -480,6 +481,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			//TODO: this has to change once we are starting to sell single brushes!!!!
 			if ( !userConfig.userConfig.hasBrushKit1 && _activeBrushKit.isPurchasable )
 			{
+				GestureManager.gesturesEnabled = false;
 				notifyTogglePaintingEnableSignal.dispatch(false);
 				clearTimeout( _revealNavigationTimeout );
 				revealHiddenNavigation();
