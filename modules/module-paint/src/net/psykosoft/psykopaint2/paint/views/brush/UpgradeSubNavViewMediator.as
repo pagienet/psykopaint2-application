@@ -6,11 +6,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyFullUpgradePriceSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyTogglePaintingEnableSignal;
@@ -51,7 +53,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		
 		[Inject]
 		public var brushKitManager : BrushKitManager;
-
+		
 		
 		override public function initialize():void {
 			// Init.
@@ -130,6 +132,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			//originally I used NavigationStateType.PREVIOUS here - but this caused some issues sometimes
 			requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_COLOR );
 			notifyTogglePaintingEnableSignal.dispatch(true);
+			GestureManager.gesturesEnabled = true;
 		}
 		
 
