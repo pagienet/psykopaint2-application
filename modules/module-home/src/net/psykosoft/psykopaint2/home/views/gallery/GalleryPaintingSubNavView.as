@@ -65,6 +65,7 @@ import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 			if (_loader) {
 				_loader.close();
 				removeLoadListeners();
+				_loader = null;
 			}
 			disposeUserBitmap();
 			super.dispose();
