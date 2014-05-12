@@ -10,7 +10,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
-	import net.psykosoft.psykopaint2.home.commands.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewDeleteModeChangedSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
 
@@ -115,6 +114,12 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 						requestNavigationStateChange( NavigationStateType.PICK_IMAGE );
 					} else {
 						view.toggleDeleteMode();
+						if( data && data.length > 0 ) {
+							view.selectButtonWithLabel(data[0].id.split("-")[1] );
+							requestEaselUpdateSignal.dispatch( data[0], true, null );
+						} else {
+							requestEaselUpdateSignal.dispatch( null, true, null );
+						}
 					}
 					break;
 				}
@@ -143,6 +148,14 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 						}
 					} else {
 						view.removePainting( id );
+						var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
+						if( data && data.length > 0 ) {
+							view.selectButtonWithLabel(data[0].id.split("-")[1] );
+							requestEaselUpdateSignal.dispatch( data[0], true, null );
+						} else {
+							requestEaselUpdateSignal.dispatch( null, true, null );
+						}
+						
 					}
 				}
 			}
