@@ -35,7 +35,6 @@ package net.psykosoft.psykopaint2.core.models
 			_localScreenRect.width /= CoreSettings.GLOBAL_SCALING;
 			_localScreenRect.height /= CoreSettings.GLOBAL_SCALING;
 			notifyEaselRectUpdateSignal.dispatch(_localScreenRect);
-			trace (_absoluteScreenRect);
 		}
 	}
 }
