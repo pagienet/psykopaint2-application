@@ -94,7 +94,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				case NavigationStateType.GALLERY_BROWSE_YOURS:
 				case NavigationStateType.GALLERY_BROWSE_USER:
 				case NavigationStateType.GALLERY_PAINTING:
-					// probably not allowed to swipe when quickshare is open
+					// probably not allowed to swipe when share is open
 					initInteraction();
 					view.showHighQuality = true;
 					if (oldState != newState) {

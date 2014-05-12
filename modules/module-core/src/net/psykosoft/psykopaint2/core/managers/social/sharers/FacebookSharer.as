@@ -19,7 +19,7 @@ public class FacebookSharer extends SharerBase
 	override public function share(content:Array):void {
 	    super.share(content);
 
-		trace("FacebookSharer - quickshare()");
+		trace("FacebookSharer - share()");
 
 		_shareMsg = _contentToBeShared[0];
 		_shareBmd = _contentToBeShared[1];

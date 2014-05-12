@@ -12,7 +12,7 @@ public class TwitterSharer extends SharerBase
 	override public function share(content:Array):void {
 		super.share( content );
 
-		trace("TwitterSharer - quickshare()");
+		trace("TwitterSharer - share()");
 		completedSignal.dispatch();
 	}
 }

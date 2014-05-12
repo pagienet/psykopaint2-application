@@ -165,7 +165,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function sharePainting() : void
 		{
-			// TODO: Maybe quickshare should be a pop-up?
+			// TODO: Maybe share should be a pop-up?
 			requestNavigationStateChange(NavigationStateType.GALLERY_SHARE);
 		}
 

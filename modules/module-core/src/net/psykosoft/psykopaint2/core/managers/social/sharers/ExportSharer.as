@@ -12,7 +12,7 @@ public class ExportSharer extends SharerBase
 	override public function share(content:Array):void {
 		super.share( content );
 
-		trace("ExportSharer - quickshare()");
+		trace("ExportSharer - share()");
 		completedSignal.dispatch();
 	}
 }
