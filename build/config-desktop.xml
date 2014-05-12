@@ -29,5 +29,6 @@
 		<extensionID>net.psykosoft.io</extensionID>
 		<extensionID>com.milkmangames.extensions.GoViral</extensionID>
 		<extensionID>com.milkmangames.extensions.StoreKit</extensionID>
+		<extensionID>pl.mateuszmackowiak.nativeANE.NativeDialogs</extensionID>
     </extensions>
 </application>

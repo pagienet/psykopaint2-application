@@ -1,36 +1,25 @@
 package net.psykosoft.psykopaint2.core.views.base
 {
 
-	import com.bit101.components.PushButton;
+import com.bit101.components.PushButton;
 
-	import flash.display.DisplayObject;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
-	import flash.system.System;
-	import flash.utils.setTimeout;
+import flash.display.DisplayObject;
+import flash.display.Sprite;
+import flash.events.MouseEvent;
+import flash.system.System;
 
-	import net.psykosoft.psykopaint2.base.ui.components.HSnapScroller;
-	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
-	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapList;
-	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
+import net.psykosoft.psykopaint2.base.utils.alert.Alert;
+import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
+import net.psykosoft.psykopaint2.core.views.debug.DebugView;
+import net.psykosoft.psykopaint2.core.views.debug.ErrorsView;
+import net.psykosoft.psykopaint2.core.views.navigation.NavigationView;
+import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerView;
+import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
+import net.psykosoft.psykopaint2.core.views.splash.SplashView;
+import net.psykosoft.psykopaint2.core.views.video.VideoView;
 
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
-import net.psykosoft.psykopaint2.core.views.components.button.IconButtonAlt;
-import net.psykosoft.psykopaint2.core.views.components.input.PsykoInput;
-	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
-	import net.psykosoft.psykopaint2.core.views.debug.DebugView;
-	import net.psykosoft.psykopaint2.core.views.debug.ErrorsView;
-	import net.psykosoft.psykopaint2.core.views.navigation.NavigationView;
-	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerView;
-	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
-	import net.psykosoft.psykopaint2.core.views.splash.SplashView;
-	import net.psykosoft.psykopaint2.core.views.video.VideoView;
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
-
-	public class CoreRootView extends Sprite
+public class CoreRootView extends Sprite
 	{
 		private var navigationView:NavigationView;
 		
@@ -55,6 +44,9 @@ import net.psykosoft.psykopaint2.core.views.components.input.PsykoInput;
 			}
 
 			// TODO: UI tests, remove.
+
+//			Alert.show("hey there!");
+
 //			var iconButton:IconButtonAlt = new IconButtonAlt();
 //			iconButton.labelText = "yo";
 //			iconButton.x = 250;
