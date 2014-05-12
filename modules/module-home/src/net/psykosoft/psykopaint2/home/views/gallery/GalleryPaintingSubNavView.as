@@ -8,10 +8,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import flash.events.IOErrorEvent;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
-	import flash.sampler.StackFrame;
 	import flash.text.TextField;
 
-	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
