@@ -189,7 +189,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		override protected function onStateChange(newState : String) : void
 		{
 			super.onStateChange(newState);
-
+			
 			// rendering should not happen until we're in an actual state
 			if (!_currentNavigationState)
 				GpuRenderManager.addRenderingStep(view.renderScene, GpuRenderingStepType.NORMAL, 0);
@@ -210,9 +210,13 @@ package net.psykosoft.psykopaint2.home.views.home
 				case NavigationStateType.GALLERY_PAINTING:
 					view.activeSection = HomeView.GALLERY;
 					break;
-				case NavigationStateType.HOME_ON_EASEL:
 				case NavigationStateType.PICK_IMAGE:
 					view.activeSection = HomeView.EASEL;
+					break;
+				case NavigationStateType.HOME_ON_EASEL:
+					view.activeSection = HomeView.EASEL;
+					//this is necessary to reactivate the camera panning when coming back from painting
+					view.activateCameraControl();
 					break;
 				case NavigationStateType.SETTINGS:
 					view.activeSection = HomeView.SETTINGS;
