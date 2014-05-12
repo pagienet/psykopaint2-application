@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.io
 {
 	import flash.display.BitmapData;
 	import flash.display.JPEGEncoderOptions;
+	import flash.display.JPEGXREncoderOptions;
 	import flash.display.PNGEncoderOptions;
 	import flash.display.Stage;
 	import flash.display.StageQuality;
@@ -11,7 +12,7 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.events.EventDispatcher;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
@@ -140,7 +141,7 @@ package net.psykosoft.psykopaint2.core.io
 			_context3D.clear(0, 0, 0, 1);
 			CopyTexture.copy(_canvas.normalSpecularMap, _context3D);
 			_context3D.drawToBitmapData(_workerBitmapData);
-			_paintingData.normalSpecularData = _workerBitmapData.encode(_workerBitmapData.rect, new PNGEncoderOptions());
+			_paintingData.normalSpecularData = _workerBitmapData.encode(_workerBitmapData.rect, new JPEGXREncoderOptions(5,"auto",1));
 		}
 
 		private function saveSourceDataToThumb() : void

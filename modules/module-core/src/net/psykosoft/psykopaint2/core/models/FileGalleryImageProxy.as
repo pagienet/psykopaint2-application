@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.core.models
 	import flash.events.IOErrorEvent;
 	import flash.geom.Matrix;
 	import flash.net.URLRequest;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	public class FileGalleryImageProxy extends GalleryImageProxy
@@ -146,22 +146,27 @@ package net.psykosoft.psykopaint2.core.models
 
 		private function onColorMapComplete(event : Event) : void
 		{
-			_activeLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onColorMapComplete);
-			_activeLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-			var bitmapData : BitmapData = Bitmap(_activeLoader.content).bitmapData;
-
-			// sometimes, a freak occurrence causes the callback to be reached after cancelling
-			if (_paintingGalleryVO) {
-				_paintingGalleryVO.colorData = bitmapData;
-
-				if (_onColorComplete)
-					_onColorComplete(_paintingGalleryVO);
-
-				loadBitmapData(normalSpecularMapURL, onNormalSpecularComplete, onLoadError);
-			}
-			else {
-				// may have been disposed()
-				bitmapData.dispose();
+			try {
+				_activeLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onColorMapComplete);
+			
+				_activeLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
+				var bitmapData : BitmapData = Bitmap(_activeLoader.content).bitmapData;
+	
+				// sometimes, a freak occurrence causes the callback to be reached after cancelling
+				if (_paintingGalleryVO) {
+					_paintingGalleryVO.colorData = bitmapData;
+	
+					if (_onColorComplete)
+						_onColorComplete(_paintingGalleryVO);
+	
+					loadBitmapData(normalSpecularMapURL, onNormalSpecularComplete, onLoadError);
+				}
+				else {
+					// may have been disposed()
+					bitmapData.dispose();
+				}
+			}catch (e:Error){
+				trace("ERROR IN THERE that happens once in a while when moving too fast or something. Might want to check later.I Put that now so it doesn't break at least:\n"+e);
 			}
 		}
 

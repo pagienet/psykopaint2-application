@@ -1,6 +1,18 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
 
+import com.greensock.TweenLite;
+import com.greensock.easing.Quad;
+
+import flash.display.BitmapData;
+import flash.display.Sprite;
+import flash.display3D.Context3DCompareMode;
+import flash.display3D.Context3DStencilAction;
+import flash.events.Event;
+import flash.geom.Rectangle;
+import flash.geom.Vector3D;
+import flash.utils.getTimer;
+
 import away3d.containers.ObjectContainer3D;
 import away3d.containers.View3D;
 import away3d.core.base.Geometry;
@@ -20,19 +32,6 @@ import away3d.materials.lightpickers.StaticLightPicker;
 import away3d.primitives.PlaneGeometry;
 import away3d.textures.BitmapTexture;
 import away3d.textures.Texture2DBase;
-
-import com.greensock.TweenLite;
-
-import com.greensock.easing.Quad;
-
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.display3D.Context3DCompareMode;
-import flash.display3D.Context3DStencilAction;
-import flash.events.Event;
-import flash.geom.Rectangle;
-import flash.geom.Vector3D;
-import flash.utils.getTimer;
 
 import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -120,7 +119,7 @@ public class GalleryView extends Sprite
 			_imageCache = new GalleryImageCache(_stage3DProxy);
 			_imageCache.thumbnailLoaded.add(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
-			_paintingModes = new Vector.<int>();
+			//_paintingModes = new Vector.<int>();
 			createRibbon();
 			_imageCache.loadingComplete.add(onAllThumbnailsLoaded);
 			_container = new ObjectContainer3D();
@@ -554,10 +553,10 @@ public class GalleryView extends Sprite
 			_imageCache.clear();
 			_imageCache.thumbnailLoaded.add(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
-			_paintingModes = new Vector.<int>();
+			//_paintingModes = new Vector.<int>();
 		}
 
-		private var _paintingModes:Vector.<int>;
+		//private var _paintingModes:Vector.<int>;
 
 		public function setImageCollection(collection:GalleryImageCollection):void
 		{
@@ -569,13 +568,7 @@ public class GalleryView extends Sprite
 
 			if (collection.type == GalleryType.NONE)
 				_activeImageProxy = null;
-
-			_paintingModes = new Vector.<int>();
-			for(var i:uint; i < collection.images.length; i++) {
-				_paintingModes[i] = collection.images[i].paintingMode;
-			}
-//			trace("-----> " + _paintingModes);
-
+			
 			_minSwipe = -PAINTING_OFFSET;
 			_maxSwipe = -(PAINTING_OFFSET - (_numPaintings - 1) * PAINTING_SPACING);
 		}
@@ -592,18 +585,18 @@ public class GalleryView extends Sprite
 			if (visibleStart >= _numPaintings) visibleStart = _numPaintings;
 			if (visibleEnd >= _numPaintings) visibleEnd = _numPaintings;
 
-
+			//REMOVE INVISIBLE ONES ON THE LEFT
 			for (i = _visibleStartIndex; i < visibleStart; ++i) {
 				if (_paintings[i]) {
 					destroyPainting(i);
 				}
 			}
-
+			//SHOW NEEDED ONES
 			for (i = visibleStart; i < visibleEnd; ++i) {
 				if (!_paintings[i])
 					createPainting(i);
 			}
-
+			//REMOVE INVISIBLE ONES ON THE RIGHT
 			for (i = visibleEnd; i < _visibleEndIndex; ++i) {
 				if (_paintings[i])
 					destroyPainting(i);
@@ -632,8 +625,9 @@ public class GalleryView extends Sprite
 			_paintings[index] = new GalleryPaintingView(_paintingGeometry, material);
 			_paintings[index].x = index * PAINTING_SPACING;
 
-			if(_paintingModes && index < _paintingModes.length)
-				_paintings[index].showRibbon(_paintingModes[index] == PaintMode.COLOR_MODE, _ribbon);
+			
+			if (GalleryImageProxy(_imageCache.proxies[index]))
+				_paintings[index].showRibbon(GalleryImageProxy(_imageCache.proxies[index]).paintingMode == PaintMode.COLOR_MODE, _ribbon);
 
 			// in case the active painting was moved out of sight and disposed, reset the HQ material
 			// UNLESS it hasn't finished loading!
@@ -660,13 +654,12 @@ public class GalleryView extends Sprite
 			_imageCache.thumbnailLoaded.removeAll();
 			_imageCache.loadingComplete.remove(onAllThumbnailsLoaded);
 			_imageCache.clear();
-			_paintingModes = null;
+			//_paintingModes = null;
 			_paintingGeometry.dispose();
 			_loadingTexture.dispose();
 			if ( _paintingOccluder.geometry )_paintingOccluder.geometry.dispose();
 			_paintingOccluder.dispose();
-			//TODO: Li please fix this properly - I just disabled it so I can continue testing
-			//_ribbon.material.dispose();
+			if(_ribbon.material)_ribbon.material.dispose();
 			_ribbon.geometry.dispose();
 			disposeHighQualityMaterial();
 			stopInteraction();
@@ -710,8 +703,9 @@ public class GalleryView extends Sprite
 		{
 			if (_paintings[imageProxy.index]) {
 				_lowQualityMaterials[imageProxy.index].texture = thumbnail;
-				if(imageProxy.index < _paintingModes.length)
-					_paintings[imageProxy.index].showRibbon(_paintingModes[imageProxy.index] == PaintMode.COLOR_MODE, _ribbon);
+				_paintings[imageProxy.index].showRibbon(imageProxy.paintingMode == PaintMode.COLOR_MODE, _ribbon);
+
+				
 			}
 		}
 

@@ -7,6 +7,7 @@ import away3d.entities.Mesh;
 import away3d.materials.MaterialBase;
 import away3d.materials.TextureMaterial;
 
+import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 import net.psykosoft.psykopaint2.home.views.book.HomeGeometryCache;
 import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
 
@@ -16,11 +17,14 @@ public class GalleryPaintingView extends ObjectContainer3D
 		private var _material:MaterialBase;
 		private var _frameMesh:Mesh;
 		private var _paintingGeometry:Geometry;
-		 
+		private var _galleryImageProxy:GalleryImageProxy;
+		private var _ribbon:Mesh;
+
 		
 		public function GalleryPaintingView(paintingGeometry:Geometry,material:MaterialBase)
 		{
 			super();
+			this._galleryImageProxy = galleryImageProxy;
 			this._paintingGeometry = paintingGeometry;
 			_material = material;
 			
@@ -34,7 +38,17 @@ public class GalleryPaintingView extends ObjectContainer3D
 			loadTexture();
 		}
 
-		private var _ribbon:Mesh;
+
+		public function set galleryImageProxy(value:GalleryImageProxy):void
+		{
+			_galleryImageProxy = value;
+		}
+
+		public function get galleryImageProxy():GalleryImageProxy
+		{
+			return _galleryImageProxy;
+		}
+
 		public function showRibbon(value:Boolean, mesh:Mesh = null):void {
 //			trace("GalleryPaintingView - showPaintingBadge: " + value);
 			if(value) {
@@ -98,6 +112,7 @@ public class GalleryPaintingView extends ObjectContainer3D
 			if(_ribbon) {
 				removeChild(_ribbon);
 			}
+			_galleryImageProxy=null;
 			_ribbon = null;
 			_mesh.dispose();
 		}

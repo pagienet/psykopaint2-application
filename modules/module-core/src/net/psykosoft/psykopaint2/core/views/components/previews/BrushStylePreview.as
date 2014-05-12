@@ -39,6 +39,7 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 		{
 			if ( label ) label.text = "";
 			//var idx:int = styleToFrame.indexOf(id);
+			gotoAndStop(1);
 			if ( movieClipHasLabel(this,id))
 				gotoAndStop(id);
 				if ( label ) label.text = id.toUpperCase();

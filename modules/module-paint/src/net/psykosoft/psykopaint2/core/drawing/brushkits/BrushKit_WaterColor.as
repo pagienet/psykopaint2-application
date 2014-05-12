@@ -88,6 +88,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 1.0;
 			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.012;
 			WaterColorBrush(brushEngine).param_pigmentGranulation.numberValue = .8;
+			WaterColorBrush(brushEngine).param_gravityStrength.numberValue=0.3;
+			WaterColorBrush(brushEngine).param_surfaceRelief.numberValue=0;
+			
 			brushEngine.param_shapes.stringList = Vector.<String>(["wet2","wet","almost circular hard"]);
 
 			pathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
@@ -224,11 +227,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private function setValuesForDryBrush():void
 		{
 			brushEngine.param_shapes.index = 2;
+			//HOW EASILY THE PAINT MOVES THROUGH THE FLUID
 			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .1;
+			//DRAG IS HOW MUCH FRICTION THE WATER HAVE
 			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .1;
 			WaterColorBrush(brushEngine).param_glossiness.numberValue = 0.5;
+			//pigment staining controls the interaction between absorbed paint in the paper and non-absorbed paint
+			//you should only change those by tiny amounts or you get the overabsorption currently showing
 			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 0.9;
 			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.010;
+			//granulation controls how much the paint tend to settle in lower regions of the paper
 			WaterColorBrush(brushEngine).param_pigmentGranulation.numberValue = .1;
 			WaterColorBrush(brushEngine).param_damageFlow.numberValue = .1 + 0.3 * param_intensity.numberValue;
 
@@ -239,11 +247,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			brushEngine.param_shapes.index = 1;
 			
-			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .02;
-			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .01;
-			WaterColorBrush(brushEngine).param_glossiness.numberValue = 0.4;
-			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 0.2;
-			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.6;
+			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .08;
+			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .1;
+			WaterColorBrush(brushEngine).param_glossiness.numberValue = 0.8;
+			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 1.0;
+			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.013;
 			WaterColorBrush(brushEngine).param_pigmentGranulation.numberValue = .8;
 			WaterColorBrush(brushEngine).param_damageFlow.numberValue = .1;
 
@@ -253,11 +261,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			brushEngine.param_shapes.index = 0;
 
-			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .2;
+			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .08;
 			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .1;
 			WaterColorBrush(brushEngine).param_glossiness.numberValue = 0.8;
 			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 1.0;
-			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.8;
+			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.013;
 			WaterColorBrush(brushEngine).param_pigmentGranulation.numberValue = .3;
 			WaterColorBrush(brushEngine).param_damageFlow.numberValue = .1 + 0.3 * param_intensity.numberValue;
 

@@ -1,18 +1,18 @@
 package net.psykosoft.psykopaint2.home.model
 {
+	import flash.display.BitmapData;
+	
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.hacks.BitmapRectTexture;
 	import away3d.hacks.RectTextureBase;
 	import away3d.hacks.TrackedBitmapRectTexture;
 	import away3d.textures.BitmapTexture;
 	import away3d.textures.Texture2DBase;
-
-	import flash.display.BitmapData;
-
+	
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.ImageThumbnailSize;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class GalleryImageCache
@@ -35,6 +35,11 @@ package net.psykosoft.psykopaint2.home.model
 			_proxies = [];
 			_textures = [];
 			_stage3DProxy = stage3DProxy;
+		}
+
+		public function get proxies():Array
+		{
+			return _proxies;
 		}
 
 		public function clear() : void

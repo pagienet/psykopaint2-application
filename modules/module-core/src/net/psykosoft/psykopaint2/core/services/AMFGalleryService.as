@@ -119,8 +119,7 @@ import net.psykosoft.psykopaint2.core.models.*;
 				var obj : Object = array[i];
 //				for(var prop:* in obj) trace("property: " + prop + ", value: " + obj[prop]); // Uncomment to see dynamic props of incoming object
 				var vo : FileGalleryImageProxy = new FileGalleryImageProxy();
-				// TODO: "is_photo_painting" seems to always be 1 even if the painting was created in color mode
-				vo.paintingMode = PaintMode.COLOR_MODE; //obj["is_photo_painting"] == 1 ? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
+				vo.paintingMode = obj["is_photo_painting"] == "1" ? PaintMode.COLOR_MODE : PaintMode.PHOTO_MODE;
 				vo.id = obj["id"];
 				vo.index = index + i;
 				vo.collectionType = type;
