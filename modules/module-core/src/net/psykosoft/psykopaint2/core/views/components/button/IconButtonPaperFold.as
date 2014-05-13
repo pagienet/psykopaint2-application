@@ -65,7 +65,7 @@ public class IconButtonPaperFold extends MovieClip
 				distortRight.tweenTo(new Point(-compressX/2,-upperTy), new Point(rightClip.width-compressX, 0), new Point(rightClip.width-compressX, rightClip.height), new Point(-compressX/2,rightClip.height+lowerTy), Exponential.easeOut, .5);
 				*/
 				if(paperFoldMc) {
-					TweenLite.to( paperFoldMc, 0.25, {frame: 100, ease: Expo.easeOut, onUpdate: function ():void {
+					TweenLite.to( paperFoldMc, 0.25, {frame: 20, ease: Expo.easeOut, onUpdate: function ():void {
 
 						paperFoldMc.x = -(paperFoldMc.width / 2);
 					}} );
