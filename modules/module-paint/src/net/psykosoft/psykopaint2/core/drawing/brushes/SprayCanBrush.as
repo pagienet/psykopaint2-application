@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function createBrushMesh() : IBrushMesh
 		{
-			return new TextureSplatMesh();//   new TextureMorphingSplatMesh();
+			return new TextureSplatMesh();
 		}
 
 		override protected function set brushShape(brushShape : AbstractBrushShape) : void
@@ -94,7 +94,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			//COPIED FROM SKETCH BRUSH
 			//_appendVO.uvBounds.x = int(rng.getNumber(0, _shapeVariations[0])) * _shapeVariations[2];
 			//_appendVO.uvBounds.y = int(rng.getNumber(0, _shapeVariations[1])) * _shapeVariations[3];
-			
+
 			_appendVO.size =  rsize * _maxBrushRenderSize;
 			_appendVO.point = point;
 			_brushMesh.append(_appendVO);

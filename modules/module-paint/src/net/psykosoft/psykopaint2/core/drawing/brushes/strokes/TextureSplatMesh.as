@@ -239,7 +239,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			context3d.setVertexBufferAt(3, null);
 		}
 
-
 		override protected function getNormalSpecularVertexCode() : String
 		{
 			return 	"mov op, va0\n" +

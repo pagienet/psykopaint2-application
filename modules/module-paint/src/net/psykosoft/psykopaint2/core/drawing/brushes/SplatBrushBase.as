@@ -116,6 +116,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 		}
 
+
+
 		override protected function drawNormalsAndSpecular():void
 		{
 			_context.setDepthTest(false, Context3DCompareMode.ALWAYS);
