@@ -371,6 +371,7 @@ package net.psykosoft.psykopaint2.core.models
 
 		public function get hasNotificationSubscriptions() : Boolean
 		{
+			trace(this,"hasNotificationSubscriptions = "+_subscriptions);
 			if (!_subscriptions) return false;
 
 			for (var i : int = 0; i < _subscriptions.length; ++i) {
@@ -383,6 +384,8 @@ package net.psykosoft.psykopaint2.core.models
 
 		public function hasNotificationSubscription(type : int) : Boolean
 		{
+			trace(this,"hasNotificationSubscription");
+
 			if (!_subscriptions) return false;
 
 			for (var i : int = 0; i < _subscriptions.length; ++i) {
