@@ -4,7 +4,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.display3D.Context3D;
 	
 	import de.popforge.math.LCG;
-	
+
+	import flash.events.Event;
+
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.EraserSplatMesh;
@@ -19,6 +21,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	
 	public class SprayCanBrush extends SplatBrushBase
 	{
+
 		private var rng:LCG;
 		
 		public function SprayCanBrush()
@@ -100,5 +103,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_appendVO.point = point;
 			_brushMesh.append(_appendVO);
 		}
+
+
 	}
 }

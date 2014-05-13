@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.display.DisplayObject;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
-	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.geom.Rectangle;
@@ -44,7 +43,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public static const PARAMETER_SL_BLEND_MODE:String = "Blend Mode";
 		public static const PARAMETER_N_QUAD_OFFSET_RATIO:String = "Stroke Attachment Ratio";
 		public static const PARAMETER_N_CURVATURE_INFLUENCE:String = "Curvature Size Influence";
-		public static const PARAMETER_B_ERASER_MODE:String = "Eraser mode";
 
 		private static const blendModes3D:Array = [Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO, 
 												   Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA,
@@ -85,17 +83,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public var param_blendModeTarget:PsykoParameter;
 		public var param_quadOffsetRatio:PsykoParameter;
 		public var param_curvatureSizeInfluence:PsykoParameter;
-		public var param_eraserMode:PsykoParameter;
 
-		
 		private var _inProgress:Boolean;
 
 		private var _drawNormalsOrSpecular:Boolean;
 		private var _type:String;
 		protected var _snapshot:CanvasSnapShot;
-
-		private var _eraserMode : Boolean;
-		private var _eraserNormalSpecularMap : TrackedRectTexture;
 
 		public function AbstractBrush(drawNormalsOrSpecular:Boolean)
 		{
@@ -106,7 +99,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			param_sizeFactor = new PsykoParameter(PsykoParameter.NumberRangeParameter, PARAMETER_NR_SIZE_FACTOR, 0, 1, 0, 1);
 			param_quadOffsetRatio = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_QUAD_OFFSET_RATIO, 0, -0.5, 0.5);
 			param_curvatureSizeInfluence = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_CURVATURE_INFLUENCE, 1, 0, 1);
-			param_eraserMode = new PsykoParameter(PsykoParameter.BooleanParameter, PARAMETER_B_ERASER_MODE, false);
 
 			param_glossiness = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_GLOSSINESS, 0.4, 0.01, 1);
 			param_bumpiness = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS, 1, 0, 1);
@@ -117,8 +109,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_parameters.push(param_shapes, param_sizeFactor, param_blendModeSource, param_blendModeTarget, param_quadOffsetRatio);
 			if (drawNormalsOrSpecular)
 				_parameters.push(param_glossiness, param_bumpiness, param_bumpInfluence);
-
-			param_eraserMode.addEventListener(Event.CHANGE, onEraserModeChange);
 
 			_bounds = new Rectangle();
 
@@ -177,9 +167,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				_brushShape.dispose();
 				_brushShape = null;
 			}
-
-			if (_eraserNormalSpecularMap)
-				_eraserNormalSpecularMap.dispose();
 		}
 
 		protected function createBrushMesh():IBrushMesh
@@ -518,27 +505,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function setColorStrategyColorMatrix(colorMatrix:Vector.<Number>, blendFactor:Number):void
 		{
 			_colorStrategy.setColorMatrix(colorMatrix, blendFactor);
-		}
-
-		private function onEraserModeChange(event : Event) : void
-		{
-			_eraserMode = param_eraserMode.booleanValue;
-
-			if (_eraserMode) {
-				_eraserNormalSpecularMap = _canvasModel.createCanvasTexture(false);
-				_eraserNormalSpecularMap.texture.uploadFromBitmapData(_canvasModel.getNormalSpecularOriginal());
-				_brushMesh.normalSpecularOriginal = _eraserNormalSpecularMap;
-			}
-			else {
-				_eraserNormalSpecularMap.dispose();
-				_eraserNormalSpecularMap = null;
-				_brushMesh.normalSpecularOriginal = null;
-			}
-
-			if (_brushMesh) {
-				_brushMesh = createBrushMesh();
-				_brushMesh.init(_context);
-			}
 		}
 	}
 }

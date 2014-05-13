@@ -53,7 +53,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			context3d.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2);
 
 			context3d.setTextureAt(0, _normalTexture);
-			context3d.setTextureAt(1, canvas.normalSpecularMap);
+			context3d.setTextureAt(1, _normalSpecularOriginal.texture);
 			_normalSpecularVertexData[0] = 1/512;
 			_normalSpecularVertexData[1] = 1/512;
 
