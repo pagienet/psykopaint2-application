@@ -175,6 +175,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 				photoStyleUI.showStyleUI(false, false, false);
 				colorPalette.visible = true;
 				brushStyleUI.showStyleUI( true, true, true );
+				//If eraser was selected and pippette is used:
+				if ( colorPalette.selectedIndex == 5 ) colorPalette.selectedIndex = 9;
 			} else if ( _userPaintSettings.colorMode == PaintMode.PHOTO_MODE ){
 				hslSliders.visible = false;
 				photoStyleUI.showStyleUI(true, true, true);
@@ -187,9 +189,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 				brushStyleUI.showStyleUI( true, true, true );
 			} else if ( _userPaintSettings.colorMode == PaintMode.ERASER_MODE){
 				hslSliders.visible = false;
-				photoStyleUI.showStyleUI(false,true,true);
+				photoStyleUI.showStyleUI(false,false,true);
 				colorPalette.visible = true;
-				brushStyleUI.showStyleUI( false,false,true );
+				brushStyleUI.showStyleUI( false,true,true );
 			}
 		}
 		

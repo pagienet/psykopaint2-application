@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
@@ -69,6 +70,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function onShowPipette( holder:Sprite, color:uint, screenPos:Point, showSpotColor:Boolean ):void
 		{
 			view.showPipette( holder, color, screenPos, showSpotColor);
+			userPaintSettingsModel.setColorMode(PaintMode.COLOR_MODE,true);
 		}
 	}
 }

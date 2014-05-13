@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.core.model
 	import net.psykosoft.psykopaint2.paint.configuration.ColorStylePresets;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModeChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
-
+	
 	public class UserPaintSettingsModel
 	{
 		[Inject]
@@ -280,7 +280,8 @@ package net.psykosoft.psykopaint2.core.model
 			if ( _eraserMode != value )
 			{
 				_eraserMode = value;
-				setColorMode( _eraserMode ? PaintMode.ERASER_MODE : PaintMode.COLOR_MODE  )
+				if ( _eraserMode ) setColorMode(PaintMode.ERASER_MODE);
+			//	setColorMode( _eraserMode ? PaintMode.ERASER_MODE : PaintMode.COLOR_MODE  )
 			}
 		}
 		

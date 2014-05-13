@@ -36,7 +36,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		//private static const STYLE_BLOODSPLAT:int = 4;
 		//private static const STYLE_FRECKLES2:int = 5;
 		private static const STYLE_DROPPING:int = 4;
-		private static const STYLE_ERASER:int = 5;
+		//Eraser is not a style in the new way of doing things:
+		//private static const STYLE_ERASER:int = 5;
 		
 		private var param_style:PsykoParameter;
 		private var param_precision:PsykoParameter;
@@ -156,7 +157,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Spray","Sponge","Digital","Flare","Dropping","Eraser"]);
+			//NOTE: The Eraser is NOT added as a style here
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Spray","Sponge","Digital","Flare","Dropping"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -173,12 +175,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			SprayCanBrush(brushEngine).param_strokeAlpha.numberValue = param_intensity.numberValue;
 			
-			eraserMode = false; 
-			
 			_persistentPoints = new Vector.<SamplePoint>(2);
 			
 			
-			onStyleChanged(null);
+			onStyleChanged();
 		}
 		
 		private function onPathStart():void
@@ -191,47 +191,19 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		}
 		
 		private function onPathEnd():void
-		{
-			
-			
-		}
+		{}
 		
-		protected function onStyleChanged(event:Event):void
+		//This is where all the style related brush defaults are set - and this needs only to be called when the 
+		//style changes
+		private function setStyleDefaults():void
 		{
-			
 			brushEngine.param_quadOffsetRatio.numberValue = 0.0;
-			switch ( param_style.index )
-			{
-				case STYLE_SPONGE:
-					brushEngine.param_quadOffsetRatio.numberValue = 0;
-				break;
-				case STYLE_DIGITAL:
-					brushEngine.param_quadOffsetRatio.numberValue = 0.0;
-					break;
-			}
-			
-			//REMOVE PERSISTENT POINTS THAT COULD REMAINS
-			if ( _persistentPoints[0] != null ) PathManager.recycleSamplePoint(_persistentPoints[0]);
-
-			
-			brushEngine.param_shapes.index = param_style.index;			
-			onPrecisionChanged(null);
-			onIntensityChanged(null);
-		}
 		
-		protected function onPrecisionChanged(event:Event):void
-		{
-			precision = param_precision.numberValue;
-			
-			
 			gridDecorator.active = false;
 			spawnDecorator.active = true;
 			splatterDecorator.active = true;
 			callbackDecorator.active = false;
 			stationaryDecorator.active = false;
-			eraserMode= false;
-			
-			
 			
 			//DEFAULTS			
 			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
@@ -265,8 +237,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			spawnDecorator.param_maxSize.numberValue = 0.12;
 			spawnDecorator.param_minOffset.numberValue = 0;
 			spawnDecorator.param_maxOffset.numberValue = 16;
-			spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -(120 + precision * 60);
-			spawnDecorator.param_offsetAngleRange.upperDegreesValue = 120 + precision * 60;
+			
 			spawnDecorator.param_autorotate.booleanValue = false;
 			
 			gridDecorator.param_stepX.numberValue = 0;
@@ -286,11 +257,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			//CHANGE ENGINE
 			//brushEngine = _sprayCanBrushEngine;
 			brushEngine.textureScaleFactor = 1;
-			brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 2 + precision * 8;
+			
 			//brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.01 + precision * 0.3;
+		}
+		
+		protected function onStyleChanged(event:Event= null):void
+		{
+			//REMOVE PERSISTENT POINTS THAT COULD REMAINS
+			if ( _persistentPoints[0] != null ) PathManager.recycleSamplePoint(_persistentPoints[0]);
 			
+			setStyleDefaults();
 			
-			
+			brushEngine.param_shapes.index = param_style.index;		
 			
 			switch ( param_style.index )
 			{
@@ -302,9 +280,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					//DISTANCE BETWEEN STEPS : THE LESS, THE MORE DENSE IT WILL BE
 					brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
 					//brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 3 - precision * 2.5;
-					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 2.5;
-
-					
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 					bumpDecorator.param_bumpInfluence.numberValue = 0.5;
@@ -313,7 +288,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_glossiness.numberValue =0.3  ;
 					bumpDecorator.param_noBumpProbability.numberValue=0.0;
 					
-					
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.0;
 					colorDecorator.param_pickRadius.upperRangeValue = 0.35;
 					colorDecorator.param_colorBlending.upperRangeValue = 0.99;
@@ -321,32 +295,26 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_brushOpacity.numberValue = 0.95;
 					colorDecorator.param_brushOpacityRange.numberValue = 0.01;
 					
-					
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
 					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
-					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
 					sizeDecorator.param_mappingRange.numberValue = 0.01;
 					sizeDecorator.param_maxSpeed.numberValue = 200;
 					
-					
 					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
-					splatterDecorator.param_splatFactor.numberValue = 0.01+0.9 * precision;
+					
 					
 					break;
 				
 				case STYLE_SPONGE:
 					
-					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.4 + precision  *4;
-					//brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 500;
+					gridDecorator.active=true;
+					splatterDecorator.active=false;
+					spawnDecorator.active=false;
 					
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
 					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
-					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
-					//sizeDecorator.param_mappingRange.numberValue = 0.001+precision * (0.1);
 					sizeDecorator.param_mappingRange.numberValue = 0;
 					sizeDecorator.param_maxSpeed.numberValue = 200;
-					
-					
 					
 					colorDecorator.param_pickRadius.lowerRangeValue = 0;
 					colorDecorator.param_pickRadius.upperRangeValue = 0;
@@ -354,8 +322,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_brushOpacityRange.numberValue = 0.04;
 					colorDecorator.param_colorBlending.upperRangeValue = 0.98;
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.90;
-					
-					
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 					bumpDecorator.param_bumpInfluence.numberValue = 0.25;
@@ -365,23 +331,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					//MAKE IT WET
 					bumpDecorator.param_glossiness.numberValue = 0.95  ;
 					
+					break;
 					
-					gridDecorator.active=true;
+				break;
+				case STYLE_DIGITAL:
+					
+					//NO SPLATTING
 					splatterDecorator.active=false;
 					spawnDecorator.active=false;
 					
-					
-					
-					
-					break;
-				
-				case STYLE_DIGITAL:
-					
-					
 					//DISTANCE BETWEEN STEPS : THE LESS, THE MORE DENSE IT WILL BE
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 ;
-					
-				
 					
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.4;
 					colorDecorator.param_pickRadius.upperRangeValue = 0.4;
@@ -393,9 +353,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					//sizeDecorator.param_invertMapping.booleanValue = false;
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
 					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
-					sizeDecorator.param_mappingFactor.numberValue = 0.01+ 0.99* precision;
 					sizeDecorator.param_mappingRange.numberValue = 0;
-					
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_PRESSURE_SPEED;
 					bumpDecorator.param_invertMapping.booleanValue=true;
@@ -404,31 +362,20 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_bumpinessRange.numberValue = 0.0 ;
 					bumpDecorator.param_glossiness.numberValue = 0.23  ;
 					bumpDecorator.param_noBumpProbability.numberValue=0.0;
-					
-
-					//NO SPLATTING
-					
-					splatterDecorator.active=false;
-
-					spawnDecorator.active=false;
-					
 					break;
 				
-				
-				
 				case STYLE_HALO_SPRAY:
-
+					
 					stationaryDecorator.active=true;
-						
+					splatterDecorator.active=false;
+					
 					brushEngine.textureScaleFactor = 2;
-					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 1 + precision * 15;
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 					bumpDecorator.param_bumpInfluence.numberValue = 0.55;
 					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
 					bumpDecorator.param_bumpinessRange.numberValue = 0.3 ;
 					bumpDecorator.param_glossiness.numberValue = 0.70  ;
-					
 					
 					colorDecorator.param_colorBlending.upperRangeValue = 0.9;
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.65;
@@ -442,26 +389,105 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_brightnessAdjustment.upperRangeValue= 0.05;		
 					colorDecorator.param_applyColorMatrix.booleanValue=true;
 					
-					
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
 					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_QUINTIC_IN;
-					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.60;
-					sizeDecorator.param_mappingRange.numberValue = 0.025+precision * 0.55;
-					
 					
 					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_SIZE_INV;
 					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SPEED_INV;
-					spawnDecorator.param_maxOffset.numberValue = 0.1+precision * 40;
-					spawnDecorator.param_minOffset.numberValue = 0.1+precision * 30;
 					spawnDecorator.param_multiples.lowerRangeValue = 2;
 					spawnDecorator.param_multiples.upperRangeValue = 6;
+					break;
+				
+				case STYLE_DROPPING:
 					
-					
+					stationaryDecorator.active=true;
+					callbackDecorator.active=true;
 					splatterDecorator.active=false;
 					
+					brushEngine.textureScaleFactor = 2;
+					
+					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
+					bumpDecorator.param_bumpInfluence.numberValue = 0.55;
+					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
+					bumpDecorator.param_bumpinessRange.numberValue = 0.3 ;
+					bumpDecorator.param_glossiness.numberValue = 0.90  ;
+					
+					colorDecorator.param_colorBlending.upperRangeValue = 0.9;
+					colorDecorator.param_colorBlending.lowerRangeValue = 0.65;
+					colorDecorator.param_pickRadius.lowerRangeValue = 0.0;
+					colorDecorator.param_pickRadius.upperRangeValue = 0.33;
+					colorDecorator.param_brushOpacity.numberValue = 0.93;
+					colorDecorator.param_brushOpacityRange.numberValue = 0.06;
+					
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
+					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_STRONG_IN;
+					
+					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_SIZE_INV;
+					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SPEED_INV;
+					break;
+			}
+			
+			onPrecisionChanged();
+			onIntensityChanged();
+		}
+		
+		protected function onPrecisionChanged(event:Event = null):void
+		{
+			precision = param_precision.numberValue;
+			
+			spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -(120 + precision * 60);
+			spawnDecorator.param_offsetAngleRange.upperDegreesValue = 120 + precision * 60;
+			
+			brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 2 + precision * 8;
+			
+			switch ( param_style.index )
+			{
+				case STYLE_DEFAULT:
+					trace("STYLE DEFAULT");
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 2.5;
+					
+					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
+					
+					splatterDecorator.param_splatFactor.numberValue = 0.01+0.9 * precision;
+					break;
+				
+				case STYLE_SPONGE:
+					
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.4 + precision  *4;
+					//brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 500;
+					
+					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
+					break;
+				
+				case STYLE_DIGITAL:
+					
+					sizeDecorator.param_mappingFactor.numberValue = 0.01+ 0.99* precision;
+					break;
+				
+				case STYLE_HALO_SPRAY:
+
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 1 + precision * 15;
+					
+					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.60;
+					sizeDecorator.param_mappingRange.numberValue = 0.025+precision * 0.55;
+					
+					spawnDecorator.param_maxOffset.numberValue = 0.1+precision * 40;
+					spawnDecorator.param_minOffset.numberValue = 0.1+precision * 30;
+					
+					break;
+				
+				case STYLE_DROPPING:
 					
 					
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 10 + precision * 15;
 					
+					sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.8;
+					sizeDecorator.param_mappingRange.numberValue = 0.04+precision * 0.78;
+					
+					spawnDecorator.param_maxOffset.numberValue = 0.1+precision * 30;
+					spawnDecorator.param_minOffset.numberValue = 0.1+precision * 5;
+					spawnDecorator.param_multiples.lowerRangeValue = 1+precision * 3;
+					spawnDecorator.param_multiples.upperRangeValue = 7+precision * 4;
 					break;
 				/*
 				case STYLE_BLOODSPLAT:
@@ -571,93 +597,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_noBumpProbability.numberValue=0.5;
 
 					
-					break;*/
-				
-				case STYLE_DROPPING:
-					
-					stationaryDecorator.active=true;
-					callbackDecorator.active=true;
-					splatterDecorator.active=false;
-					
-					brushEngine.textureScaleFactor = 2;
-					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 10 + precision * 15;
-					
-					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
-					bumpDecorator.param_bumpInfluence.numberValue = 0.55;
-					bumpDecorator.param_bumpiness.numberValue = 0.15 ;
-					bumpDecorator.param_bumpinessRange.numberValue = 0.3 ;
-					bumpDecorator.param_glossiness.numberValue = 0.90  ;
-					
-					
-					colorDecorator.param_colorBlending.upperRangeValue = 0.9;
-					colorDecorator.param_colorBlending.lowerRangeValue = 0.65;
-					colorDecorator.param_pickRadius.lowerRangeValue = 0.0;
-					colorDecorator.param_pickRadius.upperRangeValue = 0.33;
-					colorDecorator.param_brushOpacity.numberValue = 0.93;
-					colorDecorator.param_brushOpacityRange.numberValue = 0.06;
-					
-					
-					
-					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
-					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_STRONG_IN;
-					sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.8;
-					sizeDecorator.param_mappingRange.numberValue = 0.04+precision * 0.78;
-					
-					
-					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_SIZE_INV;
-					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SPEED_INV;
-					spawnDecorator.param_maxOffset.numberValue = 0.1+precision * 30;
-					spawnDecorator.param_minOffset.numberValue = 0.1+precision * 5;
-					spawnDecorator.param_multiples.lowerRangeValue = 1+precision * 3;
-					spawnDecorator.param_multiples.upperRangeValue = 7+precision * 4;
-					
-					
-				
-					
-					
-					
-					
-					break;
-				case STYLE_ERASER:
-						brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.4 + precision  *4;
-						//brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 500;
-						eraserMode = true;
-						gridDecorator.active=false;
-						splatterDecorator.active=false;
-						spawnDecorator.active=false;
-						
-						sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
-						sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
-						sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
-						//sizeDecorator.param_mappingRange.numberValue = 0.001+precision * (0.1);
-						sizeDecorator.param_mappingRange.numberValue = 0;
-						sizeDecorator.param_maxSpeed.numberValue = 200;
-						
-						
-						
-						colorDecorator.param_pickRadius.lowerRangeValue = 0;
-						colorDecorator.param_pickRadius.upperRangeValue = 0;
-						colorDecorator.param_brushOpacity.numberValue = 0.91;
-						colorDecorator.param_brushOpacityRange.numberValue = 0.04;
-						colorDecorator.param_colorBlending.upperRangeValue = 0.98;
-						colorDecorator.param_colorBlending.lowerRangeValue = 0.90;
-						
-						
-						
-						bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
-						bumpDecorator.param_bumpInfluence.numberValue = 1;
-						bumpDecorator.param_bumpiness.numberValue = 0 ;
-						bumpDecorator.param_bumpinessRange.numberValue = 0.00 ;
-						bumpDecorator.param_noBumpProbability.numberValue=0.0;
-						//MAKE IT WET
-						bumpDecorator.param_glossiness.numberValue = 0.85  ;
-						
-						
-						
-					
 					break;
 				
-				/*
 				case STYLE_FRECKLESOLD:
 					trace("STYLE_FRECKLES2");
 					
@@ -692,20 +633,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.94;
 					
 					break;*/
-				default:
-					
-					break;
-				
 			}
 			
 			trace("stop");
 		}
 		
-		protected function onIntensityChanged(event:Event):void
+		protected function onIntensityChanged(event:Event= null):void
 		{
 			var intensity:Number = param_intensity.numberValue;
 			//RESET LAYER OPACITY
-			if (brushEngine is SprayCanBrush) (brushEngine  as SprayCanBrush).param_strokeAlpha.numberValue = 1;
+			//if (brushEngine is SprayCanBrush) (brushEngine as SprayCanBrush).param_strokeAlpha.numberValue = 1;
 			
 			switch ( param_style.index )
 			{
@@ -806,7 +743,48 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		override public function set eraserMode( enabled:Boolean ):void
 		{
 			super.eraserMode = (enabled);
-			onIntensityChanged(null);
+			
+			if ( enabled )
+			{
+				setStyleDefaults();
+				
+				brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.4 + precision  *4;
+				//brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 500;
+				
+				//it's a good idea to put the eraser shape always as the last element into the shapes list
+				//like that you will not have to update the index in case you are more regular shapes
+				brushEngine.param_shapes.index = brushEngine.param_shapes.maxLimit;
+				
+				gridDecorator.active=false;
+				splatterDecorator.active=false;
+				spawnDecorator.active=false;
+				
+				sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
+				sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
+				sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
+				//sizeDecorator.param_mappingRange.numberValue = 0.001+precision * (0.1);
+				sizeDecorator.param_mappingRange.numberValue = 0;
+				sizeDecorator.param_maxSpeed.numberValue = 200;
+				
+				colorDecorator.param_pickRadius.lowerRangeValue = 0;
+				colorDecorator.param_pickRadius.upperRangeValue = 0;
+				colorDecorator.param_brushOpacity.numberValue = 0.91;
+				colorDecorator.param_brushOpacityRange.numberValue = 0.04;
+				colorDecorator.param_colorBlending.upperRangeValue = 0.98;
+				colorDecorator.param_colorBlending.lowerRangeValue = 0.90;
+				
+				bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
+				bumpDecorator.param_bumpInfluence.numberValue = 1;
+				bumpDecorator.param_bumpiness.numberValue = 0 ;
+				bumpDecorator.param_bumpinessRange.numberValue = 0.00 ;
+				bumpDecorator.param_noBumpProbability.numberValue=0.0;
+				//MAKE IT WET
+				bumpDecorator.param_glossiness.numberValue = 0.85  ;
+				onPrecisionChanged();
+				onIntensityChanged()
+			} else {
+				onStyleChanged();
+			}
 		}
 	}
 }

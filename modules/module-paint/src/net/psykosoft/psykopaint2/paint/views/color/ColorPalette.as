@@ -137,6 +137,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 		}
 		
+		public function get selectedIndex():int
+		{
+			return userPaintSettings.selectedSwatchIndex;
+		}
+		
 		public function set selectedIndex(index:int):void
 		{
 			if ( index == -1 && !userPaintSettings.pipetteIsEmpty) index = 9;
@@ -229,9 +234,14 @@ package net.psykosoft.psykopaint2.paint.views.color
 				swatch.transform.colorTransform = dummyColorTransform;
 				palettes[selectedPaletteIndex][getSwatchIndex(swatch)] = color;
 			}
-			if (swatch == currentColor && !currentColorSwatch.visible) {
-				currentColorSwatch.visible = true;
-				currentColor.visible = true;
+			if (swatch == currentColor)
+			{
+				if ( selectedIndex != 9 ) selectedIndex = 9;
+				if ( !currentColorSwatch.visible)
+				{
+					currentColorSwatch.visible = true;
+					currentColor.visible = true;
+				}
 			}
 		}
 		
