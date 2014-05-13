@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.EraserSplatMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureSplatMesh;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
@@ -39,7 +40,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function createBrushMesh() : IBrushMesh
 		{
-			return new TextureSplatMesh();
+			return param_eraserMode.booleanValue? new EraserSplatMesh() : new TextureSplatMesh();
 		}
 
 		override protected function set brushShape(brushShape : AbstractBrushShape) : void

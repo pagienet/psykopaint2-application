@@ -16,6 +16,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import flash.utils.ByteArray;
 	import flash.utils.getQualifiedClassName;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedRectTexture;
+
 	import net.psykosoft.psykopaint2.core.drawing.config.FastBufferManager;
 	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -59,6 +61,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		private var _isFinal : Boolean;
 		private var _programKey : String;
 		protected var _pixelUVOffset:Number = 0;
+		// only in eraser mode (if supported by brush)
+		protected var _normalSpecularOriginal : TrackedRectTexture;
 
 		public function AbstractBrushMesh()
 		{
@@ -391,6 +395,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		public function drawNormalsAndSpecular(context3d : Context3D, canvas : CanvasModel, glossiness : Number, bumpiness : Number, influence : Number ) : void
 		{
 
+		}
+
+		public function set normalSpecularOriginal(normalSpecularOriginal : TrackedRectTexture) : void
+		{
+			_normalSpecularOriginal = normalSpecularOriginal;
 		}
 	}
 }

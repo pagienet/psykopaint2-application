@@ -1,7 +1,5 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 {
-	import com.quasimondo.geom.ColorMatrix;
-	
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
