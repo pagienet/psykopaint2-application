@@ -130,5 +130,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			_canvasModel.swapNormalSpecularLayer();
 		}
+
+
 	}
 }

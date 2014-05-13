@@ -28,8 +28,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 			param_glossiness.numberValue = .25;
 			param_bumpiness.numberValue = .6;
-			
-			
 		}
 
 		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer, paintSettingsModel : UserPaintSettingsModel) : void
@@ -86,16 +84,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function processPoint( point : SamplePoint) : void
 		{
-			/*
-			var minSize:Number = _maxBrushRenderSize * _sizeFactor.lowerRangeValue;
-			var maxSize:Number = _maxBrushRenderSize * _sizeFactor.upperRangeValue;
-			var rsize:Number = minSize + (maxSize - minSize) * point.size;
-			
-			if (rsize > maxSize) rsize = maxSize;
-			else if (rsize < minSize) rsize = minSize;
-			*/
-			
-				
 			var rsize : Number = param_sizeFactor.lowerRangeValue + param_sizeFactor.rangeValue * point.size * ( param_curvatureSizeInfluence.numberValue * (point.curvature - 1) + 1);
 			if (rsize > 1) rsize = 1;
 			else if (rsize < 0) rsize = 0;

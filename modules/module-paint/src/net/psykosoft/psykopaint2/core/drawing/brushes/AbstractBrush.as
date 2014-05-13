@@ -421,7 +421,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function getParameterSetAsXML(path:Array):XML
 		{
 			var brushParameters:XML = <brush/>;
-			var brushPath:Array = path.concat(["brush"])
+			var brushPath:Array = path.concat(["brush"]);
 			for (var i:int = 0; i < _parameters.length; i++) {
 				brushParameters.appendChild(_parameters[i].toXML(brushPath));
 			}
@@ -473,20 +473,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			return null;
 		}
 
-		/*
-		 public function addAvailableShape( type:String):void
-		 {
-		 _availableBrushShapes.appendChild( <shape type={type}/> );
-
-		 }
-
-		 public function removeAvailableShapeAt( index:int):void
-		 {
-		 delete _availableBrushShapes.children()[index];
-
-		 }
-		 */
-
 		public function getParameterByPath(path:Array):PsykoParameter
 		{
 			if (path.length == 2 && path[0] == "brush") {
@@ -520,11 +506,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function setColorStrategyColorMatrix(colorMatrix:Vector.<Number>, blendFactor:Number):void
 		{
 			_colorStrategy.setColorMatrix(colorMatrix, blendFactor);
-		}
-
-		public function get isStrokeInProgress():Boolean
-		{
-			return _inProgress;
 		}
 	}
 }
