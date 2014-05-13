@@ -141,7 +141,7 @@ package net.psykosoft.psykopaint2.core.io
 			_context3D.clear(0, 0, 0, 1);
 			CopyTexture.copy(_canvas.normalSpecularMap, _context3D);
 			_context3D.drawToBitmapData(_workerBitmapData);
-			_paintingData.normalSpecularData = _workerBitmapData.encode(_workerBitmapData.rect, new JPEGXREncoderOptions(5,"auto",1));
+			_paintingData.normalSpecularData = _workerBitmapData.encode(_workerBitmapData.rect, new PNGEncoderOptions());
 		}
 
 		private function saveSourceDataToThumb() : void
