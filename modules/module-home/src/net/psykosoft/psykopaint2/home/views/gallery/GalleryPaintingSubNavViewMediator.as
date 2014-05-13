@@ -1,6 +1,17 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
-	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+
+import com.milkmangames.nativeextensions.GoViral;
+
+import flash.display.Bitmap;
+
+import flash.display.BitmapData;
+
+import net.psykosoft.psykopaint2.base.utils.alert.Alert;
+import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
+import net.psykosoft.psykopaint2.core.managers.social.SocialSharingManager;
+import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
@@ -27,6 +38,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		[Inject]
 		public var loggedInUser : LoggedInUserProxy;
+
+		[Inject]
+		public var socialSharingManager:SocialSharingManager;
 
 
 		public function GalleryPaintingSubNavViewMediator()
@@ -165,8 +179,32 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function sharePainting() : void
 		{
-			// TODO: Maybe share should be a pop-up?
-			requestNavigationStateChange(NavigationStateType.GALLERY_SHARE);
+			// Trigger native sharing pop up.
+			if(GoViral.isSupported()) {
+				if(socialSharingManager.goViral.isGenericShareAvailable()) {
+					// Get the image for sharing...
+					activePaintingModel.painting.loadFullSizedComposite(onBmdRetrieved, onBmdError);
+				}
+				else {
+					Alert.show("Psykopaint requires iOS 7  for sharing.");
+				}
+			}
+			else {
+				Alert.show("GoViral not available.");
+			}
+
+			// TODO: THIS NEEDS TO BE CLEANED UP AND TOTALLY REMOVED FROM THE APP, CODE + ASSETS
+//			requestNavigationStateChange(NavigationStateType.GALLERY_SHARE);
+		}
+
+		private function onBmdError():void {
+			Alert.show("Oops! There was a problem sharing this image.");
+		}
+
+		private function onBmdRetrieved(bmd:BitmapData):void {
+//			trace("bmd retrieved: " + bmd.width + ", " + bmd.height);
+			socialSharingManager.goViral.shareGenericMessageWithImage("subject", "Check out this awesome Psykopaint painting by " + activePaintingModel.painting.userName + ".", false, bmd,
+									view.stage.mouseX / CoreSettings.GLOBAL_SCALING, view.stage.mouseY / CoreSettings.GLOBAL_SCALING);
 		}
 
 		private function commentOnPainting():void
