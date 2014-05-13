@@ -18,12 +18,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 	public class TextureSplatMesh extends AbstractBrushMesh
 	{
-		private static const NUM_POISSON_SAMPLES : uint = 5;
+		protected static const NUM_POISSON_SAMPLES : uint = 5;
 		private static const NORMAL_BLUR_SAMPLE_RANGE : uint = 3;
 
 		protected var _normalSpecularFragmentData : Vector.<Number>;
 		protected var _normalSpecularVertexData : Vector.<Number>;
-		private var _numFragmentRegisters : Number;
+		protected var _numFragmentRegisters : Number;
 
 		protected static var _tmpData:Vector.<Number>;
 
@@ -255,10 +255,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 					"mul vt0, va0, vc1.xyww\n" +
 					"add vt0, vt0, vc1.xxzz\n" +
 					"mov v3, vt0\n" +
-					"mul v4, va3, vc3\n"; //multiplication does not work for some reason so add it is for now
+					"mul v4, va3, vc3\n";
 		}
 
-// default code expects a height map + alpha map
+		// default code expects a height map + alpha map
 		// texture input is:
 		// R = height
 		// G = gloss modulation
