@@ -49,7 +49,6 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		public var galleryImageSelected:Signal = new Signal(GalleryImageProxy);
 		public var sourceImageSelected:Signal = new Signal(SourceImageProxy);
-		public var loadNextImageSet:Signal = new Signal(int);
 
 		private var _viewType:String;
 
@@ -288,7 +287,7 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		public function updateImageCollection():void
 		{
-			trace("updateImageCollection");
+
 			//WE TAKE THE PREVIOUS INVISIBLE PAGES AND APPLY THE NEXT ASSETS TO THOSE			
 			//FILL LAYOUTS WITH NEW DATA 
 			//WE FILL THE 2 PREVIOUS PAGES TOO
@@ -357,7 +356,7 @@ package net.psykosoft.psykopaint2.home.views.book
 
 			var firstPageIndex:int = Math.floor(_doublePageIndex) * 2 % PAGES_CREATED;
 
-			trace("updatePages _doublePageIndex = "+_doublePageIndex+"  firstPageIndex="+firstPageIndex);
+			//	trace("updatePages _doublePageIndex = "+_doublePageIndex+"  firstPageIndex="+firstPageIndex);
 			for (var p:int = 0; p < _pages.length; p++) {
 
 				var pageIndex:uint = Math.floor(_doublePageIndex * 2) + p;
@@ -483,11 +482,10 @@ package net.psykosoft.psykopaint2.home.views.book
 
 			var maxValue:int = Math.ceil(_maxNumberOfPages / 2) - 1;
 
-			//IF WE ARE CHANGING PAGE INDEX FROM 1 TO 2 WE LOAD THE NEXT SET OF PAGES
+			//IF WE ARE CHANGING PAGE INDEX FROM 1 TO 2 WE LOAD NEXT SET OF PAGES
 			if (value >= 0 && value <= maxValue && Math.floor(_doublePageIndex) * 2 % PAGES_CREATED != Math.floor(value) * 2 % PAGES_CREATED) {
 				updateImageCollection();
-				
-				//IF WE RUN OUT OF AVAILABLE 					
+				//trace("_doublePageIndex = "+_doublePageIndex+" value = "+value);
 			}
 
 			//VALUE CAN'T BE NEGATIVE
