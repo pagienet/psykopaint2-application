@@ -89,9 +89,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 			}
 		}
 		
-		public function showStyleUI( show:Boolean ):void
+		public function showStyleUI( showSelector:Boolean, showSlider1:Boolean, showSlider2:Boolean):void
 		{
-			styleBar.visible = slider1Bar.visible = slider1Handle.visible = styleSelector.visible = styleIconHolder.visible = show;
+			styleBar.visible =  styleSelector.visible = styleIconHolder.visible = showSelector;
+			slider1Bar.visible = slider1Handle.visible = showSlider1;
+			slider2Bar.visible = slider2Handle.visible = showSlider2;
 		}
 		
 		protected function onStyleMouseDown( event:MouseEvent ):void

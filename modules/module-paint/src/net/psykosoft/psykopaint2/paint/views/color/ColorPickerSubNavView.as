@@ -79,7 +79,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 			photoStyleUI.y = brushStyleUI.y;
 			photoStyleUI.setup(3,4);
 			addChild(photoStyleUI);
-			photoStyleUI.visible = false;
 			
 			//colorStyleParameter = new PsykoParameter( PsykoParameter.IconListParameter,"Color Style",0,["No Style","Contrast Style","Black and White Style","Supersaturated Style","Mona Lisa Style","William Turner Style","Miro Style","Picasso Style"]);
 			
@@ -173,23 +172,24 @@ package net.psykosoft.psykopaint2.paint.views.color
 			if ( _userPaintSettings.colorMode == PaintMode.COLOR_MODE )
 			{
 				hslSliders.visible = true;
-				photoStyleUI.visible = false;
+				photoStyleUI.showStyleUI(false, false, false);
 				colorPalette.visible = true;
+				brushStyleUI.showStyleUI( true, true, true );
 			} else if ( _userPaintSettings.colorMode == PaintMode.PHOTO_MODE ){
 				hslSliders.visible = false;
-				photoStyleUI.showStyleUI(true);
-				photoStyleUI.visible = true;
+				photoStyleUI.showStyleUI(true, true, true);
 				colorPalette.visible = true;
+				brushStyleUI.showStyleUI( true, true, true );
 			} else if ( _userPaintSettings.colorMode == PaintMode.COSMETIC_MODE ){
 				hslSliders.visible = false;
-				photoStyleUI.showStyleUI(false);
-				photoStyleUI.visible = true;
+				photoStyleUI.showStyleUI(false,false,true);
 				colorPalette.visible = false;
+				brushStyleUI.showStyleUI( true, true, true );
 			} else if ( _userPaintSettings.colorMode == PaintMode.ERASER_MODE){
 				hslSliders.visible = false;
-				photoStyleUI.showStyleUI(false);
-				photoStyleUI.visible = true;
+				photoStyleUI.showStyleUI(false,true,true);
 				colorPalette.visible = true;
+				brushStyleUI.showStyleUI( false,false,true );
 			}
 		}
 		
