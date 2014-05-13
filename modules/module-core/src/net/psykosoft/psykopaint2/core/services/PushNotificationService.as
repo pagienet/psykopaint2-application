@@ -40,7 +40,15 @@ package net.psykosoft.psykopaint2.core.services
 		public const subscriptionFailed : Signal = new Signal();
 		private var _token:String;
 
-
+		/* don't forget to add this <Entitlements>
+		<Entitlements> 
+		<![CDATA[ 
+		<key>aps-environment</key> 
+		<string>production</string> 
+		]]> 
+		</Entitlements> 
+		to app xml otherwise RemoteNotifier won't do fuck all*/ 
+		
 		public function PushNotificationService()
 		{
 		}
