@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.core.views.popups.quickshare
 
 import com.milkmangames.nativeextensions.GoViral;
 
+import net.psykosoft.psykopaint2.base.utils.alert.Alert;
+
 import net.psykosoft.psykopaint2.core.managers.social.SocialSharingManager;
 import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -51,15 +53,31 @@ public class QuickSharePopUpViewMediator extends MediatorBase
 
 	private function onPopUpWantsToShare():void {
 
-		if(view.facebookChk.selected && GoViral.isSupported()) _sharer.addSharer(new FacebookSharer(socialSharingManager));
-		if(view.twitterChk.selected && GoViral.isSupported()) _sharer.addSharer(new TwitterSharer(socialSharingManager));
+		if(view.facebookChk.selected) _sharer.addSharer(new FacebookSharer(socialSharingManager));
+		if(view.twitterChk.selected) _sharer.addSharer(new TwitterSharer(socialSharingManager));
 
 		// Nothing to wait for, close.
-		if(_sharer.numSharers == 0) requestHidePopUpSignal.dispatch();
+		if(_sharer.numSharers == 0) exitPopUp();
 		else _sharer.share([view.tf.text, view.bmd]);
 	}
 
 	private function onUtilCompleted():void {
+		exitPopUp();
+	}
+
+	private function exitPopUp():void {
+
+		// Feedback on errors.
+		if(_sharer.numSharers > 0) {
+			if( _sharer.failedSharerNames.length == _sharer.numSharers ) {
+				Alert.show( "Oops! We couldn't post to any of the services you selected." );
+			}
+			else if( _sharer.failedSharerNames.length > 0 ) {
+				var failedStr:String = _sharer.failedSharerNames.join( ", " );
+				Alert.show( "Oops! We couldn't post to the services " + failedStr + ", but the rest worked." );
+			} // No alert if everything went ok.
+		}
+
 		requestHidePopUpSignal.dispatch();
 	}
 

@@ -13,7 +13,10 @@ public class TwitterSharer extends SharerBase
 		super.share( content );
 
 		trace("TwitterSharer - share()");
-		completedSignal.dispatch();
+		_sharerName = "Twitter";
+
+//		completedSignal.dispatch();
+		failedSignal.dispatch();
 	}
 }
 }

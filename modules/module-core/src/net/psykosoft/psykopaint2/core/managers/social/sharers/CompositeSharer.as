@@ -9,6 +9,8 @@ public class CompositeSharer extends SharerBase
 
 	private var _activeSharer:SharerBase;
 	private var _activeSharerIndex:int = -1;
+	private var _successes:Array;
+	private var _failures:Array;
 
 	public function CompositeSharer(manager:SocialSharingManager) {
 		super(manager);
@@ -23,8 +25,18 @@ public class CompositeSharer extends SharerBase
 		return _sharers.length;
 	}
 
+	public function get succeededSharerNames():Array {
+		return _successes;
+	}
+
+	public function get failedSharerNames():Array {
+		return _failures;
+	}
+
 	override public function share(content:Array):void {
 		super.share(content);
+		_successes = [];
+		_failures = [];
 		shareNextOrComplete();
 	}
 
@@ -43,16 +55,19 @@ public class CompositeSharer extends SharerBase
 
 	private function onActiveSharerCompleted():void {
 		toggleListeners(false);
+		_successes.push(_activeSharer.sharerName);
 		shareNextOrComplete();
 	}
 
 	private function onActiveSharerFailed():void {
 		toggleListeners(false);
+		_failures.push(_activeSharer.sharerName);
 		shareNextOrComplete();
 	}
 
 	private function onActiveSharerAborted():void {
 		toggleListeners(false);
+		_failures.push(_activeSharer.sharerName);
 		shareNextOrComplete();
 	}
 

@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.managers.social.sharers
 {
 
+import com.milkmangames.nativeextensions.GoViral;
 import com.milkmangames.nativeextensions.events.GVFacebookEvent;
 
 import flash.display.BitmapData;
@@ -20,6 +21,12 @@ public class FacebookSharer extends SharerBase
 	    super.share(content);
 
 		trace("FacebookSharer - share()");
+		_sharerName = "Facebook";
+
+		if(!GoViral.isSupported()) {
+			failedSignal.dispatch();
+			return;
+		}
 
 		_shareMsg = _contentToBeShared[0];
 		_shareBmd = _contentToBeShared[1];
