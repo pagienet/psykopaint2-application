@@ -149,8 +149,8 @@ public class GalleryView extends Sprite
 			ribbonMaterial.addMethod(stencilMethod);
 
 			_ribbon = new Mesh(new PlaneGeometry(50, 50, 1, 1, false, true), ribbonMaterial);
-			_ribbon.x = -92 + 12.5;
-			_ribbon.y = 66 - 12.5;
+			_ribbon.x = -79.5;
+			_ribbon.y = 53.5;
 			_ribbon.z = -1;
 			//_ribbon.scaleX = _ribbon.scaleY = 0.5; 
 		}
