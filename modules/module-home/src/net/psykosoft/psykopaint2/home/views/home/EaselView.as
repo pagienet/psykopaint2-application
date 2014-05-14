@@ -35,6 +35,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
 	
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.TransformGesture;
@@ -246,6 +248,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			if (paintingVO && paintingVO.id == _paintingID && paintingVO.id != PaintingInfoVO.DEFAULT_VO_ID)
 				return;
 
+			GestureManager.gesturesEnabled = false;
+			GrabThrowController.gesturesEnabled = false;
 			if (paintingVO && areTexturesInvalid(paintingVO)) {
 				_texturesInvalid = true;
 			}
@@ -266,11 +270,11 @@ package net.psykosoft.psykopaint2.home.views.home
 			else {
 				_pendingOnUploadComplete = null;
 				_pendingPaintingInfoVO = null;
-				updateCanvas(paintingVO, onUploadComplete);
+				updateCanvas(paintingVO, onUploadComplete, true);
 			}
 		}
 
-		private function updateCanvas(paintingVO : PaintingInfoVO, onUploadComplete : Function) : void
+		private function updateCanvas(paintingVO : PaintingInfoVO, onUploadComplete : Function, reenableGestures:Boolean = false) : void
 		{
 			if (_texturesInvalid) {
 				disposeTextures();
@@ -287,6 +291,13 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			if (onUploadComplete)
 				onUploadComplete(paintingVO);
+			
+			if ( reenableGestures )
+			{
+				GestureManager.gesturesEnabled = true;
+				GrabThrowController.gesturesEnabled = true;
+			}
+				
 		}
 		
 		
@@ -311,7 +322,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			if (_canvas.visible) {
 				_canvas.x = CANVAS_DEFAULT_POSITION.x + 400;
-				TweenLite.to(_canvas, .50, {x: CANVAS_DEFAULT_POSITION.x , ease: Expo.easeOut});
+				TweenLite.to(_canvas, .50, {x: CANVAS_DEFAULT_POSITION.x , ease: Expo.easeOut, onComplete: function():void{GestureManager.gesturesEnabled = true;GrabThrowController.gesturesEnabled = true;}});
 			}
 		}
 

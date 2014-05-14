@@ -30,6 +30,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		private var _isDragging : Boolean;
 		private var _exclusive : Boolean;
 		private var _priority : int;
+		private static var _gesturesEnabled:Boolean = true;
+		
 
 		public function GrabThrowController(stage : Stage)
 		{
@@ -80,7 +82,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function onMouseDown(event : MouseEvent) : void
 		{
-			if (beginGrabThrow(event.stageX, event.stageY)) {
+			if (_gesturesEnabled && beginGrabThrow(event.stageX, event.stageY)) {
 				if (_exclusive) event.stopImmediatePropagation();
 				_stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove, false, _priority);
 				_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp, false, _priority);
@@ -89,6 +91,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function onTouchBegin(event : TouchEvent) : void
 		{
+			if ( !_gesturesEnabled) return;
+			
 			if (!event.isPrimaryTouchPoint) {
 				// multitouch detected, not a pan gesture anymore
 				if (_isDragging) endGrabThrow(true);
@@ -104,11 +108,13 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function onMouseMove(event : MouseEvent) : void
 		{
+			if ( !_gesturesEnabled) return;
 			updateMove(event.stageX, event.stageY);
 		}
 
 		private function onTouchMove(event : TouchEvent) : void
 		{
+			if ( !_gesturesEnabled) return;
 			updateMove(event.stageX, event.stageY);
 		}
 
@@ -162,6 +168,18 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		public function get isActive() : Boolean
 		{
 			return _started;
+		}
+		
+		// ---------------------------------------------------------------------
+		// Setters & getters.
+		// ---------------------------------------------------------------------
+		
+		public static function get gesturesEnabled():Boolean {
+			return _gesturesEnabled;
+		}
+		
+		public static function set gesturesEnabled( value:Boolean ):void {
+			_gesturesEnabled = value;
 		}
 	}
 }
