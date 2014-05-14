@@ -197,6 +197,10 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		public function setSourceImages(sourceImageCollection:SourceImageCollection,shuffle:Boolean=false):void
 		{
+			
+			//RESET INDEX:
+			_doublePageIndex=0;
+			
 			// TYPE FILE
 			_viewType = TYPE_FILE_VIEW;
 

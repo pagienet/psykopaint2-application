@@ -313,13 +313,15 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		public static function set gesturesEnabled( value:Boolean ):void {
-			trace( "GestureManager - gesturesEnabled: " + value );
 			_gesturesEnabled = value;
 			
-			//
+			//KILL EXISTING GESTURES
 			if(value==false){
 				if(_instance._panGestureHorizontal.hasEventListener(GestureEvent.GESTURE_ENDED)){
 					_instance.onHorizontalPanGestureEnded(null);
+				}
+				if(_instance._panGestureVertical.hasEventListener(GestureEvent.GESTURE_ENDED)){
+					_instance.onVerticalPanGestureEnded(null);
 				}
 
 			}

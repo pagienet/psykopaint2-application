@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.LineBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.PaintBrushShape1;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.PaintbrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.SplotchBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
@@ -62,7 +63,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpInfluence.numberValue =1;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
 			brushEngine.param_glossiness.numberValue=1;
-			brushEngine.param_shapes.stringList = Vector.<String>([PaintBrushShape1.NAME,LineBrushShape.NAME,SplotchBrushShape.NAME,PaintBrushShape1.NAME]);
+			brushEngine.param_shapes.stringList = Vector.<String>([PaintBrushShape1.NAME,PaintbrushShape.NAME,SplotchBrushShape.NAME,PaintBrushShape1.NAME]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -117,8 +118,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			{
 				
 				case STYLE_VAN_GOGH:
+					brushEngine.param_quadOffsetRatio.numberValue = 0;
 					break;
-				
+				case STYLE_MONET:
+					brushEngine.param_quadOffsetRatio.numberValue = 0;
+					break;
 				case STYLE_PISSARO:
 					brushEngine.param_quadOffsetRatio.numberValue = 0;
 					break;
@@ -152,6 +156,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			//SIZE
 			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
+			sizeDecorator.param_invertMapping.booleanValue=true;
 			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCULAR_IN;
 			sizeDecorator.param_mappingFactor.minLimit = 0.01;
 			sizeDecorator.param_mappingFactor.maxLimit = 2;
@@ -229,21 +234,26 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 					
 					//ORIGINAL
-					sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 0.12;
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
+					sizeDecorator.param_invertMapping.booleanValue=false;
+					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCULAR_IN;
+					sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 0.30;
 					sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.5;
+					
 					//sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 1;
 					//sizeDecorator.param_mappingFactor.numberValue = 0;
 
 					
 					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_PRESSURE_SPEED;
 					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_RANDOM;
-					//ORIGINAL VALUES
-					spawnDecorator.param_multiples.upperRangeValue = 16;
+					spawnDecorator.param_multiples.upperRangeValue = 1;
 					spawnDecorator.param_multiples.lowerRangeValue = 4;
 					//spawnDecorator.param_multiples.upperRangeValue = 1;
 					//spawnDecorator.param_multiples.lowerRangeValue = 1;
 					spawnDecorator.param_maxSize.numberValue = 0.05 + precision * 0.36;
 					spawnDecorator.param_maxOffset.numberValue = 16 + precision * 40;
+					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -180;
+					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 180;
 					
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
@@ -286,7 +296,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					break;*/
 					
 				case STYLE_MONET:
-					trace("BRistle 3")
+					trace("STYLE_MONET")
+					
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
+					sizeDecorator.param_invertMapping.booleanValue=false;
+					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCULAR_IN;
+					sizeDecorator.param_mappingRange.numberValue = 0.05 + precision * 0.45;
+					sizeDecorator.param_mappingFactor.numberValue = 0.2 + precision * 0.8;
+					
 					
 					spawnDecorator.param_bristleVariation.numberValue = 10;
 					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SPEED;
@@ -294,14 +311,31 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_multiples.lowerRangeValue = 12;
 					spawnDecorator.param_minOffset.numberValue =  0+precision * 6;
 					spawnDecorator.param_maxOffset.numberValue =  0+precision * 6;
-					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -90;
-					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 90;
+					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -4;
+					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 4;
 					
-					bumpDecorator.param_glossiness.numberValue = 0.08	 ;
-					bumpDecorator.param_bumpiness.numberValue = 0.2;
-					bumpDecorator.param_bumpinessRange.numberValue = 0.3;
-					bumpDecorator.param_bumpInfluence.numberValue = 0.05;
-					bumpDecorator.param_noBumpProbability.numberValue = 0.9;
+					
+					colorDecorator.param_brushOpacity.numberValue = 0.98;
+					colorDecorator.param_brushOpacityRange.numberValue = 0.02;
+					colorDecorator.param_colorBlending.upperRangeValue = 1;
+					colorDecorator.param_colorBlending.lowerRangeValue = 0.95;
+					colorDecorator.param_pickRadius.lowerRangeValue = 0.0;
+					colorDecorator.param_pickRadius.upperRangeValue = 0.53;
+					colorDecorator.param_smoothFactor.lowerRangeValue = 0.8;
+					colorDecorator.param_saturationAdjustment.lowerRangeValue = 0;
+					colorDecorator.param_saturationAdjustment.upperRangeValue = 0;
+					colorDecorator.param_hueAdjustment.lowerRangeValue = 0;
+					colorDecorator.param_hueAdjustment.upperRangeValue = 0;
+					colorDecorator.param_brightnessAdjustment.lowerRangeValue = 0;
+					colorDecorator.param_brightnessAdjustment.upperRangeValue= 0;		
+					colorDecorator.param_applyColorMatrix.booleanValue=false;
+					
+					bumpDecorator.param_glossiness.numberValue = 0.08 +Math.random()*0.04 ;
+					bumpDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_EXPONENTIAL_IN;
+					bumpDecorator.param_bumpiness.numberValue = 0.03;
+					bumpDecorator.param_bumpinessRange.numberValue = 0.26;
+					bumpDecorator.param_bumpInfluence.numberValue = 0.15;
+					bumpDecorator.param_noBumpProbability.numberValue = 0.83;
 					
 					break;
 				
@@ -419,16 +453,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					break;
 				
-				default:
-
-					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
-					sizeDecorator.param_mappingRange.numberValue = 0.001;
-					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
-					
-
-					
-					
-					break;
+			
 				
 				
 			}

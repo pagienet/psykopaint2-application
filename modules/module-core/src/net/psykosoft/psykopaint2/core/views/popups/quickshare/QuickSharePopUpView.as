@@ -84,6 +84,8 @@ public class QuickSharePopUpView extends PopUpViewBase
 		paintingPlaceHolder.y = paintingMask.y;
 
 		paintingPlaceHolder.addChild(bit);
+		
+		//tf.text = "";
 	}
 
 	// -----------------------

@@ -113,11 +113,20 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				if ( paintingButtons[i].id == id )
 				{
 					paintingButtons[i].deleted = !paintingButtons[i].deleted;
+					//DISABLE DELETE MODE RIGHT AFTER
+					//TO AVOID MISTAKES
+					//reenableDefaultMode();
+					toggleDeleteMode();
+					
 					_scroller.removeButtonWithId(id);
+					_scroller.refreshToPosition();
+					
 					return;
 				}
 				
 			}
+			
+			
 		}
 	}
 }

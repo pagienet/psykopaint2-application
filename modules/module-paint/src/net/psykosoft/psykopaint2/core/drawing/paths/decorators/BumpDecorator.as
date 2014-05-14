@@ -33,6 +33,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const PARAMETER_B_INVERT_MAPPING:String = "Invert Mapping";
 		static public const PARAMETER_N_MAXIMUM_SPEED:String  = "Maximum Speed";
 		static public const PARAMETER_N_NO_BUMP_PROB:String  = "No Bump Probability";
+		static public const PARAMETER_N_MIN_BUMP:String  = "Min Bump value";
+		static public const PARAMETER_N_MAX_BUMP:String  = "Max Bump value";
 		
 		static public const INDEX_MODE_FIXED:int = 0;
 		static public const INDEX_MODE_SPEED:int = 1;
@@ -54,6 +56,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public var param_invertMapping:PsykoParameter;
 		public var param_noBumpProbability:PsykoParameter;
 		public var param_maxSpeed:PsykoParameter;
+		private var param_minBump:PsykoParameter;
+		private var param_maxBump:PsykoParameter;
 		
 		public function BumpDecorator()
 		{
@@ -64,6 +68,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			param_mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MAPPING,0,mappingFunctionLabels);
 			param_invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_INVERT_MAPPING,0);
 			param_maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
+			//MINIMUM BUMP VALUE: ex: can't go under 0
+			param_minBump   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MIN_BUMP,0,-5,5);
+			param_maxBump   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAX_BUMP,5,-5,5);
 			
 			param_glossiness    = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_GLOSSINESS, 0.4, 0.01, 5);
 			param_bumpiness     = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS, 1, -10, 10 );
@@ -140,12 +147,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				} 
 				
 				
-				
-				
+				var bumpValue:Number=  (Math.random() < nbp)?param_bumpiness.numberValue: param_bumpiness.numberValue - param_bumpinessRange.numberValue + (  param_bumpinessRange.numberValue  * bmp )* 2;
+					
+					
 				bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] = param_glossiness.numberValue;
-			//	bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] =Math.random();
 				//ADD CASE NO BUMP VALUE
-				bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] = (Math.random() < nbp)?param_bumpiness.numberValue: param_bumpiness.numberValue - param_bumpinessRange.numberValue + (  param_bumpinessRange.numberValue  * bmp )* 2;
+				bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] = Math.min(Math.max(bumpValue,param_minBump.numberValue),param_maxBump.numberValue);
 				//bumpFactors[2] = bumpFactors[6] = bumpFactors[10] = bumpFactors[14] = param_shininess.numberValue;
 				bumpFactors[3] = bumpFactors[7] = bumpFactors[11] = bumpFactors[15] = param_bumpInfluence.numberValue;
 				

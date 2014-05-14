@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		
 		public function NoisyBrushShape(context3D : Context3D)
 		{
-			super(context3D, "noisy", 1,256,2,2);
+			super(context3D, "noise", 1,256,2,2);
 			_alphaContrast = new ColorMatrixFilter([255, 0, 0, 0, 0, 0, 255, 0, 0, 0, 0, 0, 255, 0, 0, 0, 0, 0, 2, -255]);
 		}
 

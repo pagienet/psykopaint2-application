@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		public function PaintBrushShape1(context3D : Context3D)
 		{
 			super(context3D, NAME, SourceImage, SourceNormalSpecularMap, 512,2,8);
-			_rotationRange = 0.05;
+			_rotationRange = 0.01;
 		}
 	}
 }
