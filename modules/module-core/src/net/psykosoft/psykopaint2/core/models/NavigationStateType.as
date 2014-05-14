@@ -20,6 +20,7 @@ package net.psykosoft.psykopaint2.core.models
 		public static const PICK_SAMPLE_IMAGE:String = "state/pick_sample_image";
 		public static const CAPTURE_IMAGE:String = "state/capture_image";
 		public static const HOME_PICK_SURFACE:String = "state/home/pick_surface";
+		public static const LOADING_PAINT_MODE:String = "state/loading_paint_mode";
 		public static const TRANSITION_TO_PAINT_MODE:String = "state/transition_to_paint";
 
 		public static const GALLERY_BROWSE_FOLLOWING : String = "state/gallery/gallery_browse_following";

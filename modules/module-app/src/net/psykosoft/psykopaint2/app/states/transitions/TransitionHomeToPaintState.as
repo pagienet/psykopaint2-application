@@ -57,13 +57,12 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		 */
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			use namespace ns_state_machine;
 			super.activate(data);
+
+			requestNavigationStateChangeSignal.dispatch(NavigationStateType.LOADING_PAINT_MODE);
 
 			notifyPaintModuleSetUp.addOnce(onPaintingModuleSetUp);
 			requestSetupPaintModuleSignal.dispatch(PaintingDataVO(data));
-			
-
 		}
 
 		private function onPaintingModuleSetUp() : void
@@ -88,9 +87,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 
 		override ns_state_machine function deactivate() : void
 		{
-			use namespace ns_state_machine;
 			super.deactivate();
-
 		}
 	}
 }

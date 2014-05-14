@@ -29,6 +29,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 			// Link sub-navigation views that are created dynamically by CrNavigationView
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT, CanvasSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_SELECT_BRUSH, SelectBrushSubNavView );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.LOADING_PAINT_MODE, EmptySubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.TRANSITION_TO_PAINT_MODE, EmptySubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_ADJUST_COLOR, ColorPickerSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_BUY_UPGRADE, UpgradeSubNavView );

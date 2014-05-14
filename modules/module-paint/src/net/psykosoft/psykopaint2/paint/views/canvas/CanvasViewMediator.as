@@ -108,6 +108,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerEnablingState( NavigationStateType.PAINT_SELECT_BRUSH );
 			//registerEnablingState( NavigationStateType.PAINT_ADJUST_BRUSH );
 			registerEnablingState( NavigationStateType.PAINT_ADJUST_COLOR );
+			registerEnablingState( NavigationStateType.LOADING_PAINT_MODE );
 			registerEnablingState( NavigationStateType.TRANSITION_TO_PAINT_MODE );
 			registerEnablingState( NavigationStateType.PAINT_BUY_UPGRADE );
 			//registerEnablingState( NavigationStateType.PAINT_ADJUST_ALPHA );

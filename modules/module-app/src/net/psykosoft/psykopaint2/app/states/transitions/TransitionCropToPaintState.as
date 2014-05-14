@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.app.states.transitions
 	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
 	import net.psykosoft.psykopaint2.app.signals.RequestCreatePaintingBackgroundSignal;
 	import net.psykosoft.psykopaint2.app.states.PaintState;
-	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -76,6 +75,8 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		private var _croppedBitmapData : BitmapData;
 		private var _background : RefCountedRectTexture;
 
+		use namespace ns_state_machine;
+
 		public function TransitionCropToPaintState()
 		{
 		}
@@ -91,7 +92,6 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			use namespace ns_state_machine;
 			super.activate(data);
 			_croppedBitmapData = BitmapData(data.bitmapData);
 			// force position focused on easel in case we're going to quick for tweens to finish
