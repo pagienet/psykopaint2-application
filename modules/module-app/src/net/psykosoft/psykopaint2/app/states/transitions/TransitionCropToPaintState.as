@@ -157,6 +157,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 
 		override ns_state_machine function deactivate() : void
 		{
+			use namespace ns_state_machine;
 			super.deactivate();
 			requestDestroyCropModuleSignal.dispatch();
 			_background.dispose();

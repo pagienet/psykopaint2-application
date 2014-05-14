@@ -316,7 +316,14 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			trace( "GestureManager - gesturesEnabled: " + value );
 			_gesturesEnabled = value;
 			
-			
+			//
+			if(value==false){
+				if(_instance._panGestureHorizontal.hasEventListener(GestureEvent.GESTURE_ENDED)){
+					_instance.onHorizontalPanGestureEnded(null);
+				}
+
+			}
+				
 		}
 	}
 }

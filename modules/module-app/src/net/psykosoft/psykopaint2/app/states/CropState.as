@@ -3,17 +3,18 @@ package net.psykosoft.psykopaint2.app.states
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
 	
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionCropToHomeState;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionCropToPaintState;
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedRectTexture;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestCancelCropSignal;
-	import net.psykosoft.psykopaint2.app.states.transitions.TransitionCropToHomeState;
-	import net.psykosoft.psykopaint2.app.states.transitions.TransitionCropToPaintState;
 
 	use namespace ns_state_machine;
 
@@ -45,6 +46,9 @@ package net.psykosoft.psykopaint2.app.states
 		 */
 		override ns_state_machine function activate(data : Object = null) : void
 		{
+			GrabThrowController.gesturesEnabled=true;
+
+			
 			requestCancelCropSignal.add(onRequestCancelCropSignal);
 			requestOpenCroppedBitmapDataSignal.add(onRequestOpenCroppedBitmapData);
 			/*
