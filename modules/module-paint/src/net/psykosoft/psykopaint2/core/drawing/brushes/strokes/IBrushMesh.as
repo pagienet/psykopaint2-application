@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import flash.display3D.textures.TextureBase;
 	import flash.geom.Rectangle;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedRectTexture;
+
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.resources.TextureProxy;
 
@@ -28,5 +30,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		function clear() : void;
 
 		function drawNormalsAndSpecular(context3d : Context3D, canvas : CanvasModel, glossiness : Number, bumpiness : Number, influence : Number) : void;
+
+		// only used for eraser brushes
+		function set normalSpecularOriginal(normalSpecularOriginal : TrackedRectTexture) : void;
 	}
 }

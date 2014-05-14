@@ -37,6 +37,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 				  </bin>
 				</factors>
 
+
 						<factors name="monalisa" blend_in="16" blend_out="16">
 					  <bin>
 						<dimension x="83.22845893462218" y="24.043451797109896" z="7.95226553260621"/>
@@ -51,6 +52,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<mean x="189" y="148" z="63"/>
 					  </bin>
 					</factors>
+
 					<factors name="Kanagawa" blend_in="16" blend_out="16">
 				  <bin>
 					<dimension x="107.47779679033782" y="46.42900457021682" z="7.366721874969432"/>

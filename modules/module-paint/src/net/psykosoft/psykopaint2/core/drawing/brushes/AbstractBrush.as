@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.geom.Rectangle;
 	
 	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedRectTexture;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.actions.CanvasSnapShot;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
@@ -83,14 +84,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public var param_quadOffsetRatio:PsykoParameter;
 		public var param_curvatureSizeInfluence:PsykoParameter;
 
-		
 		private var _inProgress:Boolean;
 
 		private var _drawNormalsOrSpecular:Boolean;
 		private var _type:String;
 		protected var _snapshot:CanvasSnapShot;
-		
-		
 
 		public function AbstractBrush(drawNormalsOrSpecular:Boolean)
 		{
@@ -117,7 +115,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_appendVO = new StrokeAppendVO();
 		}
 
-		// only to be implemented by brushes animating/simulating after finalizing the stroke to knock it off
+
+// only to be implemented by brushes animating/simulating after finalizing the stroke to knock it off
 		// used for instance on undo
 
 		public function get paintSettingsModel():UserPaintSettingsModel
@@ -421,7 +420,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function getParameterSetAsXML(path:Array):XML
 		{
 			var brushParameters:XML = <brush/>;
-			var brushPath:Array = path.concat(["brush"])
+			var brushPath:Array = path.concat(["brush"]);
 			for (var i:int = 0; i < _parameters.length; i++) {
 				brushParameters.appendChild(_parameters[i].toXML(brushPath));
 			}
@@ -473,20 +472,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			return null;
 		}
 
-		/*
-		 public function addAvailableShape( type:String):void
-		 {
-		 _availableBrushShapes.appendChild( <shape type={type}/> );
-
-		 }
-
-		 public function removeAvailableShapeAt( index:int):void
-		 {
-		 delete _availableBrushShapes.children()[index];
-
-		 }
-		 */
-
 		public function getParameterByPath(path:Array):PsykoParameter
 		{
 			if (path.length == 2 && path[0] == "brush") {
@@ -520,11 +505,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function setColorStrategyColorMatrix(colorMatrix:Vector.<Number>, blendFactor:Number):void
 		{
 			_colorStrategy.setColorMatrix(colorMatrix, blendFactor);
-		}
-
-		public function get isStrokeInProgress():Boolean
-		{
-			return _inProgress;
 		}
 	}
 }

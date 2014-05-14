@@ -4,9 +4,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.display3D.Context3D;
 	
 	import de.popforge.math.LCG;
-	
+
+	import flash.events.Event;
+
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.EraserSplatMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureSplatMesh;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
@@ -18,6 +21,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	
 	public class SprayCanBrush extends SplatBrushBase
 	{
+
 		private var rng:LCG;
 		
 		public function SprayCanBrush()
@@ -28,8 +32,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 			param_glossiness.numberValue = .25;
 			param_bumpiness.numberValue = .6;
-			
-			
 		}
 
 		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer, paintSettingsModel : UserPaintSettingsModel) : void
@@ -41,7 +43,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function createBrushMesh() : IBrushMesh
 		{
-			return new TextureSplatMesh();//   new TextureMorphingSplatMesh();
+			return param_eraserMode.booleanValue? new EraserSplatMesh() : new TextureSplatMesh();
 		}
 
 		override protected function set brushShape(brushShape : AbstractBrushShape) : void
@@ -86,16 +88,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function processPoint( point : SamplePoint) : void
 		{
-			/*
-			var minSize:Number = _maxBrushRenderSize * _sizeFactor.lowerRangeValue;
-			var maxSize:Number = _maxBrushRenderSize * _sizeFactor.upperRangeValue;
-			var rsize:Number = minSize + (maxSize - minSize) * point.size;
-			
-			if (rsize > maxSize) rsize = maxSize;
-			else if (rsize < minSize) rsize = minSize;
-			*/
-			
-				
 			var rsize : Number = param_sizeFactor.lowerRangeValue + param_sizeFactor.rangeValue * point.size * ( param_curvatureSizeInfluence.numberValue * (point.curvature - 1) + 1);
 			if (rsize > 1) rsize = 1;
 			else if (rsize < 0) rsize = 0;
@@ -106,10 +98,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			//COPIED FROM SKETCH BRUSH
 			//_appendVO.uvBounds.x = int(rng.getNumber(0, _shapeVariations[0])) * _shapeVariations[2];
 			//_appendVO.uvBounds.y = int(rng.getNumber(0, _shapeVariations[1])) * _shapeVariations[3];
-			
+
 			_appendVO.size =  rsize * _maxBrushRenderSize;
 			_appendVO.point = point;
 			_brushMesh.append(_appendVO);
 		}
+
+
 	}
 }

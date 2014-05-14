@@ -4,11 +4,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
-	import flash.display3D.Context3DStencilAction;
+	import flash.events.Event;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedRectTexture;
-
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapIntrinsicsStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
@@ -21,16 +19,21 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	public class SplatBrushBase extends AbstractBrush
 	{
 		public static const PARAMETER_N_STROKE_ALPHA:String = "Stroke Alpha";
+		public static const PARAMETER_B_ERASER_MODE:String = "Eraser mode";
+
+		public var param_eraserMode:PsykoParameter;
 		public var param_strokeAlpha:PsykoParameter;
 		
 		protected var _incrementalWorkerTexture:TrackedRectTexture;
-		
+		private var _eraserNormalSpecularMap : TrackedRectTexture;
+
 		public function SplatBrushBase(drawNormalsOrSpecular : Boolean)
 		{
 			super(drawNormalsOrSpecular);
-			
+
 			param_strokeAlpha = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_STROKE_ALPHA, 1, 0, 1);
-			_parameters.push(param_strokeAlpha);
+			param_eraserMode = new PsykoParameter(PsykoParameter.BooleanParameter, PARAMETER_B_ERASER_MODE, false);
+			param_eraserMode.addEventListener(Event.CHANGE, onEraserModeChange);
 		}
 
 		override protected function createColorStrategy() : IColorStrategy
@@ -42,6 +45,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			super.dispose();
 			disposeWorkerTexture();
+			disposeEraserTexture();
 		}
 
 		override public function draw():void
@@ -116,6 +120,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 		}
 
+
+
 		override protected function drawNormalsAndSpecular():void
 		{
 			_context.setDepthTest(false, Context3DCompareMode.ALWAYS);
@@ -129,6 +135,32 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			drawBrushNormalsAndSpecular();
 
 			_canvasModel.swapNormalSpecularLayer();
+		}
+
+		private function onEraserModeChange(event : Event) : void
+		{
+			if (param_eraserMode.booleanValue) {
+				_eraserNormalSpecularMap = _canvasModel.createCanvasTexture(false);
+				_eraserNormalSpecularMap.texture.uploadFromBitmapData(_canvasModel.getNormalSpecularOriginal());
+				_brushMesh.normalSpecularOriginal = _eraserNormalSpecularMap;
+			}
+			else {
+				disposeEraserTexture();
+			}
+
+			if (_brushMesh) {
+				_brushMesh = createBrushMesh();
+				_brushMesh.init(_context);
+			}
+		}
+
+		private function disposeEraserTexture() : void
+		{
+			if (_eraserNormalSpecularMap) {
+				_eraserNormalSpecularMap.dispose();
+				_eraserNormalSpecularMap = null;
+				_brushMesh.normalSpecularOriginal = null;
+			}
 		}
 	}
 }
