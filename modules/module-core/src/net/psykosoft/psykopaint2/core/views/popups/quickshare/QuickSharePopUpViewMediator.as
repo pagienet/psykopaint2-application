@@ -1,16 +1,13 @@
 package net.psykosoft.psykopaint2.core.views.popups.quickshare
 {
 
-import com.milkmangames.nativeextensions.GoViral;
-
 import net.psykosoft.psykopaint2.base.utils.alert.Alert;
-
 import net.psykosoft.psykopaint2.core.managers.social.SocialSharingManager;
+import net.psykosoft.psykopaint2.core.managers.social.sharers.CompositeSharer;
+import net.psykosoft.psykopaint2.core.managers.social.sharers.FacebookSharer;
+import net.psykosoft.psykopaint2.core.managers.social.sharers.TwitterSharer;
 import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-import net.psykosoft.psykopaint2.core.managers.social.sharers.FacebookSharer;
-import net.psykosoft.psykopaint2.core.managers.social.sharers.CompositeSharer;
-import net.psykosoft.psykopaint2.core.managers.social.sharers.TwitterSharer;
 
 public class QuickSharePopUpViewMediator extends MediatorBase
 {

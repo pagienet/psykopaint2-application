@@ -58,10 +58,15 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 					//UPDATE	
 
 					currentPageThumbnailView = _pageThumbnailViews[i];
-					currentPageThumbnailView.imageProxy = currentSourceImageProxy;
-
-					//DOWNLOAD IMAGE STRAIGHT AWAY
-					currentPageThumbnailView.load();
+					//IF IMAGE ID IS SAME WE DON'T RELOAD IT:
+					//WHO REMOVE THAT DIDN'T UNDERSTAND
+					if(currentPageThumbnailView.imageProxy.id != currentSourceImageProxy.id)
+					{
+						currentPageThumbnailView.imageProxy = currentSourceImageProxy;
+					
+						//DOWNLOAD IMAGE STRAIGHT AWAY
+						currentPageThumbnailView.load();
+					}
 
 				}
 

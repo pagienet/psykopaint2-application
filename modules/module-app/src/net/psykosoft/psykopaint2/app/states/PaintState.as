@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.paint.signals.RequestClosePaintViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDiscardSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionPaintToHomeState;
 
 	use namespace ns_state_machine;
 

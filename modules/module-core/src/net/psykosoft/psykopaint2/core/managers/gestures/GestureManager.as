@@ -34,11 +34,14 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		[Inject]
 		public var notifyToggleSwipeGestureSignal:NotifyToggleSwipeGestureSignal;
 		
+		
+		
 		private var _stage:Stage;
 		private var _delegate:GestureDelegate;
 		
 		private static var _gesturesEnabled:Boolean = false;
-		
+		private static var _instance:GestureManager;
+
 		
 		private var _swipeGestureRight:SwipeGesture;
 		private var _swipeGestureLeft:SwipeGesture;
@@ -52,6 +55,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		
 		
 		public function GestureManager() {
+			//KIND OF A HACK. BUT HEY THIS IS MEANT TO BE A SINGLETON!
+			_instance = this;
 		}
 		
 		[PostConstruct]
@@ -310,6 +315,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		public static function set gesturesEnabled( value:Boolean ):void {
 			trace( "GestureManager - gesturesEnabled: " + value );
 			_gesturesEnabled = value;
+			
+			
 		}
 	}
 }

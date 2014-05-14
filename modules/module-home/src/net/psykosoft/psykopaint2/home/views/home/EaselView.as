@@ -35,6 +35,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.TransformGesture;
@@ -294,7 +295,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function animateCanvasOut() : void
 		{
 			if (_canvas.visible)
-				TweenLite.to(_canvas,.50, {x: CANVAS_DEFAULT_POSITION.x + 400, ease: Expo.easeOut, onComplete: animateCanvasIn});
+				TweenLite.to(_canvas,.50, {x: CANVAS_DEFAULT_POSITION.x + 400, ease: Expo.easeOut, onUpdate:function(){
+					GestureManager.gesturesEnabled=false;
+				},onComplete: animateCanvasIn});
 			else {
 				_canvas.x = -600;
 				animateCanvasIn();
@@ -311,7 +314,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			if (_canvas.visible) {
 				_canvas.x = CANVAS_DEFAULT_POSITION.x + 400;
-				TweenLite.to(_canvas, .50, {x: CANVAS_DEFAULT_POSITION.x , ease: Expo.easeOut});
+				TweenLite.to(_canvas, .50, {x: CANVAS_DEFAULT_POSITION.x , ease: Expo.easeOut,onUpdate:function(){
+					GestureManager.gesturesEnabled=false;
+				}});
 			}
 		}
 

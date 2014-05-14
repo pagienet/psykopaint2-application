@@ -33,6 +33,8 @@ import away3d.primitives.PlaneGeometry;
 import away3d.textures.BitmapTexture;
 import away3d.textures.Texture2DBase;
 
+import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
+import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
@@ -477,10 +479,11 @@ public class GalleryView extends Sprite
 
 		private function initLoadingTexture():void
 		{
-			var bitmapData:BitmapData = new TrackedBitmapData(16, 16, true, 0xFFAAAAAA);
-			_loadingTexture = new BitmapTexture(bitmapData);
+			//var bitmapData:BitmapData = new TrackedBitmapData(16, 16, true, 0xFFAAAAAA);
+			
+			_loadingTexture = new BitmapTexture(TextureUtil.autoResizePowerOf2(HomeMaterialsCache.getBitmapDataById(HomeMaterialsCache.THUMBNAIL_LOADING)));
 			_loadingTexture.getTextureForStage3D(_stage3DProxy);
-			bitmapData.dispose();
+			//bitmapData.dispose();
 
 		}
 

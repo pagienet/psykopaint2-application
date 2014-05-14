@@ -40,7 +40,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		public var switchedToNormalMode:Signal = new Signal();
 		public var switchedToHiddenMode:Signal = new Signal();
 
-		private static var SIMULTANEOUS_PAGES:uint = 10;
+		private static var SIMULTANEOUS_PAGES:uint = 8;
 		public static const TYPE_GALLERY_VIEW:String = "TYPE_GALLERY_VIEW";
 		public static const TYPE_FILE_VIEW:String = "TYPE_FILE_VEW";
 
@@ -288,17 +288,16 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		public function updateImageCollection():void
 		{
-			trace("updateImageCollection");
 			//WE TAKE THE PREVIOUS INVISIBLE PAGES AND APPLY THE NEXT ASSETS TO THOSE			
 			//FILL LAYOUTS WITH NEW DATA 
 			//WE FILL THE 2 PREVIOUS PAGES TOO
-			for (var i:int = Math.floor(_doublePageIndex * 2) - 2; i < Math.floor(_doublePageIndex * 2) + PAGES_CREATED - 2; i++) {
+			for (var i:int = Math.floor(_doublePageIndex * 2) - 2/* START FROM THE 2 PREVIOUS PAGES */; i < Math.floor(_doublePageIndex * 2) + PAGES_CREATED - 2 /* UNTIL LAST VISIBLE PAGE -2 */; i++) {
 
 				if (i < 0)i = PAGES_CREATED + i;
 				var iModulo:int = i % PAGES_CREATED;
 				var currentBookPageView:BookPageView = _pages[iModulo];
-				var firstPageToLoad:int = Math.max((Math.floor(_doublePageIndex) * 2 + i) - 1, 0);
-
+				
+				
 				if (_viewType == TYPE_GALLERY_VIEW) {
 					var currentGalleryImageCollection:GalleryImageCollection = GalleryImageCollection.getSubCollection(i * BookLayoutGalleryView.LENGTH, BookLayoutGalleryView.LENGTH, _galleryImageCollection);
 					BookLayoutGalleryView(currentBookPageView.getLayout()).setData(currentGalleryImageCollection);
@@ -357,7 +356,7 @@ package net.psykosoft.psykopaint2.home.views.book
 
 			var firstPageIndex:int = Math.floor(_doublePageIndex) * 2 % PAGES_CREATED;
 
-			trace("updatePages _doublePageIndex = "+_doublePageIndex+"  firstPageIndex="+firstPageIndex);
+			//trace("updatePages _doublePageIndex = "+_doublePageIndex+"  firstPageIndex="+firstPageIndex);
 			for (var p:int = 0; p < _pages.length; p++) {
 
 				var pageIndex:uint = Math.floor(_doublePageIndex * 2) + p;
@@ -390,8 +389,7 @@ package net.psykosoft.psykopaint2.home.views.book
 				}
 
 				//trace("PAGE "+i+" page = "+page.rotationZ.toFixed(0)+" pageIndex "+pageIndex);
-
-				//		trace("UPDATE PAGE "+i+" page = "+page.rotationZ +" easing = "+easing );
+				//trace("UPDATE PAGE "+i+" page = "+page.rotationZ +" easing = "+easing );
 
 
 				//UPDATE VISIBILITY
@@ -687,7 +685,6 @@ package net.psykosoft.psykopaint2.home.views.book
 				pageCreated = Math.min(_pages.length,SIMULTANEOUS_PAGES);
 				//IF GALLERY VIEW WE ALWAYS HAVE THE SIMULTANEOUS_PAGES amount of pages
 			}else if(_viewType == TYPE_GALLERY_VIEW){
-				//pageCreated = Math.min(_maxNumberOfPages,SIMULTANEOUS_PAGES);
 				pageCreated = SIMULTANEOUS_PAGES;
 			}
 

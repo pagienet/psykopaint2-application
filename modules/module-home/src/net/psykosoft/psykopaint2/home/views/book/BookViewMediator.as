@@ -180,12 +180,12 @@ package net.psykosoft.psykopaint2.home.views.book
 			// this just prevents reloading between hidden and shown state
 			if (_gallerySource != source) {
 				_gallerySource = source;
-				galleryService.fetchImages(source, 0, 100, onGalleryImagesFetched, onImagesError);
+				galleryService.fetchImages(source, 0, 6*30, onGalleryImagesFetched, onImagesError);
 			}
 		}
 		
-		private function showNextImagesSet(index:int):void{
-			galleryService.fetchImages(_gallerySource, index, 30, onGalleryImagesFetched, onImagesError);
+		private function loadNextGalleryImagesCollection(index:int):void{
+			galleryService.fetchImages(_gallerySource, index, 100, onGalleryImagesFetched, onImagesError);
 			
 		}
 

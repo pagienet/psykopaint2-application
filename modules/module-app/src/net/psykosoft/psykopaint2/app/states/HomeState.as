@@ -11,6 +11,10 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionCropToHomeState;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionHomeToCropState;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionHomeToPaintState;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionPaintToHomeState;
 
 	use namespace ns_state_machine;
 

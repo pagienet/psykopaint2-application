@@ -7,13 +7,13 @@ package net.psykosoft.psykopaint2.app.config
 	import net.psykosoft.psykopaint2.app.signals.RequestCreatePaintingBackgroundSignal;
 	import net.psykosoft.psykopaint2.app.states.CropState;
 	import net.psykosoft.psykopaint2.app.states.HomeState;
-	import net.psykosoft.psykopaint2.app.states.TransitionCropToHomeState;
-	import net.psykosoft.psykopaint2.app.states.TransitionCropToPaintState;
-	import net.psykosoft.psykopaint2.app.states.TransitionHomeToCropState;
-	import net.psykosoft.psykopaint2.app.states.TransitionPaintToHomeState;
-	import net.psykosoft.psykopaint2.app.states.TransitionSplashToHomeState;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionCropToHomeState;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionCropToPaintState;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionHomeToCropState;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionPaintToHomeState;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionSplashToHomeState;
 	import net.psykosoft.psykopaint2.app.states.PaintState;
-	import net.psykosoft.psykopaint2.app.states.TransitionHomeToPaintState;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionHomeToPaintState;
 
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
@@ -66,10 +66,10 @@ package net.psykosoft.psykopaint2.app.config
 		// -----------------------
 
 		private function mapSingletons():void {
-			injector.map(TransitionSplashToHomeState).asSingleton();
 			injector.map(HomeState).asSingleton();
 			injector.map(CropState).asSingleton();
 			injector.map(PaintState).asSingleton();
+			injector.map(TransitionSplashToHomeState).asSingleton();
 			injector.map(TransitionHomeToPaintState).asSingleton();
 			injector.map(TransitionHomeToCropState).asSingleton();
 			injector.map(TransitionCropToPaintState).asSingleton();

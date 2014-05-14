@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.app
 	import flash.events.Event;
 	
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
-	import net.psykosoft.psykopaint2.app.states.TransitionSplashToHomeState;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionSplashToHomeState;
 	import net.psykosoft.psykopaint2.app.views.base.AppRootView;
 	import net.psykosoft.psykopaint2.base.states.StateMachine;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;

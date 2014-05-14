@@ -3,24 +3,21 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 import com.milkmangames.nativeextensions.GoViral;
 
-import flash.display.Bitmap;
-
 import flash.display.BitmapData;
 
 import net.psykosoft.psykopaint2.base.utils.alert.Alert;
 import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
 import net.psykosoft.psykopaint2.core.managers.social.SocialSharingManager;
 import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
-	import net.psykosoft.psykopaint2.core.models.GalleryType;
-	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
-	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.services.GalleryService;
-	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
-	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
-	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
+import net.psykosoft.psykopaint2.core.models.GalleryType;
+import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
+import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+import net.psykosoft.psykopaint2.core.services.GalleryService;
+import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
+import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
+import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
+import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 
 	public class GalleryPaintingSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -186,11 +183,12 @@ import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 					activePaintingModel.painting.loadFullSizedComposite(onBmdRetrieved, onBmdError);
 				}
 				else {
-					Alert.show("Psykopaint requires iOS 7  for sharing.");
+					Alert.show("Psykopaint requires iOS 7 for sharing. Sorry buddy");
 				}
 			}
 			else {
-				Alert.show("GoViral not available.");
+				Alert.show("Oups. Seems like Sharing is not available on this iPad. Try updating iOS.");
+				trace("Go Viral is not available");
 			}
 
 			// TODO: THIS NEEDS TO BE CLEANED UP AND TOTALLY REMOVED FROM THE APP, CODE + ASSETS
@@ -198,13 +196,13 @@ import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 		}
 
 		private function onBmdError():void {
-			Alert.show("Oops! There was a problem sharing this image.");
+			//Alert.show("Oops! There was a problem sharing this image.");
 		}
 
 		private function onBmdRetrieved(bmd:BitmapData):void {
 //			trace("bmd retrieved: " + bmd.width + ", " + bmd.height);
-			socialSharingManager.goViral.shareGenericMessageWithImage("subject", "Check out this awesome Psykopaint painting by " + activePaintingModel.painting.userName + ".", false, bmd,
-									view.stage.mouseX / CoreSettings.GLOBAL_SCALING, view.stage.mouseY / CoreSettings.GLOBAL_SCALING);
+			socialSharingManager.goViral.shareGenericMessageWithImage("subject", "Check out this painting by " + activePaintingModel.painting.userName + ".", false, bmd, view.stage.mouseX / CoreSettings.GLOBAL_SCALING, view.stage.mouseY / CoreSettings.GLOBAL_SCALING);
+			//						
 		}
 
 		private function commentOnPainting():void

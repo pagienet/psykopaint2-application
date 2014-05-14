@@ -12,6 +12,8 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestCancelCropSignal;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionCropToHomeState;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionCropToPaintState;
 
 	use namespace ns_state_machine;
 
