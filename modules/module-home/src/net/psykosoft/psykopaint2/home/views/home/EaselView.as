@@ -249,8 +249,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			if (paintingVO && paintingVO.id == _paintingID && paintingVO.id != PaintingInfoVO.DEFAULT_VO_ID)
 				return;
 
-			GestureManager.gesturesEnabled = false;
-			GrabThrowController.gesturesEnabled = false;
+			//GestureManager.gesturesEnabled = false;
+			//GrabThrowController.gesturesEnabled = false;
 			if (paintingVO && areTexturesInvalid(paintingVO)) {
 				_texturesInvalid = true;
 			}
@@ -293,11 +293,11 @@ package net.psykosoft.psykopaint2.home.views.home
 			if (onUploadComplete)
 				onUploadComplete(paintingVO);
 			
-			if ( reenableGestures )
+			/*if ( reenableGestures )
 			{
 				GestureManager.gesturesEnabled = true;
 				GrabThrowController.gesturesEnabled = true;
-			}
+			}*/
 				
 		}
 		
@@ -305,6 +305,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function animateCanvasOut() : void
 		{
+			trace(this,animateCanvasOut);
 			if (_canvas.visible)
 				TweenLite.to(_canvas,.50, {x: CANVAS_DEFAULT_POSITION.x + 400, ease: Expo.easeOut, onUpdate:function(){
 					GestureManager.gesturesEnabled=false;
@@ -318,6 +319,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function animateCanvasIn() : void
 		{
+			trace(this,animateCanvasIn);
 			updateCanvas(_pendingPaintingInfoVO, _pendingOnUploadComplete);
 
 			_pendingOnUploadComplete = null;
@@ -326,8 +328,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			if (_canvas.visible) {
 				_canvas.x = CANVAS_DEFAULT_POSITION.x + 400;
 
-				TweenLite.to(_canvas, .50, {x: CANVAS_DEFAULT_POSITION.x , ease: Expo.easeOut, onComplete: function():void{GestureManager.gesturesEnabled = true;GrabThrowController.gesturesEnabled = true;}});
-
+				//TweenLite.to(_canvas, .50, {x: CANVAS_DEFAULT_POSITION.x , ease: Expo.easeOut, onComplete: function():void{GestureManager.gesturesEnabled = true;GrabThrowController.gesturesEnabled = true;}});
+				TweenLite.to(_canvas, .50, {x: CANVAS_DEFAULT_POSITION.x , ease: Expo.easeOut});
+				
 			}
 		}
 

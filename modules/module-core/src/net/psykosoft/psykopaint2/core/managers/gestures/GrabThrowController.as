@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	/**
@@ -31,10 +31,12 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		private var _exclusive : Boolean;
 		private var _priority : int;
 		private static var _gesturesEnabled:Boolean = true;
+		private static var _instance:GrabThrowController;
 		
 
 		public function GrabThrowController(stage : Stage)
 		{
+			_instance=this;
 			_stage = stage;
 		}
 
@@ -180,6 +182,11 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		
 		public static function set gesturesEnabled( value:Boolean ):void {
 			_gesturesEnabled = value;
+			
+			if(value==false){
+				if(_instance) _instance.endGrabThrow(false);
+				//stop();
+			}
 		}
 	}
 }

@@ -3,8 +3,10 @@ package net.psykosoft.psykopaint2.app.states
 
 	import flash.utils.setTimeout;
 	
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionPaintToHomeState;
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
@@ -21,7 +23,6 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.paint.signals.RequestClosePaintViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDiscardSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
-	import net.psykosoft.psykopaint2.app.states.transitions.TransitionPaintToHomeState;
 
 	use namespace ns_state_machine;
 
@@ -58,6 +59,10 @@ package net.psykosoft.psykopaint2.app.states
 		}
 
 		override ns_state_machine function activate( data:Object = null ):void {
+			
+			GrabThrowController.gesturesEnabled=true;
+
+			
 			ConsoleView.instance.log( this, "activating..." );
 			ConsoleView.instance.logMemory();
 			requestClosePaintView.add( onClosePaintView );
@@ -67,6 +72,7 @@ package net.psykosoft.psykopaint2.app.states
 		}
 
 		override ns_state_machine function deactivate():void {
+			
 			ConsoleView.instance.log( this, "deactivating..." );
 			ConsoleView.instance.logMemory();
 			requestClosePaintView.remove( onClosePaintView );

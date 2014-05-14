@@ -1,20 +1,21 @@
 package net.psykosoft.psykopaint2.app.states
 {
 	import flash.display.BitmapData;
-
+	
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionCropToHomeState;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionHomeToCropState;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionHomeToPaintState;
+	import net.psykosoft.psykopaint2.app.states.transitions.TransitionPaintToHomeState;
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
-	import net.psykosoft.psykopaint2.app.states.transitions.TransitionCropToHomeState;
-	import net.psykosoft.psykopaint2.app.states.transitions.TransitionHomeToCropState;
-	import net.psykosoft.psykopaint2.app.states.transitions.TransitionHomeToPaintState;
-	import net.psykosoft.psykopaint2.app.states.transitions.TransitionPaintToHomeState;
 
 	use namespace ns_state_machine;
 
@@ -61,6 +62,9 @@ package net.psykosoft.psykopaint2.app.states
 
 		override ns_state_machine function activate(data : Object = null) : void
 		{
+			GrabThrowController.gesturesEnabled=true;
+			
+			
 			ConsoleView.instance.log( this, "activating..." );
 			ConsoleView.instance.logMemory();
 			requestOpenPaintingDataVOSignal.add(onRequestOpenPaintingDataVO);
