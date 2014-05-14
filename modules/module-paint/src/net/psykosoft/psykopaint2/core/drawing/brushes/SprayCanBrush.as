@@ -5,14 +5,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	
 	import de.popforge.math.LCG;
 
-	import flash.events.Event;
-
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.EraserSplatMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureSplatMesh;
-	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
@@ -56,14 +53,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		private function assignBrushShape() : void
 		{
-			/*
-			TextureMorphingSplatMesh(_brushMesh).brushTexture = _brushShape.texture;
-			TextureMorphingSplatMesh(_brushMesh).normalTexture = _brushShape.normalSpecularMap;
-			TextureMorphingSplatMesh(_brushMesh).pixelUVOffset = 0.5 / _brushShape.size;
-			*/
-			TextureSplatMesh(_brushMesh).brushTexture = _brushShape.texture;
-			TextureSplatMesh(_brushMesh).normalTexture = _brushShape.normalSpecularMap;
-			TextureSplatMesh(_brushMesh).pixelUVOffset = 0.5 / _brushShape.size;
+			if (param_eraserMode.booleanValue) {
+				EraserSplatMesh(_brushMesh).brushTexture = _brushShape.texture;
+				EraserSplatMesh(_brushMesh).normalTexture = _brushShape.normalSpecularMap;
+				EraserSplatMesh(_brushMesh).pixelUVOffset = 0.5 / _brushShape.size;
+				EraserSplatMesh(_brushMesh).normalSpecularOriginal = _eraserNormalSpecularMap;
+			}
+			else {
+				TextureSplatMesh(_brushMesh).brushTexture = _brushShape.texture;
+				TextureSplatMesh(_brushMesh).normalTexture = _brushShape.normalSpecularMap;
+				TextureSplatMesh(_brushMesh).pixelUVOffset = 0.5 / _brushShape.size;
+			}
 			_pathManager.brushAngleRange = brushShape.rotationRange;
 		}
 
@@ -104,6 +104,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_brushMesh.append(_appendVO);
 		}
 
-
+		override protected function onBrushMeshRecreated():void
+		{
+			if (_brushShape)
+				assignBrushShape();
+		}
 	}
 }

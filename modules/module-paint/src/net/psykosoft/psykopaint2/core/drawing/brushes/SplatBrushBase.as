@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public var param_strokeAlpha:PsykoParameter;
 		
 		protected var _incrementalWorkerTexture:TrackedRectTexture;
-		private var _eraserNormalSpecularMap : TrackedRectTexture;
+		protected var _eraserNormalSpecularMap : TrackedRectTexture;
 
 		public function SplatBrushBase(drawNormalsOrSpecular : Boolean)
 		{
@@ -151,7 +151,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			if (_brushMesh) {
 				_brushMesh = createBrushMesh();
 				_brushMesh.init(_context);
+				onBrushMeshRecreated();
 			}
+		}
+
+		protected function onBrushMeshRecreated():void
+		{
+
 		}
 
 		private function disposeEraserTexture() : void

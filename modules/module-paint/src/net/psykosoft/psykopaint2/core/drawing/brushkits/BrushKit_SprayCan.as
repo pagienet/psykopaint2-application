@@ -755,6 +755,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				//like that you will not have to update the index in case you are more regular shapes
 				brushEngine.param_shapes.index = brushEngine.param_shapes.maxLimit;
 				
+				SprayCanBrush(brushEngine).param_eraserMode.booleanValue=true;
+				
 				gridDecorator.active=false;
 				splatterDecorator.active=false;
 				spawnDecorator.active=false;
@@ -768,21 +770,25 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				
 				colorDecorator.param_pickRadius.lowerRangeValue = 0;
 				colorDecorator.param_pickRadius.upperRangeValue = 0;
-				colorDecorator.param_brushOpacity.numberValue = 0.91;
-				colorDecorator.param_brushOpacityRange.numberValue = 0.04;
+				colorDecorator.param_brushOpacity.numberValue = 0.8;
+				colorDecorator.param_brushOpacityRange.numberValue = 0.1;
 				colorDecorator.param_colorBlending.upperRangeValue = 0.98;
 				colorDecorator.param_colorBlending.lowerRangeValue = 0.90;
 				
 				bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 				bumpDecorator.param_bumpInfluence.numberValue = 1;
-				bumpDecorator.param_bumpiness.numberValue = 0 ;
+				bumpDecorator.param_bumpiness.numberValue = 0.0 ;
 				bumpDecorator.param_bumpinessRange.numberValue = 0.00 ;
 				bumpDecorator.param_noBumpProbability.numberValue=0.0;
 				//MAKE IT WET
-				bumpDecorator.param_glossiness.numberValue = 0.85  ;
+				bumpDecorator.param_glossiness.numberValue = 0.10  ;
+				
+				
+				
 				onPrecisionChanged();
 				onIntensityChanged()
 			} else {
+				SprayCanBrush(brushEngine).param_eraserMode.booleanValue=false;
 				onStyleChanged();
 			}
 		}
