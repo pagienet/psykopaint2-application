@@ -742,7 +742,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		override public function set eraserMode( enabled:Boolean ):void
 		{
-			super.eraserMode = (enabled);
+			//super.eraserMode = (enabled);
 			
 			if ( enabled )
 			{
@@ -754,6 +754,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				//it's a good idea to put the eraser shape always as the last element into the shapes list
 				//like that you will not have to update the index in case you are more regular shapes
 				brushEngine.param_shapes.index = brushEngine.param_shapes.maxLimit;
+				
+				SprayCanBrush(brushEngine).param_eraserMode.booleanValue=true;
 				
 				gridDecorator.active=false;
 				splatterDecorator.active=false;
@@ -780,9 +782,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				bumpDecorator.param_noBumpProbability.numberValue=0.0;
 				//MAKE IT WET
 				bumpDecorator.param_glossiness.numberValue = 0.85  ;
+				
+				
+				
 				onPrecisionChanged();
 				onIntensityChanged()
 			} else {
+				SprayCanBrush(brushEngine).param_eraserMode.booleanValue=false;
 				onStyleChanged();
 			}
 		}
