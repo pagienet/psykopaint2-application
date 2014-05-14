@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		[Embed(source="assets/NoiseShape.png", mimeType="image/png")]
 		protected var SourceMap:Class;
 		
-		[Embed(source="assets/NoiseShape3.png", mimeType="image/png")]
+		[Embed(source="assets/NoiseShape.png", mimeType="image/png")]
 		protected var SourceNormalSpecularMap:Class;
 
 		

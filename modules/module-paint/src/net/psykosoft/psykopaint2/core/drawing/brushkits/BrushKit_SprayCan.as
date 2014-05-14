@@ -742,7 +742,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		override public function set eraserMode( enabled:Boolean ):void
 		{
-			//super.eraserMode = (enabled);
+			super.eraserMode = (enabled);
 			
 			if ( enabled )
 			{
@@ -770,18 +770,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				
 				colorDecorator.param_pickRadius.lowerRangeValue = 0;
 				colorDecorator.param_pickRadius.upperRangeValue = 0;
-				colorDecorator.param_brushOpacity.numberValue = 0.91;
-				colorDecorator.param_brushOpacityRange.numberValue = 0.04;
+				colorDecorator.param_brushOpacity.numberValue = 0.8;
+				colorDecorator.param_brushOpacityRange.numberValue = 0.1;
 				colorDecorator.param_colorBlending.upperRangeValue = 0.98;
 				colorDecorator.param_colorBlending.lowerRangeValue = 0.90;
 				
 				bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
-				bumpDecorator.param_bumpInfluence.numberValue = 0;
-				bumpDecorator.param_bumpiness.numberValue = 1 ;
+				bumpDecorator.param_bumpInfluence.numberValue = 1;
+				bumpDecorator.param_bumpiness.numberValue = 0.0 ;
 				bumpDecorator.param_bumpinessRange.numberValue = 0.00 ;
 				bumpDecorator.param_noBumpProbability.numberValue=0.0;
 				//MAKE IT WET
-				bumpDecorator.param_glossiness.numberValue = 0.85  ;
+				bumpDecorator.param_glossiness.numberValue = 0.10  ;
 				
 				
 				
