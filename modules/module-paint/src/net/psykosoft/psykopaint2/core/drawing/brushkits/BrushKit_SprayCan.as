@@ -776,8 +776,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				colorDecorator.param_colorBlending.lowerRangeValue = 0.90;
 				
 				bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
-				bumpDecorator.param_bumpInfluence.numberValue = 1;
-				bumpDecorator.param_bumpiness.numberValue = 0 ;
+				bumpDecorator.param_bumpInfluence.numberValue = 0;
+				bumpDecorator.param_bumpiness.numberValue = 1 ;
 				bumpDecorator.param_bumpinessRange.numberValue = 0.00 ;
 				bumpDecorator.param_noBumpProbability.numberValue=0.0;
 				//MAKE IT WET

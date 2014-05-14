@@ -166,7 +166,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		protected function uploadMips(size : int, source : BitmapData, texture : Texture) : void
 		{
 			var bitmapData : BitmapData = new TrackedBitmapData(size, size, false);
-			var scaleTransform : Matrix = new Matrix(size / source.width, 0, 0, size / source.width);
+			var scaleTransform : Matrix = new Matrix(size / source.width, 0, 0, size / source.height);
 			var mipLevel : int = 0;
 			var rect : Rectangle = bitmapData.rect;
 

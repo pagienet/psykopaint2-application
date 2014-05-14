@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function EraserBrushShape(context3D : Context3D)
 		{
-			super(context3D, NAME, SourceMap,SourceNormalSpecularMap,512,2,2);
+			super(context3D, NAME, SourceMap, SourceNormalSpecularMap, 512, 2, 2);
 			rotationRange = Math.PI;
 		}
 	}
