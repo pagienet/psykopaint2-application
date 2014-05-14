@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
 	import flash.display3D.VertexBuffer3D;
+	import flash.display3D.textures.TextureBase;
 
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 
@@ -24,24 +25,26 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 				// canvas uvs
 					"mul vt0, va0, vc1.xyww\n" +
 					"add vt0, vt0, vc1.xxzz\n" +
-					"mov v3, vt0\n";
+					"mov v3, vt0\n" +
+					"mul v4, va2, vc3\n";
 		}
 
-		// texture input is:
-		// R = gloss blend (amount of "varnish")
-		// G = gloss modulation (glossiness of material)
+
+		override public function set normalTexture(value:TextureBase):void
+		{
+			super.normalTexture = value;
+		}
+
+// texture input is:
+		// R = amount of erasure
 		// output should be (normalX, normalY, gloss, influence (alpha))
-		// analytical solutions may be more optimal if possible
 		override protected function getNormalSpecularFragmentCode() : String
 		{
-			var code : String = "tex ft1, v0, fs0 <2d, clamp, linear, miplinear >\n";
-
 			// fetch original and replace gloss
-			code += "tex ft6, v3, fs1 <2d, clamp, linear, nomip>\n" +
-					"mov ft6.w, ft1.x\n" +
+			return	"tex ft1, v0, fs0 <2d, clamp, linear, miplinear>\n" +
+					"tex ft6, v3, fs1 <2d, clamp, linear, mipnone>\n" +
+					"mul ft6.w, ft1.x, v4.y\n" +
 					"mov oc, ft6";
-
-			return code;
 		}
 
 		override public function drawNormalsAndSpecular(context3d : Context3D, canvas : CanvasModel, glossiness : Number, bumpiness : Number, influence : Number) : void
@@ -51,6 +54,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			context3d.setProgram(getNormalSpecularProgram(context3d));
 			context3d.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
 			context3d.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2);
+			context3d.setVertexBufferAt(2, vertexBuffer, 12, Context3DVertexBufferFormat.FLOAT_4);
 
 			context3d.setTextureAt(0, _normalTexture);
 			context3d.setTextureAt(1, _normalSpecularOriginal.texture);
@@ -60,9 +64,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_normalSpecularVertexData[8] = 1/canvas.width;
 			_normalSpecularVertexData[9] = 1/canvas.height;
 
-			_normalSpecularVertexData[12] = glossiness;
+			_normalSpecularVertexData[12] = 0;
 			_normalSpecularVertexData[13] = bumpiness;
-			_normalSpecularVertexData[15] = influence;
+			_normalSpecularVertexData[14] = 0;
+			_normalSpecularVertexData[15] = 1;
 
 			context3d.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _normalSpecularVertexData, 4);
 			context3d.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _normalSpecularFragmentData, _numFragmentRegisters);
@@ -72,6 +77,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 			context3d.setVertexBufferAt(0, null);
 			context3d.setVertexBufferAt(1, null);
+			context3d.setVertexBufferAt(2, null);
+
 		}
+
 	}
 }

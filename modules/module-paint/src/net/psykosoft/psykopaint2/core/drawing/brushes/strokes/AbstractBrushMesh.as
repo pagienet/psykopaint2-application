@@ -1,7 +1,5 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 {
-	import away3d.core.math.PoissonLookup;
-
 	import com.adobe.utils.AGALMiniAssembler;
 
 	import flash.display3D.Context3D;
