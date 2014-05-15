@@ -3,8 +3,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import flash.events.Event;
 	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AlmostCircularHardShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.EraserBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.WetBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.WetBrushShape2;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
@@ -12,6 +14,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.AbstractPointDecorator;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.BumpDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.CallbackDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
@@ -76,6 +79,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var _minSplatterChance : Number = .1;
 		private var _maxSplatterChance : Number = 1.0;
 		private var _splatterSpeedNorm:Number = 40 * CoreSettings.GLOBAL_SCALING;
+		private var precision:Number;
 
 		
 		public function BrushKit_WaterColor()
@@ -305,7 +309,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 		protected function onPrecisionChanged(event:Event):void
 		{
-			var precision:Number = param_precision.numberValue;
+			precision = param_precision.numberValue;
 			brushEngine.param_sizeFactor.lowerRangeValue = brushEngine.param_sizeFactor.upperRangeValue = 0.02+precision;
 			splatterDecorator.param_splatFactor.value = SPLAT_FACTOR*precision;
 			splatterDecorator.param_minOffset.value =  MIN_SPLAT*precision;
@@ -340,5 +344,48 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			return points;
 		}
+		
+		override public function set eraserMode( enabled:Boolean ):void
+		{
+			super.eraserMode = (enabled);
+			
+			if ( enabled )
+			{
+				onPrecisionChanged(null);
+				onIntensityChanged(null);
+				
+				
+				brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.4 + precision  *4;
+				
+				
+				//it's a good idea to put the eraser shape always as the last element into the shapes list
+				//like that you will not have to update the index in case you are more regular shapes
+				brushEngine.param_shapes.index = brushEngine.param_shapes.stringList.indexOf(WetBrushShape2.NAME);
+				
+				WaterColorBrush(brushEngine).param_paintMode.value = 1;
+				
+				splatterDecorator.active=false;
+				spawnDecorator.active=false;
+				
+				sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
+				sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
+				sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
+				//sizeDecorator.param_mappingRange.numberValue = 0.001+precision * (0.1);
+				sizeDecorator.param_mappingRange.numberValue = 0;
+				sizeDecorator.param_maxSpeed.numberValue = 200;
+				sizeDecorator.param_mappingFactor.numberValue = 1;
+				sizeDecorator.param_mappingRange.numberValue = 0.0;
+				sizeDecorator.param_mappingFactor.minLimit = 0.01;
+				sizeDecorator.param_mappingFactor.maxLimit = 2;
+				
+				
+				
+				
+			} else {
+				WaterColorBrush(brushEngine).param_paintMode.value = 0;
+				onStyleChanged(null);
+			}
+		}
+		
 	}
 }

@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import flash.events.Event;
 	
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.LineBrushShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.EraserBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.PaintBrushShape1;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.PaintbrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.SplotchBrushShape;
@@ -46,6 +46,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var param_precision:PsykoParameter;
 		private var param_intensity:PsykoParameter;
 		
+		public var precision:Number;
 
 		
 		public function BrushKit_BristleBrush()
@@ -63,7 +64,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpInfluence.numberValue =1;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
 			brushEngine.param_glossiness.numberValue=1;
-			brushEngine.param_shapes.stringList = Vector.<String>([PaintBrushShape1.NAME,PaintbrushShape.NAME,SplotchBrushShape.NAME,PaintBrushShape1.NAME]);
+			brushEngine.param_shapes.stringList = Vector.<String>([PaintBrushShape1.NAME,PaintbrushShape.NAME,SplotchBrushShape.NAME,PaintBrushShape1.NAME,EraserBrushShape.NAME]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -138,7 +139,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function onPrecisionChanged(event:Event):void
 		{
-			var precision:Number = param_precision.numberValue;
+			precision = param_precision.numberValue;
 			
 			callbackDecorator.active=false;
 			splatterDecorator.active=true;
@@ -242,12 +243,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					//sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 1;
 					//sizeDecorator.param_mappingFactor.numberValue = 0;
-
 					
 					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_PRESSURE_SPEED;
 					spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_RANDOM;
 					spawnDecorator.param_multiples.upperRangeValue = 1;
-					spawnDecorator.param_multiples.lowerRangeValue = 4;
+					spawnDecorator.param_multiples.lowerRangeValue = 6;
 					//spawnDecorator.param_multiples.upperRangeValue = 1;
 					//spawnDecorator.param_multiples.lowerRangeValue = 1;
 					spawnDecorator.param_maxSize.numberValue = 0.05 + precision * 0.36;
@@ -508,9 +508,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				
 			}
 		
-			
-			
-			
+
 		}	
 		
 		
@@ -532,66 +530,64 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			return points;
 		}
-		/*private static const definitionXML:XML = <brush engine={BrushType.SPRAY_CAN} name="Paint Brush">
-		<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0" />
-		<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="line" />
-		<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value="0"/>
 		
-		<parameterMapping>
-		<parameter id="Brush Style" type={PsykoParameter.IconListParameter} label="Style" list="Small,Medium,Large" index="1" showInUI="0"/>
-		<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Brush Style"
-		target="pathengine.pointdecorator_4"
-		condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-		indices="1"/>
+		override public function set eraserMode( enabled:Boolean ):void
+		{
+			super.eraserMode = (enabled);
+			
+			if ( enabled )
+			{
+				onPrecisionChanged(null);
+				onIntensityChanged(null);
+				
+				brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.4 + precision  *4;
+				
+				//it's a good idea to put the eraser shape always as the last element into the shapes list
+				//like that you will not have to update the index in case you are more regular shapes
+				brushEngine.param_shapes.index = brushEngine.param_shapes.stringList.indexOf(EraserBrushShape.NAME);
+				
+				SprayCanBrush(brushEngine).param_eraserMode.booleanValue=true;
+				
+				splatterDecorator.active=false;
+				spawnDecorator.active=false;
+				sizeDecorator.active=true;
+				bumpDecorator.active=true;
+				
+				sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
+				sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
+				sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
+				//sizeDecorator.param_mappingRange.numberValue = 0.001+precision * (0.1);
+				sizeDecorator.param_mappingRange.numberValue = 0;
+				sizeDecorator.param_maxSpeed.numberValue = 200;
+				sizeDecorator.param_mappingFactor.numberValue = 1;
+				sizeDecorator.param_mappingRange.numberValue = 0.0;
+				sizeDecorator.param_mappingFactor.minLimit = 0.01;
+				sizeDecorator.param_mappingFactor.maxLimit = 2;
+				
+				colorDecorator.param_pickRadius.lowerRangeValue = 0;
+				colorDecorator.param_pickRadius.upperRangeValue = 0;
+				colorDecorator.param_brushOpacity.numberValue = 0.8;
+				colorDecorator.param_brushOpacityRange.numberValue = 0.1;
+				colorDecorator.param_colorBlending.upperRangeValue = 0.98;
+				colorDecorator.param_colorBlending.lowerRangeValue = 0.90;
+				
+				bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
+				bumpDecorator.param_bumpInfluence.numberValue = 1;
+				bumpDecorator.param_bumpiness.numberValue = 1 ;
+				bumpDecorator.param_bumpinessRange.numberValue = 0.00 ;
+				bumpDecorator.param_noBumpProbability.numberValue=0.0;
+				//MAKE IT WET
+				bumpDecorator.param_glossiness.numberValue = 0.13  ;
+				
+				
+				
+				
+			} else {
+				SprayCanBrush(brushEngine).param_eraserMode.booleanValue=false;
+				onStyleChanged(null);
+			}
+		}
 		
-		</parameterMapping>
-		
-		<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
-		<parameter id={AbstractPathEngine.PARAMETER_SEND_TAPS} path="pathengine" value="0" />
-		<parameter id={AbstractPathEngine.PARAMETER_SPEED_SMOOTHING} path="pathengine" value="0.02" />
-		<parameter id={AbstractPathEngine.PARAMETER_OUTPUT_STEP} path="pathengine" value="4" />
-		
-		<SizeDecorator>
-		<parameter id={SizeDecorator.PARAMETER_SL_MODE} index={SizeDecorator.INDEX_MODE_SPEED} path="pathengine.pointdecorator_0" />
-		<parameter id={SizeDecorator.PARAMETER_N_FACTOR} path="pathengine.pointdecorator_0" value="0.3" minValue="0" maxValue="2"/>
-		<parameter id={SizeDecorator.PARAMETER_N_RANGE} path="pathengine.pointdecorator_0" label="Range" value="0.2" minValue="0" maxValue="1" />
-		
-		<parameter id={SizeDecorator.PARAMETER_SL_MAPPING} index="2" path="pathengine.pointdecorator_0"/>
-		</SizeDecorator>
-		<SpawnDecorator>
-		<parameter id={SpawnDecorator.PARAMETER_SL_OFFSET_MODE} index={SpawnDecorator.INDEX_MODE_PRESSURE_SPEED} path="pathengine.pointdecorator_1" />
-		<parameter id={SpawnDecorator.PARAMETER_IR_MULTIPLES} value1="8" value2="8" path="pathengine.pointdecorator_1" />
-		<parameter id={SpawnDecorator.PARAMETER_N_MAXIMUM_OFFSET} path="pathengine.pointdecorator_1" value="16" minValue="0" maxValue="50" showInUI="1"/>
-		<parameter id={SpawnDecorator.PARAMETER_N_MINIMUM_OFFSET} path="pathengine.pointdecorator_1" value="1" minValue="0" maxValue="200"/>
-		<parameter id={SpawnDecorator.PARAMETER_AR_OFFSET_ANGLE} path="pathengine.pointdecorator_1" value1="-1" value2="1" />
-		<parameter id={SpawnDecorator.PARAMETER_AR_BRUSH_ANGLE_VARIATION} path="pathengine.pointdecorator_1" value1="-2" value2="2" />
-		<parameter id={SpawnDecorator.PARAMETER_N_BRISTLE_VARIATION} path="pathengine.pointdecorator_1" value="1"/>
-		</SpawnDecorator>
-		<BumpDecorator>
-		<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_2" index={BumpDecorator.INDEX_MODE_FIXED} />
-		<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_2" value="0.5" />
-		<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_2" value="1.5"/>
-		<parameter id={BumpDecorator.PARAMETER_N_SHININESS} path="pathengine.pointdecorator_2" value="0.9" />
-		<parameter id={BumpDecorator.PARAMETER_N_GLOSSINESS} path="pathengine.pointdecorator_2" value="0.4" />
-		<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_2" value="0.8" />
-		</BumpDecorator>
-		<ColorDecorator>
-		<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS} path="pathengine.pointdecorator_3" value1="0.0005" value2="0.1" />
-		<parameter id={ColorDecorator.PARAMETER_SL_PICK_RADIUS_MODE} path="pathengine.pointdecorator_3" index="1" />
-		<parameter id={ColorDecorator.PARAMETER_N_OPACITY}  path="pathengine.pointdecorator_3" value="0.75" showInUI="2" />
-		<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_3" value1="0.1" value2="0.3" />
-		<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_3" color="0xffffff"/>
-		</ColorDecorator>
-		<SplatterDecorator >
-		<parameter id={SplatterDecorator.PARAMETER_A_OFFSET_ANGLE_RANGE} value1="0" value2="0" path="pathengine.pointdecorator_4" />
-		<parameter id={SplatterDecorator.PARAMETER_A_ANGLE_ADJUSTMENT} value="90" path="pathengine.pointdecorator_4" />
-		<parameter id={SplatterDecorator.PARAMETER_N_SPLAT_FACTOR} value="5" path="pathengine.pointdecorator_4" />
-		<parameter id={SplatterDecorator.PARAMETER_N_SIZE_FACTOR} value="0" path="pathengine.pointdecorator_4" />
-		<parameter id={SplatterDecorator.PARAMETER_N_MINIMUM_OFFSET} value="2" path="pathengine.pointdecorator_4" />
-		</SplatterDecorator>
-		
-		</pathengine>
-		</brush>*/
 		
 	}
 }

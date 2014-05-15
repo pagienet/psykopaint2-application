@@ -74,7 +74,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
 			brushEngine.param_curvatureSizeInfluence.numberValue = 0;
 			brushEngine.param_shapes.stringList = Vector.<String>([NoisyBrushShape2.NAME,AlmostCircularRoughShape.NAME,AlmostCircularHardShape.NAME,SplatterSprayShape.NAME,SplatterSprayShape.NAME,EraserBrushShape.NAME]);
-			
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Spray","Sponge","Digital","Flare","Dropping"]);
+
 			
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
@@ -84,7 +85,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			pathManager.pathEngine.sendTaps = false;
 			pathManager.addCallback( this,null,onPathStart,onPathEnd );
 			
-			
 			stationaryDecorator = new StationaryDecorator();
 			stationaryDecorator.param_delay.numberValue=10;
 			stationaryDecorator.param_maxOffset.numberValue=20;
@@ -92,7 +92,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			stationaryDecorator.param_sizeRange.upperRangeValue=1;
 			pathManager.addPointDecorator(stationaryDecorator);
 
-			
 			sizeDecorator = new SizeDecorator();
 			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
 			sizeDecorator.param_mappingFactor.numberValue = 0.2;
@@ -158,7 +157,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			//UI elements:
 			//NOTE: The Eraser is NOT added as a style here
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Spray","Sponge","Digital","Flare","Dropping"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -230,10 +228,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_FIXED;
 			spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_FIXED;
-			spawnDecorator.param_multiples.upperRangeValue = 1;
-			spawnDecorator.param_multiples.lowerRangeValue = 1;
-			//spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -180;
-			//spawnDecorator.param_offsetAngleRange.upperDegreesValue = 180;
+			spawnDecorator.param_multiples.upperRangeValue = 0;
+			spawnDecorator.param_multiples.lowerRangeValue = 0;
 			spawnDecorator.param_maxSize.numberValue = 0.12;
 			spawnDecorator.param_minOffset.numberValue = 0;
 			spawnDecorator.param_maxOffset.numberValue = 16;
@@ -673,14 +669,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				//bumpDecorator.param_shininess.numberValue = 0.1 + 0.2 * intensity;
 			}
 			
-			if ( eraserMode )
-			{
-				//THIS WILL MAKE SURE THAT ERASER ALSO REMOVE DEPTH
-				//bumpDecorator.param_bumpInfluence.numberValue = - intensity;
-				//bumpDecorator.param_bumpiness.numberValue = 0;
-				//bumpDecorator.param_bumpinessRange.numberValue = 0;
-				
-			} 
+			
 		}
 		
 		protected function processPoints(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
@@ -753,13 +742,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				
 				//it's a good idea to put the eraser shape always as the last element into the shapes list
 				//like that you will not have to update the index in case you are more regular shapes
-				brushEngine.param_shapes.index = brushEngine.param_shapes.maxLimit;
+				brushEngine.param_shapes.index = brushEngine.param_shapes.stringList.indexOf(EraserBrushShape.NAME);
 				
 				SprayCanBrush(brushEngine).param_eraserMode.booleanValue=true;
 				
 				gridDecorator.active=false;
 				splatterDecorator.active=false;
 				spawnDecorator.active=false;
+				bumpDecorator.active=true;
+					
 				
 				sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
 				sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
@@ -767,6 +758,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				//sizeDecorator.param_mappingRange.numberValue = 0.001+precision * (0.1);
 				sizeDecorator.param_mappingRange.numberValue = 0;
 				sizeDecorator.param_maxSpeed.numberValue = 200;
+				sizeDecorator.param_mappingFactor.numberValue = 1;
+				sizeDecorator.param_mappingRange.numberValue = 0.0;
+				sizeDecorator.param_mappingFactor.minLimit = 0.01;
+				sizeDecorator.param_mappingFactor.maxLimit = 2;
 				
 				colorDecorator.param_pickRadius.lowerRangeValue = 0;
 				colorDecorator.param_pickRadius.upperRangeValue = 0;
@@ -777,7 +772,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				
 				bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 				bumpDecorator.param_bumpInfluence.numberValue = 1;
-				bumpDecorator.param_bumpiness.numberValue = 0.0 ;
+				bumpDecorator.param_bumpiness.numberValue = 1 ;
 				bumpDecorator.param_bumpinessRange.numberValue = 0.00 ;
 				bumpDecorator.param_noBumpProbability.numberValue=0.0;
 				//MAKE IT WET
