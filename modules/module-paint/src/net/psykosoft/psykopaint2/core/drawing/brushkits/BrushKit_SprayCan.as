@@ -85,7 +85,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
 			pathManager.pathEngine.outputStepSize.numberValue = 4;
 			pathManager.pathEngine.sendTaps = false;
-			pathManager.addCallback( this,null,onPathStart,onPathEnd );
+			pathManager.addCallback( this,null,onPathStart,onPathEnd,null,onFingerUp );
 			
 			stationaryDecorator = new StationaryDecorator();
 			stationaryDecorator.param_delay.numberValue=10;
@@ -197,6 +197,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			stationaryDecorator.resetLastPoint();
 		}
 		
+
+		private function onFingerUp( x:Number, y:Number ):void
+		{
+			trace("the finger was lifted at",x,y);
+		}
+		
+
 		//This is where all the style related brush defaults are set - and this needs only to be called when the 
 		//style changes
 		private function setStyleDefaults():void

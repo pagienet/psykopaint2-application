@@ -66,7 +66,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			var tempSnapShot : CanvasSnapShot = snapshot;
 			// set lastDrawCount to 3 to prevent final stationary, we need to add this before snap shot is trimmed
 			_lastDrawCount = 3;
-			simulationMesh.appendStationary();
+//			simulationMesh.appendStationary();
 
 			_view.stage.frameRate = 60;
 			_cleanUpTickerTimer = new Timer(1500, 1);

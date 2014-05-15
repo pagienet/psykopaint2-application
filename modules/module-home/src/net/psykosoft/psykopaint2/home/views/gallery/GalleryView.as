@@ -709,8 +709,6 @@ public class GalleryView extends Sprite
 			if (_paintings[imageProxy.index]) {
 				_lowQualityMaterials[imageProxy.index].texture = thumbnail;
 				_paintings[imageProxy.index].showRibbon(imageProxy.paintingMode == PaintMode.COLOR_MODE, _ribbon);
-
-				
 			}
 		}
 
@@ -747,7 +745,7 @@ public class GalleryView extends Sprite
 			_highQualityIndex = _activeImageProxy.index;
 
 			// it may have been disposed before load finished?
-			if (_paintings[_activeImageProxy.index])
+			if (_activeImageProxy && _paintings[_activeImageProxy.index])
 				_paintings[_activeImageProxy.index].material = _highQualityMaterial;
 		}
 
