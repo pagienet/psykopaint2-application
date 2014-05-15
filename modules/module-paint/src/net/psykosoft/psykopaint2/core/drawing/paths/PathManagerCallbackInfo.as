@@ -7,14 +7,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		public var onPathStart:Function;
 		public var onPathEnd:Function;
 		public var onPickColor:Function;
+		public var onFingerUp:Function;
 		
-		public function PathManagerCallbackInfo(callbackObject:Object, onPathPoints:Function = null, onPathStart:Function = null, onPathEnd:Function = null, onPickColor:Function = null)
+		public function PathManagerCallbackInfo(callbackObject:Object, onPathPoints:Function = null, onPathStart:Function = null, onPathEnd:Function = null, onPickColor:Function = null, onFingerUp:Function = null)
 		{
 			this.callbackObject = callbackObject;
 			this.onPathPoints = onPathPoints;
 			this.onPathStart = onPathStart;
 			this.onPathEnd = onPathEnd;
 			this.onPickColor = onPickColor;
+			this.onFingerUp = onFingerUp;
 		}
 	}
 }
