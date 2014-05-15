@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		public static const NAME:String = "basic";
 
 		
-		[Embed(source="assets/basic_normalmap3.png", mimeType="image/png")]
+		[Embed(source="assets/png/basic_normalmap3.png", mimeType="image/png")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function BasicBrushShape(context3D : Context3D)

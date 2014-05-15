@@ -1,15 +1,17 @@
 package net.psykosoft.psykopaint2.home.views.book.layouts
 {
-	import away3d.core.managers.Stage3DProxy;
-	import away3d.hacks.FlatTextureMaterial;
-	import away3d.hacks.TrackedBitmapRectTexture;
-
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
+	
 	import flash.display.BitmapData;
 	import flash.events.Event;
-
+	
 	import away3d.containers.ObjectContainer3D;
 	import away3d.core.base.Geometry;
+	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
+	import away3d.hacks.FlatTextureMaterial;
+	import away3d.hacks.TrackedBitmapRectTexture;
 	import away3d.hacks.TrackedBitmapTexture;
 	import away3d.materials.TextureMaterial;
 	import away3d.textures.BitmapTexture;
@@ -18,6 +20,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 	
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.core.models.SourceImageProxy;
+	import net.psykosoft.psykopaint2.home.views.book.BookPageView;
 	import net.psykosoft.psykopaint2.home.views.book.HomeGeometryCache;
 	import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
 	
@@ -123,7 +126,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			_thumbTexture.getTextureForStage3D(_stage3DProxy);
 			_thumbMesh.material = _thumbMaterial;
 			bitmapData.dispose();
-
+			
 			dispatchEvent(new Event(EVENT_LOADED));
 		}
 

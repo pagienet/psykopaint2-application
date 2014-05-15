@@ -70,6 +70,11 @@ package net.psykosoft.psykopaint2.home.views.book
 		}
 		
 		
+		public function get flipped():Boolean
+		{
+			return _flipped;
+		}
+
 		public function setPageNumber(value:int):void{
 			
 			var geometry:PlaneGeometry;

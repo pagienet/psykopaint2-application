@@ -9,6 +9,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AlmostCircularHardShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AlmostCircularRoughShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BasicBrushShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BasicCircularShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.EraserBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.NoisyBrushShape2;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.SplatterSprayShape;
@@ -29,10 +31,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 	public class BrushKit_SprayCan extends BrushKit
 	{
-		private static const STYLE_DEFAULT:int=0;
+		private static const STYLE_DEFAULT:int=3;
 		private static const STYLE_SPONGE:int = 1;
 		private static const STYLE_DIGITAL:int = 2;
-		private static const STYLE_HALO_SPRAY:int = 3;
+		private static const STYLE_HALO_SPRAY:int = 0;
 		//private static const STYLE_BLOODSPLAT:int = 4;
 		//private static const STYLE_FRECKLES2:int = 5;
 		private static const STYLE_DROPPING:int = 4;
@@ -73,8 +75,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
 			brushEngine.param_curvatureSizeInfluence.numberValue = 0;
-			brushEngine.param_shapes.stringList = Vector.<String>([NoisyBrushShape2.NAME,AlmostCircularRoughShape.NAME,AlmostCircularHardShape.NAME,SplatterSprayShape.NAME,SplatterSprayShape.NAME,EraserBrushShape.NAME]);
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Spray","Sponge","Digital","Flare","Dropping"]);
+			brushEngine.param_shapes.stringList = Vector.<String>([SplatterSprayShape.NAME,NoisyBrushShape2.NAME,AlmostCircularRoughShape.NAME,BasicCircularShape.NAME,SplatterSprayShape.NAME,EraserBrushShape.NAME]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["Flare","Spray","Sponge","Digital","Dropping"]);
 
 			
 			
@@ -179,7 +181,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			onStyleChanged();
 		}
 		
+		//WHEN START DRAWING
 		private function onPathStart():void
+		{
+			
+		}
+		
+		//WHEN RELEASE DRAWING
+		private function onPathEnd():void
 		{
 			if (  _persistentPoints[0] != null ) {
 				PathManager.recycleSamplePoint(_persistentPoints[0]);
@@ -187,9 +196,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			}
 			stationaryDecorator.resetLastPoint();
 		}
-		
-		private function onPathEnd():void
-		{}
 		
 		//This is where all the style related brush defaults are set - and this needs only to be called when the 
 		//style changes
@@ -279,9 +285,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 					bumpDecorator.param_bumpInfluence.numberValue = 0.5;
-					bumpDecorator.param_bumpiness.numberValue = 0.4 ;
+					bumpDecorator.param_bumpiness.numberValue = 0.1 ;
 					bumpDecorator.param_bumpinessRange.numberValue = 0.02 ;
-					bumpDecorator.param_glossiness.numberValue =0.3  ;
+					bumpDecorator.param_glossiness.numberValue =0.5  ;
 					bumpDecorator.param_noBumpProbability.numberValue=0.0;
 					
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.0;
@@ -341,8 +347,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.4;
 					colorDecorator.param_pickRadius.upperRangeValue = 0.4;
-					colorDecorator.param_brushOpacity.numberValue = 0.7;
-					colorDecorator.param_brushOpacityRange.numberValue = 0.1;
+					colorDecorator.param_brushOpacity.numberValue = 1;
+					colorDecorator.param_brushOpacityRange.numberValue = 0.0;
 					colorDecorator.param_colorBlending.upperRangeValue = 0.98;
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.90;
 					
@@ -353,10 +359,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_PRESSURE_SPEED;
 					bumpDecorator.param_invertMapping.booleanValue=true;
-					bumpDecorator.param_bumpInfluence.numberValue = 0.02;
-					bumpDecorator.param_bumpiness.numberValue = 0.005 ;
+					bumpDecorator.param_bumpInfluence.numberValue = 1;
+					bumpDecorator.param_bumpiness.numberValue = 0.0 ;
 					bumpDecorator.param_bumpinessRange.numberValue = 0.0 ;
-					bumpDecorator.param_glossiness.numberValue = 0.23  ;
+					bumpDecorator.param_glossiness.numberValue = 0.13  ;
 					bumpDecorator.param_noBumpProbability.numberValue=0.0;
 					break;
 				

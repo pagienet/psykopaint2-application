@@ -13,10 +13,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		public static const NAME:String = "sumi";
 
 		
-		[Embed(source="assets/sumi_8x8.png", mimeType="image/png")]
+		[Embed(source="assets/png/sumi_8x8.png", mimeType="image/png")]
 		protected var SourceMap:Class;
 		
-		[Embed(source="assets/sumi_8x8_height.png", mimeType="image/png")]
+		[Embed(source="assets/png/sumi_8x8_height.png", mimeType="image/png")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function SumiShape(context3D : Context3D)

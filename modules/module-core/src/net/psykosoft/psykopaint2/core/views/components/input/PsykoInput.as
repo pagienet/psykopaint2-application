@@ -2,19 +2,21 @@ package net.psykosoft.psykopaint2.core.views.components.input
 {
 
 	import com.greensock.TweenLite;
-
+	
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
+	import flash.text.Font;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
+	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
 	import flash.utils.Timer;
 	import flash.utils.setTimeout;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class PsykoInput extends Sprite
@@ -105,13 +107,26 @@ package net.psykosoft.psykopaint2.core.views.components.input
 
 		public function behavesAsPassword( value:Boolean ):void {
 			_behavesAsPassword = value;
+			tf.displayAsPassword = value;
+			if(value==true){
+				//HAVE TO CHANGE THE FONT FOR PWD CAUSE IT DOESN'T WORK WITH REGULAR EMBDED FONT
+				
+				var passwordTxtFormat:TextFormat = new TextFormat();
+				passwordTxtFormat.font = "_sans";
+				passwordTxtFormat.size = 50;
+				tf.embedFonts = false;
+				tf.setTextFormat(passwordTxtFormat);
+				tf.defaultTextFormat = passwordTxtFormat;
+			}else {
+				tf.embedFonts = true;
+			}
 		}
 
 		public function focusIn():void {
 
 			showBlueHighlight();
 
-			if( _behavesAsPassword ) tf.displayAsPassword = true;
+			
 
 			// From default text to empty string?
 			if( tf.text == _defaultText ) {
@@ -170,7 +185,7 @@ package net.psykosoft.psykopaint2.core.views.components.input
 		}
 
 		private function onTfChange( event:Event ):void {
-			if( _behavesAsPassword ) tf.displayAsPassword = true;
+		//	if( _behavesAsPassword ) tf.displayAsPassword = true;
 			showCancelButton( tf.text.length > 0 );
 		}
 
@@ -182,7 +197,7 @@ package net.psykosoft.psykopaint2.core.views.components.input
 			if( hitsBtn ) return;
 
 			if( tf.text == "" ) {
-				if( _behavesAsPassword ) tf.displayAsPassword = false;
+				//if( _behavesAsPassword ) tf.displayAsPassword = false;
 				tf.textColor = _defaultTextColor;
 				tf.text = _defaultText;
 			}

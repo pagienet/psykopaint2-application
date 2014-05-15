@@ -8,10 +8,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		public static const NAME:String = "scales";
 
 		
-		[Embed(source="assets/scales_color.png", mimeType="image/png")]
+		[Embed(source="assets/png/scales_color.png", mimeType="image/png")]
 		protected var SourceImage:Class;
 
-		[Embed(source="assets/scales_normal.png", mimeType="image/png")]
+		[Embed(source="assets/png/scales_normal.png", mimeType="image/png")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function ScalesBrushShape(context3D : Context3D)

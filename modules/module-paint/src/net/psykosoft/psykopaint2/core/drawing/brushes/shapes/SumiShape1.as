@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	public class SumiShape1 extends EmbeddedBrushShapeATF
 	{
-		[Embed(source="assets/sumi.atf", mimeType="application/octet-stream")]
+		[Embed(source="assets/atf/sumi.atf", mimeType="application/octet-stream")]
 		protected var SourceImage:Class;
 
 		public function SumiShape1(context3D : Context3D)

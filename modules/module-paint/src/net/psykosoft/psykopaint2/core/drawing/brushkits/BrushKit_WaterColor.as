@@ -149,9 +149,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			spawnDecorator.param_sizeMappingFunction.numberValue =AbstractPointDecorator.INDEX_MAPPING_EXPONENTIAL_IN;
 			spawnDecorator.param_sizeFactor.numberValue = 0.2;
 			
-			
-			
-			
 
 			sizeDecorator = new SizeDecorator();
 			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_SPEED;
@@ -164,7 +161,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			
 			stationaryDecorator = new StationaryDecorator();
-			stationaryDecorator.param_delay.numberValue=0;
+			stationaryDecorator.param_delay.numberValue=10;
 			stationaryDecorator.param_maxOffset.numberValue=30;
 			stationaryDecorator.param_sizeRange.lowerRangeValue=0.1;
 			stationaryDecorator.param_sizeRange.upperRangeValue=0.5;

@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		private var _grain : Number = 0.9;
 		private var _coarseness : Number = .4;
 
-		[Embed(source="assets/pencilAlpha.png")]
+		[Embed(source="assets/png/pencilAlpha.png")]
 		private var AlphaMaskAsset : Class;
 
 		public function PencilBrushShape(context3D : Context3D)

@@ -13,10 +13,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		public static const NAME:String = "vectorsplat";
 
 		
-		[Embed(source="assets/vectorsplat.png", mimeType="image/png")]
+		[Embed(source="assets/png/vectorsplat.png", mimeType="image/png")]
 		protected var SourceMap:Class;
 		
-		[Embed(source="assets/vectorsplat_height.png", mimeType="image/png")]
+		[Embed(source="assets/png/vectorsplat_height.png", mimeType="image/png")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function VectorSplatShape(context3D : Context3D)

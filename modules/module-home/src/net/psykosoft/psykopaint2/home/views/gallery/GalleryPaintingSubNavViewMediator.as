@@ -92,7 +92,15 @@ import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 
 				var showLove:Boolean = activePaintingModel.painting.userID != loggedInUser.userID;
 //				trace("show love button: " + showLove);
+				
 				view.setButtonVisibilityWithID(GalleryPaintingSubNavView.ID_LOVE, showLove);
+				
+				//MATHIEU HACK TO CENTER SHARE BUTTO UNTIL WE FIX THE WHOLE NAV SYSTEM.
+				if(showLove==false){
+					view.x = -60;
+				}else {
+					view.x = 0;
+				}
 			}
 		}
 

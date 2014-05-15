@@ -34,34 +34,80 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		private function registerDefaultShapes(context3D : Context3D) : void
 		{
-			registerShape(new AlmostCircularHardShape(context3D));
+			//SPRAYCAN USES: NoisyBrushShape2.NAME,
+			/*	AlmostCircularRoughShape.NAME,
+				BasicCircularShape.NAME,
+				SplatterSprayShape.NAME,
+				SplatterSprayShape.NAME,
+				EraserBrushShape.NAME*/
+			//PENCIL USES: 
+			/*	DotsBrushShape.NAME,
+				LineBrushShape.NAME,
+				PencilSketchBrushShape.NAME,
+				PencilSketchBrushShape.NAME,
+				PaintBrushShape1.NAME,
+				PaintBrushShape1.NAME,
+				EraserBrushShape.NAME*/
+			//BRISTLE BRUSH
+			/*	PaintBrushShape1.NAME,
+				PaintbrushShape.NAME,
+				SplotchBrushShape.NAME,
+				PaintBrushShape1.NAME*/
+			//WATERCOLOR
+			/*	WetBrushShape2.NAME,
+				WetBrushShape.NAME,
+				AlmostCircularHardShape.NAME*/
+			//PAINTGUN
+			/*	InkSplatsShape.NAME,
+				SplatsShape.NAME,
+				SprayShape.NAME,
+				CrayonShape.NAME,
+				SplotchBrushShape.NAME,
+				SplotchBrushShape.NAME,
+				EraserBrushShape.NAME*/
+			//SPRAYCAN
 			registerShape(new AlmostCircularRoughShape(context3D));
-			registerShape(new BasicBrushShape(context3D));
 			registerShape(new BasicCircularShape(context3D));
-			registerShape(new BasicSmoothBrushShape(context3D));
-			registerShape(new CrayonShape(context3D));
-			registerShape(new DotsBrushShape(context3D));
-			registerShape(new DotBrushShape(context3D));
 			registerShape(new EraserBrushShape(context3D));
-			registerShape(new InkSplatsShape(context3D));
-			registerShape(new LineBrushShape(context3D));
+			registerShape(new SplatterSprayShape(context3D));
 			registerShape(new NoisyBrushShape2(context3D));
-			registerShape(new PaintbrushShape(context3D));
+
+
+			registerShape(new DotsBrushShape(context3D));
+			registerShape(new LineBrushShape(context3D));
+			registerShape(new PencilSketchBrushShape(context3D));
 			registerShape(new PaintBrushShape1(context3D));
+
+			registerShape(new PaintbrushShape(context3D));
+			registerShape(new SplotchBrushShape(context3D));
+			
+			//WATERCOLOR
+			registerShape(new WetBrushShape(context3D));
+			registerShape(new WetBrushShape2(context3D));
+			registerShape(new AlmostCircularHardShape(context3D));
+			
+			registerShape(new InkSplatsShape(context3D));
+			registerShape(new SplatsShape(context3D));
+			registerShape(new SprayShape(context3D));
+			registerShape(new CrayonShape(context3D));
+
+			
+			/*
+			
+			registerShape(new BasicBrushShape(context3D));
+			registerShape(new BasicSmoothBrushShape(context3D));
+			registerShape(new DotBrushShape(context3D));
+			registerShape(new LineBrushShape(context3D));
+			registerShape(new PaintbrushShape(context3D));
 			registerShape(new PencilSketchBrushShape(context3D));
 			registerShape(new RenderTextureBrushShape(context3D));
 			registerShape(new ScalesBrushShape(context3D));
-			registerShape(new SplatsShape(context3D));
 			registerShape(new SplatBrushShape(context3D));
-			registerShape(new SplatterSprayShape(context3D));
-			registerShape(new SplotchBrushShape(context3D));
-			registerShape(new SprayShape(context3D));
 			registerShape(new SumiShape(context3D));
 			registerShape(new VarnishBrushShape(context3D));
 			registerShape(new VectorSplatShape(context3D));
-			registerShape(new WetBrushShape(context3D));
-			registerShape(new WetBrushShape2(context3D));
-			/*
+			
+			
 			//disabled unused shapes
 			
 			registerShape(new SquareBrushShape(context3D));
@@ -86,8 +132,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function registerShape(shape : AbstractBrushShape) : void
 		{
-			//if (_shapes[shape.id]) throw "Brush shape with id '" + shape.id + "' already registered";
-			_shapes[shape.id] = shape;
+			if (_shapes[shape.id]) {
+				trace("Brush shape with id '" + shape.id + "' already registered");
+				//	throw "Brush shape with id '" + shape.id + "' already registered";
+			}else {
+				_shapes[shape.id] = shape;
+			}
 		}
 
 		public function getBrushShape(id : String) : AbstractBrushShape

@@ -8,9 +8,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		public static const NAME:String = "pencilSketch";
 
 		
-		[Embed( source = "assets/pencilSketch.atf", mimeType="application/octet-stream")]
+		[Embed( source = "assets/atf/pencilSketch.atf", mimeType="application/octet-stream")]
 		protected var SourceImage : Class;
-
+ 
 		public function PencilSketchBrushShape(context3D : Context3D)
 		{
 			super(context3D,NAME, SourceImage, null, 512, 2, 2 );

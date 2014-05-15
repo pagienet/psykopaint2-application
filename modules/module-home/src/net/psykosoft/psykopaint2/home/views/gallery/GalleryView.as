@@ -150,9 +150,9 @@ public class GalleryView extends Sprite
 			stencilMethod.compareMode = Context3DCompareMode.NOT_EQUAL;
 			ribbonMaterial.addMethod(stencilMethod);
 
-			_ribbon = new Mesh(new PlaneGeometry(50, 50, 1, 1, false, true), ribbonMaterial);
-			_ribbon.x = -79.5;
-			_ribbon.y = 53.5;
+			_ribbon = new Mesh(new PlaneGeometry(25, 25, 1, 1, false, true), ribbonMaterial);
+			_ribbon.x = -92;
+			_ribbon.y = 66;
 			_ribbon.z = -1;
 			//_ribbon.scaleX = _ribbon.scaleY = 0.5; 
 		}

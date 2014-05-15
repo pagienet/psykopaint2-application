@@ -2,15 +2,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 {
 	import flash.display3D.Context3D;
 	
-	public class LineBrushShape extends EmbeddedBrushShape
+	public class LineBrushShape extends EmbeddedBrushShapeATF
 	{
 		public static const NAME:String = "line";
 
 		
-		[Embed(source="assets/lines3.png", mimeType="image/png")]
+		[Embed(source="assets/atf/lines3.atf", mimeType="application/octet-stream")]
 		protected var SourceMap:Class;
 		
-		[Embed(source="assets/lines3_height.png", mimeType="image/png")]
+		[Embed(source="assets/atf/lines3_height.atf", mimeType="application/octet-stream")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function LineBrushShape(context3D : Context3D)

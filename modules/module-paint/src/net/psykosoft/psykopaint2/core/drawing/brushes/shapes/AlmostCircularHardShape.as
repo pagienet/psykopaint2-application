@@ -8,16 +8,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.geom.Matrix;
 
 	
-	public class AlmostCircularHardShape extends EmbeddedBrushShape
+	public class AlmostCircularHardShape extends EmbeddedBrushShapeATF
 	{
 		
 		public static const NAME:String="almost circular hard";
 		
-		[Embed(source="assets/notentirelycircular2.png", mimeType="image/png")]
+		[Embed(source="assets/atf/notentirelycircular1.atf", mimeType="application/octet-stream")]
 		protected var SourceMap:Class;
 		
 		//[Embed(source="assets/notentirelycircularheight9_8x8.png", mimeType="image/png")]
-		[Embed(source="assets/notentirelycircular2_hsp.png", mimeType="image/png")]
+		[Embed(source="assets/atf/notentirelycircular2_hsp.atf", mimeType="application/octet-stream")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function AlmostCircularHardShape(context3D : Context3D)

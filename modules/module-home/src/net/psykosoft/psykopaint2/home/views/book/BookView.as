@@ -240,6 +240,9 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		public function setGalleryImageCollection(galleryImageCollection:GalleryImageCollection):void
 		{
+			//RESET INDEX:
+			_doublePageIndex=0;
+			
 			//TYPE GALLERY
 			_viewType = TYPE_GALLERY_VIEW;
 

@@ -1,28 +1,27 @@
 package net.psykosoft.psykopaint2.home.views.book.layouts
 {
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
+	
 	import flash.display.BitmapData;
 	import flash.display.BlendMode;
 	import flash.events.Event;
-
+	import flash.geom.Matrix;
+	import flash.text.AntiAliasType;
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
+	
 	import away3d.containers.ObjectContainer3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.hacks.FlatTextureMaterial;
 	import away3d.hacks.TrackedBitmapRectTexture;
-
-	import flash.geom.Matrix;
-	import flash.text.AntiAliasType;
-
-	import flash.text.TextField;
-
-	import flash.text.TextFieldAutoSize;
-
-	import flash.text.TextFormat;
-
+	
 	import net.psykosoft.psykopaint2.core.configuration.PsykoFonts;
-
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.ImageThumbnailSize;
+	import net.psykosoft.psykopaint2.home.views.book.BookPageView;
 	import net.psykosoft.psykopaint2.home.views.book.HomeGeometryCache;
 	import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
 
@@ -126,6 +125,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			_shadowMesh.scaleX = 64;
 			_shadowMesh.scaleZ = 25;
 			_shadowMesh.z = -18;
+			_shadowMesh.y = 0;
 			addChild(_shadowMesh);
 		}
 
@@ -167,6 +167,9 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			updateInfoMaterial();
 
 			_onComplete = onComplete;
+			
+			//HIDE SHADOW UNTIL MATERIAL LOADED
+			_shadowMesh.visible=false;
 
 			_thumbMesh.material = HomeMaterialsCache.getTextureMaterialById(HomeMaterialsCache.THUMBNAIL_LOADING)
 			_imageProxy.loadThumbnail(onThumbnailLoaded, onThumbnailFail, ImageThumbnailSize.SMALL);
@@ -213,6 +216,18 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			_thumbTexture.getTextureForStage3D(_stage3DProxy);
 			_thumbMesh.material = _thumbMaterial;
 			bitmapData.dispose();
+			
+			//SUPER HACKY WAY TO MAKE THE TRANSITION IN THE RIGHT DIRECTION
+			//IF YOU CHANGE THE PARENTS JUST REMOVE THAT SHIT
+			
+			_shadowMesh.visible=true;
+			if(this.parent.parent.parent && BookPageView(this.parent.parent.parent).flipped){
+				TweenLite.from(_shadowMesh,0.5,{x:-200,y:2,ease:Expo.easeOut});
+				TweenLite.from(_thumbMesh,0.5,{x:-200,y:2,ease:Expo.easeOut});
+			}else {
+				TweenLite.from(_shadowMesh,0.5,{x:200,y:2,ease:Expo.easeOut});
+				TweenLite.from(_thumbMesh,0.5,{x:200,y:2,ease:Expo.easeOut});
+			}
 
 			dispatchEvent(new Event(EVENT_LOADED));
 

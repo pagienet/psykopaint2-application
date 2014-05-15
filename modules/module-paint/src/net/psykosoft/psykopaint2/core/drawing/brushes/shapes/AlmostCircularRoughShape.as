@@ -2,15 +2,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 {
 	import flash.display3D.Context3D;
 	
-	public class AlmostCircularRoughShape extends EmbeddedBrushShape
+	public class AlmostCircularRoughShape extends EmbeddedBrushShapeATF
 	{
 		public static const NAME:String = "almost circular rough";
 
 		
-		[Embed(source="assets/notentirelycircular18_8x8.png", mimeType="image/png")]
+		[Embed(source="assets/atf/notentirelycircular18_8x8.atf", mimeType="application/octet-stream")]
 		protected var SourceMap:Class;
 		
-		[Embed(source="assets/notentirelycircularheight10_8x8.png", mimeType="image/png")]
+		[Embed(source="assets/atf/notentirelycircularheight10_8x8.atf", mimeType="application/octet-stream")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function AlmostCircularRoughShape(context3D : Context3D)

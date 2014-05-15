@@ -8,15 +8,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.geom.Matrix;
 
 	
-	public class CrayonShape extends EmbeddedBrushShape
+	public class CrayonShape extends EmbeddedBrushShapeATF
 	{
 		public static const NAME:String = "crayon";
 
 		
-		[Embed(source="assets/crayon.png", mimeType="image/png")]
+		[Embed(source="assets/atf/crayon.atf", mimeType="application/octet-stream")]
 		protected var SourceMap:Class;
 		
-		[Embed(source="assets/crayon_height.png", mimeType="image/png")]
+		[Embed(source="assets/atf/crayon_height.atf", mimeType="application/octet-stream")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function CrayonShape(context3D : Context3D)

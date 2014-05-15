@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	public class InkDotShape1 extends EmbeddedYuvMatchingBrushShape
 	{
-		[Embed(source="assets/InkDots1.png", mimeType="image/png")]
+		[Embed(source="assets/png/InkDots1.png", mimeType="image/png")]
 		protected var SourceImage:Class;
 		
 		public function InkDotShape1(context3D : Context3D)

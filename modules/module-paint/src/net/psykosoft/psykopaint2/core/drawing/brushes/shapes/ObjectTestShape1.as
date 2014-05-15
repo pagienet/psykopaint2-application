@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	
 	public class ObjectTestShape1 extends EmbeddedYuvMatchingBrushShape
 	{
-		[Embed(source="assets/TestObjects.png", mimeType="image/png")]
+		[Embed(source="assets/png/TestObjects.png", mimeType="image/png")]
 		protected var SourceImage:Class;
 		
 		

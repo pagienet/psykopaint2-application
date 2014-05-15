@@ -53,7 +53,13 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 				//UPDATE
 					//trace("update thumbnail:: "+i)
 					currentPageThumbnailView = _pageThumbnailViews[i] ;
-					currentPageThumbnailView.imageProxy = currentSourceImageProxy;
+					//currentPageThumbnailView.imageProxy = currentSourceImageProxy;
+					
+					//WE ONLY UPDATE IF THE IMAGE PROXY ID IS DIFFERENT
+					if(currentPageThumbnailView.imageProxy != currentSourceImageProxy)
+					{
+						currentPageThumbnailView.imageProxy = currentSourceImageProxy;
+					}
 					
 				}
 				
@@ -72,7 +78,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		protected function onClickDownThumbnail(event:MouseEvent3D):void
 		{
 			var thumb : BookLayoutSampleThumbView = BookLayoutSampleThumbView(event.target);
-			TweenLite.to(ObjectContainer3D(event.target),0.25,{ease:Expo.easeOut,y:5,rotationX:2,onComplete:function():void{
+			TweenLite.to(ObjectContainer3D(event.target),0.25,{ease:Expo.easeOut,y:2,rotationX:2,onComplete:function():void{
 				TweenLite.to(ObjectContainer3D(event.target),0.25,{ease:Expo.easeOut,y:0,rotationX:0});
 			}});
 

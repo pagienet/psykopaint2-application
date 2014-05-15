@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	public class MixedStuffShape1 extends EmbeddedBrushShapeATF
 	{
-		[Embed(source="assets/crazy1.atf", mimeType="application/octet-stream")]
+		[Embed(source="assets/atf/crazy1.atf", mimeType="application/octet-stream")]
 		protected var SourceImage:Class;
 
 		public function MixedStuffShape1(context3D : Context3D)

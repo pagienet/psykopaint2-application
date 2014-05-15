@@ -4,10 +4,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	public class SplatBrushShape2 extends EmbeddedBrushShape
 	{
-		[Embed(source="assets/brushset2.png", mimeType="image/png")]
+		[Embed(source="assets/png/brushset2.png", mimeType="image/png")]
 		protected var SourceImage:Class;
 
-		[Embed(source="assets/brushset2_NRM.png", mimeType="image/png")]
+		[Embed(source="assets/png/brushset2_NRM.png", mimeType="image/png")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function SplatBrushShape2(context3D : Context3D)

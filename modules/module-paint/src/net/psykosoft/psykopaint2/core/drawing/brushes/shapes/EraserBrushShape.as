@@ -2,12 +2,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 {
 	import flash.display3D.Context3D;
 	
-	public class EraserBrushShape extends EmbeddedBrushShape
+	public class EraserBrushShape extends EmbeddedBrushShapeATF
 	{
-		[Embed(source="assets/NoiseShape.png", mimeType="image/png")]
+		[Embed(source="assets/atf/NoiseShape.atf", mimeType="application/octet-stream")]
 		protected var SourceMap:Class;
 		
-		[Embed(source="assets/NoiseShape.png", mimeType="image/png")]
+		[Embed(source="assets/atf/NoiseShape.atf", mimeType="application/octet-stream")]
 		protected var SourceNormalSpecularMap:Class;
 
 		

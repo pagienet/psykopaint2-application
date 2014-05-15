@@ -8,15 +8,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.geom.Matrix;
 
 	
-	public class SplatsShape extends EmbeddedBrushShape
+	public class SplatsShape extends EmbeddedBrushShapeATF
 	{
 		public static const NAME:String = "splats";
 
 		
-		[Embed(source="assets/splat.png", mimeType="image/png")]
+		[Embed(source="assets/atf/splat.atf", mimeType="application/octet-stream")]
 		protected var SourceMap:Class;
 		
-		[Embed(source="assets/splat_height.png", mimeType="image/png")]
+		[Embed(source="assets/atf/splat_height.atf", mimeType="application/octet-stream")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function SplatsShape(context3D : Context3D)
