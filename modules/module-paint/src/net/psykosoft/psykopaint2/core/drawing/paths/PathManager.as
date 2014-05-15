@@ -137,9 +137,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_callbacks = new Vector.<PathManagerCallbackInfo>();
 		}
 		
-		public function addCallback( callbackObject : Object, onPathPoints : Function, onPathStart : Function = null, onPathEnd : Function = null, onPickColor : Function = null) : void
+		public function addCallback( callbackObject : Object, onPathPoints : Function, onPathStart : Function = null, onPathEnd : Function = null, onPickColor : Function = null, onFingerUp : Function = null) : void
 		{
-			_callbacks.push( new PathManagerCallbackInfo(callbackObject, onPathPoints, onPathStart, onPathEnd, onPickColor ));
+			_callbacks.push( new PathManagerCallbackInfo(callbackObject, onPathPoints, onPathStart, onPathEnd, onPickColor, onFingerUp ));
 		}
 		
 		public function removeCallback( callbackObject : Object) : void
@@ -258,6 +258,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			{
 				enableGestureRecognition(true);
 				_strokeInProgress = false;
+				var px : Number = event.stageX*_canvasScaleX + _canvasOffsetX;
+				var py : Number = event.stageY*_canvasScaleY + _canvasOffsetY;
+				for ( var i:int = 0; i < _callbacks.length; i++ )
+				{
+					if (_callbacks[i].onFingerUp) _callbacks[i].onFingerUp.apply(_callbacks[i].callbackObject,[px,py]);
+				}
 				onSampleEnd(event.stageX, event.stageY);
 				_view.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 				_view.stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
@@ -394,6 +400,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			if ( !CoreSettings.RUNNING_ON_iPAD && !playbackActive )
 			{
 				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
+			}
+			var px : Number = event.stageX*_canvasScaleX + _canvasOffsetX;
+			var py : Number = event.stageY*_canvasScaleY + _canvasOffsetY;
+			for ( var i:int = 0; i < _callbacks.length; i++ )
+			{
+				if (_callbacks[i].onFingerUp) _callbacks[i].onFingerUp.apply(_callbacks[i].callbackObject,[px,py]);
 			}
 			onSampleEnd(event.stageX, event.stageY);
 			_view.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
