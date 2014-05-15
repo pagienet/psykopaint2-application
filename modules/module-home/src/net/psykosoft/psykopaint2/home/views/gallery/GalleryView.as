@@ -709,8 +709,6 @@ public class GalleryView extends Sprite
 			if (_paintings[imageProxy.index]) {
 				_lowQualityMaterials[imageProxy.index].texture = thumbnail;
 				_paintings[imageProxy.index].showRibbon(imageProxy.paintingMode == PaintMode.COLOR_MODE, _ribbon);
-
-				
 			}
 		}
 
