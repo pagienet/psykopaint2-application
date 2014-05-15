@@ -2,8 +2,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 {
 	import flash.events.Event;
 	
+	import net.psykosoft.psykopaint2.core.drawing.brushes.SketchBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.CrayonShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.EraserBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.InkSplatsShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.SplatsShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.SplotchBrushShape;
@@ -42,6 +44,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		
 		private var eraserMode:Boolean;
+		private var precision:Number=0.5;
 		
 		public function BrushKit_Paintgun()
 		{
@@ -59,7 +62,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpiness.numberValue = 0;
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-			brushEngine.param_shapes.stringList = Vector.<String>([InkSplatsShape.NAME,SplatsShape.NAME,SprayShape.NAME,CrayonShape.NAME,SplotchBrushShape.NAME,SplotchBrushShape.NAME]);
+			brushEngine.param_shapes.stringList = Vector.<String>([InkSplatsShape.NAME,SplatsShape.NAME,SprayShape.NAME,CrayonShape.NAME,SplotchBrushShape.NAME,SplotchBrushShape.NAME,EraserBrushShape.NAME]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -110,7 +113,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-			//brushEngine.param_quadOffsetRatio.numberValue = 0;
 			switch ( param_style.index )
 			{
 				
@@ -140,7 +142,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function onPrecisionChanged(event:Event):void
 		{
-			var precision:Number = param_precision.numberValue;
+			precision = param_precision.numberValue;
 			
 			
 			spawnDecorator.active = true;
@@ -566,9 +568,64 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		override public function set eraserMode( enabled:Boolean ):void
 		{
-			super.eraserMode = enabled;
-			onIntensityChanged(null);
+			super.eraserMode = (enabled);
+			
+			if ( enabled )
+			{
+				onPrecisionChanged(null);
+				onIntensityChanged(null);
+				
+				
+				brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.4 + precision  *4;
+
+				
+				//it's a good idea to put the eraser shape always as the last element into the shapes list
+				//like that you will not have to update the index in case you are more regular shapes
+				brushEngine.param_shapes.index = brushEngine.param_shapes.stringList.indexOf(EraserBrushShape.NAME);
+				
+				//SETTING ERASER MODE WILL REMOVE THE DEPTH AS WELL AS THE COLOR
+				SprayCanBrush(brushEngine).param_eraserMode.booleanValue=true;
+				
+
+				splatterDecorator.active=false;
+				spawnDecorator.active=false;
+				bumpDecorator.active=true;
+				
+				sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
+				sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
+				sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
+				//sizeDecorator.param_mappingRange.numberValue = 0.001+precision * (0.1);
+				sizeDecorator.param_mappingRange.numberValue = 0;
+				sizeDecorator.param_maxSpeed.numberValue = 200;
+				sizeDecorator.param_mappingFactor.numberValue = 1;
+				sizeDecorator.param_mappingRange.numberValue = 0.0;
+				sizeDecorator.param_mappingFactor.minLimit = 0.01;
+				sizeDecorator.param_mappingFactor.maxLimit = 2;
+				
+				colorDecorator.param_pickRadius.lowerRangeValue = 0;
+				colorDecorator.param_pickRadius.upperRangeValue = 0;
+				colorDecorator.param_brushOpacity.numberValue = 0.8;
+				colorDecorator.param_brushOpacityRange.numberValue = 0.1;
+				colorDecorator.param_colorBlending.upperRangeValue = 0.98;
+				colorDecorator.param_colorBlending.lowerRangeValue = 0.90;
+				
+				bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
+				bumpDecorator.param_bumpInfluence.numberValue = 1;
+				bumpDecorator.param_bumpiness.numberValue = 0 ;
+				bumpDecorator.param_bumpinessRange.numberValue = 0.00 ;
+				bumpDecorator.param_noBumpProbability.numberValue=0.0;
+				//MAKE IT WET
+				bumpDecorator.param_glossiness.numberValue = 0.10  ;
+				
+				
+				
+				
+			} else {
+				SprayCanBrush(brushEngine).param_eraserMode.booleanValue=false;
+				onStyleChanged(null);
+			}
 		}
+		
 	}
 }
 
