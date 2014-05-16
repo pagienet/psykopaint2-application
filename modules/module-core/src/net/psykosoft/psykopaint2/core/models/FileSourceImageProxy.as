@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.core.models
 		// public for convenience, not accessible through interface anyway
 		public var id : int;
 		public var lowResThumbnailFilename : String;
+		public var mediumResThumbnailFilename : String;
 		public var highResThumbnailFilename : String;
 		public var originalFilename : String;
 		//book debug
@@ -42,7 +43,14 @@ package net.psykosoft.psykopaint2.core.models
 		
 		public function loadThumbnail(onComplete : Function, onError : Function, size : int = 1) : void
 		{
-			load(size == ImageThumbnailSize.LARGE? highResThumbnailFilename : lowResThumbnailFilename, onComplete, onError);
+			if(size== ImageThumbnailSize.LARGE){
+				load(highResThumbnailFilename, onComplete, onError);
+			}else if(size== ImageThumbnailSize.MEDIUM){
+				load(mediumResThumbnailFilename, onComplete, onError);
+			}else {
+				load(lowResThumbnailFilename, onComplete, onError);
+			}
+			
 		}
 
 		public function loadFullSized(onComplete : Function, onError : Function) : void

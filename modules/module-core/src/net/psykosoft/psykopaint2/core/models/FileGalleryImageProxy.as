@@ -9,6 +9,8 @@ package net.psykosoft.psykopaint2.core.models
 	import flash.events.IOErrorEvent;
 	import flash.geom.Matrix;
 	import flash.net.URLRequest;
+	import flash.system.ImageDecodingPolicy;
+	import flash.system.LoaderContext;
 	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
@@ -18,8 +20,11 @@ package net.psykosoft.psykopaint2.core.models
 		public var normalSpecularMapURL  : String;
 		public var colorMapURL  : String;
 		public var sourceThumbnailURL : String;
-		public var thumbnailFilename : String;
-		public var compositeFilename : String;
+		
+		public var tinySizeURL : String;
+		public var smallSizeURL : String;
+		public var mediumSizeURL:String;
+		public var fullsizeURL : String;
 
 		private var _onColorComplete : Function;
 		private var _onComplete : Function;
@@ -63,8 +68,10 @@ package net.psykosoft.psykopaint2.core.models
 			_onComplete = onComplete;
 			_onError = onError;
 
-			loadBitmapData(thumbnailFilename, onThumbLoadComplete, onLoadError);
+			loadBitmapData(smallSizeURL, onThumbLoadComplete, onLoadError);
 		}
+		
+		
 
 		override public function loadFullSizedComposite(onComplete : Function, onError : Function) : void
 		{
@@ -76,7 +83,7 @@ package net.psykosoft.psykopaint2.core.models
 			if(_paintingGalleryVO && _paintingGalleryVO.compositedFullSize){
 				callOnComplete(_paintingGalleryVO.compositedFullSize);
 			}else {
-				loadBitmapData(compositeFilename, onCompositeLoadComplete, onLoadError);
+				loadBitmapData(fullsizeURL, onCompositeLoadComplete, onLoadError);
 			}
 		}
 
@@ -84,9 +91,12 @@ package net.psykosoft.psykopaint2.core.models
 		{
 			var loader : Loader = new Loader();
 			_activeLoader = loader;
+			//Asynchronous decoding
+			var loaderContext:LoaderContext = new LoaderContext(); 
+			loaderContext.imageDecodingPolicy = ImageDecodingPolicy.ON_LOAD ;
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
 			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onError);
-			loader.load(new URLRequest(filename));
+			loader.load(new URLRequest(filename),loaderContext);
 		}
 
 		private function onThumbLoadComplete(event : Event) : void
@@ -202,8 +212,10 @@ package net.psykosoft.psykopaint2.core.models
 			clone.normalSpecularMapURL = normalSpecularMapURL;
 			clone.colorMapURL = colorMapURL;
 			clone.sourceThumbnailURL = sourceThumbnailURL;
-			clone.thumbnailFilename = thumbnailFilename;
-			clone.compositeFilename = compositeFilename;
+			clone.smallSizeURL = smallSizeURL;
+			clone.tinySizeURL = tinySizeURL;
+			clone.mediumSizeURL = mediumSizeURL;
+			clone.fullsizeURL = fullsizeURL;
 			return clone;
 		}
 	}

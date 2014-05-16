@@ -2,10 +2,10 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 {
 	import flash.display.BitmapData;
 	import flash.display.JPEGEncoderOptions;
-
+	import flash.display.PNGEncoderOptions;
 	import flash.display.Stage;
 	import flash.utils.ByteArray;
-
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.io.CanvasPublishEvent;
@@ -118,6 +118,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 
 		private function onPublishComplete(data : Object) : void
 		{
+			trace(data);
 			if (data["status_code"] != 1) {
 				showErrorPopUp();
 				trace ("Publish unsuccesful with error code: " + data["status_code"]);
