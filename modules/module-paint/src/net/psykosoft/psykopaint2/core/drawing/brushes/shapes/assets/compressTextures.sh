@@ -11,7 +11,7 @@
 #./png2atf -c p —q 10 -f 0  -i png/logo.png -o atf/ios/logo.atf
 #./png2atf -c d —q 10 -f 0  -i png/logo.png -o atf/desktop/logo.atf
 
-./png2atf —q 0 -i png/brushset1_test1.png -o atf/brushset1_test1.atf
+./png2atf —q 0 -i png/final.png -o atf/final.atf
 
 : '#for entry in png
 do

@@ -301,14 +301,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
 					sizeDecorator.param_invertMapping.booleanValue=false;
 					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCULAR_IN;
-					sizeDecorator.param_mappingRange.numberValue = 0.05 + precision * 0.45;
+					sizeDecorator.param_mappingRange.numberValue = 0.05 + precision * 0.40;
 					sizeDecorator.param_mappingFactor.numberValue = 0.2 + precision * 0.8;
 					
 					
 					spawnDecorator.param_bristleVariation.numberValue = 10;
 					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SPEED;
-					spawnDecorator.param_multiples.upperRangeValue = 16;
-					spawnDecorator.param_multiples.lowerRangeValue = 12;
+					spawnDecorator.param_multiples.upperRangeValue = 3;
+					spawnDecorator.param_multiples.lowerRangeValue = 6;
 					spawnDecorator.param_minOffset.numberValue =  0+precision * 6;
 					spawnDecorator.param_maxOffset.numberValue =  0+precision * 6;
 					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -4;

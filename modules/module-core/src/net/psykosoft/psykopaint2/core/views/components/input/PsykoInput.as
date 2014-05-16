@@ -107,13 +107,13 @@ package net.psykosoft.psykopaint2.core.views.components.input
 
 		public function behavesAsPassword( value:Boolean ):void {
 			_behavesAsPassword = value;
-			tf.displayAsPassword = value;
+			
 			if(value==true){
 				//HAVE TO CHANGE THE FONT FOR PWD CAUSE IT DOESN'T WORK WITH REGULAR EMBDED FONT
 				
 				var passwordTxtFormat:TextFormat = new TextFormat();
 				passwordTxtFormat.font = "_sans";
-				passwordTxtFormat.size = 50;
+				passwordTxtFormat.size = 30;
 				tf.embedFonts = false;
 				tf.setTextFormat(passwordTxtFormat);
 				tf.defaultTextFormat = passwordTxtFormat;
@@ -132,6 +132,8 @@ package net.psykosoft.psykopaint2.core.views.components.input
 			if( tf.text == _defaultText ) {
 				tf.text = "";
 			}
+			
+			tf.displayAsPassword = _behavesAsPassword;
 
 			tf.textColor = _activeTextColor;
 

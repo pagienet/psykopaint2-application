@@ -344,7 +344,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 				break;
 				case STYLE_DIGITAL:
-					
+					 
 					//NO SPLATTING
 					splatterDecorator.active=false;
 					spawnDecorator.active=false;

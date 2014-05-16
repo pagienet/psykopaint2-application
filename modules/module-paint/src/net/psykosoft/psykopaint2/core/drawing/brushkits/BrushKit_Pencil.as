@@ -357,13 +357,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_brushOpacity.numberValue = 0.9;
 					colorDecorator.param_brushOpacityRange.numberValue = 0.1;
 					
-					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_FIXED;
+					spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_RANDOM;
 					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -80;
 					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 80;
 					spawnDecorator.param_minOffset.numberValue = 0.01+precision * 8;
 					spawnDecorator.param_maxOffset.numberValue = 0.01+precision * 20;
-					spawnDecorator.param_multiples.lowerRangeValue = 3+precision * 2;
-					spawnDecorator.param_multiples.upperRangeValue = 3+precision * 5;
+					spawnDecorator.param_multiples.lowerRangeValue = 2+precision * 2;
+					spawnDecorator.param_multiples.upperRangeValue = 2+precision * 4;
 					
 
 					
@@ -379,8 +379,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_minOffset.numberValue =  5* precision;
 					spawnDecorator.param_maxOffset.numberValue = 1 + 23* precision;
 					spawnDecorator.param_brushAngleRange.degrees=360;
-					spawnDecorator.param_multiples.lowerRangeValue = 8;
-					spawnDecorator.param_multiples.upperRangeValue = 8;
+					spawnDecorator.param_multiples.lowerRangeValue = 4;
+					spawnDecorator.param_multiples.upperRangeValue = 4;
 					
 					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -1;
 					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 1;
