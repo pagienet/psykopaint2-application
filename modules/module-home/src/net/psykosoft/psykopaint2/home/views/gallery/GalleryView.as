@@ -747,17 +747,20 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onFullsizedCompositeComplete(compositedFullSize:BitmapData):void
 		{
-			_fullsizeCompositedTexture.bitmapData =compositedFullSize;
-			_fullsizeCompositedTexture.getTextureForStage3D(_stage3DProxy);
-			_highQualityMaterial.albedoTexture = _fullsizeCompositedTexture;
-
-			compositedFullSize.dispose();
-
-			// it may have been disposed before load finished?
-			if (_activeImageProxy && _paintings[_activeImageProxy.index])
-				_paintings[_activeImageProxy.index].material = _highQualityMaterial;
-
-			_activeImageProxy.loadSurfaceData(onSurfaceDataComplete, onSurfaceDataError, onSurfaceColorDataComplete);
+			//HAD TO ADD THIS CONDITION TO FOOLPROOF. MIGHT WANT TO CHECK IT OUT LATER
+			if(_fullsizeCompositedTexture){
+				_fullsizeCompositedTexture.bitmapData =compositedFullSize;
+				_fullsizeCompositedTexture.getTextureForStage3D(_stage3DProxy);
+				_highQualityMaterial.albedoTexture = _fullsizeCompositedTexture;
+	
+				compositedFullSize.dispose();
+	
+				// it may have been disposed before load finished?
+				if (_activeImageProxy && _paintings[_activeImageProxy.index])
+					_paintings[_activeImageProxy.index].material = _highQualityMaterial;
+	
+				_activeImageProxy.loadSurfaceData(onSurfaceDataComplete, onSurfaceDataError, onSurfaceColorDataComplete);
+			}
 		}
 
 		private function onSurfaceColorDataComplete(galleryVO:PaintingGalleryVO):void
