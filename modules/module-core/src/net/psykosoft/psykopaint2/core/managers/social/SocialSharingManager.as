@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.core.managers.social
 			// Init.
 			GoViral.create();
 	//		trace(describeType(GoViral.goViral)); // Traces methods and properties of GoViral.
-	
+			
 			// Init facebook.
 			if( GoViral.goViral.isFacebookSupported() ) {
 				GoViral.goViral.initFacebook( FACEBOOK_APP_ID, "" );

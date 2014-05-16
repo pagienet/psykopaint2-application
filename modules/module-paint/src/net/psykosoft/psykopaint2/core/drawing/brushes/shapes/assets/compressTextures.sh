@@ -2,6 +2,7 @@
 # -q <0-180> = QUALITY , 0 = lossless
 # -f <0-15> Selects how many flex bits are trimmed during JPEG XR compression. 
 # -c store an uncompressed texture
+# -e disable mipmaps
 
 #DXT for Windows and Mac OS => d
 #ETC1 or DXT for Android => e
