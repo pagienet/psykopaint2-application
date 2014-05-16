@@ -43,10 +43,12 @@ package net.psykosoft.psykopaint2.core.models
 		
 		public function loadThumbnail(onComplete : Function, onError : Function, size : int = 1) : void
 		{
-			if(size== ImageThumbnailSize.LARGE){
+			if(size== ImageThumbnailSize.FULLSIZE){
 				load(highResThumbnailFilename, onComplete, onError);
 			}else if(size== ImageThumbnailSize.MEDIUM){
 				load(mediumResThumbnailFilename, onComplete, onError);
+			}else if(size== ImageThumbnailSize.TINY){
+				load(lowResThumbnailFilename, onComplete, onError);
 			}else {
 				load(lowResThumbnailFilename, onComplete, onError);
 			}
