@@ -22,12 +22,12 @@
         <depthAndStencil>true</depthAndStencil>
     </initialWindow>
 	<extensions>
+		<extensionID>com.milkmangames.extensions.GoViral</extensionID>
         <extensionID>net.psykosoft.notifications</extensionID>
 		<extensionID>net.psykosoft.photos</extensionID>
 		<extensionID>net.psykosoft.gyroscope</extensionID>
 		<extensionID>net.psykosoft.wacom</extensionID>
 		<extensionID>net.psykosoft.io</extensionID>
-		<extensionID>com.milkmangames.extensions.GoViral</extensionID>
 		<extensionID>com.milkmangames.extensions.StoreKit</extensionID>
 		<extensionID>pl.mateuszmackowiak.nativeANE.NativeDialogs</extensionID>
     </extensions>

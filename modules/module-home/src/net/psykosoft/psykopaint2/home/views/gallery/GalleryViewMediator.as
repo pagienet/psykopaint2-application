@@ -104,7 +104,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 					// probably not allowed to swipe when share is open
 					initInteraction();
 					view.showHighQuality = true;
-					if (oldState != newState) {
+					if (oldState != NavigationStateType.GALLERY_PAINTING && _galleryNavStateLookUp[oldState] != _galleryNavStateLookUp[newState]) {
 						resetPaintings(_galleryNavStateLookUp[newState]);
 					}
 					break;

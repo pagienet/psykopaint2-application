@@ -390,7 +390,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				moveToNearest();
 
 				if (_dragCountsAsTap && !event.interrupted && mousePosInFocusedPainting()) {
-					if (_activeImageProxy && _activeImageProxy.collectionType == GalleryType.NONE)
+					if (_activeImageProxy && _activeImageProxy.collectionType != GalleryType.NONE)
 						zoomFully();
 					else
 						requestReconnectSignal.dispatch();

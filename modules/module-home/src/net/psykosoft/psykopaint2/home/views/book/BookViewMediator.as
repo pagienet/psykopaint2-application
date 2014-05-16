@@ -138,7 +138,6 @@ package net.psykosoft.psykopaint2.home.views.book
 					showEaselBook(ImageCollectionSource.CAMERAROLL_IMAGES);
 					break;
 				default:
-					_gallerySource = -1;
 					_activeGalleryNavState = null;
 					view.mouseEnabled = false;
 					view.hidingEnabled = false;
