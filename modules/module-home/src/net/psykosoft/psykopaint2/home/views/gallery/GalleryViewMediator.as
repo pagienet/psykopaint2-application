@@ -60,6 +60,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			notifyStateChangeSignal.add(onStateChangeSignal);
 			view.requestImageCollection.add(requestImageCollection);
 			view.requestActiveImageSignal.add(onRequestActiveImage);
+			view.requestReconnectSignal.add(onRequestReconnect);
 			requestActiveImage(GalleryType.MOST_RECENT, 0);
 		}
 
@@ -71,6 +72,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			notifyStateChangeSignal.remove(onStateChangeSignal);
 			view.requestImageCollection.remove(requestImageCollection);
 			view.requestActiveImageSignal.remove(requestActiveImage);
+			view.requestReconnectSignal.remove(onRequestReconnect);
 			view.dispose();
 		}
 
@@ -83,6 +85,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function requestActiveImage(source : int, index : int) : void
 		{
 			galleryService.fetchImages(source, index, 1, onRequestActiveImageResult, onImageCollectionFailed);
+		}
+
+		private function onRequestReconnect() : void
+		{
+			requestActiveImage(GalleryType.MOST_RECENT, 0);
 		}
 
 		private function onStateChangeSignal(newState:String) : void

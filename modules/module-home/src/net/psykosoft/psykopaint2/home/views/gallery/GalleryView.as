@@ -1,55 +1,55 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
 
-import com.greensock.TweenLite;
-import com.greensock.easing.Quad;
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Quad;
 
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.display3D.Context3DCompareMode;
-import flash.display3D.Context3DStencilAction;
-import flash.events.Event;
-import flash.geom.Rectangle;
-import flash.geom.Vector3D;
-import flash.utils.getTimer;
+	import flash.display.BitmapData;
+	import flash.display.Sprite;
+	import flash.display3D.Context3DCompareMode;
+	import flash.display3D.Context3DStencilAction;
+	import flash.events.Event;
+	import flash.geom.Rectangle;
+	import flash.geom.Vector3D;
+	import flash.utils.getTimer;
 
-import away3d.containers.ObjectContainer3D;
-import away3d.containers.View3D;
-import away3d.core.base.Geometry;
-import away3d.core.managers.Stage3DProxy;
-import away3d.entities.Mesh;
-import away3d.events.Object3DEvent;
-import away3d.hacks.BitmapRectTexture;
-import away3d.hacks.MaskingMethod;
-import away3d.hacks.PaintingMaterial;
-import away3d.hacks.RectTextureBase;
-import away3d.hacks.StencilMethod;
-import away3d.hacks.TrackedBitmapRectTexture;
-import away3d.lights.LightBase;
-import away3d.materials.ColorMaterial;
-import away3d.materials.TextureMaterial;
-import away3d.materials.lightpickers.StaticLightPicker;
-import away3d.primitives.PlaneGeometry;
-import away3d.textures.BitmapTexture;
-import away3d.textures.Texture2DBase;
+	import away3d.containers.ObjectContainer3D;
+	import away3d.containers.View3D;
+	import away3d.core.base.Geometry;
+	import away3d.core.managers.Stage3DProxy;
+	import away3d.entities.Mesh;
+	import away3d.events.Object3DEvent;
+	import away3d.hacks.BitmapRectTexture;
+	import away3d.hacks.MaskingMethod;
+	import away3d.hacks.PaintingMaterial;
+	import away3d.hacks.RectTextureBase;
+	import away3d.hacks.StencilMethod;
+	import away3d.hacks.TrackedBitmapRectTexture;
+	import away3d.lights.LightBase;
+	import away3d.materials.ColorMaterial;
+	import away3d.materials.TextureMaterial;
+	import away3d.materials.lightpickers.StaticLightPicker;
+	import away3d.primitives.PlaneGeometry;
+	import away3d.textures.BitmapTexture;
+	import away3d.textures.Texture2DBase;
 
-import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
-import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
-import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
-import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
-import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
-import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
-import net.psykosoft.psykopaint2.core.models.GalleryType;
-import net.psykosoft.psykopaint2.core.models.PaintMode;
-import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
-import net.psykosoft.psykopaint2.home.model.GalleryImageCache;
-import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
+	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.models.GalleryType;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
+	import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
+	import net.psykosoft.psykopaint2.home.model.GalleryImageCache;
+	import net.psykosoft.psykopaint2.home.views.book.HomeMaterialsCache;
 
-import org.osflash.signals.Signal;
+	import org.osflash.signals.Signal;
 
-public class GalleryView extends Sprite
+	public class GalleryView extends Sprite
 	{
 		public static const CAMERA_FAR_POSITION:Vector3D = new Vector3D(-814, -40.14, 450);
 		public static var CAMERA_NEAR_POSITION:Vector3D = null;
@@ -61,6 +61,7 @@ public class GalleryView extends Sprite
 		private static const PAINTING_Z:Number = -160;
 		private static const SWIPE_SCENE_RECT:Rectangle = new Rectangle(PAINTING_OFFSET + 10 - 250, -100, 500, 300);
 
+		public var requestReconnectSignal:Signal = new Signal();
 		public var requestImageCollection:Signal = new Signal(int, int, int); // source, start index, amount of images
 		public var requestActiveImageSignal:Signal = new Signal(int, int); // source, index
 
@@ -214,9 +215,9 @@ public class GalleryView extends Sprite
 				_activeImageProxy.loadFullSizedComposite(onFullsizedCompositeComplete, onSurfaceDataError);
 			}
 		}
-		
-		
-		
+
+
+
 		private function initHighQualityMaterial():void
 		{
 			var emptyNormalMap : BitmapData = new TrackedBitmapData(1, 1, false, 0x00808000);
@@ -389,7 +390,10 @@ public class GalleryView extends Sprite
 				moveToNearest();
 
 				if (_dragCountsAsTap && !event.interrupted && mousePosInFocusedPainting()) {
-					zoomFully();
+					if (_activeImageProxy && _activeImageProxy.collectionType == GalleryType.NONE)
+						zoomFully();
+					else
+						requestReconnectSignal.dispatch();
 				}
 			}
 			else {
@@ -486,7 +490,7 @@ public class GalleryView extends Sprite
 		private function initLoadingTexture():void
 		{
 			//var bitmapData:BitmapData = new TrackedBitmapData(16, 16, true, 0xFFAAAAAA);
-			
+
 			_loadingTexture = new BitmapTexture(TextureUtil.autoResizePowerOf2(HomeMaterialsCache.getBitmapDataById(HomeMaterialsCache.THUMBNAIL_LOADING)));
 			_loadingTexture.getTextureForStage3D(_stage3DProxy);
 			//bitmapData.dispose();
@@ -577,7 +581,7 @@ public class GalleryView extends Sprite
 
 			if (collection.type == GalleryType.NONE)
 				_activeImageProxy = null;
-			
+
 			_minSwipe = -PAINTING_OFFSET;
 			_maxSwipe = -(PAINTING_OFFSET - (_numPaintings - 1) * PAINTING_SPACING);
 		}
@@ -619,7 +623,7 @@ public class GalleryView extends Sprite
 		{
 			var texture:Texture2DBase = _imageCache.getThumbnail(index);
 			texture ||= _loadingTexture;
-			
+
 			var material:TextureMaterial = new TextureMaterial(texture);
 			material.mipmap = false;
 			//material.alphaBlending=true;
@@ -629,12 +633,12 @@ public class GalleryView extends Sprite
 			material.addMethod(stencilMethod);
 
 			_lowQualityMaterials[index] = material;
-			
-			
+
+
 			_paintings[index] = new GalleryPaintingView(_paintingGeometry, material);
 			_paintings[index].x = index * PAINTING_SPACING;
 
-			
+
 			if (GalleryImageProxy(_imageCache.proxies[index]))
 				_paintings[index].showRibbon(GalleryImageProxy(_imageCache.proxies[index]).paintingMode == PaintMode.COLOR_MODE, _ribbon);
 
@@ -645,11 +649,11 @@ public class GalleryView extends Sprite
 			}
 
 			_container.addChild(_paintings[index]);
-			
+
 			//TweenLite.killTweensOf(_paintings[index]);
 			//TweenLite.from(_paintings[index],0.5,{y:300,ease:Expo.easeOut});
 
-			
+
 		}
 
 		public function dispose():void
@@ -727,7 +731,7 @@ public class GalleryView extends Sprite
 			var painting:GalleryPaintingView = _paintings[imageProxy.index];
 			if (painting) {
 				_lowQualityMaterials[imageProxy.index].texture = _loadingTexture;
-				
+
 				if (painting.parent)
 					_container.removeChild(painting);
 			}
@@ -746,19 +750,19 @@ public class GalleryView extends Sprite
 			_fullsizeCompositedTexture.bitmapData =compositedFullSize;
 			_fullsizeCompositedTexture.getTextureForStage3D(_stage3DProxy);
 			_highQualityMaterial.albedoTexture = _fullsizeCompositedTexture;
-			
+
 			compositedFullSize.dispose();
-			
+
 			// it may have been disposed before load finished?
 			if (_activeImageProxy && _paintings[_activeImageProxy.index])
 				_paintings[_activeImageProxy.index].material = _highQualityMaterial;
-			
+
 			_activeImageProxy.loadSurfaceData(onSurfaceDataComplete, onSurfaceDataError, onSurfaceColorDataComplete);
 		}
-		
+
 		private function onSurfaceColorDataComplete(galleryVO:PaintingGalleryVO):void
 		{
-			
+
 			// it may have been disposed before load finished?
 			if (_activeImageProxy && _paintings[_activeImageProxy.index])
 				_paintings[_activeImageProxy.index].material = _highQualityMaterial;
@@ -766,27 +770,27 @@ public class GalleryView extends Sprite
 
 		private function onSurfaceDataComplete(galleryVO:PaintingGalleryVO):void
 		{
-			
+
 
 			//MATHIEU: NOW WE ONLY DISPLAY WHEN BOTH THE COLOR AND BUMP HAVE BEEN LOADED
 			// if view disposed, sometimes loading doesn't close in time?
 			if (_highQualityNormalSpecularTexture) {
-				
+
 				//COLOR MAP
 				_highQualityColorTexture.bitmapData = galleryVO.colorData;
 				_highQualityColorTexture.getTextureForStage3D(_stage3DProxy);
 				_highQualityMaterial.albedoTexture = _highQualityColorTexture;
 				//_highQualityMaterial.normalSpecularTexture = _stillLoadingNormalSpecularTexture;
-				
+
 				//NORMAL MAP
 				_highQualityNormalSpecularTexture.bitmapData = galleryVO.normalSpecularData;
 				_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
 				_highQualityMaterial.normalSpecularTexture = _highQualityNormalSpecularTexture;
 			}
-			
+
 			_highQualityIndex = _activeImageProxy.index;
 
-			
+
 			_loadingHQ = false;
 			galleryVO.dispose();
 		}
