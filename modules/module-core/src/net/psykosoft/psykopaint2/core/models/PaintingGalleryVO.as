@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.core.models
 		public var normalSpecularData :  BitmapData;
 		public var colorData : BitmapData;
 		public var sourceThumbnail :  BitmapData;
+		public var compositedFullSize :  BitmapData;
 
 		public function dispose() : void
 		{
@@ -14,10 +15,12 @@ package net.psykosoft.psykopaint2.core.models
 			if (normalSpecularData) normalSpecularData.dispose();
 			if (colorData) colorData.dispose();
 			if (sourceThumbnail) sourceThumbnail.dispose();
+			if (compositedFullSize) compositedFullSize.dispose();
 
 			normalSpecularData = null;
 			colorData = null;
 			sourceThumbnail = null;
+			compositedFullSize = null;
 		}
 	}
 }

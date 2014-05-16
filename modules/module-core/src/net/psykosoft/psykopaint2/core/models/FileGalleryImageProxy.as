@@ -103,6 +103,10 @@ package net.psykosoft.psykopaint2.core.models
 		private function onCompositeLoadComplete(event : Event) : void
 		{
 			var loader : LoaderInfo = LoaderInfo(event.target);
+			
+			if (_paintingGalleryVO) {
+				_paintingGalleryVO.compositedFullSize = Bitmap(loader.content).bitmapData;}
+			
 			callOnComplete(Bitmap(loader.content).bitmapData);
 		}
 

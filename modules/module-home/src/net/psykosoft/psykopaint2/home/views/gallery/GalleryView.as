@@ -106,6 +106,8 @@ public class GalleryView extends Sprite
 		private var _highQualityNormalSpecularTexture:BitmapRectTexture;
 		private var _stillLoadingNormalSpecularTexture:BitmapRectTexture;
 		private var _highQualityColorTexture:BitmapRectTexture;
+		private var _fullsizeCompositedTexture:BitmapRectTexture;
+
 		private var _showHighQuality:Boolean;
 		private var _loadingHQ:Boolean;
 		private var _dragStartX:Number;
@@ -208,15 +210,20 @@ public class GalleryView extends Sprite
 
 			if (_activeImageProxy) {
 				_loadingHQ = true;
-				_activeImageProxy.loadSurfaceData(onSurfaceDataComplete, onSurfaceDataError, onSurfaceColorDataComplete);
+				//MATHIEU: WE LOAD THE COMPOSITE IMAGE INSTEAD OF THE COLOR DATA FIRST
+				// 
+				_activeImageProxy.loadFullSizedComposite(onFullsizedCompositeComplete, onSurfaceDataError);
 			}
 		}
-
+		
+		
+		
 		private function initHighQualityMaterial():void
 		{
 			var emptyNormalMap : BitmapData = new TrackedBitmapData(1, 1, false, 0x00808000);
 
 			//BookMaterialsProxy.getBitmapDataById(BookMaterialsProxy.THUMBNAIL_LOADING)
+			_fullsizeCompositedTexture = new TrackedBitmapRectTexture(null);
 			_highQualityColorTexture = new TrackedBitmapRectTexture(null);
 			_highQualityNormalSpecularTexture = new TrackedBitmapRectTexture(null);
 			_stillLoadingNormalSpecularTexture = new BitmapRectTexture(emptyNormalMap);
@@ -227,11 +234,11 @@ public class GalleryView extends Sprite
 				_highQualityMaterial = new PaintingMaterial();
 
 			_highQualityMaterial.lightPicker = new StaticLightPicker([_light]);
-			_highQualityMaterial.albedoTexture = _highQualityColorTexture;
+			_highQualityMaterial.albedoTexture = _fullsizeCompositedTexture;
 			_highQualityMaterial.normalSpecularTexture = _stillLoadingNormalSpecularTexture;
 			_highQualityMaterial.ambientColor = 0xffffff;
 			_highQualityMaterial.specular = 1.5;
-			_highQualityMaterial.gloss = 200;
+			_highQualityMaterial.gloss = 150;
 
 			_highQualityMaterial.enableStencil = true;
 			_highQualityMaterial.stencilReferenceValue = 40;
@@ -678,6 +685,7 @@ public class GalleryView extends Sprite
 		{
 			removeHighQualityMaterial();
 			if (_highQualityColorTexture) {
+				_fullsizeCompositedTexture.dispose();
 				_highQualityColorTexture.dispose();
 				_highQualityNormalSpecularTexture.dispose();
 				_highQualityColorTexture = null;
@@ -732,6 +740,15 @@ public class GalleryView extends Sprite
 			}
 		}
 
+		private function onFullsizedCompositeComplete(compositedFullSize:BitmapData):void
+		{
+			_fullsizeCompositedTexture.bitmapData =compositedFullSize;
+			_fullsizeCompositedTexture.getTextureForStage3D(_stage3DProxy);
+
+			
+			_activeImageProxy.loadSurfaceData(onSurfaceDataComplete, onSurfaceDataError, onSurfaceColorDataComplete);
+		}
+		
 		private function onSurfaceColorDataComplete(galleryVO:PaintingGalleryVO):void
 		{
 			// if view disposed, sometimes loading doesn't close in time?
