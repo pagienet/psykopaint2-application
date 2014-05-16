@@ -210,8 +210,7 @@ public class GalleryView extends Sprite
 
 			if (_activeImageProxy) {
 				_loadingHQ = true;
-				//MATHIEU: WE LOAD THE COMPOSITE IMAGE INSTEAD OF THE COLOR DATA FIRST
-				// 
+				//MATHIEU: WE LOAD THE COMPOSITE IMAGE INSTEAD OF THE COLOR/NORMAL DATA FIRST
 				_activeImageProxy.loadFullSizedComposite(onFullsizedCompositeComplete, onSurfaceDataError);
 			}
 		}
@@ -688,8 +687,10 @@ public class GalleryView extends Sprite
 				_fullsizeCompositedTexture.dispose();
 				_highQualityColorTexture.dispose();
 				_highQualityNormalSpecularTexture.dispose();
+				_fullsizeCompositedTexture.dispose();
 				_highQualityColorTexture = null;
 				_highQualityNormalSpecularTexture = null;
+				_fullsizeCompositedTexture = null;
 			}
 		}
 
@@ -744,23 +745,20 @@ public class GalleryView extends Sprite
 		{
 			_fullsizeCompositedTexture.bitmapData =compositedFullSize;
 			_fullsizeCompositedTexture.getTextureForStage3D(_stage3DProxy);
-
+			_highQualityMaterial.albedoTexture = _fullsizeCompositedTexture;
+			
+			compositedFullSize.dispose();
+			
+			// it may have been disposed before load finished?
+			if (_activeImageProxy && _paintings[_activeImageProxy.index])
+				_paintings[_activeImageProxy.index].material = _highQualityMaterial;
 			
 			_activeImageProxy.loadSurfaceData(onSurfaceDataComplete, onSurfaceDataError, onSurfaceColorDataComplete);
 		}
 		
 		private function onSurfaceColorDataComplete(galleryVO:PaintingGalleryVO):void
 		{
-			// if view disposed, sometimes loading doesn't close in time?
-			if (_highQualityColorTexture) {
-				_highQualityColorTexture.bitmapData = galleryVO.colorData;
-				_highQualityColorTexture.getTextureForStage3D(_stage3DProxy);
-
-				_highQualityMaterial.normalSpecularTexture = _stillLoadingNormalSpecularTexture;
-			}
-
-			_highQualityIndex = _activeImageProxy.index;
-
+			
 			// it may have been disposed before load finished?
 			if (_activeImageProxy && _paintings[_activeImageProxy.index])
 				_paintings[_activeImageProxy.index].material = _highQualityMaterial;
@@ -768,13 +766,27 @@ public class GalleryView extends Sprite
 
 		private function onSurfaceDataComplete(galleryVO:PaintingGalleryVO):void
 		{
+			
+
+			//MATHIEU: NOW WE ONLY DISPLAY WHEN BOTH THE COLOR AND BUMP HAVE BEEN LOADED
 			// if view disposed, sometimes loading doesn't close in time?
 			if (_highQualityNormalSpecularTexture) {
+				
+				//COLOR MAP
+				_highQualityColorTexture.bitmapData = galleryVO.colorData;
+				_highQualityColorTexture.getTextureForStage3D(_stage3DProxy);
+				_highQualityMaterial.albedoTexture = _highQualityColorTexture;
+				//_highQualityMaterial.normalSpecularTexture = _stillLoadingNormalSpecularTexture;
+				
+				//NORMAL MAP
 				_highQualityNormalSpecularTexture.bitmapData = galleryVO.normalSpecularData;
 				_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
-
 				_highQualityMaterial.normalSpecularTexture = _highQualityNormalSpecularTexture;
 			}
+			
+			_highQualityIndex = _activeImageProxy.index;
+
+			
 			_loadingHQ = false;
 			galleryVO.dispose();
 		}

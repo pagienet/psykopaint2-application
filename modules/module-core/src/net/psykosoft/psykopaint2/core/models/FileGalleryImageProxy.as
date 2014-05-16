@@ -71,8 +71,13 @@ package net.psykosoft.psykopaint2.core.models
 			if (_onComplete) cancelLoading();
 			_onComplete = onComplete;
 			_onError = onError;
-
-			loadBitmapData(compositeFilename, onCompositeLoadComplete, onLoadError);
+			
+			//IF ALREADY LOADED WE JUST CALL THE onCOMPLETE FUNCTION:
+			if(_paintingGalleryVO && _paintingGalleryVO.compositedFullSize){
+				callOnComplete(_paintingGalleryVO.compositedFullSize);
+			}else {
+				loadBitmapData(compositeFilename, onCompositeLoadComplete, onLoadError);
+			}
 		}
 
 		private function loadBitmapData(filename : String, onComplete : Function, onError : Function) : void
