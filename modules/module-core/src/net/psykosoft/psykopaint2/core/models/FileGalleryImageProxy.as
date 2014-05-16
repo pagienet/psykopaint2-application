@@ -33,6 +33,7 @@ package net.psykosoft.psykopaint2.core.models
 		private static var _scaleDownMatrix : Matrix = new Matrix(.5, 0, 0, .5);
 
 		private var _activeLoader : Object;
+		private var _sizeHint:int=1;
 
 		public function FileGalleryImageProxy()
 		{
@@ -63,7 +64,7 @@ package net.psykosoft.psykopaint2.core.models
 		{
 			if (_onComplete) cancelLoading();
 			
-
+			_sizeHint = size;
 			_onComplete = onComplete;
 			_onError = onError;
 			var urlToLoad:String = "";
@@ -75,6 +76,9 @@ package net.psykosoft.psykopaint2.core.models
 				
 			}else if(size==ImageThumbnailSize.MEDIUM){
 				urlToLoad= mediumSizeURL;
+			} 
+			else if(size==ImageThumbnailSize.FULLSIZE){
+				urlToLoad= fullsizeURL;
 			} 
 			
 			loadBitmapData(urlToLoad, onThumbLoadComplete, onLoadError);
@@ -114,13 +118,13 @@ package net.psykosoft.psykopaint2.core.models
 
 			var bitmapData : BitmapData = Bitmap(loader.content).bitmapData;
 			//MATHIEU: WHAT'S THE IDEA BEHIND THIS?
-			/*if (_sizeHint == ImageThumbnailSize.SMALL) {
+			if (_sizeHint == ImageThumbnailSize.SMALL) {
 				var source : BitmapData = bitmapData;
 				bitmapData = new TrackedBitmapData(source.width *.5, source.height *.5, false);
 				bitmapData.drawWithQuality(source, _scaleDownMatrix, null, null, null, true, StageQuality.BEST);
 				
 				source.dispose();
-			}*/
+			}
 
 			callOnComplete(bitmapData);
 		}
