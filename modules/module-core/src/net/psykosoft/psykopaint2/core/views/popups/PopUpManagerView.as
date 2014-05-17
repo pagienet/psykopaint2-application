@@ -84,7 +84,7 @@ package net.psykosoft.psykopaint2.core.views.popups
 			TweenLite.killTweensOf( popUp );
 			popUp.x = 1024;
 			//Don't ANYMATE POPUP. 1 BECAUSE IT'S SLOW. 2 BECAUSE PEOPLE CAN'T WAIT
-			TweenLite.to( popUp, 0.0, { x: 0, delay: 0.0, ease: Strong.easeOut, onComplete: onShowPopUpComplete } );
+			TweenLite.to( popUp, 0.25, { x: 0, delay: 0.0, ease: Strong.easeOut, onComplete: onShowPopUpComplete } );
 		}
 
 		private function onShowPopUpComplete():void {
