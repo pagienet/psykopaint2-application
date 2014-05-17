@@ -104,7 +104,7 @@ package net.psykosoft.psykopaint2.home.model
 				if (_textures[_loadingIndex])
 					cacheNext();
 				else
-					_proxies[_loadingIndex].loadThumbnail(onComplete, onError, ImageThumbnailSize.MEDIUM);
+					_proxies[_loadingIndex].loadThumbnail(onComplete, onError, ImageThumbnailSize.SMALL);
 			}
 			else {
 				loadingComplete.dispatch();
