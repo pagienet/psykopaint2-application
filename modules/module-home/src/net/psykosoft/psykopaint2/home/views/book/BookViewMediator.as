@@ -24,7 +24,6 @@ package net.psykosoft.psykopaint2.home.views.book
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryView;
@@ -67,15 +66,11 @@ package net.psykosoft.psykopaint2.home.views.book
 		[Inject]
 		public var requestStartColorPaintingSignal : RequestStartNewColorPaintingSignal;
 
-		[Inject]
-		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
-
 		private var currentState:String;
 		private var _gallerySource:int = -1;
 		private var _activeGalleryNavState:String;
 		private var _galleryZoomRatio:Number;
 		private var _failed:Boolean;
-
 
 
 		public function BookViewMediator()
@@ -293,19 +288,11 @@ package net.psykosoft.psykopaint2.home.views.book
 		private function onSwitchedToHiddenMode():void
 		{
 			requestNavigationStateChange.dispatch(NavigationStateType.GALLERY_PAINTING);
-
-			// HACK: necessary to prevent disappearing menu caused by showing w/ tween and immediately requesting a new state
-			requestNavigationToggleSignal.dispatch(1, true, false);
-			// END HACK
 		}
 
 		private function onSwitchedToNormalMode():void
 		{
 			requestNavigationStateChange.dispatch(_activeGalleryNavState);
-
-			// HACK: necessary to prevent disappearing menu caused by showing w/ tween and immediately requesting a new state
-			requestNavigationToggleSignal.dispatch(1, true, false);
-			// END HACK
 		}
 	}
 }

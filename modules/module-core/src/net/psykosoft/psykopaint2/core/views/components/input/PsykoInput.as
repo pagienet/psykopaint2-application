@@ -111,7 +111,12 @@ package net.psykosoft.psykopaint2.core.views.components.input
 			if(value==true){
 				//HAVE TO CHANGE THE FONT FOR PWD CAUSE IT DOESN'T WORK WITH REGULAR EMBDED FONT
 				
-				
+				var passwordTxtFormat:TextFormat = new TextFormat();
+				passwordTxtFormat.font = "_sans";
+				passwordTxtFormat.size = 30;
+				tf.embedFonts = false;
+				tf.setTextFormat(passwordTxtFormat);
+				tf.defaultTextFormat = passwordTxtFormat;
 			}else {
 				tf.embedFonts = true;
 			}
@@ -129,15 +134,6 @@ package net.psykosoft.psykopaint2.core.views.components.input
 			}
 			
 			tf.displayAsPassword = _behavesAsPassword;
-			if(_behavesAsPassword==true){
-				trace("focus in ")
-				var passwordTxtFormat:TextFormat = new TextFormat();
-				passwordTxtFormat.font = "_sans";
-				passwordTxtFormat.size = 30;
-				tf.embedFonts = false;
-				tf.setTextFormat(passwordTxtFormat);
-				tf.defaultTextFormat = passwordTxtFormat;
-			}
 
 			tf.textColor = _activeTextColor;
 
@@ -192,25 +188,6 @@ package net.psykosoft.psykopaint2.core.views.components.input
 
 		private function onTfChange( event:Event ):void {
 		//	if( _behavesAsPassword ) tf.displayAsPassword = true;
-			tf.displayAsPassword = _behavesAsPassword;
-			if(_behavesAsPassword==true){
-				trace("focus in ")
-				var passwordTxtFormat:TextFormat = new TextFormat();
-				passwordTxtFormat.font = "_sans";
-				passwordTxtFormat.size = 30;
-				tf.embedFonts = false;
-				tf.setTextFormat(passwordTxtFormat);
-				tf.defaultTextFormat = passwordTxtFormat;
-			}
-			/*else {
-				var regularTxtFormat:TextFormat = new TextFormat();
-				regularTxtFormat.font = "Gloriah Hallelujah";
-				regularTxtFormat.size = 20;
-				tf.embedFonts = true;
-				tf.setTextFormat(regularTxtFormat);
-				tf.defaultTextFormat = regularTxtFormat;
-			}*/
-
 			showCancelButton( tf.text.length > 0 );
 		}
 
