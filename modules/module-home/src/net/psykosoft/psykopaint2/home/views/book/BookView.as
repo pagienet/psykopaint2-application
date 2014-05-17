@@ -206,6 +206,7 @@ package net.psykosoft.psykopaint2.home.views.book
 
 			//ASSIGN DATA
 			_sourceImageCollection = sourceImageCollection;
+			_galleryImageCollection = null;
 			
 			if(shuffle) SourceImageCollection.shuffle(_sourceImageCollection);
 
@@ -248,6 +249,7 @@ package net.psykosoft.psykopaint2.home.views.book
 
 			// ASSIGN DATA
 			_galleryImageCollection = galleryImageCollection;
+			_sourceImageCollection = null;
 
 			//CLEAR PREVIOUS LAYOUT
 			removePages();
@@ -632,7 +634,8 @@ package net.psykosoft.psykopaint2.home.views.book
 			_hiddenRatio = value;
 			updatePosition();
 
-//			if (!_hidingEnabled) return;
+			// hiding 'mode' is actually not relevant for non-gallery
+			if (!_galleryImageCollection) return;
 
 			if (value < .01 && _consideredHidden) {
 				_consideredHidden = false;
