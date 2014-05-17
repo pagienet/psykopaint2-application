@@ -49,12 +49,10 @@ public class QuickSharePopUpViewMediator extends MediatorBase
 	}
 
 	private function onPopUpWantsToShare():void {
-		//EXIT FIRST
-		requestHidePopUpSignal.dispatch();
-		
+
 		if(view.facebookChk.selected) _sharer.addSharer(new FacebookSharer(socialSharingManager));
 		if(view.twitterChk.selected) _sharer.addSharer(new TwitterSharer(socialSharingManager));
-	
+
 		// Nothing to wait for, close.
 		if(_sharer.numSharers == 0) exitPopUp();
 		else _sharer.share([view.tf.text, view.bmd]);
@@ -77,7 +75,7 @@ public class QuickSharePopUpViewMediator extends MediatorBase
 			} // No alert if everything went ok.
 		}
 
-		
+		requestHidePopUpSignal.dispatch();
 	}
 
 	private function onPopUpWantsToClose():void {

@@ -172,7 +172,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			_shadowMesh.visible=false;
 
 			_thumbMesh.material = HomeMaterialsCache.getTextureMaterialById(HomeMaterialsCache.THUMBNAIL_LOADING)
-			_imageProxy.loadThumbnail(onThumbnailLoaded, onThumbnailFail, ImageThumbnailSize.TINY);
+			_imageProxy.loadThumbnail(onThumbnailLoaded, onThumbnailFail, ImageThumbnailSize.SMALL);
 		}
 
 

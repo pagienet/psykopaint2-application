@@ -13,13 +13,13 @@ package net.psykosoft.psykopaint2.core.models
 			var width : int;
 			var height : int;
 
-			if (size == ImageThumbnailSize.TINY) {
-				width = 128;
-				height =int( width*3/4);
+			if (size == ImageThumbnailSize.SMALL) {
+				width = 150;
+				height = 100;
 			}
-			else if (size == ImageThumbnailSize.SMALL) {
-				width = 256;
-				height = int( width*3/4);
+			else if (size == ImageThumbnailSize.LARGE) {
+				width = 300;
+				height = 200;
 			}
 			else
 				throw "Invalid size!";

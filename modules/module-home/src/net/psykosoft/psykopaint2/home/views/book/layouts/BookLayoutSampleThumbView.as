@@ -19,7 +19,6 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 	import away3d.utils.Cast;
 	
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
-	import net.psykosoft.psykopaint2.core.models.ImageThumbnailSize;
 	import net.psykosoft.psykopaint2.core.models.SourceImageProxy;
 	import net.psykosoft.psykopaint2.home.views.book.BookPageView;
 	import net.psykosoft.psykopaint2.home.views.book.HomeGeometryCache;
@@ -91,7 +90,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 
 		public function set imageProxy(value:SourceImageProxy):void{
 			_imageProxy = value;
-			_imageProxy.loadThumbnail(onThumbnailLoaded,onThumbnailFail,ImageThumbnailSize.FULLSIZE);
+			_imageProxy.loadThumbnail(onThumbnailLoaded,onThumbnailFail,1 /* 1= large thumbnail */);
 		}
 		
 		override public function dispose():void{

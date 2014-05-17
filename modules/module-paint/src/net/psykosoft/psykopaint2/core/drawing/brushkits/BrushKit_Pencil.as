@@ -341,6 +341,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					splatterDecorator.param_splatFactor.numberValue = 0.01+ 2 * precision;
 					splatterDecorator.param_brushAngleOffsetRange.degrees = 5;
 					
+					
+					
+					
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;					
 					sizeDecorator.param_mappingFactor.numberValue = 0.3;
 					sizeDecorator.param_mappingRange.numberValue = 0.05;
@@ -349,7 +352,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.01;
 					colorDecorator.param_pickRadius.upperRangeValue = 0.05;
-					colorDecorator.param_colorBlending.upperRangeValue = 0.9;
+					colorDecorator.param_colorBlending.upperRangeValue = 0.6;
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.1;
 					colorDecorator.param_brushOpacity.numberValue = 0.9;
 					colorDecorator.param_brushOpacityRange.numberValue = 0.1;
@@ -359,8 +362,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 80;
 					spawnDecorator.param_minOffset.numberValue = 0.01+precision * 8;
 					spawnDecorator.param_maxOffset.numberValue = 0.01+precision * 20;
-					spawnDecorator.param_multiples.lowerRangeValue = 3+precision * 3;
-					spawnDecorator.param_multiples.upperRangeValue = 3+precision * 5;
+					spawnDecorator.param_multiples.lowerRangeValue = 2+precision * 2;
+					spawnDecorator.param_multiples.upperRangeValue = 2+precision * 4;
 					
 
 					
