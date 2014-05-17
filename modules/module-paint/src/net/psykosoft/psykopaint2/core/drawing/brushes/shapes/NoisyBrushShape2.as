@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		protected var SourceMap:Class;
 		
 		//[Embed(source="assets/notentirelycircularheight9_8x8.png", mimeType="image/png")]
-		[Embed(source="assets/atf/NoiseShape3.atf", mimeType="application/octet-stream")]
+		[Embed(source="assets/atf/NoiseShape4.atf", mimeType="application/octet-stream")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function NoisyBrushShape2(context3D : Context3D)

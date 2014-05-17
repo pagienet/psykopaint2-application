@@ -12,7 +12,7 @@
 #./png2atf -c p —q 10 -f 0  -i png/logo.png -o atf/ios/logo.atf
 #./png2atf -c d —q 10 -f 0  -i png/logo.png -o atf/desktop/logo.atf
 
-./png2atf —q 0 -i png/final.png -o atf/final.atf
+./png2atf —q 0 -i png/basic_circle2_hsp.png -o atf/basic_circle2_hsp.atf
 
 : '#for entry in png
 do
