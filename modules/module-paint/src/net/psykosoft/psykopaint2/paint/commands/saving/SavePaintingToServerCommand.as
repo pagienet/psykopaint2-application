@@ -1,10 +1,13 @@
 package net.psykosoft.psykopaint2.paint.commands.saving
 {
+	import com.greensock.TweenLite;
+	
 	import flash.display.BitmapData;
 	import flash.display.JPEGEncoderOptions;
 	import flash.display.PNGEncoderOptions;
 	import flash.display.Stage;
 	import flash.utils.ByteArray;
+	import flash.utils.setTimeout;
 	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
@@ -89,11 +92,16 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 			requestShowPopUpSignal.dispatch( PopUpType.MESSAGE );
 			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
 			requestUpdateMessagePopUpSignal.dispatch( "Publishing...", randomJoke );
+			
+			//HACK TO MAKE SURE THE POPUP APPEARS BEFORE PROCESSING THE SHIT OUT OF THE BITMAPS
+			TweenLite.to(new Object(),0.3,{onComplete:function(){
+				var canvasExporter:CanvasPublisher = new CanvasPublisher( stage, ioAne );
+				canvasExporter.addEventListener( CanvasPublishEvent.COMPLETE, onExportComplete );
+				canvasExporter.exportForPublish( canvasModel, paintSettings, CoreSettings.PUBLISH_JPEG_QUALITY );
+				// dispatch notify started signal
 
-			// dispatch notify started signal
-			var canvasExporter:CanvasPublisher = new CanvasPublisher( stage, ioAne );
-			canvasExporter.addEventListener( CanvasPublishEvent.COMPLETE, onExportComplete );
-			canvasExporter.exportForPublish( canvasModel, paintSettings, CoreSettings.PUBLISH_JPEG_QUALITY );
+			}})
+			
 		}
 
 		private function onExportComplete( event:CanvasPublishEvent ):void {

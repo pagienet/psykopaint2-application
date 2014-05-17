@@ -29,11 +29,11 @@ package net.psykosoft.psykopaint2.core.models
 		private var _onColorComplete : Function;
 		private var _onComplete : Function;
 		private var _onError : Function;
-		private var _sizeHint : int;
 		private var _paintingGalleryVO : PaintingGalleryVO;
 		private static var _scaleDownMatrix : Matrix = new Matrix(.5, 0, 0, .5);
 
 		private var _activeLoader : Object;
+		private var _sizeHint:int=1;
 
 		public function FileGalleryImageProxy()
 		{
@@ -63,12 +63,25 @@ package net.psykosoft.psykopaint2.core.models
 		override public function loadThumbnail(onComplete : Function, onError : Function, size : int = 1) : void
 		{
 			if (_onComplete) cancelLoading();
+			
 			_sizeHint = size;
-
 			_onComplete = onComplete;
 			_onError = onError;
-
-			loadBitmapData(smallSizeURL, onThumbLoadComplete, onLoadError);
+			var urlToLoad:String = "";
+			if(size==ImageThumbnailSize.TINY){
+				urlToLoad= tinySizeURL;
+				
+			}else if(size==ImageThumbnailSize.SMALL){
+				urlToLoad= smallSizeURL;
+				
+			}else if(size==ImageThumbnailSize.MEDIUM){
+				urlToLoad= mediumSizeURL;
+			} 
+			else if(size==ImageThumbnailSize.FULLSIZE){
+				urlToLoad= fullsizeURL;
+			} 
+			
+			loadBitmapData(urlToLoad, onThumbLoadComplete, onLoadError);
 		}
 		
 		
@@ -104,11 +117,12 @@ package net.psykosoft.psykopaint2.core.models
 			var loader : LoaderInfo = LoaderInfo(event.target);
 
 			var bitmapData : BitmapData = Bitmap(loader.content).bitmapData;
+			//MATHIEU: WHAT'S THE IDEA BEHIND THIS?
 			if (_sizeHint == ImageThumbnailSize.SMALL) {
 				var source : BitmapData = bitmapData;
 				bitmapData = new TrackedBitmapData(source.width *.5, source.height *.5, false);
 				bitmapData.drawWithQuality(source, _scaleDownMatrix, null, null, null, true, StageQuality.BEST);
-
+				
 				source.dispose();
 			}
 

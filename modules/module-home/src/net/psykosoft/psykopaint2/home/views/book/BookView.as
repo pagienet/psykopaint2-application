@@ -85,7 +85,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		private var _hiddenOffset:Number = -198;
 		private var _basePosition:Vector3D = new Vector3D();
 		private var _hiddenRatio:Number = 0.0;
-		private var _consideredHidden:Boolean;
+		private var _consideredHidden:Boolean = true;
 
 		public function BookView(view:View3D, light:LightBase, stage3dProxy:Stage3DProxy)
 		{
@@ -632,7 +632,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			_hiddenRatio = value;
 			updatePosition();
 
-			if (!_hidingEnabled) return;
+//			if (!_hidingEnabled) return;
 
 			if (value < .01 && _consideredHidden) {
 				_consideredHidden = false;
