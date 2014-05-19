@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 	{
 		public static const JOKES:Array = [
 			'"Change is inevitable, except from a vending machine."' ,
-			'"Dog for sale: eats anything and is fond of children."' ,
 			'"I am a nobody, nobody is perfect, therefore I am perfect."' ,
 			'"Snowmen fall from Heaven unassembled."' ,
 			'"Home is where you can say anything you like cause nobody listens to you anyway."' ,

@@ -2,10 +2,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 {
 	import flash.events.Event;
 	
-	import net.psykosoft.psykopaint2.core.drawing.BrushType;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SketchBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.DotsBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.EraserBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.LineBrushShape;
@@ -13,11 +10,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.PencilSketchBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
-	import net.psykosoft.psykopaint2.core.drawing.paths.AbstractPathEngine;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.AbstractPointDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.BumpDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.CallbackDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.GridDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
@@ -62,7 +57,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine = new SketchBrush();
 			//THAT's WHAT's SPECIAL ABOUT SKETCHBRUSH. IT'S COLOR MAP IS INFLUENCED BY THE RELIEF. BUT YOU CAN'T HAVE NO BUMP MAP. SHITE
 			(brushEngine as SketchBrush).param_surfaceRelief.numberValue = 0.85;
-			brushEngine.param_quadOffsetRatio.numberValue = 0.25;
+			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
 			brushEngine.param_bumpiness.numberValue = 1;
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			//brushEngine.param_glossiness.numberValue=1;
@@ -166,6 +161,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function onStyleChanged(event:Event):void
 		{
+			brushEngine.param_quadOffsetRatio.numberValue = 0.0;
+
+			
 			onPrecisionChanged(null);
 			onIntensityChanged(null);
 		}
@@ -184,7 +182,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
 			brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 4;
-			brushEngine.param_curvatureSizeInfluence.numberValue = 1;
+			brushEngine.param_curvatureSizeInfluence.numberValue = 2;
 			brushEngine.pathManager.pathEngine.sendTaps = false;
 			brushEngine.textureScaleFactor = 1;
 			//SURFACE RELIEF OF >1 WILL AFFECT THE PENCIL WITH THE RELIEF = PENCIL EFFECT
@@ -195,8 +193,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			sizeDecorator.param_invertMapping.booleanValue = false;
 			sizeDecorator.param_mappingFactor.minLimit = 0;
 			sizeDecorator.param_mappingFactor.maxLimit = 2;
-			sizeDecorator.param_mappingFactor.numberValue = 0.2;
-			sizeDecorator.param_mappingRange.numberValue = 0.05;
+			sizeDecorator.param_mappingFactor.numberValue = 0.05+0.3*precision;
+			sizeDecorator.param_mappingRange.numberValue = 0.1*precision;
 			
 			
 			spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_FIXED;
@@ -242,13 +240,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				case STYLE_DEFAULT:
 					splatterDecorator.active=false;
 					
-					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.7;
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5;
 					
 					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_STRONG_OUT;
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_RANDOM;
 					sizeDecorator.param_invertMapping.booleanValue = false;
 					sizeDecorator.param_mappingRange.numberValue = 0.01;
 					sizeDecorator.param_mappingFactor.numberValue = 0.04;
+					//sizeDecorator.param_mappingRange.numberValue = 0.001+0.01*precision;
+					//sizeDecorator.param_mappingFactor.numberValue = 0.004*precision;
+					
 					sizeDecorator.param_maxSpeed.numberValue = 40;
 					
 					colorDecorator.param_brushOpacity.numberValue = 1;
@@ -267,8 +268,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 180;
 					spawnDecorator.param_multiples.lowerRangeValue = 3+precision * 2;
 					spawnDecorator.param_multiples.upperRangeValue = 3+precision * 4;
-					spawnDecorator.param_maxOffset.numberValue = 0.01+precision * 12;
-					spawnDecorator.param_minOffset.numberValue = 0.01+precision * 12;
+					spawnDecorator.param_maxOffset.numberValue = precision * 12;
+					spawnDecorator.param_minOffset.numberValue = precision * 12;
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 					bumpDecorator.param_bumpInfluence.numberValue = 0.1;
@@ -286,7 +287,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					(brushEngine as SketchBrush).param_surfaceRelief.numberValue = 0.20;
 					
 					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
-					splatterDecorator.param_splatFactor.numberValue = 0.01+ 2 * precision;
+					splatterDecorator.param_splatFactor.numberValue =  2 * precision;
 					splatterDecorator.param_brushAngleOffsetRange.degrees = 2;
 					
 					
@@ -295,7 +296,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_SPEED;					
 					sizeDecorator.param_mappingFactor.numberValue = 0.25;
-					sizeDecorator.param_mappingRange.numberValue = 0.09;
+					sizeDecorator.param_mappingRange.numberValue = 0.19;
+					//PARTICULAR CASE TO MAKE PENCIAL PRECISE
+					if(precision<=0.05){
+						sizeDecorator.param_mappingFactor.numberValue = 0.08;
+						sizeDecorator.param_mappingRange.numberValue = 0.05;
+					}
 					
 					
 					colorDecorator.param_brushOpacity.numberValue = 0.75;
@@ -338,12 +344,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 1;
 					
 					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
-					splatterDecorator.param_splatFactor.numberValue = 0.01+ 2 * precision;
-					splatterDecorator.param_brushAngleOffsetRange.degrees = 5;
+					splatterDecorator.param_splatFactor.numberValue = 2 * precision;
+					splatterDecorator.param_brushAngleOffsetRange.degrees = 5* precision;
 					
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;					
-					sizeDecorator.param_mappingFactor.numberValue = 0.3;
-					sizeDecorator.param_mappingRange.numberValue = 0.05;
+					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_EXPONENTIAL_IN;
+					sizeDecorator.param_mappingFactor.numberValue =0.1+ 0.3* precision*2;
+					sizeDecorator.param_mappingRange.numberValue = 0.10* precision*2;
 					//sizeDecorator.param_mappingFactor.numberValue = 0.25;
 					//sizeDecorator.param_mappingRange.numberValue = 0.09;
 					
@@ -440,8 +447,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					//SIZE VARY ON SPEED
 					sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
-					sizeDecorator.param_mappingFactor.numberValue = 1.2;
-					sizeDecorator.param_mappingRange.numberValue = 1.18;
+					sizeDecorator.param_mappingFactor.numberValue = 0.15+0.8*precision*2;
+					sizeDecorator.param_mappingRange.numberValue = 0.12+0.75*precision*2;
 					sizeDecorator.param_maxSpeed.numberValue = 200;
 					//sizeDecorator.pa
 					
@@ -449,8 +456,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.05;
 					
 					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_FIXED;
-					splatterDecorator.param_splatFactor.numberValue = 0.01+precision*1;
-					splatterDecorator.param_minOffset.numberValue = 0.01+precision*1;
+					splatterDecorator.param_splatFactor.numberValue = precision*1;
+					splatterDecorator.param_minOffset.numberValue = precision*1;
 					splatterDecorator.param_offsetAngleRange.degrees = 3;
 					
 					

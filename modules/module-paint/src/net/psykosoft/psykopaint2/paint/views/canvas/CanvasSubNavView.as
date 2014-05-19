@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public static const ID_SAVE:String = "Save";
 		public static const ID_DISCARD:String = "Discard";
 		public static const ID_CLEAR:String = "Reload";
-		public static const ID_DOWNLOAD:String = "To roll";
+		public static const ID_DOWNLOAD:String = "Download";
 		public static const ID_PUBLISH:String = "Publish";
 
 		public static const ID_PICK_A_BRUSH:String = "Pick a Brush";

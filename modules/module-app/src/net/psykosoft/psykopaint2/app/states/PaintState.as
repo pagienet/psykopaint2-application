@@ -1,25 +1,23 @@
 package net.psykosoft.psykopaint2.app.states
 {
 
-	import flash.utils.setTimeout;
+	import flash.display.BitmapData;
 	
 	import net.psykosoft.psykopaint2.app.states.transitions.TransitionPaintToHomeState;
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
+	import net.psykosoft.psykopaint2.base.utils.io.DesktopImageSaveUtil;
+	import net.psykosoft.psykopaint2.base.utils.io.IosImageSaveUtil;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
-	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleTransformGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
-	import net.psykosoft.psykopaint2.core.views.popups.base.Jokes;
-	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 	import net.psykosoft.psykopaint2.paint.signals.RequestClosePaintViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDiscardSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
@@ -48,6 +46,9 @@ package net.psykosoft.psykopaint2.app.states
 
 		[Inject]
 		public var paintingModel:PaintingModel;
+		
+		[Inject]
+		public var canvasRenderer:CanvasRenderer;
 
 		[Inject]
 		public var toggleTransformGestureSignal:NotifyToggleTransformGestureSignal;
@@ -99,13 +100,36 @@ package net.psykosoft.psykopaint2.app.states
 		private function savePainting():void {
 			ConsoleView.instance.log( this, "saving painting..." );
 			ConsoleView.instance.logMemory();
+			
+			
+			//MATHIEU: WE SAVE THE OUTPUT OF THE IMAGE AS WE SAVE FOR NOW
+			var bitmapData:BitmapData = canvasRenderer.renderToBitmapData();
+			
+			
+			// Write bmd
+			if( CoreSettings.RUNNING_ON_iPAD ) {
+				var iosImageSaveUtil:IosImageSaveUtil = new IosImageSaveUtil();
+				iosImageSaveUtil.saveImageToCameraRoll( bitmapData, onWriteComplete );
+			}
+			else {
+				var desktopImageSaveUtil:DesktopImageSaveUtil = new DesktopImageSaveUtil();
+				desktopImageSaveUtil.saveImageToDesktop( bitmapData, onWriteComplete );
+			}
+			
+			
 			notifyPaintingSavedSignal.addOnce( onPaintingSaved );
 			requestPaintingSaveSignal.dispatch( paintingModel.activePaintingId, true );
 //			setTimeout( function():void {
 //				requestPaintingSaveSignal.dispatch( paintingModel.activePaintingId, true );
 //			}, 2000 );
 		}
-
+		
+		private function onWriteComplete():void
+		{
+			// TODO Auto Generated method stub
+			
+		}
+		
 		private function onPaintingSaved( success:Boolean ):void {
 			continueToHome();
 		}
