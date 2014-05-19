@@ -184,11 +184,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			//BUMP
 			bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
 			bumpDecorator.param_invertMapping.booleanValue = true;
-			bumpDecorator.param_bumpiness.numberValue = 0.8;
+			bumpDecorator.param_bumpiness.numberValue = 0.0;
 			bumpDecorator.param_bumpinessRange.numberValue = 0.5;
 			bumpDecorator.param_bumpInfluence.numberValue = 0.25;
-			bumpDecorator.param_noBumpProbability.numberValue = 0.6;
-			bumpDecorator.param_glossiness.numberValue = 0.25;
+			bumpDecorator.param_noBumpProbability.numberValue = 0.9;
+			bumpDecorator.param_glossiness.numberValue = 0.20;
 			
 			//COLOR
 			colorDecorator.param_brushOpacity.numberValue = 0.98;
@@ -257,12 +257,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM;
-					bumpDecorator.param_invertMapping.booleanValue = true;
-					bumpDecorator.param_bumpiness.numberValue = 0.10;
+					bumpDecorator.param_invertMapping.booleanValue = false;
+					bumpDecorator.param_bumpiness.numberValue = 0.02;
 					bumpDecorator.param_bumpinessRange.numberValue = 0.15;
-					bumpDecorator.param_bumpInfluence.numberValue = 0.25;
-					bumpDecorator.param_noBumpProbability.numberValue = 0.0;
-					bumpDecorator.param_glossiness.numberValue = 0.24;
+					bumpDecorator.param_bumpInfluence.numberValue = 0.1;
+					bumpDecorator.param_noBumpProbability.numberValue = 0.6;
+					bumpDecorator.param_glossiness.numberValue = 0.25;
 					
 					colorDecorator.param_brushOpacity.numberValue = 0.98;
 					colorDecorator.param_brushOpacityRange.numberValue = 0.02;
