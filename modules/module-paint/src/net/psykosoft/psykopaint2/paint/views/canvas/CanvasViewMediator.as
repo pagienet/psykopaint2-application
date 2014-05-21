@@ -14,7 +14,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
-	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
@@ -203,9 +202,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function onGlobalGesture( type:String, event:GestureEvent ):void {
 			
 			switch( type ) {
-				case GestureType.TWO_FINGER_TAP_GESTURE_RECOGNIZED:
-					requestUndoSignal.dispatch();
-					break;
+//				MATHIEU: NOT ANYMORE: THIS HAPPENED TO ERRATICALLY SO REMOVED
+//				case GestureType.TWO_FINGER_TAP_GESTURE_RECOGNIZED:
+//					requestUndoSignal.dispatch();
+//					break;
 
 				case GestureType.TRANSFORM_GESTURE_CHANGED:
 					var tg:TransformGesture = (event.target as TransformGesture);

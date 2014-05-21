@@ -542,7 +542,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			if (_activeImageProxy)
 				_activeImageProxy.cancelLoading();
 			// also test if painting hasn't been destroyed yet due to panning
-			if (_activeImageProxy && _paintings[_activeImageProxy.index]) {
+			if (_paintings && _activeImageProxy && _paintings[_activeImageProxy.index]) {
 				var index:uint = _activeImageProxy.index;
 				_paintings[index].material = _lowQualityMaterials[index];
 			}
