@@ -12,6 +12,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModeChangedSignal;
@@ -20,6 +22,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import net.psykosoft.psykopaint2.paint.signals.NotifyShowPipetteSignal;
 	
 	import org.gestouch.events.GestureEvent;
+	import org.osflash.signals.Signal;
 
 	public class ColorPickerSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -34,6 +37,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		[Inject]
 		public var canvasModel:CanvasModel;
+		
+		[Inject]
+		public var notifyHistoryStackChanged : NotifyHistoryStackChangedSignal;
 		
 		[Inject]
 		public var notifyPickedColorChangedSignal:NotifyPickedColorChangedSignal;
@@ -59,6 +65,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 		[Inject]
 		public var userPaintSettings:UserPaintSettingsModel;
 		
+		[Inject]
+		public var requestUndoSignal:RequestUndoSignal;
+		
+		
+		
 		private var _stage:Stage;
 		
 		override public function initialize():void {
@@ -74,6 +85,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			view.enabledSignal.add( onViewEnabled );
 			view.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
+			view.undoBtn.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDownUndo);
 			// From view.
 			//view.colorChangedSignal.add( onColorChanged );
 
@@ -82,9 +94,16 @@ package net.psykosoft.psykopaint2.paint.views.color
 			notifyGlobalGestureSignal.add( onGlobalGestureDetected );
 			notifyPipetteChargeChangedSignal.add( onPipetteChargeChanged );
 			notifyPaintModeChangedSignal.add( onPaintModeChanged );
+			notifyHistoryStackChanged.add( onHistoryChanged );
 			
 			_stage = view.stage;
 			view.setParameters( paintModule.getCurrentBrushParameters() );
+		}
+		
+		private function onHistoryChanged(hasHistory:Boolean):void
+		{
+			//RESET UNDO BUTTON
+			view.undoBtn.reset();
 		}
 		
 		private function onPaintModeChanged( paintMode:int):void
@@ -97,6 +116,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		override public function destroy():void {
 			super.destroy();
 			view.removeEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
+			view.undoBtn.removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDownUndo);
 			view.enabledSignal.remove(onViewEnabled);
 			
 			notifyPickedColorChangedSignal.remove( onColorChanged );
@@ -107,7 +127,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 				_stage.removeEventListener( MouseEvent.MOUSE_UP, onMouseUp );
 			_stage = null;
 		}
-
+		
+		protected function onMouseDownUndo(event:MouseEvent):void
+		{
+			requestUndoSignal.dispatch();
+		}
 		
 		// -----------------------
 		// From view.

@@ -21,7 +21,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 		private static const presets:XML = <presets>
 
 				<factors name="Saturate" colorMatrix="3.361987,-2.14548,-0.216507,0,0,-0.6380129999999999,1.85452,-0.216507,0,0,-0.6380129999999999,-2.14548,3.783493,0,0,0,0,0,1,0" />
-					
+				<factors name="Black&White" colorMatrix="0.212671,0.71516,0.072169,0,0,0.212671,0.71516,0.072169,0,0,0.212671,0.71516,0.072169,0,0,0,0,0,1,0" />
+
 				<factors name="starrynight" blend_in="16" blend_out="16">
 				  <bin>
 					<dimension x="103.68526859322643" y="36.589568742835255" z="10.621072089363906"/>
@@ -98,7 +99,6 @@ package net.psykosoft.psykopaint2.paint.configuration
   </bin>
 </factors>
 3.361987,-2.14548,-0.216507,0,0,-0.6380129999999999,1.85452,-0.216507,0,0,-0.6380129999999999,-2.14548,3.783493,0,0,0,0,0,1,0
-<factors name="Black&White" colorMatrix="0.212671,0.71516,0.072169,0,0,0.212671,0.71516,0.072169,0,0,0.212671,0.71516,0.072169,0,0,0,0,0,1,0" />
 </presets>;
 		
 /*

@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
@@ -34,7 +35,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public var hslSliders:HSLSliders;
 		public var brushStyleUI:StyleUI;
 		public var colorPalette:ColorPalette;
-		private var photoStyleUI:StyleUI;
+		public var photoStyleUI:StyleUI;
+		public var undoBtn:UndoBtn;
 		
 		public var notifyChangePipetteColorSignal:NotifyChangePipetteColorSignal;
 		public var renderer:CanvasRenderer;
@@ -72,13 +74,13 @@ package net.psykosoft.psykopaint2.paint.views.color
 			brushStyleUI.setParameters(styleParameter,slider1Parameter,slider2Parameter);
 			brushStyleUI.setup(1,2);
 			hslSliders.setup();
-			photoStyleUI = new StyleUI();
+			//photoStyleUI = new StyleUI();
 			photoStyleUI.setParameters(_userPaintSettings.colorStyleParameter,_userPaintSettings.styleBlendParameter,_userPaintSettings.previewMixtureParameter);
 			
-			photoStyleUI.x = hslSliders.x - 32;
-			photoStyleUI.y = brushStyleUI.y;
+			//photoStyleUI.x = hslSliders.x - 32;
+			//photoStyleUI.y = brushStyleUI.y;
 			photoStyleUI.setup(3,4);
-			addChild(photoStyleUI);
+		//	addChild(photoStyleUI);
 			
 			//colorStyleParameter = new PsykoParameter( PsykoParameter.IconListParameter,"Color Style",0,["No Style","Contrast Style","Black and White Style","Supersaturated Style","Mona Lisa Style","William Turner Style","Miro Style","Picasso Style"]);
 			
@@ -93,6 +95,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			
 		}
+		
 		
 		override protected function onDisabled():void
 		{
