@@ -77,10 +77,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			var cos2 : Number = halfSize * Math.cos( -baseAngle + angle);
 			var sin2 : Number = halfSize * Math.sin( -baseAngle + angle);
 
+
 			var point:SamplePoint = appendVO.point;
 			var pnx:Number = point.x;
 			var pny:Number = point.y;
-			
+			var bumpFactors : Vector.<Number> = point.bumpFactors;
+
+			var diffX : Number;
+			var diffU : Number;
+
 			var data:Vector.<Number> = _tmpData;
 
 			var ox:Number = appendVO.quadOffsetRatio * (-cos1 - cos2);
@@ -100,6 +105,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			data[0] = vx;
 			data[1] = vy;
 
+			diffX = vx;
+
 			vx = (pnx + cos2 + ox) * ndcScaleX - 1.0;
 			vy = -((pny + sin2 + oy) * ndcScaleY - 1.0);
 
@@ -107,6 +114,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if (vx > _maxX) _maxX = vx;
 			if (vy < _minY) _minY = vy;
 			if (vy > _maxY) _maxY = vy;
+
+			diffX -= vx;
 
 			data[8] = vx;
 			data[9] = vy;
@@ -137,7 +146,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			data[3]  = data[11] = uvBounds.top;
 			data[10] = data[18] = uvBounds.right;
 			data[19] = data[27] = uvBounds.bottom;
-			
+
+			diffU = uvBounds.left - uvBounds.right;
 			
 			//used by bump map:
 			var rotCos : Number = Math.cos(angle);
@@ -146,13 +156,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			data[5] = data[13] = data[21] = data[29] =-rotSin;
 			data[6] = data[14] = data[22] = data[30] = rotSin;
 			data[7] = data[15] = data[23] = data[31] = rotCos;
-			 
+
+			// this is a scaling factor for neighbor sampling, trying to match the chosen mip maps (so we can sample neighbouring pixels correctly)
+			bumpFactors[2] = bumpFactors[6] = bumpFactors[10] = bumpFactors[14] = Math.abs(diffX / diffU * .5);
 			
 			//_fastBuffer.addInterleavedFloatsToVertices( data,_vIndex,8,4);
 			//_fastBuffer.addInterleavedFloatsToVertices( point.colorsRGBA,_vIndex+32,4,8);
 			_fastBuffer.addInterleavedFloatsToVertices( data,_vIndex,8,8);
 			_fastBuffer.addInterleavedFloatsToVertices( point.colorsRGBA,_vIndex+32,4,12);
-			_fastBuffer.addInterleavedFloatsToVertices( point.bumpFactors,_vIndex+48,4,12);
+			_fastBuffer.addInterleavedFloatsToVertices( bumpFactors,_vIndex+48,4,12);
 			//_vIndex += 192;
 			_vIndex += 256;
 			
@@ -220,7 +232,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 			context3d.setTextureAt(0, _normalTexture);
 			context3d.setTextureAt(1, canvas.normalSpecularMap);
-			_normalSpecularVertexData[0] = 1/512;
+			_normalSpecularVertexData[0] = 1/512;	// scale with diff_x / diff_u ( in pixel space ? )
 			_normalSpecularVertexData[1] = 1/512;
 
 			_normalSpecularVertexData[8] = 1/canvas.width;
@@ -255,9 +267,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 				// canvas uvs
 					"mul vt0, va0, vc1.xyww\n" +
+					// make sure we've got the right mip neighbour
+					"mul vt0, vt0, va3.z\n" +
 					"add vt0, vt0, vc1.xxzz\n" +
 					"mov v3, vt0\n" +
-					"mul v4, va3, vc3\n";
+
+				// do not write to w to preserve linear (non-perspective) interpolation
+					"mul v4.xyz, va3.xyw, vc3.xyw\n" +
+					"mov v4.w, vc0.w";
 		}
 
 		// default code expects a height map + alpha map
@@ -287,7 +304,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			// store original to blend against later
 			code += "tex ft6, v3, fs1 <2d, clamp, linear, nomip>\n" +
 					"sub ft6.xy, ft6.xy, fc0.x\n" +	// - .5
-					"mul ft6.xy, ft6.xy, v4.w\n" +	// v4.w contains the amount of flattening of the original
+					"mul ft6.xy, ft6.xy, v4.z\n" +	// v4.z contains the amount of flattening of the original
 					"add ft6.xy, ft6.xy, fc0.x\n";	// + .5
 
 			for (i = 0; i < NUM_POISSON_SAMPLES; ++i) {

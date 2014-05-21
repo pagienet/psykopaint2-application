@@ -146,14 +146,13 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					bmp = mapping.apply( null, applyArray);
 				} 
 				
-				
 				var bumpValue:Number=  (Math.random() < nbp)?param_bumpiness.numberValue: param_bumpiness.numberValue - param_bumpinessRange.numberValue + (  param_bumpinessRange.numberValue  * bmp )* 2;
 					
 					
 				bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] = param_glossiness.numberValue;
 				//ADD CASE NO BUMP VALUE
 				bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] = Math.min(Math.max(bumpValue,param_minBump.numberValue),param_maxBump.numberValue);
-				//bumpFactors[2] = bumpFactors[6] = bumpFactors[10] = bumpFactors[14] = param_shininess.numberValue;
+				// IMPORTANT: bumpFactors[2] is reserved
 				bumpFactors[3] = bumpFactors[7] = bumpFactors[11] = bumpFactors[15] = param_bumpInfluence.numberValue;
 				
 
