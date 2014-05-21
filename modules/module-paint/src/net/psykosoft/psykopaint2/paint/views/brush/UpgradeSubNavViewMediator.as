@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
+	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
@@ -54,6 +55,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		[Inject]
 		public var brushKitManager : BrushKitManager;
 		
+		[Inject]
+		public var canvasHistoryModel : CanvasHistoryModel;
+		
 		
 		override public function initialize():void {
 			// Init.
@@ -82,7 +86,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 				case UpgradeSubNavView.ID_CANCEL:
 					requestUndoSignal.dispatch();
-					
+					canvasHistoryModel.clearHistory();	// make sure there is no trickery possible
 					requestNavigationStateChange( NavigationStateType.PREVIOUS );
 					notifyTogglePaintingEnableSignal.dispatch(true);
 					break;
@@ -100,10 +104,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			{
 				case InAppPurchaseManager.STATUS_PURCHASE_CANCELLED:
 					requestUndoSignal.dispatch();
+					canvasHistoryModel.clearHistory();	// make sure there is no trickery possible
 				break;
 				
 				case InAppPurchaseManager.STATUS_PURCHASE_FAILED:
 					requestUndoSignal.dispatch();
+					canvasHistoryModel.clearHistory();	// make sure there is no trickery possible
+					
 					requestShowPopUpSignal.dispatch( PopUpType.ERROR )
 					requestUpdateErrorPopUpSignal.dispatch("Upgrade Failed","Oops - something went wrong with your purchase.  Please check your internet connection and try again.");
 					break;
@@ -122,8 +129,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 						userConfig.userConfig.hasBrushKit1 = true;
 					} else {
 						requestUndoSignal.dispatch();
+						canvasHistoryModel.clearHistory();	// make sure there is no trickery possible
 						requestShowPopUpSignal.dispatch( PopUpType.ERROR )
 						requestUpdateErrorPopUpSignal.dispatch("App Store is not available","Unfortunately we cannot connect to the App Store right now. Please check your internet connection and try again.");
+					
+						
 					}
 					break;
 				
