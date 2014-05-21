@@ -26,6 +26,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var lastY:Number;
 		private var lastAngle:Number;
 		private var delayTriggered:Boolean;
+		private var firstTriggered:Boolean;
+		
 		private var timeStamp:int;
 		
 		public var param_delay:PsykoParameter;
@@ -47,7 +49,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			if ( points.length == 0 )
 			{
-				if ( fingerIsDown )
+				if ( firstTriggered && fingerIsDown )
 				{
 					if ( delayTriggered && 	(getTimer()-timeStamp >=  param_delay.intValue ))
 					{
@@ -63,6 +65,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					delayTriggered = false;
 				}
 			} else {
+				if ( points[0].first ) firstTriggered = true;
 				if ( points[0].first || lastX != points[points.length-1].x || lastY != points[points.length-1].y ) delayTriggered = false;
 				lastX = points[points.length-1].x;
 				lastY = points[points.length-1].y;
@@ -90,6 +93,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public function resetLastPoint():void
 		{
 			delayTriggered = false;
+			firstTriggered = false;
 		}
 		
 		
