@@ -155,7 +155,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			loadATFMaterial(titles, atfURL + "titles.atf", 0);
  
 			var logoData:LogoData = new LogoData();
-			var logo_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-266.8269958496094,-1.1448999643325806,-355.1099853515625,1]);
+			var logo_rd:Vector.<Number> = Vector.<Number>([1.02,0,0,0,0,1.02,0,0,0,0,1,0,-266.8269958496094,-1.1448999643325806,-344.1099853515625,1]);
 			var logo:Mesh = new Mesh(logoData.geometryData, null);
 			applyTransform(logo_rd, logo, "logo");
 			loadATFMaterial(logo, atfURL + "logo.atf", 1);

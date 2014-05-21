@@ -1,12 +1,12 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
 
-	import away3d.core.managers.Stage3DProxy;
-
 	import flash.display.BitmapData;
-
 	import flash.geom.Matrix3D;
-
+	import flash.net.SharedObject;
+	
+	import away3d.core.managers.Stage3DProxy;
+	
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
@@ -17,10 +17,11 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeDistanceToSectionChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyProfilePictureUpdatedSignal;
-	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewIntroZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.views.popups.tutorial.TutorialPopup;
+	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewIntroZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 
@@ -71,6 +72,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var notifyHomeDistanceToSectionChangedSignal : NotifyHomeDistanceToSectionChangedSignal;
 
 		private var _currentNavigationState : String;
+		
+		
+		private var _localCache:SharedObject;
+		private var _connectionCount:int=0;
 
 		override public function initialize() : void
 		{
@@ -98,6 +103,21 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.enable();
 
 			userProxy.loadUserImage();
+			
+			
+			_localCache = SharedObject.getLocal("com.psykopaint.localData");
+			if (_localCache.data["connectionCount"] )
+			{
+				_localCache.data["connectionCount"] = _localCache.data["connectionCount"]+1;
+				_connectionCount = _localCache.data["connectionCount"];
+				
+			} else {
+				//FIRST TIME WE CONNECT
+				_connectionCount=1;
+				_localCache.data["connectionCount"] = _connectionCount;
+				_localCache.flush();
+			}
+			
 		}
 
 		override public function destroy() : void
@@ -177,13 +197,31 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onIntroRequested() : void
 		{
-			view.playIntroAnimation(onIntroComplete);
+			//TESTING ONLY
+			//_connectionCount = 1;
+			
+			if(_connectionCount==1){
+				///THE FIRST TIME WE USE THE APP THE TRANSITION IS SLOW
+				view.playIntroAnimation(onIntroComplete,3);
+				//THEN IT'S A BIT FASTER
+			}else if(_connectionCount<=4){
+				view.playIntroAnimation(onIntroComplete,1);
+			}else {
+				//IF WE COME BACK OFTEN IT'S MUCH FASTER
+				view.playIntroAnimation(onIntroComplete,0.5);
+			}
 		}
 
 		private function onIntroComplete() : void
 		{
 			notifyHomeViewIntroZoomComplete.dispatch();
 			view.activateCameraControl();
+			
+			//SHOW TUTORIAL POPUP ON FIRST LOAD
+			if(_connectionCount==1){
+				var tutorialPopup:TutorialPopup = new TutorialPopup();
+				view.stage.addChild(tutorialPopup);
+			}
 		}
 
 		override protected function onStateChange(newState : String) : void

@@ -77,6 +77,16 @@ package net.psykosoft.psykopaint2.core.views.components
 		// public methods
 		//////////////////////////////////////////////////////
 		
+		public function get ns():NetStream
+		{
+			return _ns;
+		}
+
+		public function get video():Video
+		{
+			return _video;
+		}
+
 		public function play():void
 		{
 			
