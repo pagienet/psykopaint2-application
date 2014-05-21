@@ -85,7 +85,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
 			pathManager.pathEngine.outputStepSize.numberValue = 4;
 			pathManager.pathEngine.sendTaps = false;
-			pathManager.addCallback( this,null,onPathStart,onPathEnd,null,onFingerUp );
+			pathManager.addCallback( this,null,onPathStart,onPathEnd,onFingerDown,onFingerUp );
 			
 			stationaryDecorator = new StationaryDecorator();
 			stationaryDecorator.param_delay.numberValue=10;
@@ -198,6 +198,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				PathManager.recycleSamplePoint(_persistentPoints[0]);
 				_persistentPoints[0] = null;
 			}
+			stationaryDecorator.resetLastPoint();
+		}
+		
+		
+		private function onFingerDown( x:Number, y:Number ):void
+		{
 			stationaryDecorator.resetLastPoint();
 		}
 		

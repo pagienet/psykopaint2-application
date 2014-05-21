@@ -22,5 +22,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 			}
 		}
+		
+		public function reset():void
+		{
+			this.gotoAndStop(1);
+		}
 	}
 }

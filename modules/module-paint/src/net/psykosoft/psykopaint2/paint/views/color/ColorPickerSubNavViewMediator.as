@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
@@ -36,6 +37,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		[Inject]
 		public var canvasModel:CanvasModel;
+		
+		[Inject]
+		public var notifyHistoryStackChanged : NotifyHistoryStackChangedSignal;
 		
 		[Inject]
 		public var notifyPickedColorChangedSignal:NotifyPickedColorChangedSignal;
@@ -90,9 +94,16 @@ package net.psykosoft.psykopaint2.paint.views.color
 			notifyGlobalGestureSignal.add( onGlobalGestureDetected );
 			notifyPipetteChargeChangedSignal.add( onPipetteChargeChanged );
 			notifyPaintModeChangedSignal.add( onPaintModeChanged );
+			notifyHistoryStackChanged.add( onHistoryChanged );
 			
 			_stage = view.stage;
 			view.setParameters( paintModule.getCurrentBrushParameters() );
+		}
+		
+		private function onHistoryChanged(hasHistory:Boolean):void
+		{
+			//RESET UNDO BUTTON
+			view.undoBtn.reset();
 		}
 		
 		private function onPaintModeChanged( paintMode:int):void
