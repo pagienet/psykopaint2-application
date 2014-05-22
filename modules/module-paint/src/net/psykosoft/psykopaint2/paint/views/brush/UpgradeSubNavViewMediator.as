@@ -1,10 +1,8 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
-	import com.milkmangames.nativeextensions.ios.StoreKitProduct;
 	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
@@ -12,9 +10,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
-	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyProductPriceSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyTogglePaintingEnableSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
@@ -70,9 +65,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			
 			
 			
-			for ( var i:int = 0; i < brushKitManager.currentPurchaseOptions.length; i++ )
+			for ( var i:int = 0; i < brushKitManager.activeBrushKit.purchasePackages.length; i++ )
 			{
-				var productID:String =  brushKitManager.currentPurchaseOptions[i];
+				var productID:String =  brushKitManager.activeBrushKit.purchasePackages[i];
 				if ( InAppPurchaseManager.isBrushPackage(productID) )
 				{
 					if ( brushKitManager.availableProducts && brushKitManager.availableProducts[productID] )
@@ -82,12 +77,20 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					packageProductID = productID;
 				} else {
 					if ( brushKitManager.availableProducts && brushKitManager.availableProducts[productID] )
+					{
 						view.singlePrice = brushKitManager.availableProducts[productID].localizedPrice;
-					else
+						view.singleBrushName =  brushKitManager.availableProducts[productID].title;
+					} else {
 						view.singlePrice = "0";
+						view.singleBrushName = brushKitManager.activeBrushKit.name;
+					}
+					
 					singleProductID = productID;
+					
 				}
 			}
+			view.singleBrushIconID = brushKitManager.activeBrushKit.purchaseIconID;
+			
 		}
 		
 		override public function destroy():void

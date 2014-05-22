@@ -104,7 +104,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		// -----------------------
 
 		private function activateBrush( name:String ):void {
-			paintModule.activeBrushKit = name;
+			paintModule.activeBrushKitName = name;
 		}
 
 		private function getNumParams():uint {

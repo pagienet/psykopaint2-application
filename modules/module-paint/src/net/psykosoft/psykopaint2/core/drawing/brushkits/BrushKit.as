@@ -24,7 +24,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
-	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 
 	public class BrushKit extends EventDispatcher
@@ -72,7 +71,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		protected var _brushEngine:AbstractBrush;
 		protected var _parameterMapping:PsykoParameterMapping;
 		protected var _eraserMode:Boolean=false;
-		
+		public var purchaseIconID:String;
 
 		public function BrushKit() 
 		{}

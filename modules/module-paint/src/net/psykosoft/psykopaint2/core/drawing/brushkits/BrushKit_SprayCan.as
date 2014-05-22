@@ -29,6 +29,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.StationaryDecorator;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 
 	public class BrushKit_SprayCan extends BrushKit
 	{
@@ -61,6 +62,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		public function BrushKit_SprayCan()
 		{
 			purchasePackages.push(InAppPurchaseManager.PRODUCT_ID_FREE);
+			
 			init( null );
 		}
 		

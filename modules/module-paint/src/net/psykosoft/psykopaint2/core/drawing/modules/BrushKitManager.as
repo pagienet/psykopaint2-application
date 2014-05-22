@@ -162,7 +162,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _revealNavigationTimeout:uint;
 		private var _activeBrushEngine:AbstractBrush;
 		//public var fullUpgradePackage:StoreKitProduct;
-		public var currentPurchaseOptions:Vector.<String>;
+		
 		public var availableProducts:Object = {};
 		
 		public function BrushKitManager()
@@ -310,12 +310,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			_availableBrushKitNames.push(brushKit.name);
 		}
 		
-		public function get activeBrushKit() : String
+		public function get activeBrushKitName() : String
 		{
 			return _activeBrushKitName;
 		}
 
-		public function set activeBrushKit( brushKitName:String ) : void
+		public function set activeBrushKitName( brushKitName:String ) : void
 		{
 			if (_activeBrushKitName == brushKitName) return;
 			if ( _activeBrushKit ) deactivateBrushKit();
@@ -386,7 +386,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				PsykoSocket.sendString( '<msg src="PaintModule.activate" />' );
 			}
 			
-			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
+			if ( !_activeBrushKit ) activeBrushKitName = _availableBrushKitNames[0];
 			activateBrushKit();
 			paintSettingsModel.setDefaultValues();
 			notifyToggleLoadingMessageSignal.dispatch(false);
@@ -501,7 +501,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 				clearTimeout( _revealNavigationTimeout );
 				revealHiddenNavigation();
-				currentPurchaseOptions = _activeBrushKit.purchasePackages;
 				requestStateChangeSignal.dispatch( NavigationStateType.PAINT_BUY_UPGRADE);
 				
 			} else if ( _navigationWasHiddenByPainting )
@@ -561,6 +560,13 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			availableProducts[product.productId] = product;
 		}
+		
+		
+		public function get activeBrushKit():BrushKit
+		{
+			return _activeBrushKit;
+		}
+		
 		
 	}
 }

@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	
-	
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
@@ -20,6 +19,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		public static const ID_BUY_SINGLE:String = "Buy Brush";
 		private var _packagePrice:String = "$???";
 		private var _singlePrice:String = "$???";
+		private var _singleBrushName:String;
+		private var _singleBrushIconID:String;
 		
 		public function UpgradeSubNavView() {
 			super();
@@ -32,7 +33,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			
 			createCenterButton( ID_CANCEL,ID_CANCEL, ButtonIconType.CANCEL_UPGRADE, IconButton, null, true, true, false );
 			createCenterButton( ID_BUY_PACKAGE,"Buy Package", ButtonIconType.BUY_UPGRADE, IconButton, null, true, true, false, MouseEvent.MOUSE_UP, this, onPackageIconReady );
-			createCenterButton( ID_BUY_SINGLE,"Buy Brush", ButtonIconType.BUY_PENCIL, IconButton, null, true, true, false, MouseEvent.MOUSE_UP, this, onSingleIconReady );
+			createCenterButton( ID_BUY_SINGLE,"Buy "+_singleBrushName, _singleBrushIconID, IconButton, null, true, true, false, MouseEvent.MOUSE_UP, this, onSingleIconReady );
 			
 			validateCenterButtons();
 		
@@ -84,6 +85,27 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		{
 			_singlePrice = value;
 		}
+
+		public function get singleBrushName():String
+		{
+			return _singleBrushName;
+		}
+
+		public function set singleBrushName(value:String):void
+		{
+			_singleBrushName = value;
+		}
+
+		public function get singleBrushIconID():String
+		{
+			return _singleBrushIconID;
+		}
+
+		public function set singleBrushIconID(value:String):void
+		{
+			_singleBrushIconID = value;
+		}
+
 
 	}
 }

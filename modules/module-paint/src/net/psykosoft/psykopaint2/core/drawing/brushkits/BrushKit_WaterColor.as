@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.StationaryDecorator;
 	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 
 	public class BrushKit_WaterColor extends BrushKit
 	{
@@ -54,6 +55,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			//isPurchasable = true;
 			purchasePackages.push(InAppPurchaseManager.PRODUCT_ID_BRUSHKIT1, InAppPurchaseManager.PRODUCT_ID_WATERCOLOR_BRUSH_1);
+			purchaseIconID = ButtonIconType.BUY_WATERCOLOR;
 			init(null);
 		}
 		
