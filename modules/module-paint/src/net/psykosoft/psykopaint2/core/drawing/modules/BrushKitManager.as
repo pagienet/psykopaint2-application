@@ -474,7 +474,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			
 			//TRIAL: WE RECORD UNDOS ALL THE TIME EXEPT IF THE BRUSH IS PURCHASABLE AND WE DO NOT OWN IT
 			//THEN IT RECORDS ONLY THE FIRST TIME
-			if(userConfig.userConfig.hasBrushKit1==false  && _activeBrushKit.isPurchasable ){
+			if(!userConfig.userConfig.userOwns(_activeBrushKit.purchasePackages)  ){
 				if(userConfig.userConfig.trialMode==false){
 					
 					userConfig.userConfig.trialMode = true;
@@ -493,7 +493,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			singleTapDelay = getTimer();
 			_view.removeEventListener(Event.ENTER_FRAME, onPaintOverNavCheck );
 			
-			//TODO: this has to change once we are starting to sell single brushes!!!!
 			if ( !userConfig.userConfig.userOwns(_activeBrushKit.purchasePackages) ) 
 			{
 				// !userConfig.userConfig.hasBrushKit1 && _activeBrushKit.isPurchasable

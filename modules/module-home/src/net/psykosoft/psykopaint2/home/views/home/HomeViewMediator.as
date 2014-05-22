@@ -199,7 +199,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onIntroRequested() : void
 		{
 			//TESTING ONLY
-			_connectionCount = 1;
+			//_connectionCount = 1;
 			
 			if(_connectionCount==1){
 				///THE FIRST TIME WE USE THE APP THE TRANSITION IS SLOW
