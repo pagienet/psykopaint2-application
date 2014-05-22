@@ -4,6 +4,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import flash.display.Sprite;
 	import flash.geom.ColorTransform;
 	
+	import net.psykosoft.psykopaint2.core.data.UserConfigVO;
+	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit_BristleBrush;
+	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
@@ -47,40 +50,42 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			}
 		}
 
-		public function setAvailableBrushes( availableBrushTypes:Vector.<String>, selectedId:String, hasFullVersion:Boolean ):void {
+		public function setAvailableBrushes( availableBrushTypes:Vector.<String>, selectedId:String, userConfig:UserConfigVO ):void {
 
 			var len:uint = availableBrushTypes.length;
 //			trace( this, "setAvailableBrushes - len: " + len );
 
 			for( var i:uint; i < len; ++i ) {
 				var iconType:String;
-				switch( i ) {
+				switch( i ) 
+				{
 					case 0: 
 						iconType = ButtonIconType.SPRAYCAN;
 						break;
 					
 					case 1: 
-						iconType = hasFullVersion ? ButtonIconType.BRUSH : ButtonIconType.TRY_BRUSH;
+						iconType = userConfig.userOwns( Vector.<String>([InAppPurchaseManager.PRODUCT_ID_BRUSHKIT1, InAppPurchaseManager.PRODUCT_ID_BRISTLE_BRUSH_1])) ? ButtonIconType.BRUSH : ButtonIconType.TRY_BRUSH;
 						break;
 					
 					case 2: 
-						iconType =  hasFullVersion ? ButtonIconType.PENCIL : ButtonIconType.TRY_PENCIL;
+						iconType = userConfig.userOwns( Vector.<String>([InAppPurchaseManager.PRODUCT_ID_BRUSHKIT1, InAppPurchaseManager.PRODUCT_ID_PENCIL_BRUSH_1])) ? ButtonIconType.PENCIL : ButtonIconType.TRY_PENCIL;
 						break;
 					
 					case 3: 
-						iconType =hasFullVersion ? ButtonIconType.WATERCOLOR : ButtonIconType.TRY_WATERCOLOR;
+						iconType = userConfig.userOwns( Vector.<String>([InAppPurchaseManager.PRODUCT_ID_BRUSHKIT1, InAppPurchaseManager.PRODUCT_ID_WATERCOLOR_BRUSH_1])) ? ButtonIconType.WATERCOLOR : ButtonIconType.TRY_WATERCOLOR;
 						break;
 					
 					case 4: 
-						iconType =hasFullVersion ? ButtonIconType.PAINTGUN : ButtonIconType.TRY_PAINTGUN;
+						iconType = userConfig.userOwns( Vector.<String>([InAppPurchaseManager.PRODUCT_ID_BRUSHKIT1, InAppPurchaseManager.PRODUCT_ID_PAINTGUN_BRUSH_1])) ? ButtonIconType.PAINTGUN : ButtonIconType.TRY_PAINTGUN;
 						break;
 					
 					case 5: 
-						iconType =hasFullVersion ? ButtonIconType.COSMETICS : ButtonIconType.TRY_COSMETICS;
+						iconType = userConfig.userOwns( Vector.<String>([InAppPurchaseManager.PRODUCT_ID_BRUSHKIT2, InAppPurchaseManager.PRODUCT_ID_COSMETICS_BRUSH_1])) ? ButtonIconType.COSMETICS : ButtonIconType.TRY_COSMETICS;
 						break;
 					
 					default: 
-						iconType = hasFullVersion ? ButtonIconType.BRUSH :ButtonIconType.TRY_BRUSH;
+						throw("SelectBrushSubNavView: unhandled brush id "+i);
+						break;
 					
 				}
 				createCenterButton( availableBrushTypes[ i ], availableBrushTypes[ i ], iconType, IconButton, null, true, true, false );

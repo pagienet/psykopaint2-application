@@ -48,7 +48,7 @@ import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteS
 import net.psykosoft.psykopaint2.core.signals.NotifyDataForPopUpSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
-import net.psykosoft.psykopaint2.core.signals.NotifyFullUpgradePriceSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifyProductPriceSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifyGalleryZoomRatioSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
@@ -279,7 +279,7 @@ public class CoreConfig
 			_injector.map( RequestUpdateCropImageSignal ).asSingleton();
 			_injector.map( RequestOpenCroppedBitmapDataSignal ).asSingleton();
 			_injector.map( NotifyPurchaseStatusSignal ).asSingleton();
-			_injector.map( NotifyFullUpgradePriceSignal ).asSingleton();
+			_injector.map( NotifyProductPriceSignal ).asSingleton();
 			_injector.map( NotifyProfilePictureUpdatedSignal ).asSingleton();
 			_injector.map( NotifyHomeDistanceToSectionChangedSignal ).asSingleton();
 			// services

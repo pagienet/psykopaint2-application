@@ -18,11 +18,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
+	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
 
 	public class BrushKit_BristleBrush extends BrushKit
 	{
-		
-		
 		
 		private static const STYLE_VAN_GOGH:int = 0;
 		private static const STYLE_MONET:int = 1;
@@ -51,7 +50,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		public function BrushKit_BristleBrush()
 		{
-			isPurchasable = true;
+			//isPurchasable = true;
+			purchasePackages.push(InAppPurchaseManager.PRODUCT_ID_BRUSHKIT1, InAppPurchaseManager.PRODUCT_ID_BRISTLE_BRUSH_1);
+			
+			
 			if (!_initialized ) BrushKit.init();
 			name = "paint brush";
 			
