@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
+	import net.psykosoft.psykopaint2.core.models.CanvasSurfaceSettingsModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	
@@ -20,7 +21,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	public class LoadSurfaceCommand extends TracingCommand
 	{
 		[Inject]
-		public var index:uint; // From signal.
+		public var canvasSurfaceSettingsModel : CanvasSurfaceSettingsModel;
 
 		[Inject]
 		public var context:IContext;
@@ -49,7 +50,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		private function loadNormalSpecularData():void {
 			_loader = new Loader();
 			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onSurfaceLoaded);
-			_loader.load( new URLRequest("/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_" + _assetSize + ".png" ));
+			_loader.load( new URLRequest("/core-packaged/images/surfaces/canvas_normal_specular_" + canvasSurfaceSettingsModel.surfaceID + "_" + _assetSize + ".png" ));
 		}
 
 		private function onSurfaceLoaded(event : Event):void

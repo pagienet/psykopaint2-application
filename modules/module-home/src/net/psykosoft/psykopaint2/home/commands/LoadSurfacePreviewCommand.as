@@ -4,23 +4,23 @@ package net.psykosoft.psykopaint2.home.commands
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
-	import flash.display.LoaderInfo;
 	import flash.events.Event;
 	import flash.net.URLRequest;
-	import flash.utils.ByteArray;
-	
+
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.models.CanvasSurfaceSettingsModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	
 	import robotlegs.bender.framework.api.IContext;
 
+
 	public class LoadSurfacePreviewCommand extends TracingCommand
 	{
 		[Inject]
-		public var index:uint; // From signal. Which Signal???
+		public var canvasSurfaceSettingsModel : CanvasSurfaceSettingsModel;
 
 		[Inject]
 		public var context:IContext;
@@ -60,7 +60,7 @@ package net.psykosoft.psykopaint2.home.commands
 		private function loadNormalSpecularData():void {
 			_loader = new Loader();
 			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onSurfaceLoaded);
-			_loader.load( new URLRequest("/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_512.png" ));
+			_loader.load( new URLRequest("/core-packaged/images/surfaces/canvas_normal_specular_" + canvasSurfaceSettingsModel.surfaceID + "_512.png" ));
 		}
 
 		private function onSurfaceLoaded(event : Event):void {
@@ -86,7 +86,6 @@ package net.psykosoft.psykopaint2.home.commands
 			var vo:PaintingInfoVO = new PaintingInfoVO();
 			vo.width = 512;
 			vo.height = 384;
-			vo.surfaceID = index;
 			vo.colorPreviewData = new TrackedByteArray();
 			vo.colorPreviewData.length = vo.width * vo.height * 4;	// will fill with zeroes
 			vo.normalSpecularPreviewBitmap = _loadedNormalSpecularData;

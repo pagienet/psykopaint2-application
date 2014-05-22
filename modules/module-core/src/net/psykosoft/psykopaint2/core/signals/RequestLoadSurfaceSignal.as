@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.signals
 	public class RequestLoadSurfaceSignal extends TracingSignal
 	{
 		public function RequestLoadSurfaceSignal() {
-			super( uint ); // The index of the surface in the packaged assets folder.
+			super();
 		}
 	}
 }

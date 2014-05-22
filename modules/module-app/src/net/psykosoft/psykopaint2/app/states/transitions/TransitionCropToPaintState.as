@@ -105,7 +105,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 			_background = background.newReference();
 
 			notifySurfaceLoadedSignal.addOnce(onSurfaceLoaded);
-			requestLoadSurfaceSignal.dispatch(0);
+			requestLoadSurfaceSignal.dispatch();
 		}
 		
 		private function onSurfaceLoaded(data : SurfaceDataVO) : void

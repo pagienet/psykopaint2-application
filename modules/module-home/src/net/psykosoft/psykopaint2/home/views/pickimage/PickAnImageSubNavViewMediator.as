@@ -78,7 +78,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		
 		override protected function onViewEnabled():void {
 			super.onViewEnabled();
-			requestLoadSurfacePreviewSignal.dispatch(0);
+			requestLoadSurfacePreviewSignal.dispatch();
 		}
 
 		override public function destroy():void {

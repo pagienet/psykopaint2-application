@@ -11,9 +11,6 @@ package net.psykosoft.psykopaint2.home.commands
 	public class StartNewColorPaintingCommand
 	{
 		[Inject]
-		public var surfaceID : uint;
-
-		[Inject]
 		public var requestLoadSurfaceSignal:RequestLoadSurfaceSignal;
 
 		[Inject]
@@ -25,7 +22,7 @@ package net.psykosoft.psykopaint2.home.commands
 		public function execute() : void
 		{
 			notifySurfaceLoadedSignal.addOnce( onSurfaceLoaded );
-			requestLoadSurfaceSignal.dispatch( surfaceID );
+			requestLoadSurfaceSignal.dispatch();
 		}
 
 		private function onSurfaceLoaded(surface : SurfaceDataVO):void {

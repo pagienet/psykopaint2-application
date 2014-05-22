@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.commands.load.SetUpHomeModuleCommand;
 	import net.psykosoft.psykopaint2.home.commands.unload.DestroyHomeModuleCommand;
 	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
+	import net.psykosoft.psykopaint2.core.models.CanvasSurfaceSettingsModel;
 	import net.psykosoft.psykopaint2.home.model.WallpaperModel;
 	import net.psykosoft.psykopaint2.home.signals.NotifyCameraFlipRequest;
 	import net.psykosoft.psykopaint2.home.signals.NotifyCameraSnapshotRequest;
@@ -56,8 +57,8 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.views.pickimage.PickAUserImageViewMediator;
 	import net.psykosoft.psykopaint2.home.views.pickimage.PickAnImageSubNavView;
 	import net.psykosoft.psykopaint2.home.views.pickimage.PickAnImageSubNavViewMediator;
-	import net.psykosoft.psykopaint2.home.views.picksurface.PickSurfaceSubNavView;
-	import net.psykosoft.psykopaint2.home.views.picksurface.PickSurfaceSubNavViewMediator;
+	import net.psykosoft.psykopaint2.home.views.settings.CanvasSurfaceSubNavView;
+	import net.psykosoft.psykopaint2.home.views.settings.CanvasSurfaceSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavView;
 	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavView;
@@ -98,6 +99,7 @@ package net.psykosoft.psykopaint2.home.config
 
 		private function mapModels():void {
 			_injector.map( WallpaperModel ).asSingleton();
+			_injector.map( CanvasSurfaceSettingsModel ).asSingleton();
 		}
 
 		// -----------------------
@@ -161,7 +163,8 @@ package net.psykosoft.psykopaint2.home.config
 			_mediatorMap.map( NewPaintingSubNavView ).toMediator( NewPaintingSubNavViewMediator );
 			_mediatorMap.map( SettingsSubNavView ).toMediator( SettingsSubNavViewMediator );
 			_mediatorMap.map( WallpaperSubNavView ).toMediator( WallpaperSubNavViewMediator );
-			_mediatorMap.map( PickSurfaceSubNavView ).toMediator( PickSurfaceSubNavViewMediator );
+			_mediatorMap.map( CanvasSurfaceSubNavView ).toMediator( CanvasSurfaceSubNavViewMediator );
+//			_mediatorMap.map( PickSurfaceSubNavView ).toMediator( PickSurfaceSubNavViewMediator );
 			_mediatorMap.map( PickAnImageSubNavView ).toMediator( PickAnImageSubNavViewMediator );
 			_mediatorMap.map( GalleryBrowseSubNavView ).toMediator( GalleryBrowseSubNavViewMediator );
 			_mediatorMap.map( GalleryPaintingSubNavView ).toMediator( GalleryPaintingSubNavViewMediator );

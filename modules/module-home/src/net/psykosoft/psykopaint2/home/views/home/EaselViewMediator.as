@@ -64,7 +64,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var notifyToggleLoadingMessageSignal:NotifyToggleLoadingMessageSignal;
 		
 
-		private var _selectedSurfaceID : uint;
 		private var canOpenImageOnEasel:Boolean;
 
 		public function EaselViewMediator()
@@ -94,8 +93,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onRequestNavigationStateChange(newState : String) : void
 		{
-			if (newState == NavigationStateType.HOME_ON_EASEL ||
-				newState == NavigationStateType.HOME_PICK_SURFACE)
+			if (newState == NavigationStateType.HOME_ON_EASEL)
 				view.mouseEnabled = true;
 			else
 				view.mouseEnabled = false;
@@ -130,10 +128,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onEaselUpdateRequest(paintingVO : PaintingInfoVO, animateIn : Boolean = false, onUploadComplete : Function = null) : void
 		{
 			view.setContent(paintingVO, animateIn, onUploadComplete);
-
-			// TODO: I'm not too fond of this
-			if (paintingVO && paintingVO.id == PaintingInfoVO.DEFAULT_VO_ID)
-				_selectedSurfaceID = paintingVO.surfaceID;
 		}
 
 		
@@ -155,7 +149,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				var paintingID : String = view.paintingID;
 	
 				if (paintingID == PaintingInfoVO.DEFAULT_VO_ID)
-					requestStartNewPaintingCommand.dispatch(_selectedSurfaceID);
+					requestStartNewPaintingCommand.dispatch();
 				else
 					requestLoadPaintingDataSignal.dispatch(view.paintingID);
 			}

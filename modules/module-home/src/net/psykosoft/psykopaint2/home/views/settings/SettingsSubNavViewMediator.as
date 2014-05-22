@@ -51,6 +51,9 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
+				case SettingsSubNavView.ID_CANVAS_SURFACE:
+					requestNavigationStateChange( NavigationStateType.SETTINGS_CANVAS_SURFACE );
+					break;
 
 				case SettingsSubNavView.ID_WALLPAPER:
 					requestNavigationStateChange( NavigationStateType.SETTINGS_WALLPAPER );

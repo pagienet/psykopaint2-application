@@ -2,8 +2,7 @@ package net.psykosoft.psykopaint2.home.views.base
 {
 
 	import flash.display.Sprite;
-	import flash.utils.getTimer;
-	
+
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
@@ -18,7 +17,7 @@ package net.psykosoft.psykopaint2.home.views.base
 	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageView;
 	import net.psykosoft.psykopaint2.home.views.pickimage.PickAUserImageView;
 	import net.psykosoft.psykopaint2.home.views.pickimage.PickAnImageSubNavView;
-	import net.psykosoft.psykopaint2.home.views.picksurface.PickSurfaceSubNavView;
+	import net.psykosoft.psykopaint2.home.views.settings.CanvasSurfaceSubNavView;
 	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavView;
 	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavView;
 
@@ -41,7 +40,8 @@ package net.psykosoft.psykopaint2.home.views.base
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.HOME, HomeSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.SETTINGS, SettingsSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.SETTINGS_WALLPAPER, WallpaperSubNavView );
-			StateToSubNavLinker.linkSubNavToState( NavigationStateType.HOME_PICK_SURFACE, PickSurfaceSubNavView );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.SETTINGS_CANVAS_SURFACE, CanvasSurfaceSubNavView );
+//			StateToSubNavLinker.linkSubNavToState( NavigationStateType.HOME_PICK_SURFACE, PickSurfaceSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PICK_IMAGE, PickAnImageSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PICK_SAMPLE_IMAGE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PICK_USER_IMAGE_DESKTOP, SubNavigationViewBase );
