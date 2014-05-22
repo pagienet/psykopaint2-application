@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 	
 	import flash.net.SharedObject;
 	
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyProductPriceSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
@@ -148,12 +149,17 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			// of a shared object.
 			this.sharedObject=SharedObject.getLocal("myPurchases");
 			var inventory:Object;
+			
 			// check if the application has been loaded before.  if not, create a store of our purchases in the sharedobject.
 			if (sharedObject.data["inventory"]==null)
 			{			
-				inventory= sharedObject.data["inventory"]=new Object();
+				inventory= sharedObject.data["inventory"] = {}
 			} else {
-				
+				if ( !CoreSettings.RUNNING_ON_iPAD)  
+				{
+					sharedObject.data["inventory"] = {}
+					sharedObject.flush();
+				}
 				inventory=sharedObject.data["inventory"];
 				/*
 				if( inventory[PRODUCT_ID_BRUSHKIT1]=="purchased")
