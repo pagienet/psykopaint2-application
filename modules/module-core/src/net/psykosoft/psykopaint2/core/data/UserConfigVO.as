@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.data
 		public var userEmail:String;
 		public var userPassword:String;
 		public var hasBrushKit1:Boolean;
+		public var trialMode:Boolean=false;
 		
 		//public var hasFullVersion:Boolean;
 		

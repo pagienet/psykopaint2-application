@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	
 	import away3d.core.managers.Stage3DProxy;
 	
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
@@ -113,7 +114,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				
 			} else {
 				//FIRST TIME WE CONNECT
-				_connectionCount=1;
+				_connectionCount = 1;
 				_localCache.data["connectionCount"] = _connectionCount;
 				_localCache.flush();
 			}
@@ -198,7 +199,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onIntroRequested() : void
 		{
 			//TESTING ONLY
-			//_connectionCount = 1;
+			_connectionCount = 1;
 			
 			if(_connectionCount==1){
 				///THE FIRST TIME WE USE THE APP THE TRANSITION IS SLOW
@@ -219,9 +220,15 @@ package net.psykosoft.psykopaint2.home.views.home
 			
 			//SHOW TUTORIAL POPUP ON FIRST LOAD
 			if(_connectionCount==1){
+				view.scrollingEnabled=false;
 				var tutorialPopup:TutorialPopup = new TutorialPopup();
 				view.stage.addChild(tutorialPopup);
+				tutorialPopup.onTutorialPopupCloseSignal.add(onTutorialClose);
 			}
+		}
+		
+		private function onTutorialClose():void{
+			view.scrollingEnabled=true;
 		}
 
 		override protected function onStateChange(newState : String) : void

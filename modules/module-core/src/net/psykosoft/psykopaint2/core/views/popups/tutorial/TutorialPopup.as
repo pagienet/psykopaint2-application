@@ -5,16 +5,31 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
+	import net.psykosoft.psykopaint2.base.utils.events.EventStopper;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.views.components.SimpleVideoPlayer;
+	
+	import org.osflash.signals.Signal;
 	
 	public class TutorialPopup extends Sprite
 	{
 		public var closeBtn:MovieClip;
+		public var bg:Sprite;
+		public var dragArea:Sprite;
+		
+		public var onTutorialPopupCloseSignal:Signal = new Signal();;
+
+		
 		private var videoPlayer:SimpleVideoPlayer;
 		private var duration:Number=0;
 		
+		
+		
 		public function TutorialPopup()
 		{
+			
+			
+			
 			
 			closeBtn.stop();
 			closeBtn.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDownCloseBtn);
@@ -24,6 +39,21 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 		}
 		
 		
+		private function onAddedToStage( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			
+			initializeIntroVideo();
+			EventStopper.stop(bg);
+			
+			dragArea.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
+		}
+		
+		protected function onMouseDown(event:MouseEvent):void
+		{
+			
+			this.addEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);
+			this.addEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+		}
 		
 		protected function onMouseMove(event:MouseEvent):void
 		{
@@ -32,12 +62,11 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 		}		
 		
 		
-		private function onAddedToStage( event:Event ):void {
-			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+		protected function onMouseUp(event:MouseEvent):void
+		{
 			
-			initializeIntroVideo();
-			
-			this.addEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);
+			this.removeEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);
+			this.removeEventListener(MouseEvent.MOUSE_UP,onMouseUp);
 		}
 		
 		private function initializeIntroVideo():void {
@@ -45,9 +74,11 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 			videoPlayer.source = "core-packaged/video/gettingStarted.mp4";
 			videoPlayer.loop = false;
 			videoPlayer.removeOnComplete = true;
-			videoPlayer.width = stage.stageWidth;
-			videoPlayer.height = stage.stageHeight;
+			videoPlayer.width = 640;
+			videoPlayer.height = 480;
 			addChildAt( videoPlayer.container,0 );
+			videoPlayer.container.x = (1024-videoPlayer.width)/2;
+			videoPlayer.container.y = (768-videoPlayer.height)/2;
 			play();
 			var client:Object = new Object(); //Create an Object that represents the client
 			client.onMetaData = onMetaData; //reference the function that catches the MetaData of the Video
@@ -75,11 +106,26 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 		
 		protected function onMouseUpCloseBtn(event:MouseEvent):void
 		{
-			videoPlayer.stop();
-			videoPlayer.dispose();
-			this.parent.removeChild(this);
+			
+			dispose();
+		}
+		
+		public function dispose():void{
+			
+			dragArea.removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
 			closeBtn.removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDownCloseBtn);
 			closeBtn.removeEventListener(MouseEvent.MOUSE_UP,onMouseUpCloseBtn);
+			
+			videoPlayer.stop();
+			videoPlayer.dispose();
+			videoPlayer = null;
+			EventStopper.removeStop(bg);
+			
+			this.parent.removeChild(this);
+			
+			
+			
+			onTutorialPopupCloseSignal.dispatch();
 			
 		}
 	}

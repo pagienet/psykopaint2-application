@@ -81,7 +81,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override protected function onButtonClicked( id:String ):void {
 
 //			trace( this, "clicked: " + id);
-
+			//STOP TRIAL MODE
+			userConfig.userConfig.trialMode=false;
 			switch( id ) {
 
 				case UpgradeSubNavView.ID_CANCEL:

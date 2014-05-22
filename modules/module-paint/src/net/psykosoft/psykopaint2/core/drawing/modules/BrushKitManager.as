@@ -469,8 +469,21 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				_view.addEventListener(Event.ENTER_FRAME, onPaintOverNavCheck );
 			}
 			
-			_activeBrushKit.brushEngine.snapShot = canvasHistory.takeSnapshot();
 			
+			//TRIAL: WE RECORD UNDOS ALL THE TIME EXEPT IF THE BRUSH IS PURCHASABLE AND WE DO NOT OWN IT
+			//THEN IT RECORDS ONLY THE FIRST TIME
+			if(userConfig.userConfig.hasBrushKit1==false  && _activeBrushKit.isPurchasable ){
+				if(userConfig.userConfig.trialMode==false){
+					
+					userConfig.userConfig.trialMode = true;
+					
+				}else {
+					canvasHistory.undo();
+				}
+			}
+			
+			_activeBrushKit.brushEngine.snapShot = canvasHistory.takeSnapshot();
+
 		}
 		
 		private function onStrokeEnded(event : Event) : void
@@ -481,8 +494,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			//TODO: this has to change once we are starting to sell single brushes!!!!
 			if ( !userConfig.userConfig.hasBrushKit1 && _activeBrushKit.isPurchasable )
 			{
-				GestureManager.gesturesEnabled = false;
-				notifyTogglePaintingEnableSignal.dispatch(false);
+				//GestureManager.gesturesEnabled = true;
+				//notifyTogglePaintingEnableSignal.dispatch(true);
 				clearTimeout( _revealNavigationTimeout );
 				revealHiddenNavigation();
 				requestStateChangeSignal.dispatch( NavigationStateType.PAINT_BUY_UPGRADE);
