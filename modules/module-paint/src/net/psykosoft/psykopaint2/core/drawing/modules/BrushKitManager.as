@@ -42,10 +42,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyFullUpgradePriceSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyProductPriceSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyTogglePaintingEnableSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
@@ -137,7 +137,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public var requestUndoSignal:RequestUndoSignal;
 		
 		[Inject]
-		public var notifyFullUpgradePriceSignal:NotifyFullUpgradePriceSignal;
+		public var notifyFullUpgradePriceSignal:NotifyProductPriceSignal;
 		
 		[Inject]
 		public var purchaseManager:InAppPurchaseManager;
@@ -161,7 +161,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _navigationWasHiddenByPainting:Boolean;
 		private var _revealNavigationTimeout:uint;
 		private var _activeBrushEngine:AbstractBrush;
-		public var fullUpgradePackage:StoreKitProduct;
+		//public var fullUpgradePackage:StoreKitProduct;
+		public var currentPurchaseOptions:Vector.<String>;
+		public var availableProducts:Object = {};
 		
 		public function BrushKitManager()
 		{
@@ -479,12 +481,14 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			_view.removeEventListener(Event.ENTER_FRAME, onPaintOverNavCheck );
 			
 			//TODO: this has to change once we are starting to sell single brushes!!!!
-			if ( !userConfig.userConfig.hasBrushKit1 && _activeBrushKit.isPurchasable )
+			if ( !userConfig.userConfig.userOwns(_activeBrushKit.purchasePackages) ) 
 			{
+				// !userConfig.userConfig.hasBrushKit1 && _activeBrushKit.isPurchasable
 				GestureManager.gesturesEnabled = false;
 				notifyTogglePaintingEnableSignal.dispatch(false);
 				clearTimeout( _revealNavigationTimeout );
 				revealHiddenNavigation();
+				currentPurchaseOptions = _activeBrushKit.purchasePackages;
 				requestStateChangeSignal.dispatch( NavigationStateType.PAINT_BUY_UPGRADE);
 				
 			} else if ( _navigationWasHiddenByPainting )
@@ -542,8 +546,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private function onUpgradePriceAvailable( product:StoreKitProduct):void
 		{
-			fullUpgradePackage = product;
-			
+			availableProducts[product.productId] = product;
 		}
 		
 	}
