@@ -7,8 +7,9 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 	
 	import flash.net.SharedObject;
 	
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
-	import net.psykosoft.psykopaint2.core.signals.NotifyFullUpgradePriceSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyProductPriceSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 
 	public class InAppPurchaseManager
@@ -28,8 +29,38 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		
 		/** Sample Product IDs, must match iTunes Connect Items */
 		//public static const FULL_UPGRADE_PRODUCT_ID:String="com.psykopaint.ipad.fullVersionUpgrade";
-		public static const BRUSHKIT1_PRODUCT_ID:String="com.psykopaint.app.brushkit1";
+
 		
+		public static const PRODUCT_ID_FREE:String="com.psykopaint.app.free";
+		
+		public static const PRODUCT_ID_BRUSHKIT1:String="com.psykopaint.app.brushkit1";
+		public static const PRODUCT_ID_WATERCOLOR_BRUSH_1:String="com.psykopaint.app.watercolorbrush1";
+		public static const PRODUCT_ID_BRISTLE_BRUSH_1:String="com.psykopaint.app.bristlebrush1";
+		public static const PRODUCT_ID_PAINTGUN_BRUSH_1:String="com.psykopaint.app.paintgunbrush1";
+		public static const PRODUCT_ID_PENCIL_BRUSH_1:String="com.psykopaint.app.pencilbrush1";
+		
+		//potential future additions: 
+		public static const PRODUCT_ID_BRUSHKIT2:String="com.psykopaint.app.brushkit2";
+		public static const PRODUCT_ID_COSMETICS_BRUSH_1:String="com.psykopaint.app.cosmeticsbrush1";
+		
+		
+		private static const productIdList:Vector.<String>= Vector.<String>(
+			[PRODUCT_ID_BRUSHKIT1,
+			PRODUCT_ID_WATERCOLOR_BRUSH_1,
+			PRODUCT_ID_BRISTLE_BRUSH_1,
+			PRODUCT_ID_PAINTGUN_BRUSH_1,
+			PRODUCT_ID_PENCIL_BRUSH_1
+			]);
+		
+		public static const packages:Vector.<String>= Vector.<String>(
+			[PRODUCT_ID_BRUSHKIT1]);
+		
+		public static function isBrushPackage( productID:String ):Boolean
+		{
+			return ( packages.indexOf(productID) > -1 );
+			
+		}
+	
 		
 		/** Shared Object.  Used in this example to remember what we've bought. */
 		private var sharedObject:SharedObject;
@@ -40,7 +71,7 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		public var notifyPurchaseStatusSignal:NotifyPurchaseStatusSignal
 		
 		[Inject]
-		public var notifyFullUpgradePriceSignal:NotifyFullUpgradePriceSignal
+		public var notifyProductPriceSignal:NotifyProductPriceSignal
 		
 		
 		[Inject]
@@ -55,6 +86,9 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		[PostConstruct]
 		public function init() : void
 		{
+			// initialize a sharedobject that's holding our inventory.
+			initSharedObject();
+			
 			//initialized = true;
 			if (!StoreKit.isSupported())
 			{
@@ -89,8 +123,7 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			StoreKit.storeKit.addEventListener(StoreKitErrorEvent.PURCHASE_FAILED,onPurchaseFailed);
 			StoreKit.storeKit.addEventListener(StoreKitErrorEvent.TRANSACTION_RESTORE_FAILED, onTransactionRestoreFailed);
 			
-			// initialize a sharedobject that's holding our inventory.
-			initSharedObject();
+			
 			
 			// the first thing to do is to supply a list of product ids you want to display,
 			// and Apple's server will respond with a list of their details (titles, price, etc)
@@ -98,8 +131,7 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			// information, you should make the details request before doing a purchase.
 			
 			// the list of ids is passed in as an as3 vector (typed Array.)
-			var productIdList:Vector.<String>=new Vector.<String>();
-			productIdList.push(BRUSHKIT1_PRODUCT_ID);
+			
 			
 			
 			// when this is done, we'll get a PRODUCT_DETAILS_LOADED or PRODUCT_DETAILS_FAILED event and go on from there...
@@ -116,19 +148,27 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			// also consider obfuscating the data, and/or using an SQL database isntead
 			// of a shared object.
 			this.sharedObject=SharedObject.getLocal("myPurchases");
+			var inventory:Object;
 			
 			// check if the application has been loaded before.  if not, create a store of our purchases in the sharedobject.
 			if (sharedObject.data["inventory"]==null)
 			{			
-				sharedObject.data["inventory"]=new Object();
+				inventory= sharedObject.data["inventory"] = {}
 			} else {
-				
-				var inventory:Object=sharedObject.data["inventory"];
-				if( inventory[BRUSHKIT1_PRODUCT_ID]=="purchased")
+				if ( !CoreSettings.RUNNING_ON_iPAD)  
+				{
+					sharedObject.data["inventory"] = {}
+					sharedObject.flush();
+				}
+				inventory=sharedObject.data["inventory"];
+				/*
+				if( inventory[PRODUCT_ID_BRUSHKIT1]=="purchased")
 				{
 					userConfigModel.userConfig.hasBrushKit1 = true;
 				}
+				*/
 			}
+			userConfigModel.userConfig.setInventory(inventory);
 			
 			//updateInventoryMessage();
 			
@@ -137,27 +177,27 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		
 		
 		/** Example of how to purchase a product */
-		public function purchaseFullUpgrade():void
+		public function purchaseProduct( productID:String ):void
 		{
 			if (!StoreKit.isSupported())
 			{
-				notifyPurchaseStatusSignal.dispatch(null,STATUS_STORE_UNAVAILABLE);
+				notifyPurchaseStatusSignal.dispatch(productID,STATUS_STORE_UNAVAILABLE);
 				return;
 			}
 			
 			// for this to work, you must have added the value of LEVELPACK_PRODUCT_ID in the iTunes Connect website
-			trace("InAppPurchaseManager: start purchase of non-consumable '"+BRUSHKIT1_PRODUCT_ID+"'...");
+			trace("InAppPurchaseManager: start purchase of non-consumable '"+productID+"'...");
 			
 			// we won't let you purchase it if its already in your inventory!
 			var inventory:Object=sharedObject.data["inventory"];
-			if (inventory[BRUSHKIT1_PRODUCT_ID]!=null)
+			if (inventory[productID]!=null)
 			{
-				notifyPurchaseStatusSignal.dispatch(BRUSHKIT1_PRODUCT_ID,STATUS_PURCHASE_NOT_REQUIRED);
-				trace("InAppPurchaseManager: You already have bought Brush Kit 1!");
+				notifyPurchaseStatusSignal.dispatch(productID,STATUS_PURCHASE_NOT_REQUIRED);
+				trace("InAppPurchaseManager: You already have bought "+productID+"!");
 				return;
 			}
 			
-			StoreKit.storeKit.purchaseProduct(BRUSHKIT1_PRODUCT_ID);
+			StoreKit.storeKit.purchaseProduct(productID);
 		}
 		
 		/** Example of how to restore transactions */
@@ -187,7 +227,7 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 				trace("String Price: "+product.localizedPrice);
 				trace("Price: "+product.price);
 				//TODO: right now we only have one product so this is dirty but should work:
-				notifyFullUpgradePriceSignal.dispatch(product);
+				notifyProductPriceSignal.dispatch(product);
 			}
 			trace("Loaded "+e.validProducts.length+" Products.");
 			
@@ -223,18 +263,12 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			// want to make your own inventory manager class to handle these
 			// types of things.
 			var inventory:Object=sharedObject.data["inventory"];
-			switch(e.productId)
-			{
-				case BRUSHKIT1_PRODUCT_ID:
-					inventory[BRUSHKIT1_PRODUCT_ID]="purchased";
-					break;
-				
-				default:
-					// we don't do anything for unknown items.
-			}
+			inventory[e.productId]="purchased";
 			
 			// save state!
 			sharedObject.flush();
+			userConfigModel.userConfig.setInventory(inventory);
+			
 			notifyPurchaseStatusSignal.dispatch(e.productId,STATUS_PURCHASE_COMPLETE);
 			
 				

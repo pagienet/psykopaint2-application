@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.core.views.video
 
 	import flash.display.Sprite;
 	import flash.events.Event;
-
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.SimpleVideoPlayer;
 

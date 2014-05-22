@@ -2,9 +2,8 @@ package net.psykosoft.psykopaint2.core.model
 {
 	import flash.display.Stage3D;
 	import flash.display3D.Context3D;
-
+	
 	import net.psykosoft.psykopaint2.core.drawing.actions.CanvasSnapShot;
-
 	import net.psykosoft.psykopaint2.core.resources.texture_management;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
 

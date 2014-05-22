@@ -1,19 +1,15 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
-	import com.milkmangames.nativeextensions.ios.StoreKitProduct;
 	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
+	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
-	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyFullUpgradePriceSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyTogglePaintingEnableSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
@@ -54,6 +50,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		[Inject]
 		public var brushKitManager : BrushKitManager;
 		
+		[Inject]
+		public var canvasHistoryModel : CanvasHistoryModel;
+		
+		private var packageProductID:String;
+		private var singleProductID:String
 		
 		override public function initialize():void {
 			// Init.
@@ -61,7 +62,35 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			super.initialize();
 			
 			notifyPurchaseStatusSignal.add( onPurchaseStatus );
-			if (  brushKitManager.fullUpgradePackage != null ) view.upgradePrice = brushKitManager.fullUpgradePackage.localizedPrice;
+			
+			
+			
+			for ( var i:int = 0; i < brushKitManager.activeBrushKit.purchasePackages.length; i++ )
+			{
+				var productID:String =  brushKitManager.activeBrushKit.purchasePackages[i];
+				if ( InAppPurchaseManager.isBrushPackage(productID) )
+				{
+					if ( brushKitManager.availableProducts && brushKitManager.availableProducts[productID] )
+						view.packagePrice = brushKitManager.availableProducts[productID].localizedPrice;
+					else
+						view.packagePrice = "0";
+					packageProductID = productID;
+				} else {
+					if ( brushKitManager.availableProducts && brushKitManager.availableProducts[productID] )
+					{
+						view.singlePrice = brushKitManager.availableProducts[productID].localizedPrice;
+						view.singleBrushName =  brushKitManager.availableProducts[productID].title;
+					} else {
+						view.singlePrice = "0";
+						view.singleBrushName = brushKitManager.activeBrushKit.name;
+					}
+					
+					singleProductID = productID;
+					
+				}
+			}
+			view.singleBrushIconID = brushKitManager.activeBrushKit.purchaseIconID;
+			
 		}
 		
 		override public function destroy():void
@@ -77,18 +106,23 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override protected function onButtonClicked( id:String ):void {
 
 //			trace( this, "clicked: " + id);
-
+			//STOP TRIAL MODE
+			userConfig.userConfig.trialMode=false;
 			switch( id ) {
 
 				case UpgradeSubNavView.ID_CANCEL:
 					requestUndoSignal.dispatch();
-					
+					canvasHistoryModel.clearHistory();	// make sure there is no trickery possible
 					requestNavigationStateChange( NavigationStateType.PREVIOUS );
 					notifyTogglePaintingEnableSignal.dispatch(true);
 					break;
 
-				case UpgradeSubNavView.ID_BUY:
-					purchaseManager.purchaseFullUpgrade();
+				case UpgradeSubNavView.ID_BUY_PACKAGE:
+					purchaseManager.purchaseProduct(packageProductID);
+					
+					break;
+				case UpgradeSubNavView.ID_BUY_SINGLE:
+					purchaseManager.purchaseProduct(singleProductID);
 					
 					break;
 			}
@@ -100,10 +134,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			{
 				case InAppPurchaseManager.STATUS_PURCHASE_CANCELLED:
 					requestUndoSignal.dispatch();
+					canvasHistoryModel.clearHistory();	// make sure there is no trickery possible
 				break;
 				
 				case InAppPurchaseManager.STATUS_PURCHASE_FAILED:
 					requestUndoSignal.dispatch();
+					canvasHistoryModel.clearHistory();	// make sure there is no trickery possible
+					
 					requestShowPopUpSignal.dispatch( PopUpType.ERROR )
 					requestUpdateErrorPopUpSignal.dispatch("Upgrade Failed","Oops - something went wrong with your purchase.  Please check your internet connection and try again.");
 					break;
@@ -111,7 +148,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				case InAppPurchaseManager.STATUS_PURCHASE_COMPLETE:
 				case InAppPurchaseManager.STATUS_PURCHASE_NOT_REQUIRED:
 					//as long as we have a single buy in product this is okayish:
-					userConfig.userConfig.hasBrushKit1 = true;
+					userConfig.userConfig.markProductAsPurchased(purchaseObjectID);
 					break;
 				
 				case InAppPurchaseManager.STATUS_STORE_UNAVAILABLE:
@@ -119,11 +156,14 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					//for testing on desktop you always get the brushes:
 					if ( !CoreSettings.RUNNING_ON_iPAD)  
 					{
-						userConfig.userConfig.hasBrushKit1 = true;
+						userConfig.userConfig.markProductAsPurchased(purchaseObjectID);
 					} else {
 						requestUndoSignal.dispatch();
+						canvasHistoryModel.clearHistory();	// make sure there is no trickery possible
 						requestShowPopUpSignal.dispatch( PopUpType.ERROR )
 						requestUpdateErrorPopUpSignal.dispatch("App Store is not available","Unfortunately we cannot connect to the App Store right now. Please check your internet connection and try again.");
+					
+						
 					}
 					break;
 				

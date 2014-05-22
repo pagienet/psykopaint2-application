@@ -1,20 +1,19 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
 	import com.greensock.TweenLite;
-	import com.greensock.easing.Strong;
-
+	import com.greensock.easing.Expo;
+	
 	import flash.display.BitmapData;
-
 	import flash.display3D.textures.Texture;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.events.TouchEvent;
 	import flash.geom.Matrix3D;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
+	import flash.net.SharedObject;
 	
 	import away3d.Away3D;
 	import away3d.cameras.Camera3D;
+	import away3d.cameras.lenses.PerspectiveLens;
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.lights.PointLight;
@@ -55,6 +54,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _camera : Camera3D;
 		private var _scrollingEnabled : Boolean = true;
 		private var _animateToTarget : Boolean = false;
+		
+		
 
 		public function HomeView()
 		{
@@ -86,11 +87,13 @@ package net.psykosoft.psykopaint2.home.views.home
 			_stage3dProxy = value;
 		}
 
-		public function playIntroAnimation(onComplete : Function) : void
+		public function playIntroAnimation(onComplete : Function,speed:Number=1) : void
 		{
 			initCameraIntroPosition();
-			TweenLite.to(	_camera, 0.5, { 	z:450,
-				ease: Strong.easeOut,
+			
+			TweenLite.to(	_camera, speed, { 	z:450,
+				delay:speed/8,
+				ease: Expo.easeOut,
 				onComplete:onComplete,
 				overwrite : 0
 			} );
@@ -170,17 +173,17 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.rethrowEvents = false;
 			_view.width = stage.stageWidth;
 			_view.height = stage.stageHeight;
-			_view.camera.lens.far = 2000;
+			
 			stage.addChildAt( _view, 0 );
-			//PerspectiveLens( _view.camera.lens ).fieldOfView = 70;
+			
 		}
 
 		private function initCamera() : void
 		{
 			_camera = _view.camera;
 			_camera.lens.near = 10;
-			_camera.lens.far = 5000;
-
+			_camera.lens.far = 1000;
+			PerspectiveLens( _view.camera.lens ).fieldOfView = 60;
 			initCameraIntroPosition();
 
 			_cameraController = new CameraPromenadeController(_camera, stage);
@@ -200,6 +203,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_camera.x =  -266.82;
 			_camera.y = -1.14;
 			_camera.z = -146.5;
+			
 			_camera.lookAt(new Vector3D(-266.82, -1.14, -353.10));
 		}
 

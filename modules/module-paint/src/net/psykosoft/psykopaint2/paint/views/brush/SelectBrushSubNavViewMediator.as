@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override protected function onViewSetup():void {
 			var brushes:Vector.<String> = paintModule.getAvailableBrushTypes();
 			if( _activeBrushId == "" ) _activeBrushId = brushes[ 0 ];
-			view.setAvailableBrushes( brushes, _activeBrushId, userConfig.userConfig.hasBrushKit1 );
+			view.setAvailableBrushes( brushes, _activeBrushId, userConfig.userConfig );
 			super.onViewSetup();
 		}
 
@@ -104,7 +104,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		// -----------------------
 
 		private function activateBrush( name:String ):void {
-			paintModule.activeBrushKit = name;
+			paintModule.activeBrushKitName = name;
 		}
 
 		private function getNumParams():uint {

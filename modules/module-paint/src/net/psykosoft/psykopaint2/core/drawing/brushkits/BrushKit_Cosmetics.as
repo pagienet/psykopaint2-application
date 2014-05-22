@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
+	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	
@@ -41,7 +42,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		public function BrushKit_Cosmetics()
 		{
-			isPurchasable = true;
+			//isPurchasable = true;
+			purchasePackages.push(InAppPurchaseManager.PRODUCT_ID_BRUSHKIT2, InAppPurchaseManager.PRODUCT_ID_COSMETICS_BRUSH_1);
+			
 			init( null );
 		}
 		

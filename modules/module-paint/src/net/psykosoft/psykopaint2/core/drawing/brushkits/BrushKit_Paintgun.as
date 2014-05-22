@@ -19,6 +19,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
+	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	
 	public class BrushKit_Paintgun extends BrushKit
 	{
@@ -48,7 +50,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		public function BrushKit_Paintgun()
 		{
-			isPurchasable = true;
+			//isPurchasable = true;
+			purchasePackages.push(InAppPurchaseManager.PRODUCT_ID_BRUSHKIT1, InAppPurchaseManager.PRODUCT_ID_PAINTGUN_BRUSH_1);
+			purchaseIconID = ButtonIconType.BUY_PAINTGUN;
 			init( null );
 		}
 		
