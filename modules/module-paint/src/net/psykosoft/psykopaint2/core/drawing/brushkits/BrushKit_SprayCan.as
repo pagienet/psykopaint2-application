@@ -70,7 +70,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			if (!_initialized ) BrushKit.init();
 			
-			
 			name = "Spray cans";
 			
 			//CREATE SPRAY CAN BRUSH ENGINE
