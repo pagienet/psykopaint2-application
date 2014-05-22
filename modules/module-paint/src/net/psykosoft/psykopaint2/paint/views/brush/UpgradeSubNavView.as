@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			
 			createCenterButton( ID_CANCEL,ID_CANCEL, ButtonIconType.CANCEL_UPGRADE, IconButton, null, true, true, false );
 			createCenterButton( ID_BUY_PACKAGE,"Buy Package", ButtonIconType.BUY_UPGRADE, IconButton, null, true, true, false, MouseEvent.MOUSE_UP, this, onPackageIconReady );
-			createCenterButton( ID_BUY_SINGLE,"Buy Brush", ButtonIconType.BUY_UPGRADE, IconButton, null, true, true, false, MouseEvent.MOUSE_UP, this, onSingleIconReady );
+			createCenterButton( ID_BUY_SINGLE,"Buy Brush", ButtonIconType.BUY_PENCIL, IconButton, null, true, true, false, MouseEvent.MOUSE_UP, this, onSingleIconReady );
 			
 			validateCenterButtons();
 		

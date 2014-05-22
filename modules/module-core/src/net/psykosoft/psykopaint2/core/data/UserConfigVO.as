@@ -8,9 +8,7 @@ package net.psykosoft.psykopaint2.core.data
 		public var userPassword:String;
 		public var trialMode:Boolean=false;
 		private var _inventory:Object;
-		//public var hasBrushKit1:Boolean;
 		
-		//public var hasFullVersion:Boolean;
 		
 		public function UserConfigVO() {
 			super();

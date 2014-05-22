@@ -496,8 +496,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if ( !userConfig.userConfig.userOwns(_activeBrushKit.purchasePackages) ) 
 			{
 				// !userConfig.userConfig.hasBrushKit1 && _activeBrushKit.isPurchasable
-				GestureManager.gesturesEnabled = false;
-				notifyTogglePaintingEnableSignal.dispatch(false);
+				//GestureManager.gesturesEnabled = false;
+				//notifyTogglePaintingEnableSignal.dispatch(false);
 
 				clearTimeout( _revealNavigationTimeout );
 				revealHiddenNavigation();

@@ -72,6 +72,10 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		
 		public static const CANCEL_UPGRADE:String = "cancel_upgrade";
 		public static const BUY_UPGRADE:String = "buy_upgrade";
+		public static const BUY_PENCIL:String = "buy_pencil";
+		public static const BUY_WATERCOLOR:String = "buy_watercolor";
+		public static const BUY_BRUSH:String = "buy_brush";
+		public static const BUY_PAINTGUN:String = "buy_paintgun";
 		
 		public static const INSTAGRAM:String = "instagram";
 		public static const FOLLOW:String = "follow";
