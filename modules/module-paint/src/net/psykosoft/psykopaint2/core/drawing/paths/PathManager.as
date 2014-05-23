@@ -211,7 +211,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected function onTouchBegin(event : TouchEvent) : void
 		{
 			//Navbar touched?
-			trace( "PathManager onTouchBegin - target: " + event.target );
+			//trace( "PathManager onTouchBegin - target: " + event.target );
 			if (!(event.target is Stage) && !(event.target is CanvasView)) {
 				if( !event.target.stage ) return;
 				if( !CanvasInteractionUtil.canContentsUnderMouseBeIgnored( event.target.stage ) ) return;
@@ -316,11 +316,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			{
 				if( !event.target.stage || !CanvasInteractionUtil.canContentsUnderMouseBeIgnored( event.target.stage ) )
 				{
-					trace( "PathManager onMouseDown - rejected: " + event.target + ", " + event.target.name );
+					//trace( "PathManager onMouseDown - rejected: " + event.target + ", " + event.target.name );
 					return;
 				}
 			}
-			trace( "PathManager onMouseDown - accepted: " + event.target + ", " + event.target.name );
+			//trace( "PathManager onMouseDown - accepted: " + event.target + ", " + event.target.name );
 			if ( event.stageY > CoreSettings.STAGE_HEIGHT - 100 )
 			{
 				recordedData.length = 0;

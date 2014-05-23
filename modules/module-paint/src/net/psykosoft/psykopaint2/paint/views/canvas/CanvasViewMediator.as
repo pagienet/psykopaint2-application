@@ -367,6 +367,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				zoomScale = MAX_ZOOM_SCALE;
 			}
 
+			if ( zoomScale > 0.9 && zoomScale < 1.1 ) {
+				_canvasRect.width = canvasModel.width;
+				_canvasRect.height = canvasModel.height;
+				zoomScale = 1;
+			}
+			
 			var ratio : Number = 0;
 			var minPanX : Number, minPanY : Number, maxPanX : Number, maxPanY : Number;
 			if( zoomScale < 1 )
@@ -381,12 +387,17 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				minPanX += ZOOM_MARGIN*powRatio;
 				minPanY += ZOOM_MARGIN*powRatio;
 			}
-			else {
+			else if( zoomScale > 1 ){
 				// clamp to painting edges with margin
 				minPanX = ZOOM_MARGIN;
 				minPanY = ZOOM_MARGIN + offsetY;
 				maxPanX = canvasModel.width - _canvasRect.width - ZOOM_MARGIN;
 				maxPanY = canvasModel.height - _canvasRect.height - ZOOM_MARGIN + offsetY;
+			} else {
+				minPanX = 0;
+				minPanY = offsetY;
+				maxPanX = 0;
+				maxPanY = offsetY;
 			}
 
 			if (_canvasRect.x > minPanX) _canvasRect.x = minPanX;
