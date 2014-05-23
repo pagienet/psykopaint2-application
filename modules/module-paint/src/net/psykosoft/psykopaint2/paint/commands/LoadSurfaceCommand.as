@@ -5,9 +5,12 @@ package net.psykosoft.psykopaint2.paint.commands
 	import flash.display.BitmapData;
 	import flash.display.Loader;
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
+	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
+	import net.psykosoft.psykopaint2.base.utils.images.ImageDataUtils;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
 	import net.psykosoft.psykopaint2.core.models.CanvasSurfaceSettingsModel;
@@ -32,6 +35,8 @@ package net.psykosoft.psykopaint2.paint.commands
 		private var _assetSize:String;
 		private var _loader:Loader;
 
+		private var _surfaceData:SurfaceDataVO;
+
 		public function LoadSurfaceCommand() {
 			super();
 		}
@@ -43,26 +48,56 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			context.detain( this );
 
+			_surfaceData = new SurfaceDataVO();
 			_assetSize = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? "2048" : "1024";
-			loadNormalSpecularData();
+			loadSurfaceData();
 		}
 
-		private function loadNormalSpecularData():void {
-			_loader = new Loader();
-			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onSurfaceLoaded);
-			_loader.load( new URLRequest("/core-packaged/images/surfaces/canvas_normal_specular_" + canvasSurfaceSettingsModel.surfaceID + "_" + _assetSize + ".png" ));
+		private function loadSurfaceData():void
+		{
+			loadImage("/core-packaged/images/surfaces/canvas_color_" + canvasSurfaceSettingsModel.surfaceID + "_" + _assetSize + ".jpg", onColorLoaded, onColorError);
+		}
+
+		private function onColorLoaded(event : Event) : void
+		{
+			_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onColorLoaded);
+			_loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, onColorError);
+
+			var bitmapData : BitmapData = Bitmap(_loader.content).bitmapData;
+			_surfaceData.color = bitmapData.getPixels(bitmapData.rect);
+			ImageDataUtils.ARGBtoBGRA(_surfaceData.color, bitmapData.width * bitmapData.height * 4, 0);
+			bitmapData.dispose();
+
+			loadNormalSpecular();
+		}
+
+		private function onColorError(event:IOErrorEvent):void
+		{
+			loadNormalSpecular();
+		}
+
+		private function loadNormalSpecular():void
+		{
+			loadImage("/core-packaged/images/surfaces/canvas_normal_specular_" + canvasSurfaceSettingsModel.surfaceID + "_" + _assetSize + ".png", onSurfaceLoaded);
 		}
 
 		private function onSurfaceLoaded(event : Event):void
 		{
 			_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onSurfaceLoaded);
 
-			var surfaceData : SurfaceDataVO = new SurfaceDataVO();
-			surfaceData.normalSpecular = Bitmap(_loader.content).bitmapData;
+			_surfaceData.normalSpecular = Bitmap(_loader.content).bitmapData;
 			_loader = null;
 
-			notifySurfaceLoadedSignal.dispatch(surfaceData);
+			notifySurfaceLoadedSignal.dispatch(_surfaceData);
 			context.release( this );
+		}
+
+		private function loadImage(filename:String, onComplete:Function, onError:Function = null):void
+		{
+			_loader = new Loader();
+			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
+			if (onError) _loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onError);
+			_loader.load(new URLRequest(filename));
 		}
 	}
 }
