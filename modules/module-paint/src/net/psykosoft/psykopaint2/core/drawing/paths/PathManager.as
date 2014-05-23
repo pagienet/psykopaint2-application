@@ -803,7 +803,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					playbackActive = true;
 					_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
 				}
-			}else if ( event.keyCode == Keyboard.RIGHT)
+			}else if ( event.keyCode == Keyboard.PAGE_DOWN)
 			{
 				playbackActive = false;
 				_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );

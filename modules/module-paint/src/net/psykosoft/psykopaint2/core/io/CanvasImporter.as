@@ -24,7 +24,8 @@ package net.psykosoft.psykopaint2.core.io
 			if (paintingData.sourceImageData) {
 				var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(paintingData.sourceImageData, canvas.width, canvas.height, false);
 				canvas.setSourceBitmapData(sourceBmd);
-				sourceBmd.dispose();
+				//Not required since it gets already disposed in setSourceBitmapData
+				//sourceBmd.dispose();
 			}
 			else
 			// doing this to force creation of PyramidMap

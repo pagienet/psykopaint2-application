@@ -116,7 +116,8 @@ package net.psykosoft.psykopaint2.core.model
 				var tmpBmd2:BitmapData = new BitmapData(_width,1,false,0);
 				tmpBmd2.copyPixels(tmpBmd,new Rectangle(0,int( scl * sourceBitmapData.height-2),_width,1),new Point());
 				tmpBmd.draw(tmpBmd2, new Matrix(1,0,0,_height - scl * sourceBitmapData.height,0,int( scl * sourceBitmapData.height-1)), null, "normal", null,false);
-				
+				tmpBmd2.dispose();
+				sourceBitmapData.dispose();
 				
 				return tmpBmd;
 			} else {
