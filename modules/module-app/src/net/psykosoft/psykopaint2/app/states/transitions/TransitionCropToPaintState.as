@@ -146,7 +146,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 			vo.sourceImageData =  _croppedBitmapData.getPixels(_croppedBitmapData.rect);
 			if (surface.color) {
 				vo.colorBackgroundOriginal = surface.color;
-				vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);
+				vo.colorData = surface.color;
 			}
 			else
 				vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);

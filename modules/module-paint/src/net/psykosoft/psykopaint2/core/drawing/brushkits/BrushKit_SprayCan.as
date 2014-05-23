@@ -656,8 +656,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					
 					break;*/
 			}
-			
-			trace("stop");
 		}
 		
 		protected function onIntensityChanged(event:Event= null):void
