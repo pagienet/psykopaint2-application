@@ -7,10 +7,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.display3D.textures.Texture;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.ui.Keyboard;
 	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
@@ -88,7 +90,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private var _canvasRect : Rectangle;
 
 		private const MAX_ZOOM_SCALE:Number = 3;
-		private const ZOOM_MARGIN:Number = 100 * CoreSettings.GLOBAL_SCALING;
+		private const ZOOM_MARGIN:Number = 200 * CoreSettings.GLOBAL_SCALING;
 
 		public var offsetY : Number = 0;
 		private var _firstTimeZooming : Boolean = true;
@@ -195,6 +197,30 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			updateAndConstrainCanvasRect();
 		}
 
+		//TODO: this is for desktop testing - remove in final version
+		private function onKeyDown( event:KeyboardEvent ):void
+		{
+			switch ( event.keyCode )
+			{
+				case Keyboard.LEFT:
+					_canvasRect.x+=20;
+					updateAndConstrainCanvasRect();
+					break;
+				case Keyboard.RIGHT:
+					_canvasRect.x-=20;
+					updateAndConstrainCanvasRect();
+					break;
+				case Keyboard.UP:
+					_canvasRect.y+=20;
+					updateAndConstrainCanvasRect();
+					break;
+				case Keyboard.DOWN:
+					_canvasRect.y-=20;
+					updateAndConstrainCanvasRect();
+					break;
+			}
+		}
+		
 		private function onGlobalGesture( type:String, event:GestureEvent ):void {
 			
 			switch( type ) {
@@ -238,6 +264,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 					if( !CoreSettings.RUNNING_ON_iPAD && !_addedMouseWheelListener ) {
 						view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+						view.stage.addEventListener( KeyboardEvent.KEY_DOWN, onKeyDown );
+						
 						_addedMouseWheelListener = true;
 						trace( this, "listener added" );
 					}
@@ -247,6 +275,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				paintModule.stopAnimations();
 				if( !CoreSettings.RUNNING_ON_iPAD && _addedMouseWheelListener ) {
 					view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+					view.stage.removeEventListener( KeyboardEvent.KEY_DOWN, onKeyDown );
 					_addedMouseWheelListener = false;
 					trace( this, "listener removed" );
 				}
