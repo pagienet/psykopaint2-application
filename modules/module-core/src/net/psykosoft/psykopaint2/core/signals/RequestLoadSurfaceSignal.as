@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.signals
 	public class RequestLoadSurfaceSignal extends TracingSignal
 	{
 		public function RequestLoadSurfaceSignal() {
-			super();
+			super(int);	// PaintMode.PHOTO_MODE or PaintMode.COLOR_MODE
 		}
 	}
 }

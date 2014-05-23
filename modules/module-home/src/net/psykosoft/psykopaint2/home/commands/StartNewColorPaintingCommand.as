@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.home.commands
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
@@ -22,7 +23,7 @@ package net.psykosoft.psykopaint2.home.commands
 		public function execute() : void
 		{
 			notifySurfaceLoadedSignal.addOnce( onSurfaceLoaded );
-			requestLoadSurfaceSignal.dispatch();
+			requestLoadSurfaceSignal.dispatch(PaintMode.COLOR_MODE);
 		}
 
 		private function onSurfaceLoaded(surface : SurfaceDataVO):void {

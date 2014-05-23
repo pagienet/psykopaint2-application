@@ -9,11 +9,11 @@ package net.psykosoft.psykopaint2.paint.commands
 	import flash.net.URLRequest;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
-	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.images.ImageDataUtils;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
 	import net.psykosoft.psykopaint2.core.models.CanvasSurfaceSettingsModel;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	
@@ -23,6 +23,9 @@ package net.psykosoft.psykopaint2.paint.commands
 	// TODO: Move this out of paint module
 	public class LoadSurfaceCommand extends TracingCommand
 	{
+		[Inject]
+		public var paintMode : int;	// PaintMode.PHOTO_MODE or PaintMode.COLOR_MODE, coming from signal
+
 		[Inject]
 		public var canvasSurfaceSettingsModel : CanvasSurfaceSettingsModel;
 
@@ -50,10 +53,14 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			_surfaceData = new SurfaceDataVO();
 			_assetSize = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? "2048" : "1024";
-			loadSurfaceData();
+
+			if (paintMode == PaintMode.COLOR_MODE)
+				loadColorAndNormalData();
+			else
+				loadNormalSpecular();
 		}
 
-		private function loadSurfaceData():void
+		private function loadColorAndNormalData():void
 		{
 			loadImage("/core-packaged/images/surfaces/canvas_color_" + canvasSurfaceSettingsModel.surfaceID + "_" + _assetSize + ".jpg", onColorLoaded, onColorError);
 		}
