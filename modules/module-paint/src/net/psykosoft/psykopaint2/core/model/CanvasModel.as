@@ -212,12 +212,14 @@ package net.psykosoft.psykopaint2.core.model
 			if (_sourceTexture) _sourceTexture.dispose();
 			if (_normalSpecularOriginal) _normalSpecularOriginal.dispose();
 			if (_colorBackgroundOriginal) _colorBackgroundOriginal.clear();
+			if (_colorTransfer) _colorTransfer.dispose();
 			_colorTexture = null;
 			_normalSpecularMap = null;
 			_sourceTexture = null;
 			_normalSpecularOriginal = null;
 			_colorBackgroundOriginal = null;
-
+			_colorTransfer = null;
+			
 			if (_pyramidMap )
 			{
 				_pyramidMap.dispose();
