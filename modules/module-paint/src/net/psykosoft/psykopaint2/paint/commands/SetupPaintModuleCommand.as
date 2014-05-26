@@ -70,9 +70,6 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		[Inject]
 		public var shaker:ShakeAndBakeManager;
-
-		[Inject]
-		public var notifyToggleLoadingMessageSignal:NotifyToggleLoadingMessageSignal;
 		
 		override public function execute() : void
 		{
@@ -121,7 +118,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		{
 			stage.removeEventListener(Event.ENTER_FRAME, onNextFrame);
 			notifyPaintModuleSetUpSignal.dispatch();
-			notifyToggleLoadingMessageSignal.dispatch(false);
+			
 		}
 
 		private function importPaintingData() : void
