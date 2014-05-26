@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedRectTexture;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
@@ -105,7 +106,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 			_background = background.newReference();
 
 			notifySurfaceLoadedSignal.addOnce(onSurfaceLoaded);
-			requestLoadSurfaceSignal.dispatch();
+			requestLoadSurfaceSignal.dispatch(PaintMode.PHOTO_MODE);
 		}
 		
 		private function onSurfaceLoaded(data : SurfaceDataVO) : void

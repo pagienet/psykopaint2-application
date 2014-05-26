@@ -209,7 +209,7 @@ package net.psykosoft.psykopaint2.core.io
 			var data:ByteArray = _canvas.getColorBackgroundOriginal();
 			_output.writeBytes(data, 0, data.length);
 		}
-		
+
 		private function writeColorPalette() : void
 		{
 			var palettes:Vector.<Vector.<uint>> = _paintSettings.colorPalettes;
