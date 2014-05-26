@@ -96,7 +96,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private var _firstTimeZooming : Boolean = true;
 
 		public var zoomScale:Number = _minZoomScale;
-
+		private var zoomIsSnapped:Boolean;
+		private var snappedZoomScale:Number = _minZoomScale;
+		
 		override public function initialize():void {
 
 			registerView( view );
@@ -169,7 +171,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			// lovely magical numbers to counter the magic numbers from the nav panel
 			offsetY = offset * CoreSettings.GLOBAL_SCALING * .75 * .33;
 			if (_canvasRect)
-				updateAndConstrainCanvasRect();
+				updateAndConstrainCanvasRect(1);
 		}
 
 		// -----------------------
@@ -194,7 +196,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			_canvasRect.width = bottomRight.x - topLeft.x;
 			_canvasRect.height = bottomRight.y - topLeft.y;
-			updateAndConstrainCanvasRect();
+			updateAndConstrainCanvasRect(sc);
 		}
 
 		//TODO: this is for desktop testing - remove in final version
@@ -204,19 +206,19 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			{
 				case Keyboard.LEFT:
 					_canvasRect.x+=20;
-					updateAndConstrainCanvasRect();
+					updateAndConstrainCanvasRect(1);
 					break;
 				case Keyboard.RIGHT:
 					_canvasRect.x-=20;
-					updateAndConstrainCanvasRect();
+					updateAndConstrainCanvasRect(1);
 					break;
 				case Keyboard.UP:
 					_canvasRect.y+=20;
-					updateAndConstrainCanvasRect();
+					updateAndConstrainCanvasRect(1);
 					break;
 				case Keyboard.DOWN:
 					_canvasRect.y-=20;
-					updateAndConstrainCanvasRect();
+					updateAndConstrainCanvasRect(1);
 					break;
 			}
 		}
@@ -244,7 +246,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					_canvasRect.y = topLeft.y;
 					_canvasRect.width = bottomRight.x - topLeft.x;
 					_canvasRect.height = bottomRight.y - topLeft.y;
-					updateAndConstrainCanvasRect();
+					updateAndConstrainCanvasRect(tg.scale);
 					break;
 
 			}
@@ -350,13 +352,25 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// -----------------------
 
 		// used for manual zooming
-		private function updateAndConstrainCanvasRect():void {
-			constrainCanvasRect();
+		private function updateAndConstrainCanvasRect(requestedScaleFactor:Number):void {
+			constrainCanvasRect(requestedScaleFactor);
 			requestChangeRenderRectSignal.dispatch(_canvasRect);
 		}
 
-		private function constrainCanvasRect():void {
+		private function constrainCanvasRect(requestedScaleFactor:Number):void {
+			
 			zoomScale = _canvasRect.height / canvasModel.height;
+			
+			if ( zoomIsSnapped )
+			{
+				snappedZoomScale *= requestedScaleFactor;
+				if ( snappedZoomScale <= 0.9 || snappedZoomScale >= 1.1 ) 
+				{
+					zoomScale = snappedZoomScale;
+					zoomIsSnapped = false;
+				}
+			}
+			
 			if( zoomScale < _minZoomScale ) {
 				_canvasRect.width *= ( _minZoomScale / zoomScale );
 				_canvasRect.height *= ( _minZoomScale / zoomScale );
@@ -370,6 +384,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			if ( zoomScale > 0.9 && zoomScale < 1.1 ) {
 				_canvasRect.width = canvasModel.width;
 				_canvasRect.height = canvasModel.height;
+				if ( !zoomIsSnapped )
+				{
+					snappedZoomScale = zoomScale;
+					zoomIsSnapped = true;
+				}
 				zoomScale = 1;
 			}
 			
