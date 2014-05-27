@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
+	import flash.utils.getTimer;
 	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
@@ -96,8 +97,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private var _firstTimeZooming : Boolean = true;
 
 		public var zoomScale:Number = _minZoomScale;
-		private var zoomIsSnapped:Boolean;
-		private var snappedZoomScale:Number = _minZoomScale;
+		private var snapDelay:int;
+		private var lastSnapBigger:Boolean;
 		
 		override public function initialize():void {
 
@@ -361,16 +362,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			
 			zoomScale = _canvasRect.height / canvasModel.height;
 			
-			if ( zoomIsSnapped )
-			{
-				snappedZoomScale *= requestedScaleFactor;
-				if ( snappedZoomScale <= 0.9 || snappedZoomScale >= 1.1 ) 
-				{
-					zoomScale = snappedZoomScale;
-					zoomIsSnapped = false;
-				}
-			}
-			
 			if( zoomScale < _minZoomScale ) {
 				_canvasRect.width *= ( _minZoomScale / zoomScale );
 				_canvasRect.height *= ( _minZoomScale / zoomScale );
@@ -381,14 +372,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				zoomScale = MAX_ZOOM_SCALE;
 			}
 
-			if ( zoomScale > 0.9 && zoomScale < 1.1 ) {
+			if ( (getTimer()- snapDelay)<200 ||
+				 ( zoomScale > 0.9 && zoomScale < 1.1 && (lastSnapBigger != (requestedScaleFactor>1) )) )
+				{
 				_canvasRect.width = canvasModel.width;
 				_canvasRect.height = canvasModel.height;
-				if ( !zoomIsSnapped )
-				{
-					snappedZoomScale = zoomScale;
-					zoomIsSnapped = true;
-				}
+				if ((getTimer()- snapDelay) >= 200 ) snapDelay = getTimer();
+				lastSnapBigger = requestedScaleFactor>1;
 				zoomScale = 1;
 			}
 			
