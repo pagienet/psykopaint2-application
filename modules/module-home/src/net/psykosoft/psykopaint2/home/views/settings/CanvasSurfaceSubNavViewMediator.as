@@ -44,6 +44,10 @@ package net.psykosoft.psykopaint2.home.views.settings
 				case CanvasSurfaceSubNavView.ID_WOOD:
 					canvasSurfaceSettingsModel.surfaceID = 1;
 					break;
+
+				case CanvasSurfaceSubNavView.ID_PAPER:
+					canvasSurfaceSettingsModel.surfaceID = 2;
+					break;
 			}
 		}
 	}

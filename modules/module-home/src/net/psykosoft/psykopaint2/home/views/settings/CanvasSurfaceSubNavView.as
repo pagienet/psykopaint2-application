@@ -16,11 +16,14 @@ package net.psykosoft.psykopaint2.home.views.settings
 		/* Settings */
 		public static const ID_CANVAS:String = "Canvas";
 		public static const ID_WOOD:String = "Wood";
+		public static const ID_PAPER:String = "Paper";
 
-		private var _wood : Bitmap;
-		private var _canvas : Bitmap;
 		private var _loader : Loader;
 		private var _selectedButtonID:String;
+
+		private var _surfaceIDS : Vector.<String> = Vector.<String>([ ID_CANVAS, ID_WOOD, ID_PAPER ]);
+		private var _loadingIndex : int = 0;
+		private var _icons:Vector.<Bitmap>;
 
 		public function CanvasSurfaceSubNavView()
 		{
@@ -37,16 +40,15 @@ package net.psykosoft.psykopaint2.home.views.settings
 		override public function dispose():void
 		{
 			super.dispose();
-			if (_wood) {
-				_wood.bitmapData.dispose();
-				_wood = null;
+			for (var i : uint = 0; i < _icons.length; ++i) {
+				if (_icons[i])
+					_icons[i].bitmapData.dispose();
 			}
-			if (_canvas) {
-				_canvas.bitmapData.dispose();
-				_canvas = null;
-			}
+
+			_icons = null;
+
 			if (_loader) {
-				_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onWoodLoadComplete);
+				_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onIconLoadComplete);
 				try {
 					_loader.close();
 				}
@@ -60,30 +62,45 @@ package net.psykosoft.psykopaint2.home.views.settings
 		override protected function onSetup():void
 		{
 			super.onSetup();
-			loadIcon("/core-packaged/images/surfaces/canvas_normal_specular_0_icon.jpg", onCanvasLoadComplete);
+
+			startLoadingIcons();
 		}
 
-		private function loadIcon(filename:String, onComplete:Function):void
+		private function startLoadingIcons():void
 		{
+			_loadingIndex = 0;
+			_icons = new Vector.<Bitmap>();
+			loadNextIcon();
+		}
+
+		private function loadNextIcon():void
+		{
+			var filename : String = "/core-packaged/images/surfaces/canvas_normal_specular_" + _loadingIndex + "_icon.jpg";
+
 			_loader = new Loader();
-			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
+			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onIconLoadComplete);
 			_loader.load(new URLRequest(filename));
 		}
 
-		private function onCanvasLoadComplete(event : Event):void
+		private function onIconLoadComplete(event : Event):void
 		{
-			_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onCanvasLoadComplete);
-			_canvas = Bitmap(_loader.content);
-			loadIcon("/core-packaged/images/surfaces/canvas_normal_specular_1_icon.jpg", onWoodLoadComplete);
+			_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onIconLoadComplete);
+			_icons[_loadingIndex] = Bitmap(_loader.content);
+
+			if (++_loadingIndex == _surfaceIDS.length)
+				onIconsLoaded();
+			else
+				loadNextIcon();
 		}
 
-		private function onWoodLoadComplete(event : Event):void
+		private function onIconsLoaded():void
 		{
-			_wood = Bitmap(_loader.content);
-			_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onWoodLoadComplete);
 			_loader = null;
-			createCenterButton(ID_CANVAS, ID_CANVAS, null, PolaroidButton, _canvas, true);
-			createCenterButton(ID_WOOD, ID_WOOD, null, PolaroidButton, _wood, true);
+
+			for (var i : int = 0; i < _surfaceIDS.length; ++i) {
+				createCenterButton(_surfaceIDS[i], _surfaceIDS[i], null, null, _icons[i], true);
+			}
+
 			validateCenterButtons();
 			if (_selectedButtonID) selectButtonWithLabel(_selectedButtonID);
 		}
@@ -92,8 +109,13 @@ package net.psykosoft.psykopaint2.home.views.settings
 		{
 			_selectedButtonID = id;
 
-			if (_wood || _canvas)
+			if (areAllIconsLoaded())
 				selectButtonWithLabel(id);
+		}
+
+		private function areAllIconsLoaded():Boolean
+		{
+			return _icons && _icons.length == _surfaceIDS.length;
 		}
 	}
 }
