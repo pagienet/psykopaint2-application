@@ -755,7 +755,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				_fullsizeCompositedTexture.bitmapData =compositedFullSize;
 				_fullsizeCompositedTexture.getTextureForStage3D(_stage3DProxy);
 				_highQualityMaterial.albedoTexture = _fullsizeCompositedTexture;
-	
+				_highQualityMaterial.normalSpecularTexture = _stillLoadingNormalSpecularTexture;
+
 				compositedFullSize.dispose();
 	
 				// it may have been disposed before load finished?
