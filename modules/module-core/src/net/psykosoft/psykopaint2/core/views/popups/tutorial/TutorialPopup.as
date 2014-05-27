@@ -6,7 +6,6 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 	import flash.events.MouseEvent;
 	
 	import net.psykosoft.psykopaint2.base.utils.events.EventStopper;
-	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.views.components.SimpleVideoPlayer;
 	
 	import org.osflash.signals.Signal;
@@ -27,9 +26,6 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 		
 		public function TutorialPopup()
 		{
-			
-			
-			
 			
 			closeBtn.stop();
 			closeBtn.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDownCloseBtn);

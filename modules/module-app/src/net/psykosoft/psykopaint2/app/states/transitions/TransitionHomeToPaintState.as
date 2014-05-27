@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedRectTexture;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
@@ -47,6 +48,9 @@ package net.psykosoft.psykopaint2.app.states.transitions
 
 		[Inject]
 		public var notifyCanvasZoomedToDefaultViewSignal:NotifyCanvasZoomedToDefaultViewSignal;
+		
+		[Inject]
+		public var notifyToggleLoadingMessageSignal:NotifyToggleLoadingMessageSignal;
 
 		public function TransitionHomeToPaintState()
 		{
@@ -83,6 +87,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		{
 			requestDestroyHomeModuleSignal.dispatch();
 			stateMachine.setActiveState(paintState);
+			notifyToggleLoadingMessageSignal.dispatch(false);
 		}
 
 		override ns_state_machine function deactivate() : void

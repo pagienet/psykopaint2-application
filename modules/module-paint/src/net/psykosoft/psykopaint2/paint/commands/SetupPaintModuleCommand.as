@@ -24,6 +24,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.views.base.ViewLayerOrdering;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
@@ -69,7 +70,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		[Inject]
 		public var shaker:ShakeAndBakeManager;
-
+		
 		override public function execute() : void
 		{
 			super.execute();
@@ -117,6 +118,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		{
 			stage.removeEventListener(Event.ENTER_FRAME, onNextFrame);
 			notifyPaintModuleSetUpSignal.dispatch();
+			
 		}
 
 		private function importPaintingData() : void

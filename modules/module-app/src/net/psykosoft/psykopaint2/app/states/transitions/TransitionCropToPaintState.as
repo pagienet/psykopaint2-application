@@ -15,6 +15,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
@@ -72,6 +73,10 @@ package net.psykosoft.psykopaint2.app.states.transitions
 
 		[Inject]
 		public var notifyBackgroundSetSignal : NotifyFrozenBackgroundCreatedSignal;
+		
+		[Inject]
+		public var notifyToggleLoadingMessageSignal:NotifyToggleLoadingMessageSignal;
+
 
 		private var _croppedBitmapData : BitmapData;
 		private var _background : RefCountedRectTexture;
@@ -137,6 +142,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		private function onZoomInComplete() : void
 		{
 			stateMachine.setActiveState(paintState);
+			notifyToggleLoadingMessageSignal.dispatch(false);
 		}
 
 		private function createPaintingVO(surface : SurfaceDataVO) : PaintingDataVO
