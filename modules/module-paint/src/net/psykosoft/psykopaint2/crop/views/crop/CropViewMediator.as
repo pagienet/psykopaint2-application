@@ -2,11 +2,12 @@ package net.psykosoft.psykopaint2.crop.views.crop
 {
 
 	import flash.display.Stage3D;
-
+	
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleSwipeGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleTransformGestureSignal;
-	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
 
 	
 	public class CropViewMediator extends MediatorBase
@@ -65,6 +66,7 @@ package net.psykosoft.psykopaint2.crop.views.crop
 //			GpuRenderManager.addRenderingStep(render, GpuRenderingStepType.NORMAL,0);
 			toggleTransformGestureSignal.dispatch(true);
 			notifyToggleSwipeGestureSignal.dispatch(false);
+			GestureManager.gesturesEnabled=true;
 		}
 
 		private function onDisabled() : void
