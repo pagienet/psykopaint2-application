@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	
 	import away3d.core.managers.Stage3DProxy;
 	
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
@@ -222,6 +223,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			if(_connectionCount==1){
 				view.scrollingEnabled=false;
 				var tutorialPopup:TutorialPopup = new TutorialPopup();
+				tutorialPopup.scaleX = tutorialPopup.scaleY = CoreSettings.GLOBAL_SCALING;
 				view.stage.addChild(tutorialPopup);
 				tutorialPopup.onTutorialPopupCloseSignal.add(onTutorialClose);
 			}
