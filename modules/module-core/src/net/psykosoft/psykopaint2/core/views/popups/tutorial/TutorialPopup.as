@@ -193,41 +193,6 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 			
 		}
 	}
-	/*
-	private function toggleStageVideo(on:Boolean):void       
-	{              
-		// if StageVideo is available, attach the NetStream to StageVideo       
-		if (on)       
-		{       
-			stageVideoInUse = true;       
-			if ( sv == null )       
-			{       
-				sv = stage.stageVideos[0];       
-				sv.addEventListener(StageVideoEvent.RENDER_STATE, stageVideoStateChange);       
-			}       
-			sv.attachNetStream(ns);       
-			if (classicVideoInUse)       
-			{       
-				// If using StageVideo, just remove the Video object from       
-				// the display list to avoid covering the StageVideo object       
-				// (always in the background)       
-				stage.removeChild ( video );       
-				classicVideoInUse = false;       
-			}       
-		} else       
-		{       
-			// Otherwise attach it to a Video object       
-			if (stageVideoInUse)       
-				stageVideoInUse = false;       
-			classicVideoInUse = true;       
-			video.attachNetStream(ns);       
-			stage.addChildAt(video, 0);       
-		}       
-		if ( !played )       
-		{       
-			played = true;       
-			ns.play(FILE_NAME);       
-		}       
-	}       */
+	
 	
 }
