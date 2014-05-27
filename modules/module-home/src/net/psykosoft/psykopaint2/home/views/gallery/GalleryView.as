@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
 
+	import away3d.materials.lightpickers.LightPickerBase;
+
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Quad;
 
@@ -68,7 +70,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _imageCache:GalleryImageCache;
 		private var _view:View3D;
 		private var _stage3DProxy:Stage3DProxy;
-		private var _light:LightBase;
 		private var _container:ObjectContainer3D;
 
 		private var _paintings:Vector.<GalleryPaintingView> = new Vector.<GalleryPaintingView>();
@@ -115,12 +116,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _dragStartY:Number;
 		private var _highQualityIndex:int = -1;
 		private var _ribbon:Mesh;
+		private var _lightPicker:LightPickerBase;
 
 		public function GalleryView(view:View3D, light:LightBase, stage3dProxy:Stage3DProxy)
 		{
 			_view = view;
 			_stage3DProxy = stage3dProxy;
-			_light = light;
+			_lightPicker = new StaticLightPicker([light]);
 			_imageCache = new GalleryImageCache(_stage3DProxy);
 			_imageCache.thumbnailLoaded.add(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
@@ -233,7 +235,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			if (!_highQualityMaterial)
 				_highQualityMaterial = new PaintingMaterial();
 
-			_highQualityMaterial.lightPicker = new StaticLightPicker([_light]);
+			_highQualityMaterial.lightPicker = _lightPicker;
 			_highQualityMaterial.albedoTexture = _fullsizeCompositedTexture;
 			_highQualityMaterial.normalSpecularTexture = _stillLoadingNormalSpecularTexture;
 			_highQualityMaterial.ambientColor = 0xffffff;
@@ -625,6 +627,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			texture ||= _loadingTexture;
 
 			var material:TextureMaterial = new TextureMaterial(texture);
+			material.lightPicker = _lightPicker;
 			material.mipmap = false;
 			//material.alphaBlending=true;
 			var stencilMethod:StencilMethod = new StencilMethod();
