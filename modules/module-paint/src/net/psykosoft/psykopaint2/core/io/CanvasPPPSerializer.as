@@ -98,10 +98,10 @@ package net.psykosoft.psykopaint2.core.io
 			_PPPFileData.colorPalettes = palettes;
 			
 			//SAVE COLOR MAP
-			
-			var colorBytes:ByteArray = extractChannels(_canvas.colorTexture, _copySubTextureChannelsRGB);
+			var colorBytes:ByteArray = new ByteArray();
+			extractChannels(_canvas.colorTexture, _copySubTextureChannelsRGB, colorBytes);
 			//MATHIEU: NEED TO ADD THE ALPHA CHANNEL AND MERGE IT
-			colorBytes.writeBytes(extractChannels(_canvas.colorTexture, _copySubTextureChannelsA));
+			extractChannels(_canvas.colorTexture, _copySubTextureChannelsA, colorBytes);
 			//extractChannels(_canvas.colorTexture, _copySubTextureChannelsA);
 			mergeRGBAData(0,colorBytes);
 			_PPPFileData.colorData = colorBytes;
@@ -255,9 +255,9 @@ package net.psykosoft.psykopaint2.core.io
 			ApplicationDomain.currentDomain.domainMemory = tmp;
 		}
 		
-		private function extractChannels(layer : RectangleTexture, copier : CopySubTextureChannels) : ByteArray
+		private function extractChannels(layer : RectangleTexture, copier : CopySubTextureChannels, target:ByteArray ) : void
 		{
-			var bytes:ByteArray = new ByteArray();
+		//	var bytes:ByteArray = new ByteArray();
 			_context3D.setRenderToBackBuffer();
 			_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			
@@ -267,9 +267,9 @@ package net.psykosoft.psykopaint2.core.io
 			copier.copy(layer, _sourceRect, _destRect, _context3D);
 			var bitmapData : BitmapData = new TrackedBitmapData(_canvas.width, _canvas.height, false);
 			_context3D.drawToBitmapData(bitmapData);
-			bitmapData.copyPixelsToByteArray(bitmapData.rect, bytes);
+			bitmapData.copyPixelsToByteArray(bitmapData.rect, target);
 			bitmapData.dispose();
-			return bytes;
+			//return bytes;
 		}
 		
 		
