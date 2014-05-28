@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.core.data
 		public var colorData:ByteArray;
 		public var normalSpecularData:ByteArray;
 		public var sourceImageData:ByteArray;
-		//public var surfaceNormalSpecularData:BitmapData;
+		public var surfaceNormalSpecularData:BitmapData;
 		public var colorBackgroundOriginal:ByteArray;
 		public var surfaceID:int;
 		public var width:uint;
