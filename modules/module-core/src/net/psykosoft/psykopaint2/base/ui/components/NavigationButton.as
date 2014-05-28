@@ -96,6 +96,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function set iconType( frameName:String ):void {
 			if( !frameName ) return;
+			trace("ICONTYPE: frameName = "+frameName);
 			_icon.gotoAndStop( frameName );
 		}
 

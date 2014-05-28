@@ -200,7 +200,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onIntroRequested() : void
 		{
 			//TESTING ONLY
-			//_connectionCount = 1;
+			_connectionCount = 1;
 			
 			if(_connectionCount==1){
 				///THE FIRST TIME WE USE THE APP THE TRANSITION IS SLOW
@@ -216,8 +216,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onIntroComplete() : void
 		{
-			notifyHomeViewIntroZoomComplete.dispatch();
-			view.activateCameraControl();
+			
 			
 			//SHOW TUTORIAL POPUP ON FIRST LOAD
 			if(_connectionCount==1){
@@ -226,11 +225,18 @@ package net.psykosoft.psykopaint2.home.views.home
 				tutorialPopup.scaleX = tutorialPopup.scaleY = CoreSettings.GLOBAL_SCALING;
 				view.stage.addChild(tutorialPopup);
 				tutorialPopup.onTutorialPopupCloseSignal.add(onTutorialClose);
+			}else {
+				notifyHomeViewIntroZoomComplete.dispatch();
+				view.activateCameraControl();
 			}
 		}
 		
 		private function onTutorialClose():void{
 			view.scrollingEnabled=true;
+			
+			//SEND NOTIFICATION ZOOM COMPLETE ON TUTORIAL CLOSE ONLY IF TUTORIAL VISIBLE
+			notifyHomeViewIntroZoomComplete.dispatch();
+			view.activateCameraControl();
 		}
 
 		override protected function onStateChange(newState : String) : void

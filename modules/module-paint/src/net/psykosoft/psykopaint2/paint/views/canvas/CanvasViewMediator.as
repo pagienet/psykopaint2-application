@@ -98,7 +98,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		public var zoomScale:Number = _minZoomScale;
 		private var snapDelay:int;
-		private var lastSnapBigger:Boolean;
+		private var lastSnapDirection:int;
 		
 		override public function initialize():void {
 
@@ -372,13 +372,17 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				zoomScale = MAX_ZOOM_SCALE;
 			}
 
-			if ( (getTimer()- snapDelay)<200 ||
-				 ( zoomScale > 0.9 && zoomScale < 1.1 && (lastSnapBigger != (requestedScaleFactor>1) )) )
+			if ( requestedScaleFactor == 0 )
+			{
+				snapDelay = getTimer();
+				lastSnapDirection = 0;
+			} else if ( (getTimer()- snapDelay)<200 ||
+				 ( zoomScale > 0.9 && zoomScale < 1.1 && (lastSnapDirection != (requestedScaleFactor<1? -1 : requestedScaleFactor>1?1:0) )) )
 				{
 				_canvasRect.width = canvasModel.width;
 				_canvasRect.height = canvasModel.height;
 				if ((getTimer()- snapDelay) >= 200 ) snapDelay = getTimer();
-				lastSnapBigger = requestedScaleFactor>1;
+				lastSnapDirection = (requestedScaleFactor<1? -1 : requestedScaleFactor>1?1:0);
 				zoomScale = 1;
 			}
 			
