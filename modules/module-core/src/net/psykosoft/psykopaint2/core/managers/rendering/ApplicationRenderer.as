@@ -8,6 +8,9 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.RectangleTexture;
 	import flash.display3D.textures.Texture;
+	import flash.filters.BitmapFilterQuality;
+	import flash.filters.BlurFilter;
+	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.utils.getTimer;
 
@@ -87,14 +90,18 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 
 		private function createSnapshot() : void
 		{
-			// TODO: Go back to render to texture approach, this is allocating a lot of memory
-			var croppedBitmapData : BitmapData = new TrackedBitmapData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, false, 0);
-			stage3DProxy.context3D.drawToBitmapData(croppedBitmapData);
+			// we can store the blurred map in a smaller texture due to low-frequency, saving memory
+			var largeBitmapData : BitmapData = new TrackedBitmapData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, false, 0);
+			var smallBitmapData : BitmapData = new TrackedBitmapData(512, 512 / CoreSettings.ASPECT_RATIO, false, 0);
+			stage3DProxy.context3D.drawToBitmapData(largeBitmapData);
+			smallBitmapData.draw(largeBitmapData, new Matrix(smallBitmapData.width/largeBitmapData.width, 0, 0, smallBitmapData.height/largeBitmapData.height), null, null, null, true);
+			largeBitmapData.dispose();
+			smallBitmapData.applyFilter(smallBitmapData, smallBitmapData.rect, new Point(), new BlurFilter(5, 5, BitmapFilterQuality.HIGH));
 
-			var texture : RectangleTexture = stage3DProxy.context3D.createRectangleTexture(croppedBitmapData.width, croppedBitmapData.height, Context3DTextureFormat.BGRA, false);
+			var texture : RectangleTexture = stage3DProxy.context3D.createRectangleTexture(smallBitmapData.width, smallBitmapData.height, Context3DTextureFormat.BGRA, false);
 			var snapshot : RefCountedRectTexture = new RefCountedRectTexture(texture);
-			snapshot.texture.uploadFromBitmapData(croppedBitmapData);
-			croppedBitmapData.dispose();
+			snapshot.texture.uploadFromBitmapData(smallBitmapData);
+			smallBitmapData.dispose();
 			fulfillPromises(snapshot);
 		}
 

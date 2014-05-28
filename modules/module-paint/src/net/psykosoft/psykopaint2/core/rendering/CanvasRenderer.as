@@ -58,11 +58,14 @@ package net.psykosoft.psykopaint2.core.rendering
 		private var _background : RefCountedRectTexture;
 		private var _backgroundBaseRect : Rectangle;
 		private var _renderRect : Rectangle;
+		private var _copySubTexture : CopySubTexture;
 		private var unitRect:Rectangle = new Rectangle(0, 0, 1, 1);
+
 
 		public function CanvasRenderer()
 		{
 			_renderRect = new Rectangle(0, 0, CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT);
+			_copySubTexture = new CopySubTexture(true);
 		}
 
 		public function init() : void
@@ -78,6 +81,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		{
 			disposeBackground();
 			_lightingRenderer.dispose();
+			_copySubTexture.dispose();
 		}
 
 		private function disposeBackground() : void
@@ -178,7 +182,7 @@ package net.psykosoft.psykopaint2.core.rendering
 				_context3D.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP);
 				_context3D.setStencilReferenceValue(0);
 				_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-				CopySubTexture.copy(_background.texture, unitRect, backgroundRect, _context3D);
+				_copySubTexture.copy(_background.texture, unitRect, backgroundRect, _context3D);
 			}
 		}
 
