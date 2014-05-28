@@ -128,9 +128,6 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		
 		private function onPaintingModuleSetUp() : void
 		{
-			notifyHomeModuleDestroyedSignal.addOnce( onHomeModuleDestroyed );
-			requestDestroyHomeModuleSignal.dispatch();
-			
 			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
 			requestSetCanvasBackgroundSignal.dispatch(_background.newReference(), easelRectModel.absoluteScreenRect);
 			
@@ -141,6 +138,8 @@ package net.psykosoft.psykopaint2.app.states.transitions
 
 		private function onZoomInComplete() : void
 		{
+			notifyHomeModuleDestroyedSignal.addOnce( onHomeModuleDestroyed );
+			requestDestroyHomeModuleSignal.dispatch();
 			stateMachine.setActiveState(paintState);
 			notifyToggleLoadingMessageSignal.dispatch(false);
 		}

@@ -305,7 +305,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			TweenLite.killTweensOf( this );
 			var targetScale : Number = (canvasModel.height - 200*CoreSettings.GLOBAL_SCALING)/canvasModel.height;
 			if (_firstTimeZooming) {
+				renderer.backgroundAlpha = 0;
 				TweenLite.to( this, 1, { offsetY: -175 * CoreSettings.GLOBAL_SCALING * .75 * .4, zoomScale: targetScale, onUpdate: onZoomUpdate, onComplete: onZoomToDefaultViewComplete, ease: Strong.easeInOut } );
+				TweenLite.to( renderer, 1, { backgroundAlpha: 1 });
 			}
 			else {
 				TweenLite.to( this, 1, { zoomScale: targetScale, onUpdate: onZoomUpdate, onComplete: onZoomToDefaultViewComplete, ease: Strong.easeInOut } );

@@ -32,8 +32,6 @@ package net.psykosoft.psykopaint2.crop.views.crop
 			registerView( view );
 			super.initialize();
 			manageStateChanges = false;
-//			registerEnablingState( NavigationStateType.CROP );
-//			registerEnablingState( NavigationStateType.CROP_SKIP );
 
 			// From app.
 			requestDestroyCropModuleSignal.add( onRequestDestroyCropModule );
@@ -63,7 +61,6 @@ package net.psykosoft.psykopaint2.crop.views.crop
 
 		private function onEnabled() : void
 		{
-//			GpuRenderManager.addRenderingStep(render, GpuRenderingStepType.NORMAL,0);
 			toggleTransformGestureSignal.dispatch(true);
 			notifyToggleSwipeGestureSignal.dispatch(false);
 			GestureManager.gesturesEnabled=true;
@@ -71,8 +68,6 @@ package net.psykosoft.psykopaint2.crop.views.crop
 
 		private function onDisabled() : void
 		{
-//			GpuRenderManager.removeRenderingStep(render, GpuRenderingStepType.NORMAL);
-//			view.background = null;
 			toggleTransformGestureSignal.dispatch(false);
 			notifyToggleSwipeGestureSignal.dispatch(true);
 		}
