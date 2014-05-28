@@ -83,19 +83,26 @@ package net.psykosoft.psykopaint2.core.data
 			paintingDataVO.colorData = pppfileData.colorData;
 			paintingDataVO.normalSpecularData= pppfileData.normalSpecularData;
 			paintingDataVO.sourceImageData= pppfileData.sourceImageData;
+			
+			paintingDataVO.surfaceID = pppfileData.surfaceID;
 			paintingDataVO.surfaceNormalSpecularData= pppfileData.surfaceNormalSpecularData;
 			paintingDataVO.colorBackgroundOriginal = pppfileData.colorBackgroundOriginal;
-			paintingDataVO.surfaceID= pppfileData.surfaceID;
+			
 			paintingDataVO.width= pppfileData.width;
 			paintingDataVO.height= pppfileData.height;
 			paintingDataVO.loadedFileName= pppfileData.loadedFileName;
 			
 			//AMF3 doesn't undertand vectors. So we have to convert from array to vector
-			paintingDataVO.colorPalettes = new Vector.<Vector.<uint>>();
+			paintingDataVO.colorPalettes =new Vector.<Vector.<uint>>();
 			for (var i:int = 0; i < pppfileData.colorPalettes.length; i++) 
 			{
-				paintingDataVO.colorPalettes.push(pppfileData.colorPalettes[i]);
+				paintingDataVO.colorPalettes[i] = new Vector.<uint>();
+				for (var j:int = 0; j < pppfileData.colorPalettes[i].length; j++) 
+				{
+					paintingDataVO.colorPalettes[i][j] = pppfileData.colorPalettes[i][j];
+				}
 			}
+			
 			paintingDataVO.isPhotoPainting = pppfileData.isPhotoPainting;
 			
 			//NO NEED FOR YOU ANYMORE LITTLE GUY, GO GET GARBAGE COLLECTED:

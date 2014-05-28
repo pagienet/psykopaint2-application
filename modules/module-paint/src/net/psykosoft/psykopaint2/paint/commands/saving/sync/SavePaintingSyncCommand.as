@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 			ConsoleView.instance.log( this, "prepare()" );
 
 			add( DisposeCanvasNonEssentialsCommand );
-			add( SerializeDPPCommand );
+			add( SerializePPPCommand );
 			add( SerializeIPPCommand );
 			if( CoreSettings.RUNNING_ON_iPAD && CoreSettings.USE_IO_ANE_ON_PAINTING_FILES )
 				add( WritePaintingANECommand );

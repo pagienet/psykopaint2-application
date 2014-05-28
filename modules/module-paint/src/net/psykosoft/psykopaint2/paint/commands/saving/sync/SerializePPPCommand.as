@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 
-	public class SerializeDPPCommand extends AsyncCommand
+	public class SerializePPPCommand extends AsyncCommand
 	{
 		[Inject]
 		public var saveVO : SavingProcessModel;

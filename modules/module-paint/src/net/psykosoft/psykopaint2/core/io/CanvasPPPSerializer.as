@@ -85,10 +85,16 @@ package net.psykosoft.psykopaint2.core.io
 			
 			//COLOR PALETTES
 			var palettes:Array = [];
-			for (var i:int = 0; i < _paintSettings.colorPalettes.length; i++) 
+			for (var i:int = 0; i <_paintSettings.colorPalettes.length; i++) 
 			{
-				palettes.push(_paintSettings.colorPalettes[i]);
+				palettes[i] = [];
+				for (var j:int = 0; j < _paintSettings.colorPalettes[i].length; j++) 
+				{
+					palettes[i][j] = _paintSettings.colorPalettes[i][j];
+				}
 			}
+				
+			
 			_PPPFileData.colorPalettes = palettes;
 			
 			//SAVE COLOR MAP

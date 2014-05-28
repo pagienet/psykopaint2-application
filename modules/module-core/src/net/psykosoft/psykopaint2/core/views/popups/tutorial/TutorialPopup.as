@@ -173,6 +173,7 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 				stage3ds[i].visible=_stagevisibilities[i];
 			}
 			
+			
 			dispose();
 		}
 		
@@ -182,9 +183,11 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 			closeBtn.removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDownCloseBtn);
 			closeBtn.removeEventListener(MouseEvent.MOUSE_UP,onMouseUpCloseBtn);
 			
+		
 			//videoPlayer.stop();
 			//videoPlayer.dispose();
 			//videoPlayer = null;
+			_stagevisibilities = null;
 			ns.close();
 			stage.stageVideos[0].attachNetStream(null);
 			EventStopper.removeStop(bg);
