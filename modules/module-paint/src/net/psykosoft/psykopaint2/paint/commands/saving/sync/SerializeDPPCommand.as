@@ -1,12 +1,10 @@
 package net.psykosoft.psykopaint2.paint.commands.saving.sync
 {
-	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
-
 	import flash.display.Stage;
 	
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
 	
-	import net.psykosoft.psykopaint2.core.io.CanvasDPPSerializer;
+	import net.psykosoft.psykopaint2.core.io.CanvasPPPSerializer;
 	import net.psykosoft.psykopaint2.core.io.CanvasSerializationEvent;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -41,8 +39,9 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 			ConsoleView.instance.log( this, "execute()" );
 
 			requestUpdateMessagePopUpSignal.dispatch("Saving: Packing...", "");
-
-			var serializer : CanvasDPPSerializer = new CanvasDPPSerializer(stage, ioAne);
+			
+			//var serializer : CanvasDPPSerializer = new CanvasDPPSerializer(stage, ioAne);
+			var serializer : CanvasPPPSerializer = new CanvasPPPSerializer(stage, ioAne);
 			serializer.addEventListener(CanvasSerializationEvent.COMPLETE, onSerializationComplete);
 			serializer.serialize(canvasModel, paintSettings);
 		}

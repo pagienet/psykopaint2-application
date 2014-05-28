@@ -158,7 +158,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 			else
 				vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);
 			vo.normalSpecularData = null;
-			vo.normalSpecularOriginal = surface.normalSpecular;
+			vo.surfaceNormalSpecularData = surface.normalSpecular;
 			return vo;
 		}
 

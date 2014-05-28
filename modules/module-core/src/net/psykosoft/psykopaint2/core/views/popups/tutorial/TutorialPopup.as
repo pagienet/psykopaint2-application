@@ -23,12 +23,13 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 		public var bg:Sprite;
 		public var dragArea:Sprite;
 		
-		public var onTutorialPopupCloseSignal:Signal = new Signal();;
+		public var onTutorialPopupCloseSignal:Signal = new Signal();
 
 		
 		//private var videoPlayer:SimpleVideoPlayer;
 		private var duration:Number=0;
 		private var ns:NetStream;
+		private var _stagevisibilities:Array;
 		
 		
 		
@@ -133,9 +134,11 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 				
 				//HIDE ALL STAGE3d INSTANCES:
 				var stage3ds:Vector.<Stage3D> = stage.stage3Ds;
-				trace(stage3ds);
+				//trace(stage3ds);
+				_stagevisibilities = [];
 				for (var i:int = 0; i < stage3ds.length; i++) 
 				{
+					_stagevisibilities.push(stage3ds[i].visible);
 					stage3ds[i].visible=false;
 				}
 			}else {
@@ -163,10 +166,11 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 		{
 			//SHOW BACK ALL STAGE3d INSTANCES:
 			var stage3ds:Vector.<Stage3D> = stage.stage3Ds;
-			trace(stage3ds);
+			//trace(stage3ds);
+			
 			for (var i:int = 0; i < stage3ds.length; i++) 
 			{
-				stage3ds[i].visible=true;
+				stage3ds[i].visible=_stagevisibilities[i];
 			}
 			
 			dispose();
