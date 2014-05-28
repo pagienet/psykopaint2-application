@@ -39,6 +39,7 @@ package net.psykosoft.psykopaint2.core.io
 				
 			var newSurfacedataVO:SurfaceDataVO = new SurfaceDataVO();
 			newSurfacedataVO.color = paintingData.colorBackgroundOriginal;
+			//HERE NEED TO GET THE SURFACE FROM
 			newSurfacedataVO.normalSpecular = paintingData.surfaceNormalSpecularData;
 			newSurfacedataVO.id = paintingData.surfaceID;
 			

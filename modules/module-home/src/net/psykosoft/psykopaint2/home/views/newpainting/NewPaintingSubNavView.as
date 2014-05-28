@@ -54,7 +54,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var dump:Array = vo.id.split( "-" );
 				var str:String = dump[ dump.length - 1 ];
 				var btnIsEnabled:Boolean = vo.id != unavailablePaintingId;
-				var buttonData:ButtonData = createCenterButton( str, str, null, BitmapButton, new Bitmap( vo.thumbnail ), true, btnIsEnabled, false,"mouseUp",this,onButtonReady );
+				var buttonData:ButtonData = createCenterButton( str, str, null, BitmapButton, new Bitmap( vo.thumbnailBmd ), true, btnIsEnabled, false,"mouseUp",this,onButtonReady );
 			}
 		}
 

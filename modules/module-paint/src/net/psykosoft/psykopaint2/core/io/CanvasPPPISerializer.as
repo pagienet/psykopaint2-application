@@ -1,38 +1,36 @@
 package net.psykosoft.psykopaint2.core.io
 {
 	import flash.display.BitmapData;
-	import flash.display.PNGEncoderOptions;
 	import flash.geom.Matrix;
+	import flash.net.ObjectEncoding;
 	import flash.utils.ByteArray;
 	
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.base.utils.images.ImageDataUtils;
+	import net.psykosoft.psykopaint2.core.data.PPPIFileData;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
-	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.paint.utils.CopyColorAndSourceToBitmapDataUtil;
 
-	public class CanvasIPPSerializer
+	public class CanvasPPPISerializer
 	{
 		public static const SURFACE_PREVIEW_SHRINK_FACTOR : Number = 4;
 
 		private static var _copyColorAndSourceToBitmapData:CopyColorAndSourceToBitmapDataUtil;
 
-		private var _output : ByteArray;
 
 		// powers of 2, integers > 1
 
-		public function CanvasIPPSerializer()
+		public function CanvasPPPISerializer()
 		{
 			_copyColorAndSourceToBitmapData ||= new CopyColorAndSourceToBitmapDataUtil();
 		}
 
-		public function serialize(paintingID : String, lastSavedOnDateMs : Number, canvas : CanvasModel, canvasRenderer : CanvasRenderer, paintSettings : UserPaintSettingsModel,dpp:ByteArray) : ByteArray
+		public function serialize(paintingID : String, lastSavedOnDateMs : Number, canvas : CanvasModel, canvasRenderer : CanvasRenderer, paintSettings : UserPaintSettingsModel,ppp:ByteArray) : ByteArray
 		{
-			_output = new ByteArray();
-			
+			var newPPPIFileData:PPPIFileData = new PPPIFileData();
 			
 			//MATHIEU:
 			//NOW USING PPP:
@@ -40,74 +38,78 @@ package net.psykosoft.psykopaint2.core.io
 			var width : int = canvas.width;
 			var height : int = canvas.height;
 			
-			writeHeader(paintingID, lastSavedOnDateMs, width, height);
-			writeThumbnail(canvasRenderer);
 			
-			mergeColor(canvas);
-			
-			//THIS I NEED TO FIX. BREAKS SOMETIMES BECAUSE OF CANVAS RENDERER
-			var surfaceBytes:ByteArray = new ByteArray();
-			var normalSpecularBmd: BitmapData= canvas.getNormalSpecularOriginal();
-			normalSpecularBmd.copyPixelsToByteArray(normalSpecularBmd.rect, surfaceBytes);
-			reduceSurface(surfaceBytes, width, height, 0);	// normal specular data
+			// Write exposed single value data.
+			newPPPIFileData.version = PaintingFileUtils.PAINTING_FILE_VERSION;
+			newPPPIFileData.id=paintingID;
+			newPPPIFileData.width = width / SURFACE_PREVIEW_SHRINK_FACTOR;
+			newPPPIFileData.height = height / SURFACE_PREVIEW_SHRINK_FACTOR;
+			newPPPIFileData.dateTimestamp = lastSavedOnDateMs;
 			
 			
-			/*
-			dpp.position = 0;
-			dpp.readUTF();	// skip DPP2
-			dpp.readUTF();	// skip version
-			var width : int = dpp.readInt();
-			var height : int = dpp.readInt();
-
-			writeHeader(paintingID, lastSavedOnDateMs, width, height);
-			dpp.readBoolean();	// skip isPhotoPainting
-
-			writeThumbnail(canvasRenderer);
-
-			var position : int = dpp.position;
-			var len : int = width * height * 4;
-			mergeColor(canvas);
-			reduceSurface(dpp, width, height, position + len);	// normal specular data
-
-			dpp.position = 0;*/
-			_output.position = 0;
-
-			return cleanUpAndReturn();
-		}
-		
-		
-		
-		
-
-		private function mergeColor(canvas:CanvasModel):void
-		{
-			var offset : int = _output.position;
+			//WRITE THUMBNAIL BMD
+			
+			//thumbnail.encode(thumbnail.rect, new PNGEncoderOptions(true), _output);
+			//thumbnail.dispose();
+			
+			//var bytes:ByteArray = new ByteArray();
+			//var thumbnail : BitmapData = generateThumbnail(canvasRenderer);
+			//thumbnail.encode(thumbnail.rect, new PNGEncoderOptions(), bytes);
+			//newPPPIFileData.colorPreviewData = bytes;
+			
+			var bytes:ByteArray = new ByteArray();
+			var offset : int = 0;
 			var largeBitmapData : BitmapData = _copyColorAndSourceToBitmapData.execute(canvas);
 			var smallBitmapData : BitmapData = new BitmapData(canvas.width / SURFACE_PREVIEW_SHRINK_FACTOR, canvas.height / SURFACE_PREVIEW_SHRINK_FACTOR, false);
 			smallBitmapData.draw(largeBitmapData, new Matrix(1.0/SURFACE_PREVIEW_SHRINK_FACTOR, 0, 0, 1.0/SURFACE_PREVIEW_SHRINK_FACTOR));
 			largeBitmapData.dispose();
-			smallBitmapData.copyPixelsToByteArray(smallBitmapData.rect, _output);
-			ImageDataUtils.ARGBtoBGRA(_output, smallBitmapData.width * smallBitmapData.height * 4, offset);
+			smallBitmapData.copyPixelsToByteArray(smallBitmapData.rect, bytes);
+			newPPPIFileData.thumbnailBmd = new ByteArray();
+			newPPPIFileData.thumbnailBmd.writeBytes(bytes);
+			ImageDataUtils.ARGBtoBGRA(bytes, smallBitmapData.width * smallBitmapData.height * 4, offset);
+			
+			newPPPIFileData.colorPreviewData = bytes;
+			
+			
+			//THIS I NEED TO FIX. BREAKS SOMETIMES BECAUSE OF CANVAS RENDERER
+			// I JUST NEED TO SAVE REFERENCE OF THE ORIGINAL SURFACE ANYWAY
+			var surfaceBytes:ByteArray = new ByteArray();
+			var normalSpecularBmd: BitmapData = canvas.getNormalSpecularOriginal();
+			//MATHIEU HACK TO HAVE FLAT SURFACE, SURFACE ALWAYS LOOK WEIRD IN PREVIEW
+			normalSpecularBmd = new BitmapData(width,height,false,0x555555);
+			normalSpecularBmd.copyPixelsToByteArray(normalSpecularBmd.rect, surfaceBytes);
+			newPPPIFileData.normalSpecularPreviewData = reduceSurface(surfaceBytes, width, height, 0);	// normal specular data
+			
+			
+			var filebytes : ByteArray = new ByteArray();
+			filebytes.objectEncoding = ObjectEncoding.AMF3;
+			filebytes.writeObject(newPPPIFileData);
+			
+			return filebytes;
+		}
+		
+		
+		
+		
+		
+		private function mergeColor(canvas:CanvasModel):ByteArray
+		{
+			var bytes:ByteArray = new ByteArray();
+			var offset : int = 0;
+			var largeBitmapData : BitmapData = _copyColorAndSourceToBitmapData.execute(canvas);
+			var smallBitmapData : BitmapData = new BitmapData(canvas.width / SURFACE_PREVIEW_SHRINK_FACTOR, canvas.height / SURFACE_PREVIEW_SHRINK_FACTOR, false);
+			smallBitmapData.draw(largeBitmapData, new Matrix(1.0/SURFACE_PREVIEW_SHRINK_FACTOR, 0, 0, 1.0/SURFACE_PREVIEW_SHRINK_FACTOR));
+			largeBitmapData.dispose();
+			smallBitmapData.copyPixelsToByteArray(smallBitmapData.rect, bytes);
+			ImageDataUtils.ARGBtoBGRA(bytes, smallBitmapData.width * smallBitmapData.height * 4, offset);
 			smallBitmapData.dispose();
 
-			_output.position = _output.length;
+			return bytes
 		}
 		
 		
-		
-		
-
-		private function writeHeader(paintingID : String, lastSavedOnDateMs : Number, width : int, height : int) : void
-		{
-			_output.writeUTF("IPP2");
-			// Write exposed single value data.
-			_output.writeUTF(PaintingFileUtils.PAINTING_FILE_VERSION);
-			_output.writeUTF(paintingID);
-			_output.writeInt(width / SURFACE_PREVIEW_SHRINK_FACTOR);
-			_output.writeInt(height / SURFACE_PREVIEW_SHRINK_FACTOR);
-			_output.writeFloat(lastSavedOnDateMs);
-		}
-
+	
+		/*
 		private function writeThumbnail(canvasRenderer : CanvasRenderer) : void
 		{
 			// store temporary length of 0 so we can generate the png as we go
@@ -122,7 +124,7 @@ package net.psykosoft.psykopaint2.core.io
 			_output.position = thumbnailStartPos - 4;
 			_output.writeUnsignedInt(thumbnailBytesLength);
 			_output.position += thumbnailBytesLength;
-		}
+		}*/
 
 		private function generateThumbnail(canvasRenderer : CanvasRenderer) : BitmapData
 		{
@@ -133,8 +135,9 @@ package net.psykosoft.psykopaint2.core.io
 			return scaledThumbnail;
 		}
 		
-		private function reduceSurface(sourceData : ByteArray, sourceWidth : uint, sourceHeight : uint, offset : uint) : void
+		private function reduceSurface(sourceData : ByteArray, sourceWidth : uint, sourceHeight : uint, offset : uint) : ByteArray
 		{
+			var returnBytes:ByteArray = new ByteArray();
 			var outputWidth : uint = sourceWidth / SURFACE_PREVIEW_SHRINK_FACTOR;
 			var outputHeight : uint = sourceHeight / SURFACE_PREVIEW_SHRINK_FACTOR;
 			var sampleX : uint, sampleY : uint = 0;
@@ -144,18 +147,14 @@ package net.psykosoft.psykopaint2.core.io
 				for (var x : uint = 0; x < outputWidth; ++x) {
 					sourceData.position = offset + ((sampleX + sampleY * sourceWidth) << 2);
 					var value : uint = sourceData.readUnsignedInt();
-					_output.writeUnsignedInt(value);
+					returnBytes.writeUnsignedInt(value);
 					sampleX += SURFACE_PREVIEW_SHRINK_FACTOR;
 				}
 				sampleY += SURFACE_PREVIEW_SHRINK_FACTOR;
 			}
+			return returnBytes;
 		}
 
-		private function cleanUpAndReturn() : ByteArray
-		{
-			var output : ByteArray = _output;
-			_output = null;
-			return output;
-		}
+		
 	}
 }

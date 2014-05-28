@@ -18,9 +18,10 @@ package net.psykosoft.psykopaint2.core.data
 		public var height:uint;
 		public var loadedFileName:String;
 		public var colorPalettes:Array;
+		//public var colorPalettes:Vector.<Vector.<uint>>;
 		public var isPhotoPainting:Boolean;
 		
-		
+		/* WARNING AMF3 DON'T SERIALIZE BITMAPDATA! NEED TO CONVERT THEM TO BYTEARRAY*/
 		public function PPPFileData()
 		{
 			registerClassAlias( "net.psykosoft.psykopaint2.core.data.PPPFileData", PPPFileData );
