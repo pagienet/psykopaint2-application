@@ -13,10 +13,11 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedRectTexture;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
 	import net.psykosoft.psykopaint2.core.drawing.colortransfer.ColorTransfer;
 	import net.psykosoft.psykopaint2.core.intrinsics.PyramidMapIntrinsics;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
@@ -36,17 +37,23 @@ package net.psykosoft.psykopaint2.core.model
 		private var _fullSizeBackBuffer : TrackedRectTexture;	// used during export (rendering)
 		private var _colorTexture : TrackedRectTexture;			// used during export (rendering)
 		private var _normalSpecularMap : TrackedRectTexture;	// RGB = slope, A = height, half sized
-
+		
 		private var _width : Number;
 		private var _height : Number;
 
 		private var _pyramidMap : PyramidMapIntrinsics;
 		private var _colorTransfer : ColorTransfer;
+		
+		private var _surfaceID:int;
 
 		// TODO: should originals be a string path to packaged asset?
+		//MATHIEU: WHO DID THIS COMMENT? WOULD BE GREAT TO KNOW WHOM.
 		private var _normalSpecularOriginal : BitmapData;		// used during export (reference)
 		private var _colorBackgroundOriginal : ByteArray;
 		// used during export (reference)
+		
+		//MATHIEU ADDED THIS. NEED TO FINISH
+		private var surfacedataVO:SurfaceDataVO;
 
 		public function CanvasModel()
 		{
@@ -125,15 +132,6 @@ package net.psykosoft.psykopaint2.core.model
 			}
 		}
 
-		public function setColorBackgroundOriginal(value : ByteArray) : void
-		{
-			if (_colorBackgroundOriginal) _colorBackgroundOriginal.clear();
-
-			if (value)
-				_colorBackgroundOriginal = value;
-			else
-				_colorBackgroundOriginal = null;
-		}
 
 		public function get pyramidMap() : PyramidMapIntrinsics
 		{
@@ -181,13 +179,33 @@ package net.psykosoft.psykopaint2.core.model
 			if (!_normalSpecularMap)
 				_normalSpecularMap = createCanvasTexture(true);
 		}
-
+		
+		public function setSurfaceDataVO(surfacedataVO:SurfaceDataVO):void
+		{
+			this.surfacedataVO = surfacedataVO;
+			
+			setNormalSpecularOriginal(surfacedataVO.normalSpecular);
+			setColorBackgroundOriginal(surfacedataVO.color);
+			
+		}
+		
 		public function setNormalSpecularOriginal(value : BitmapData) : void
 		{
 			if (_normalSpecularOriginal && _normalSpecularOriginal != value)
 				_normalSpecularOriginal.dispose();
 
 			_normalSpecularOriginal = value;
+		}
+		
+		
+		public function setColorBackgroundOriginal(value : ByteArray) : void
+		{
+		if (_colorBackgroundOriginal) _colorBackgroundOriginal.clear();
+		
+		if (value)
+		_colorBackgroundOriginal = value;
+		else
+		_colorBackgroundOriginal = null;
 		}
 
 		public function createCanvasTexture(isRenderTarget : Boolean, scale : Number = 1) : TrackedRectTexture
@@ -293,5 +311,7 @@ package net.psykosoft.psykopaint2.core.model
 		{
 			return RGBProximityQuantizer.getPalette( _pyramidMap,colorCount,3);
 		}
+		
+		
 	}
 }

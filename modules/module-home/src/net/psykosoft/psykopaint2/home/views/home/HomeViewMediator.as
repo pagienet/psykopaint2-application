@@ -2,8 +2,15 @@ package net.psykosoft.psykopaint2.home.views.home
 {
 
 	import flash.display.BitmapData;
+	import flash.events.LocationChangeEvent;
+	import flash.filesystem.File;
+	import flash.filesystem.FileMode;
+	import flash.filesystem.FileStream;
 	import flash.geom.Matrix3D;
+	import flash.geom.Rectangle;
+	import flash.media.StageWebView;
 	import flash.net.SharedObject;
+	import flash.net.URLVariables;
 	
 	import away3d.core.managers.Stage3DProxy;
 	
@@ -79,6 +86,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _localCache:SharedObject;
 		private var _connectionCount:int=0;
 
+		
 		override public function initialize() : void
 		{
 			// Init.
@@ -200,7 +208,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onIntroRequested() : void
 		{
 			//TESTING ONLY
-			_connectionCount = 1;
+			//_connectionCount = 1;
 			
 			if(_connectionCount==1){
 				///THE FIRST TIME WE USE THE APP THE TRANSITION IS SLOW
@@ -219,12 +227,23 @@ package net.psykosoft.psykopaint2.home.views.home
 			
 			
 			//SHOW TUTORIAL POPUP ON FIRST LOAD
-			if(_connectionCount==1){
+			if(_connectionCount==1)
+			{
 				view.scrollingEnabled=false;
+				
+				
+		
+				
 				var tutorialPopup:TutorialPopup = new TutorialPopup();
 				tutorialPopup.scaleX = tutorialPopup.scaleY = CoreSettings.GLOBAL_SCALING;
 				view.stage.addChild(tutorialPopup);
 				tutorialPopup.onTutorialPopupCloseSignal.add(onTutorialClose);
+				
+				
+				//SEND NOTIFICATION ZOOM COMPLETE ON TUTORIAL CLOSE ONLY IF TUTORIAL VISIBLE
+				notifyHomeViewIntroZoomComplete.dispatch();
+				view.activateCameraControl();
+				
 			}else {
 				notifyHomeViewIntroZoomComplete.dispatch();
 				view.activateCameraControl();
@@ -234,9 +253,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onTutorialClose():void{
 			view.scrollingEnabled=true;
 			
-			//SEND NOTIFICATION ZOOM COMPLETE ON TUTORIAL CLOSE ONLY IF TUTORIAL VISIBLE
-			notifyHomeViewIntroZoomComplete.dispatch();
-			view.activateCameraControl();
+			
 		}
 
 		override protected function onStateChange(newState : String) : void

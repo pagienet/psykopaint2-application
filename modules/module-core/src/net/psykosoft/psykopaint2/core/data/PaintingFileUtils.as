@@ -5,9 +5,9 @@ package net.psykosoft.psykopaint2.core.data
 
 	public class PaintingFileUtils
 	{
-		public static const PAINTING_FILE_VERSION:String = "15";
-		public static const PAINTING_INFO_FILE_EXTENSION:String = ".ipp2";
-		public static const PAINTING_DATA_FILE_EXTENSION:String = ".dpp2";
+		public static const PAINTING_FILE_VERSION:String = "1";
+		public static const PAINTING_INFO_FILE_EXTENSION:String = ".ipp";
+		public static const PAINTING_DATA_FILE_EXTENSION:String = ".ppp"; /* PsykoPaintProject */
 
 		static public function decodeImage(bytes : TrackedByteArray, width : uint, height : Number) : TrackedByteArray
 		{
