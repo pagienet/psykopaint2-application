@@ -189,13 +189,13 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 			}
 			f = File.applicationStorageDirectory.resolvePath("tutorial.html");
 			//TODO: video size might need a little tweaking still:
-			if ( !f.exists )
-			{
+			//if ( !f.exists )
+			//{
 				var fs:FileStream = new FileStream();
 				fs.open(f,FileMode.WRITE);
-				fs.writeUTFBytes('<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0px;padding:0px;"><video src="GettingStartedSoftware.mp4" controls autoplay width="'+viewPort.width+'" height="'+viewPort.height+'"></video></body></html>');
+				fs.writeUTFBytes('<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0px;padding:0px;background-color:#000;"><video src="GettingStartedSoftware.mp4" controls autoplay width="100%" height="100%"></video></body></html>');
 				fs.close();
-			}
+			//}
 			webView.loadURL(  "file://"+f.nativePath );
 		}
 	}
