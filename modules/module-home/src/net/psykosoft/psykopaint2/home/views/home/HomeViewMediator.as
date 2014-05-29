@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyProfilePictureUpdatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.ToggleDepthOfFieldSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.views.popups.tutorial.TutorialPopup;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewIntroZoomCompleteSignal;
@@ -80,6 +81,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyHomeDistanceToSectionChangedSignal : NotifyHomeDistanceToSectionChangedSignal;
 
+		[Inject]
+		public var toggleDepthOfFieldSignal : ToggleDepthOfFieldSignal;
+
 		private var _currentNavigationState : String;
 		
 		
@@ -101,6 +105,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestHomeIntroSignal.add(onIntroRequested);
 			notifyGyroscopeUpdateSignal.add(onGyroscopeUpdate);
 			notifyProfilePictureUpdatedSignal.add(onProfilePictureUpdate);
+			toggleDepthOfFieldSignal.add(view.setDepthOfFieldEnabled);
 
 			// From view.
 			view.disabledSignal.add(onDisabled);
@@ -144,6 +149,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.sceneReadySignal.remove(onSceneReady);
 			notifyGyroscopeUpdateSignal.remove(onGyroscopeUpdate);
 			notifyProfilePictureUpdatedSignal.remove(onProfilePictureUpdate);
+
+			toggleDepthOfFieldSignal.remove(view.setDepthOfFieldEnabled);
 
 			view.dispose();
 
@@ -224,13 +231,11 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onIntroComplete() : void
 		{
-			
-			
 			//SHOW TUTORIAL POPUP ON FIRST LOAD
 			if(_connectionCount==1)
 			{
 				view.scrollingEnabled=false;
-				
+
 				var tutorialPopup:TutorialPopup = new TutorialPopup();
 				tutorialPopup.scaleX = tutorialPopup.scaleY = CoreSettings.GLOBAL_SCALING;
 				view.stage.addChild(tutorialPopup);
