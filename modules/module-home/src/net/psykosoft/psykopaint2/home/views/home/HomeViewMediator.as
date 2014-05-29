@@ -215,7 +215,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				view.playIntroAnimation(onIntroComplete,3);
 				//THEN IT'S A BIT FASTER
 			}else if(_connectionCount<=4){
-				view.playIntroAnimation(onIntroComplete,1);
+				view.playIntroAnimation(onIntroComplete,1.5);
 			}else {
 				//IF WE COME BACK OFTEN IT'S MUCH FASTER
 				view.playIntroAnimation(onIntroComplete,0.5);
@@ -230,9 +230,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			if(_connectionCount==1)
 			{
 				view.scrollingEnabled=false;
-				
-				
-		
 				
 				var tutorialPopup:TutorialPopup = new TutorialPopup();
 				tutorialPopup.scaleX = tutorialPopup.scaleY = CoreSettings.GLOBAL_SCALING;

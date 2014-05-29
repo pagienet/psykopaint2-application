@@ -2,10 +2,10 @@ package net.psykosoft.psykopaint2.core.data
 {
 
 	import flash.display.BitmapData;
+	import flash.geom.Rectangle;
 	import flash.net.ObjectEncoding;
 	import flash.net.registerClassAlias;
 	import flash.utils.ByteArray;
-	import flash.utils.CompressionAlgorithm;
 	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 
@@ -81,11 +81,13 @@ package net.psykosoft.psykopaint2.core.data
 			var paintingDataVO : PaintingDataVO = new PaintingDataVO();
 			// NO NEEDED paintingDataVO.version= pppfileData.version;
 			paintingDataVO.colorData = pppfileData.colorData;
-			paintingDataVO.normalSpecularData= pppfileData.normalSpecularData;
-			paintingDataVO.sourceImageData= pppfileData.sourceImageData;
+			paintingDataVO.normalSpecularData = pppfileData.normalSpecularData;
+			paintingDataVO.sourceImageData = pppfileData.sourceImageData;
 			
 			paintingDataVO.surfaceID = pppfileData.surfaceID;
-			paintingDataVO.surfaceNormalSpecularData= pppfileData.surfaceNormalSpecularData;
+			var newBmd:BitmapData = new BitmapData(pppfileData.width,pppfileData.height,true,0xFFFFFFFF);
+			newBmd.setPixels(new Rectangle(0,0,pppfileData.width,pppfileData.height), pppfileData.surfaceNormalSpecularData);
+			paintingDataVO.surfaceNormalSpecularData = newBmd;
 			paintingDataVO.colorBackgroundOriginal = pppfileData.colorBackgroundOriginal;
 			
 			paintingDataVO.width= pppfileData.width;

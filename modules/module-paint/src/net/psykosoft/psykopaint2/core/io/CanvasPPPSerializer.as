@@ -110,11 +110,13 @@ package net.psykosoft.psykopaint2.core.io
 			_PPPFileData.normalSpecularData = copyNormalSpecular();
 			
 			
+			_PPPFileData.surfaceID = _canvas.surfaceID;
+			//FROM BITMAPDATA TO BYTEARRAY
+			var surfacebytes:ByteArray = new ByteArray();
+			var bitmapData : BitmapData = _canvas.getNormalSpecularOriginal();
+			bitmapData.copyPixelsToByteArray(bitmapData.rect, surfacebytes);
+			_PPPFileData.surfaceNormalSpecularData =surfacebytes ;
 			
-			//var original : BitmapData = _canvas.getNormalSpecularOriginal();
-			//var bytes:ByteArray = new ByteArray();
-			//original.copyPixelsToByteArray(original.rect, bytes);
-			_PPPFileData.surfaceNormalSpecularData = _canvas.getNormalSpecularOriginal();
 				
 			//	.setPixels(paintingDataVO.surfaceNormalSpecularData.rect, surfaceNormalSpecularDataBytes);
 			

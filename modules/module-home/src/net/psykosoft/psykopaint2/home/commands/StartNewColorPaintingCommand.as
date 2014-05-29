@@ -27,20 +27,21 @@ package net.psykosoft.psykopaint2.home.commands
 		}
 
 		private function onSurfaceLoaded(surface : SurfaceDataVO):void {
-			var vo : PaintingDataVO = new PaintingDataVO();
-			vo.width = CoreSettings.STAGE_WIDTH;
-			vo.height = CoreSettings.STAGE_HEIGHT;
+			var paintingDataVO : PaintingDataVO = new PaintingDataVO();
+			paintingDataVO.width = CoreSettings.STAGE_WIDTH;
+			paintingDataVO.height = CoreSettings.STAGE_HEIGHT;
 
 			if (surface.color) {
-				vo.colorData = surface.color;
-				vo.colorBackgroundOriginal = surface.color;
+				paintingDataVO.colorData = surface.color;
+				paintingDataVO.colorBackgroundOriginal = surface.color;
 			}
-			else
-				vo.colorData = ByteArrayUtil.createBlankColorData(vo.width, vo.height, 0xffffffff);
+			else {
+				paintingDataVO.colorData = ByteArrayUtil.createBlankColorData(paintingDataVO.width, paintingDataVO.height, 0xffffffff);}
 
-			vo.surfaceNormalSpecularData = surface.normalSpecular;
+			paintingDataVO.surfaceNormalSpecularData = surface.normalSpecular;
+			paintingDataVO.surfaceID = surface.id;
 
-			requestOpenPaintingDataVOSignal.dispatch(vo);
+			requestOpenPaintingDataVOSignal.dispatch(paintingDataVO);
 		}
 	}
 }

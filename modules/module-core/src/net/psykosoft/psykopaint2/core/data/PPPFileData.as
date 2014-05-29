@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.core.data
 {
-	import flash.display.BitmapData;
 	import flash.net.registerClassAlias;
 	import flash.utils.ByteArray;
 
@@ -11,7 +10,7 @@ package net.psykosoft.psykopaint2.core.data
 		public var colorData:ByteArray;
 		public var normalSpecularData:ByteArray;
 		public var sourceImageData:ByteArray;
-		public var surfaceNormalSpecularData:BitmapData;
+		public var surfaceNormalSpecularData:ByteArray;
 		public var colorBackgroundOriginal:ByteArray;
 		public var surfaceID:int;
 		public var width:uint;

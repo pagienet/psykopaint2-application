@@ -23,7 +23,6 @@ package net.psykosoft.psykopaint2.core.data
 
 		public function PaintingDataVO()
 		{
-			registerClassAlias( "net.psykosoft.psykopaint2.core.data.PaintingDataVO", PaintingDataVO );
 
 			if (CoreSettings.TRACK_NON_GCED_OBJECTS)
 				UndisposedObjects.getInstance().add(this);

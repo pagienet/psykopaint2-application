@@ -47,16 +47,7 @@ package net.psykosoft.psykopaint2.core.io
 			newPPPIFileData.dateTimestamp = lastSavedOnDateMs;
 			
 			
-			//WRITE THUMBNAIL BMD
-			
-			//thumbnail.encode(thumbnail.rect, new PNGEncoderOptions(true), _output);
-			//thumbnail.dispose();
-			
-			//var bytes:ByteArray = new ByteArray();
-			//var thumbnail : BitmapData = generateThumbnail(canvasRenderer);
-			//thumbnail.encode(thumbnail.rect, new PNGEncoderOptions(), bytes);
-			//newPPPIFileData.colorPreviewData = bytes;
-			
+			//WRITE THUMBNAILs
 			var bytes:ByteArray = new ByteArray();
 			var offset : int = 0;
 			var largeBitmapData : BitmapData = _copyColorAndSourceToBitmapData.execute(canvas);
@@ -109,22 +100,6 @@ package net.psykosoft.psykopaint2.core.io
 		
 		
 	
-		/*
-		private function writeThumbnail(canvasRenderer : CanvasRenderer) : void
-		{
-			// store temporary length of 0 so we can generate the png as we go
-			_output.writeUnsignedInt(0);
-
-			var thumbnail : BitmapData = generateThumbnail(canvasRenderer);
-			var thumbnailStartPos : uint = _output.position;
-			thumbnail.encode(thumbnail.rect, new PNGEncoderOptions(), _output);
-			thumbnail.dispose();
-
-			var thumbnailBytesLength : uint = _output.position - thumbnailStartPos;
-			_output.position = thumbnailStartPos - 4;
-			_output.writeUnsignedInt(thumbnailBytesLength);
-			_output.position += thumbnailBytesLength;
-		}*/
 
 		private function generateThumbnail(canvasRenderer : CanvasRenderer) : BitmapData
 		{

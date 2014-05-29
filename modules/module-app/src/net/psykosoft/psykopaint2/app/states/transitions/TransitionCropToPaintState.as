@@ -146,19 +146,20 @@ package net.psykosoft.psykopaint2.app.states.transitions
 
 		private function createPaintingVO(surface : SurfaceDataVO) : PaintingDataVO
 		{
-			var vo : PaintingDataVO = new PaintingDataVO();
-			vo.width = CoreSettings.STAGE_WIDTH;
-			vo.height = CoreSettings.STAGE_HEIGHT;
-			vo.sourceImageData =  _croppedBitmapData.getPixels(_croppedBitmapData.rect);
+			var paintingDataVO : PaintingDataVO = new PaintingDataVO();
+			paintingDataVO.width = CoreSettings.STAGE_WIDTH;
+			paintingDataVO.height = CoreSettings.STAGE_HEIGHT;
+			paintingDataVO.sourceImageData =  _croppedBitmapData.getPixels(_croppedBitmapData.rect);
 			if (surface.color) {
-				vo.colorBackgroundOriginal = surface.color;
-				vo.colorData = surface.color;
+				paintingDataVO.colorBackgroundOriginal = surface.color;
+				paintingDataVO.colorData = surface.color;
 			}
-			else
-				vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);
-			vo.normalSpecularData = null;
-			vo.surfaceNormalSpecularData = surface.normalSpecular;
-			return vo;
+			else{
+				paintingDataVO.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);}
+			paintingDataVO.surfaceID = surface.id;
+			paintingDataVO.normalSpecularData = null;
+			paintingDataVO.surfaceNormalSpecularData = surface.normalSpecular;
+			return paintingDataVO;
 		}
 
 		override ns_state_machine function deactivate() : void

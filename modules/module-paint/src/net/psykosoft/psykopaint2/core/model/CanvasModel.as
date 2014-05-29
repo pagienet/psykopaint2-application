@@ -44,7 +44,7 @@ package net.psykosoft.psykopaint2.core.model
 		private var _pyramidMap : PyramidMapIntrinsics;
 		private var _colorTransfer : ColorTransfer;
 		
-		private var _surfaceID:int;
+		
 
 		// TODO: should originals be a string path to packaged asset?
 		//MATHIEU: WHO DID THIS COMMENT? WOULD BE GREAT TO KNOW WHOM.
@@ -53,11 +53,23 @@ package net.psykosoft.psykopaint2.core.model
 		// used during export (reference)
 		
 		//MATHIEU ADDED THIS. NEED TO FINISH
-		private var surfacedataVO:SurfaceDataVO;
+		private var _surfacedataVO:SurfaceDataVO;
 
 		public function CanvasModel()
 		{
 
+		}
+
+	
+
+		public function get surfacedataVO():SurfaceDataVO
+		{
+			return _surfacedataVO;
+		}
+
+		public function get surfaceID():int
+		{
+			return _surfacedataVO.id;
 		}
 
 		[PostConstruct]
@@ -180,16 +192,16 @@ package net.psykosoft.psykopaint2.core.model
 				_normalSpecularMap = createCanvasTexture(true);
 		}
 		
-		public function setSurfaceDataVO(surfacedataVO:SurfaceDataVO):void
+		public function setSurfaceDataVO(dataVO:SurfaceDataVO):void
 		{
-			this.surfacedataVO = surfacedataVO;
+			this._surfacedataVO = dataVO;
 			
-			setNormalSpecularOriginal(surfacedataVO.normalSpecular);
-			setColorBackgroundOriginal(surfacedataVO.color);
+			setNormalSpecularOriginal(dataVO.normalSpecular);
+			setColorBackgroundOriginal(dataVO.color);
 			
 		}
 		
-		public function setNormalSpecularOriginal(value : BitmapData) : void
+		private function setNormalSpecularOriginal(value : BitmapData) : void
 		{
 			if (_normalSpecularOriginal && _normalSpecularOriginal != value)
 				_normalSpecularOriginal.dispose();
@@ -198,7 +210,7 @@ package net.psykosoft.psykopaint2.core.model
 		}
 		
 		
-		public function setColorBackgroundOriginal(value : ByteArray) : void
+		private function setColorBackgroundOriginal(value : ByteArray) : void
 		{
 		if (_colorBackgroundOriginal) _colorBackgroundOriginal.clear();
 		
