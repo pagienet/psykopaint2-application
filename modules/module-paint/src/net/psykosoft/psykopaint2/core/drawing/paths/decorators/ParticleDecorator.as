@@ -22,25 +22,61 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var activeParticles:Vector.<ParticlePoint>;
 		private const _applyArray:Array = [0,0,1,1];
 		
-		
+		//"Max Concurrent Particles" - IntValue
 		public var param_maxConcurrentParticles:PsykoParameter;
+		
+		//"Minimum Spawn Distance" - NumberValue
 		public var param_minSpawnDistance:PsykoParameter;
+		
+	    //"Spawn Probability" - NumberValue
 		public var param_spawnProbability:PsykoParameter;
+		
+		//"Lifespan" - IntRange
 		public var param_lifeSpan:PsykoParameter;
+		
+		//"Acceleration" - NumberRange
 		public var param_acceleration:PsykoParameter;
+		
+		//"Speed" - NumberRange
 		public var param_speed:PsykoParameter;
-		public var param_offsetAngle:PsykoParameter;
-		public var param_curlAngle:PsykoParameter;
-		public var param_renderSteps:PsykoParameter;
-		public var param_updateProbability:PsykoParameter;
-		public var param_curlFlipProbability:PsykoParameter;
-		public var param_useAccelerometer:PsykoParameter;
-		public var param_saturationAdjustment:PsykoParameter;
-		public var param_hueAdjustment:PsykoParameter;
-		public var param_brightnessAdjustment:PsykoParameter;
-		public var param_applyColorMatrix:PsykoParameter;
-		public var param_lifeSpanDistribution:PsykoParameter;
+		
+		//"Speed Distribution" - StringList
 		public var param_speedDistribution:PsykoParameter;
+		
+		//"Offset Angle" - AngleRange
+		public var param_offsetAngle:PsykoParameter;
+		
+		//"Curl Angle" - AngleRange
+		public var param_curlAngle:PsykoParameter;
+		
+		//"Render Steps per Frame" - IntValue
+		public var param_renderSteps:PsykoParameter;
+		
+		//"Update Probability" - Number Range
+		public var param_updateProbability:PsykoParameter;
+		
+		//
+		public var param_curlFlipProbability:PsykoParameter;
+		
+		//
+		public var param_useAccelerometer:PsykoParameter;
+		
+		//
+		public var param_saturationAdjustment:PsykoParameter;
+		
+		//
+		public var param_hueAdjustment:PsykoParameter;
+		
+		//
+		public var param_brightnessAdjustment:PsykoParameter;
+		
+		//
+		public var param_applyColorMatrix:PsykoParameter;
+		
+		//
+		public var param_lifeSpanDistribution:PsykoParameter;
+		
+		//
 		public var param_dropOriginalPoint:PsykoParameter;
 		
 		

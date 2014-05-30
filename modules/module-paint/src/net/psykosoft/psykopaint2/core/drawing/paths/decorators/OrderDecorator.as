@@ -13,6 +13,13 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var rng:LCG;
 		private var buffer:Vector.<SamplePoint>;
 		
+		//"Buffer Size" - IntValue
+		//allow to shuffle the order of the incoming Sample Points
+		//this is useful if you want to count the "snake" effect
+		//where every new quad is drawn upon the previous one
+		//the bigger the buffer size is the more points will be
+		//included in the shuffle, at the same time it will also
+		//delay the display of the latest drawn point a bit
 		public var param_bufferSize:PsykoParameter;
 		
 		public function OrderDecorator( )

@@ -12,6 +12,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	{
 		private var rng:LCG;
 		
+		//"Angle Adjustment" - NumberRangeValue
+		//adds a random rotation within the given range to the current rotation value of a SamplePoint
 		public var param_angleAdjustment:PsykoParameter;
 		
 		public function RotationDecorator( minAdjustmentAngle:Number = -1.5707963267948966192313216916398, maxAdjustmentAngle:Number = 1.5707963267948966192313216916398 )
