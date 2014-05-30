@@ -92,13 +92,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			if (rsize > 1) rsize = 1;
 			else if (rsize < 0) rsize = 0;
 			
-			//Mathieu: ORIGNAL SPRAYCAN ONE:
 			_appendVO.uvBounds.x = int(Math.random() * _shapeVariations[0]) * _shapeVariations[2]; 
 			_appendVO.uvBounds.y = int(Math.random() * _shapeVariations[1]) * _shapeVariations[3];
-			//COPIED FROM SKETCH BRUSH
-			//_appendVO.uvBounds.x = int(rng.getNumber(0, _shapeVariations[0])) * _shapeVariations[2];
-			//_appendVO.uvBounds.y = int(rng.getNumber(0, _shapeVariations[1])) * _shapeVariations[3];
-
+		
 			_appendVO.size =  rsize * _maxBrushRenderSize;
 			_appendVO.point = point;
 			_brushMesh.append(_appendVO);

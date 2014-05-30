@@ -7,12 +7,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import flash.display3D.Context3DVertexBufferFormat;
 	import flash.display3D.VertexBuffer3D;
 	import flash.display3D.textures.TextureBase;
-	import flash.events.Event;
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-
+	
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.intrinsics.FastBuffer;
@@ -62,16 +60,35 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_normalSpecularFragmentData.length = _numFragmentRegisters * 4;
 		}
 
+		
+		/**
+		 * The append() method is responsible for adding the actual textured triangles
+		 * that will be rendered on the GPU. In the case of the TextureSplatMesh
+		 * we are adding scaled and rotated Quads, meaning 2 triangles are added
+		 * each time. 
+		 */
 		override public function append( appendVO:StrokeAppendVO ):void
 		{
 			//check for maximum vertex count
 			if ( _numVertices >= 65531 ) return;
 			
+			// The following 3 values tell us which part of the AbstractBrushShape's texture should be used:
+			
+			// uvBounds contains the uv coordinates of the table cell that is being drawn
 			var uvBounds:Rectangle = appendVO.uvBounds;
+			
+			// baseAngle is the diagonal angle of the cell, this is required to calculate 
+			// the 4 corner points of the quad
 			var baseAngle:Number = appendVO.diagonalAngle; //Math.atan2(uvBounds.height,uvBounds.width);
+			
+			// halfSize is the distance of the center of the cell to the corners, again
+			// this value is required for the calculation of the 4 corners of the quad
 			var halfSize : Number = appendVO.size * appendVO.diagonalLength * 0.5;//appendVO.size * Math.SQRT1_2;
 			
+			// angle is the rotation value of the SamplePoint 
 			var angle : Number = appendVO.point.angle;
+			
+			// 4 intermediate values required for the corner calculation:
 			var cos1 : Number = halfSize * Math.cos(  baseAngle + angle);
 			var sin1 : Number = halfSize * Math.sin(  baseAngle + angle);
 			var cos2 : Number = halfSize * Math.cos( -baseAngle + angle);
@@ -86,6 +103,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			var diffX : Number;
 			var diffU : Number;
 
+			// data will accumulate all the vertex data that is sent to the GPU
+			// for performance reasons we reuse the same Vector each time
 			var data:Vector.<Number> = _tmpData;
 
 			var ox:Number = appendVO.quadOffsetRatio * (-cos1 - cos2);
@@ -94,54 +113,63 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			var ndcScaleX:Number = 2/CoreSettings.STAGE_WIDTH;
 			var ndcScaleY:Number = 2/CoreSettings.STAGE_HEIGHT;
 
+			// Calculating the upper left corner of the quad:
 			var vx : Number = (pnx - cos1 + ox) * ndcScaleX - 1.0;
 			var vy : Number = -((pny - sin1 + oy) * ndcScaleY - 1.0);
 
+			/*
 			if (vx < _minX) _minX = vx;
 			if (vx > _maxX) _maxX = vx;
 			if (vy < _minY) _minY = vy;
 			if (vy > _maxY) _maxY = vy;
-
+			*/
+			
 			data[0] = vx;
 			data[1] = vy;
 
 			diffX = vx;
 
+			// Calculating the upper right corner of the quad:
 			vx = (pnx + cos2 + ox) * ndcScaleX - 1.0;
 			vy = -((pny + sin2 + oy) * ndcScaleY - 1.0);
 
+			/*
 			if (vx < _minX) _minX = vx;
 			if (vx > _maxX) _maxX = vx;
 			if (vy < _minY) _minY = vy;
 			if (vy > _maxY) _maxY = vy;
-
+			*/
 			diffX -= vx;
 
 			data[8] = vx;
 			data[9] = vy;
 
+			// Calculating the lower right corner of the quad:
 			vx = (pnx + cos1 + ox) * ndcScaleX - 1.0;
 			vy = -((pny + sin1 + oy) * ndcScaleY - 1.0);
-
+			/*
 			if (vx < _minX) _minX = vx;
 			if (vx > _maxX) _maxX = vx;
 			if (vy < _minY) _minY = vy;
 			if (vy > _maxY) _maxY = vy;
-
+			*/
 			data[16] = vx;
 			data[17] = vy;
 
+			// Calculating the lower left corner of the quad:
 			vx = (pnx - cos2 + ox) * ndcScaleX - 1.0;
 			vy = -((pny - sin2 + oy) * ndcScaleY - 1.0);
 
+			/*
 			if (vx < _minX) _minX = vx;
 			if (vx > _maxX) _maxX = vx;
 			if (vy < _minY) _minY = vy;
 			if (vy > _maxY) _maxY = vy;
-
+			*/
 			data[24] = vx;
 			data[25] = vy;
 			
+			// The uv coordinates for the 4 corners:
 			data[2]  = data[26] = uvBounds.left;
 			data[3]  = data[11] = uvBounds.top;
 			data[10] = data[18] = uvBounds.right;
@@ -160,19 +188,23 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			// this is a scaling factor for neighbor sampling, trying to match the chosen mip maps (so we can sample neighbouring pixels correctly)
 			bumpFactors[2] = bumpFactors[6] = bumpFactors[10] = bumpFactors[14] = Math.abs(diffX / diffU * .5);
 			
-			//_fastBuffer.addInterleavedFloatsToVertices( data,_vIndex,8,4);
-			//_fastBuffer.addInterleavedFloatsToVertices( point.colorsRGBA,_vIndex+32,4,8);
+			// _fastBuffer accumulates all the required vertex data before sending them to the GPU
+			// we are using DomainMemory here for maximum performance:
 			_fastBuffer.addInterleavedFloatsToVertices( data,_vIndex,8,8);
 			_fastBuffer.addInterleavedFloatsToVertices( point.colorsRGBA,_vIndex+32,4,12);
 			_fastBuffer.addInterleavedFloatsToVertices( bumpFactors,_vIndex+48,4,12);
-			//_vIndex += 192;
+			
+			// each Quad uses 256 bytes of memory - calculated as numElementsPerVertex * 16
 			_vIndex += 256;
 			
+			// each Quad uses 4 vertices (4 corner points):
 			_numVertices += 4;
+			
+			// each Quad uses 6 indices (2 triangles a 3 indices):
 			_numIndices += 6;
 
 			invalidateBuffers();
-			invalidateBounds();
+			//invalidateBounds();
 		}
 
 		override public function drawColor(context3d : Context3D, canvas : CanvasModel, source : TextureBase = null) : void
@@ -180,8 +212,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			var vertexBuffer : VertexBuffer3D = getVertexBuffer(context3d);
 
 			context3d.setProgram(getColorProgram(context3d));
+			
+			//Vertex coordinate
 			context3d.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
+			//uv coordinate
 			context3d.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2);
+			//color value
 			context3d.setVertexBufferAt(2, vertexBuffer, 8, Context3DVertexBufferFormat.FLOAT_4);
 			
 			context3d.setTextureAt(0, _brushTexture);
@@ -196,6 +232,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		}
 
 
+		/**
+		 * The uv coordinates are passed via v0 to the fragment shader
+		 * The color data is passed via v1 to the fragment shader
+		 */
 		override protected function getColorVertexCode() : String
 		{
 			return "mov v0, va1\n"+
@@ -203,6 +243,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 				   "mov op, va0\n";
 		}
 
+		/**
+		 * reads the red channel of the color texture and multiplies it with the color data
+		 * the 3 vertices of a triangle can contain different colors and the resulting
+		 * color used is the result of an interpolation between the 3 at the pixel location
+		 */
 		override protected function getColorFragmentCode() : String
 		{
 			return "tex ft0, v0, fs0 <2d, clamp, linear, miplinear >\n" +

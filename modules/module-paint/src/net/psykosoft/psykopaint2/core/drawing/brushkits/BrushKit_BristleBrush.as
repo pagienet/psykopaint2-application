@@ -265,7 +265,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					bumpDecorator.param_bumpinessRange.numberValue = 0.15;
 					bumpDecorator.param_bumpInfluence.numberValue = 0.1;
 					bumpDecorator.param_noBumpProbability.numberValue = 0.6;
-					bumpDecorator.param_glossiness.numberValue = 0.25;
+					bumpDecorator.param_glossiness.numberValue = 0.32;
 					
 					colorDecorator.param_brushOpacity.numberValue = 0.98;
 					colorDecorator.param_brushOpacityRange.numberValue = 0.02;
