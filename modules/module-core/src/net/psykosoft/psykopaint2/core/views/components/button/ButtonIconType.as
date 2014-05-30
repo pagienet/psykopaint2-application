@@ -92,6 +92,9 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const SEND:String = "send";
 		public static const SHARE:String = "share";
 		public static const SURFACE:String = "surface";
+		public static const SURFACE_WOOD:String = "Wood";
+		public static const SURFACE_PAPER:String = "Paper";
+		public static const SURFACE_CANVAS:String = "Canvas";
 		public static const TWEAK_BRUSH:String = "tweakBrush";
 		public static const TWITTER:String = "twitter";
 		public static const WAVEFORM:String = "waveform";
