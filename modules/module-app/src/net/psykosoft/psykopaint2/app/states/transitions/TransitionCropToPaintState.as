@@ -1,12 +1,14 @@
 package net.psykosoft.psykopaint2.app.states.transitions
 {
 	import flash.display.BitmapData;
-	
+	import flash.geom.Matrix;
+
 	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
 	import net.psykosoft.psykopaint2.app.signals.RequestCreatePaintingBackgroundSignal;
 	import net.psykosoft.psykopaint2.app.states.PaintState;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
+	import net.psykosoft.psykopaint2.base.utils.images.ImageDataUtils;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
@@ -151,8 +153,16 @@ package net.psykosoft.psykopaint2.app.states.transitions
 			paintingDataVO.height = CoreSettings.STAGE_HEIGHT;
 			paintingDataVO.sourceImageData =  _croppedBitmapData.getPixels(_croppedBitmapData.rect);
 			if (surface.color) {
+				if (surface.color.width == paintingDataVO.width && surface.color.height == paintingDataVO.height)
+					paintingDataVO.colorData = surface.color.getPixels(surface.color.rect);
+				else {
+					var scaled : BitmapData = new BitmapData(paintingDataVO.width, paintingDataVO.height, true, 0)
+					scaled.draw(surface.color, new Matrix(paintingDataVO.width / surface.color.width, 0, 0, paintingDataVO.height / surface.color.height), null, null, null, true);
+					paintingDataVO.colorData = scaled.getPixels(scaled.rect);
+					scaled.dispose();
+				}
+				ImageDataUtils.ARGBtoBGRA(paintingDataVO.colorData, paintingDataVO.colorData.length, 0);
 				paintingDataVO.colorBackgroundOriginal = surface.color;
-				paintingDataVO.colorData = surface.color;
 			}
 			else{
 				paintingDataVO.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);}

@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.home.commands
 {
 
-	import flash.utils.ByteArray;
 	import flash.utils.getTimer;
 	
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;

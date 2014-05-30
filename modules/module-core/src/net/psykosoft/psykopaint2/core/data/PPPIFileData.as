@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.core.data
 {
-	import flash.display.BitmapData;
 	import flash.net.registerClassAlias;
 	import flash.utils.ByteArray;
 

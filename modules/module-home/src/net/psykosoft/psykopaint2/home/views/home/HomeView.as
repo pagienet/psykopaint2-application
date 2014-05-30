@@ -13,16 +13,13 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.geom.Matrix3D;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
-	import flash.net.SharedObject;
-	
+
 	import away3d.Away3D;
 	import away3d.cameras.Camera3D;
 	import away3d.cameras.lenses.PerspectiveLens;
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.lights.PointLight;
-
-	import flashx.textLayout.elements.GlobalSettings;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -178,13 +175,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.width = stage.stageWidth;
 			_view.height = stage.stageHeight;
 
-			_depthOfFieldFilter = new SmartDepthOfFieldFilter3D(15 * CoreSettings.GLOBAL_SCALING, 15 * CoreSettings.GLOBAL_SCALING, CoreSettings.GLOBAL_SCALING);
-			_depthOfFieldFilter.focusedRange = 50;
-			_depthOfFieldFilter.smartRange = 100;
+			_depthOfFieldFilter = new SmartDepthOfFieldFilter3D(10 * CoreSettings.GLOBAL_SCALING, 10 * CoreSettings.GLOBAL_SCALING, CoreSettings.GLOBAL_SCALING);
+			_depthOfFieldFilter.smartRange = 220;
 			_depthOfFieldFilter.range = 100;
 
 			stage.addChildAt( _view, 0 );
-			
+
 		}
 
 		private function initCamera() : void
@@ -211,7 +207,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onCameraMoved(event:Object3DEvent):void
 		{
 			if (_depthOfFieldFilter && _easelView)
-				_depthOfFieldFilter.focusDistance = Math.abs(_easelView.canvasScenePosition.z - _camera.scenePosition.z);
+				_depthOfFieldFilter.focusDistance = Math.abs(_easelView.canvasScenePosition.z - _camera.scenePosition.z) + 50;
 		}
 
 		private function initCameraIntroPosition():void

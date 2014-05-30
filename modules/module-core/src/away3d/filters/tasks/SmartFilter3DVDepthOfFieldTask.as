@@ -7,7 +7,12 @@ package away3d.filters.tasks
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.textures.Texture;
-	
+	import flash.geom.Vector3D;
+
+	import flashx.textLayout.elements.GlobalSettings;
+
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
 	use namespace arcane;
 	
 	public class SmartFilter3DVDepthOfFieldTask extends Filter3DTaskBase
@@ -29,7 +34,7 @@ package away3d.filters.tasks
 		{
 			super(true);
 			_maxBlur = maxBlur;
-			_data = Vector.<Number>([0, 0, 100, _focusDistance, 10, 0, 0, 0, _range, 0, 0, 0, 1.0, 1/255.0, 1/65025.0, 1/16581375.0]);
+			_data = Vector.<Number>([0, 0, 100, _focusDistance, 10, .01, 0, 0, _range, 0, 0, 0, 1.0, 1/255.0, 1/65025.0, 1/16581375.0]);
 			this.stepSize = stepSize;
 		}
 		
@@ -79,16 +84,6 @@ package away3d.filters.tasks
 			_data[3] = _focusDistance = value;
 		}
 
-		public function get focusedRange():Number
-		{
-			return _data[4];
-		}
-
-		public function set focusedRange(value:Number):void
-		{
-			_data[4] = value;
-		}
-		
 		public function get maxBlur():uint
 		{
 			return _maxBlur;
@@ -110,15 +105,12 @@ package away3d.filters.tasks
 			var code:String;
 
 			// sample depth, unpack & get blur amount (offset point + step size)
-			code = "tex ft0, v0, fs1 <2d, linear>	\n" +
-					// ft7.w = depth
+			code = "tex ft0, v0, fs1 <2d, linear, repeat>	\n" +
 				"dp4 ft7.w, ft0, fc3				\n" +
 				"sub ft1.z, ft7.w, fc1.z			\n" + // d = d - f
 				"rcp ft1.z, ft1.z					\n" + // screenZ = -n*f/(d-f)
 				"mul ft1.z, fc1.w, ft1.z			\n" + // screenZ = -n*f/(d-f)
 				"sub ft1.z, ft1.z, fc0.w			\n" + // screenZ - dist
-				"abs ft1.z, ft1.z					\n" + // abs(screenZ - dist)/range
-				"sub ft1.z, ft1.z, fc1.x			\n" + // do not blur within focusedRange
 				"mul ft1.z, ft1.z, fc2.x			\n" + // (screenZ - dist)/range
 
 				"sat ft1.z, ft1.z					\n" + // sat(abs(screenZ - dist)/range)
@@ -126,20 +118,20 @@ package away3d.filters.tasks
 
 			code += "mov ft0, v0	\n" +
 					"sub ft0.y, ft0.y, ft6.x\n" +
-					"tex ft1, ft0, fs0 <2d,linear,clamp>\n" +
+					"tex ft1, ft0, fs0 <2d,linear,repeat>\n" +
 					"mov ft7.x, fc3.x\n";
 			
 			for (var y:Number = _realStepSize; y <= _maxBlur; y += _realStepSize) {
 				code += "add ft0.y, ft0.y, ft6.y	\n" +
-						"tex ft2, ft0, fs0 <2d,linear,clamp>\n" +
+						"tex ft2, ft0, fs0 <2d,linear,repeat>\n" +
 
 					// calculate and apply weight
-						"tex ft5, ft0, fs1 <2d, linear>	\n" +
+						"tex ft5, ft0, fs1 <2d, linear, repeat>	\n" +
 						"dp4 ft7.y, ft5, fc3			\n" +
 						"sub ft7.y, ft7.y, ft7.w		\n" +	// diff in depth
 						"abs ft7.y, ft7.y				\n" +
-						"mul ft7.y, ft7.y, fc0.z			\n" +
-						"sat ft7.y, ft7.y					\n" +
+						"mul ft7.y, ft7.y, fc0.z		\n" +
+						"sat ft7.y, ft7.y				\n" +
 						"sub ft7.y, fc3.x, ft7.y		\n" +	// 1 - diff
 
 						"mul ft2, ft2, ft7.y\n" +
@@ -158,7 +150,7 @@ package away3d.filters.tasks
 			var context:Context3D = stage3DProxy._context3D;
 			var n:Number = camera.lens.near;
 			var f:Number = camera.lens.far;
-			
+
 			_data[6] = f/(f - n);
 			_data[7] = -n*_data[6];
 			

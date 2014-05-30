@@ -27,6 +27,7 @@ package away3d.filters
 			super();
 			_hDofTask = new SmartFilter3DHDepthOfFieldTask(maxBlurX, stepSize);
 			_vDofTask = new SmartFilter3DVDepthOfFieldTask(maxBlurY, stepSize);
+
 			addTask(_hDofTask);
 			addTask(_vDofTask);
 		}
@@ -39,16 +40,6 @@ package away3d.filters
 		public function set smartRange(value:Number):void
 		{
 			_vDofTask.smartRange = _hDofTask.smartRange = value;
-		}
-
-		public function get focusedRange():Number
-		{
-			return _vDofTask.focusedRange;
-		}
-
-		public function set focusedRange(value:Number):void
-		{
-			_vDofTask.focusedRange = _hDofTask.focusedRange = value;
 		}
 
 		/**
