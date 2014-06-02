@@ -1,20 +1,14 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Quad;
-	
 	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	import flash.geom.Matrix;
 	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.base.utils.misc.ClickUtil;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.LeftButton;
 	import net.psykosoft.psykopaint2.core.views.components.button.RightButton;
@@ -293,7 +287,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				_panel.contentHeight = 140;
 				header.lowerEdge = 630;
 			} else {
-				_panel.contentHeight = 215;
+				_panel.contentHeight = 140;
 				header.lowerEdge = 600;
 			}
 		}

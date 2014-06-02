@@ -148,8 +148,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 					//var objsUnderMouse:Array = target.getObjectsUnderPoint( TapGesture( event.target ).location );
 					if( CanvasInteractionUtil.canContentsUnderMouseBeIgnored(target) ) { // We only want clicks on the stage.
 						// Perform hide/show
-						if( !view.panel.shown ) view.panel.show(true);
-						else view.panel.hide(true);
+						if( !view.panel.shown ) view.panel.show(false);
+						else view.panel.hide(false);
 					}
 				}
 

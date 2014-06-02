@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
 	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
 	import com.greensock.easing.Strong;
 	
 	import flash.display.Stage;
@@ -28,6 +29,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationPositionChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToEaselViewSignal;
@@ -80,27 +82,52 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var notifyNavigationPositionChangedSignal:NotifyNavigationPositionChangedSignal;
+	
 
 		[Inject]
 		public var easelRectModel : EaselRectModel;
 
+		private var _zoomScale:Number = _minZoomScale;
+		public var offsetY : Number = 0;
+		
+		private const MAX_ZOOM_SCALE:Number = 3;
+		private const ZOOM_MARGIN:Number = 200 * CoreSettings.GLOBAL_SCALING;
+		
 		private var _transformMatrix:Matrix;
 		private var _easelRectFromHomeView:Rectangle;
 		private var _minZoomScale:Number;
 		private var _addedMouseWheelListener:Boolean;
 		private var _canvasRect : Rectangle;
-
-		private const MAX_ZOOM_SCALE:Number = 3;
-		private const ZOOM_MARGIN:Number = 200 * CoreSettings.GLOBAL_SCALING;
-
-		public var offsetY : Number = 0;
 		private var _firstTimeZooming : Boolean = true;
-
-		public var zoomScale:Number = _minZoomScale;
 		private var snapDelay:int;
 		private var snapped:Boolean;
 		private var lastZoomDirection:int = 0;
+		private var _ratio:Number= 1;
 		
+		public function get ratio():Number
+		{
+			return _ratio;
+		}
+
+		public function set ratio(value:Number):void
+		{
+			_ratio = value;
+		}
+
+		public function get zoomScale():Number
+		{
+			return _zoomScale;
+		}
+
+		public function set zoomScale(value:Number):void
+		{
+			_zoomScale = value;
+			_canvasRect.height = value * canvasModel.height;
+			_canvasRect.width = _canvasRect.height * (canvasModel.width/canvasModel.height);
+			_ratio = (value - _minZoomScale)/(1 - _minZoomScale);
+			
+		}
+
 		override public function initialize():void {
 
 			registerView( view );
@@ -131,6 +158,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			view.enabledSignal.add(onEnabled);
 			view.disabledSignal.add(onDisabled);
 		}
+		
+		
 
 		override public function destroy():void {
 
@@ -146,6 +175,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			requestZoomCanvasToDefaultViewSignal.remove( zoomToDefaultView );
 			requestZoomCanvasToEaselViewSignal.remove( zoomToEaselView );
 			notifyNavigationPositionChangedSignal.remove( onNavigationPositionChange );
+
 			view.enabledSignal.remove(onEnabled);
 			view.disabledSignal.remove(onDisabled);
 
@@ -167,14 +197,45 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			GpuRenderManager.removeRenderingStep( paintModulePreRenderingStep, GpuRenderingStepType.PRE_CLEAR );
 			GpuRenderManager.removeRenderingStep( paintModuleNormalRenderingsStep, GpuRenderingStepType.NORMAL );
 		}
-
 		private function onNavigationPositionChange(offset:Number):void
 		{
-			// lovely magical numbers to counter the magic numbers from the nav panel
-			offsetY = offset * CoreSettings.GLOBAL_SCALING * .75 * .33;
-			if (_canvasRect)
-				updateAndConstrainCanvasRect(1);
+			//trace(this,"onNavigationPositionChange"+offset);
+			
+			//THE INTERFACE IS 120 PIXELS HEIGHT. SO TO CENTER THE EASEL it's 120/2
+			// BUT THAT EVENT SENDS THE Y VALUE OF A CHILDREN OF NAVIGATION VIEW.
+			// WHICH IS NOT A REPRESENTATIVE VALLUE. THAT'S WHY WE HARDCORE IT AT 60
+			/*if(offset<0){
+			offset =0;
+			}else {
+			offset=-60;
+			}*/
+			
+			
+			offsetY = 60*offset/175 * CoreSettings.GLOBAL_SCALING;
+			//offsetY = offset * CoreSettings.GLOBAL_SCALING * .75 * .33;
+			update();
+			requestChangeRenderRectSignal.dispatch(_canvasRect);
+			//TweenLite.to(this,0.3,{offsetY:offset,ease:Expo.easeOut,onUpdate:update});
+			
 		}
+		
+		/*private function onToggleNavRequest( value:int, autoCenter:Boolean, skipTween:Boolean ):void {
+		
+		var tweenDuration:Number = 0;
+		if(skipTween==false){
+		tweenDuration= 0.25;
+		}
+		if(value==1){
+		//THE INTERFACE IS 120 PIXELS HEIGHT. SO TO CENTER THE EASEL it's 120/2
+		// BUT THAT EVENT SENDS THE Y VALUE OF A CHILDREN OF NAVIGATION VIEW.
+		// WHICH IS NOT A REPRESENTATIVE VALLUE. THAT'S WHY WE HARDCORE IT AT 60
+		TweenLite.to(this,tweenDuration,{offsetY:-60,ease:Expo.easeOut,onUpdate:update});
+		}else {
+		TweenLite.to(this,tweenDuration,{offsetY:0,ease:Expo.easeOut,onUpdate:update});
+		
+		}
+		
+		}*/
 
 		// -----------------------
 		// From app.
@@ -185,10 +246,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			var sc:Number = 1 + event.delta / 50;
 			_transformMatrix.identity();
-			_transformMatrix.translate( -event.localX, -event.localY - offsetY );
+			_transformMatrix.translate( -event.localX, -event.localY  );
 			if (zoomScale < MAX_ZOOM_SCALE || (zoomScale == MAX_ZOOM_SCALE && sc <= 1) )
 				_transformMatrix.scale(sc,sc );
-			_transformMatrix.translate( event.localX, event.localY + offsetY  );
+			_transformMatrix.translate( event.localX, event.localY  );
 
 			var topLeft:Point = _transformMatrix.transformPoint( _canvasRect.topLeft );
 			var bottomRight:Point = _transformMatrix.transformPoint( _canvasRect.bottomRight );
@@ -228,7 +289,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function onGlobalGesture( type:String, event:GestureEvent ):void {
 			
 			switch( type ) {
-//				MATHIEU: NOT ANYMORE: THIS HAPPENED TO ERRATICALLY SO REMOVED
+//				MATHIEU: NOT ANYMORE: THIS HAPPENED TOO ERRATICALLY SO REMOVED
 //				case GestureType.TWO_FINGER_TAP_GESTURE_RECOGNIZED:
 //					requestUndoSignal.dispatch();
 //					break;
@@ -236,10 +297,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				case GestureType.TRANSFORM_GESTURE_CHANGED:
 					var tg:TransformGesture = (event.target as TransformGesture);
 					_transformMatrix.identity();
-					_transformMatrix.translate( -tg.location.x, -tg.location.y - offsetY );
+					_transformMatrix.translate( -tg.location.x, -tg.location.y );
 					if (zoomScale < MAX_ZOOM_SCALE || (zoomScale == MAX_ZOOM_SCALE && tg.scale  <= 1) )
 						_transformMatrix.scale( tg.scale, tg.scale );
-					_transformMatrix.translate( tg.location.x + tg.offsetX, tg.location.y + tg.offsetY + offsetY );
+					_transformMatrix.translate( tg.location.x + tg.offsetX, tg.location.y + tg.offsetY  );
 
 					var topLeft:Point = _transformMatrix.transformPoint( _canvasRect.topLeft );
 					var bottomRight:Point = _transformMatrix.transformPoint( _canvasRect.bottomRight );
@@ -286,69 +347,46 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 		}
 
-		private function updateEaselRect():void {
-			_easelRectFromHomeView = easelRectModel.absoluteScreenRect;
-
-			_minZoomScale = _easelRectFromHomeView.width / canvasModel.width;
-			zoomScale = _minZoomScale;
-
-			// Uncomment to visualize incoming rect.
-			/*view.graphics.lineStyle( 1, 0x00FF00 );
-			view.graphics.drawRect( rect.x, rect.y, rect.width, rect.height );
-			view.graphics.endFill();*/
-		}
-
+	
 		private function zoomToDefaultView():void
 		{
-			updateEaselRect();
+			_easelRectFromHomeView = easelRectModel.absoluteScreenRect;
+			_minZoomScale = _easelRectFromHomeView.width / canvasModel.width;
+			zoomScale  = _minZoomScale;
+			
 			_canvasRect = _easelRectFromHomeView.clone();
 			requestChangeRenderRectSignal.dispatch(_canvasRect);
 			TweenLite.killTweensOf( this );
 			var targetScale : Number = (canvasModel.height - 200*CoreSettings.GLOBAL_SCALING)/canvasModel.height;
+			//var targetRatio:Number  = (targetScale - _minZoomScale)/(1 - _minZoomScale);
 			if (_firstTimeZooming) {
 				renderer.backgroundAlpha = 0;
-				TweenLite.to( this, 1, { offsetY: -175 * CoreSettings.GLOBAL_SCALING * .75 * .4, zoomScale: targetScale, onUpdate: onZoomUpdate, onComplete: onZoomToDefaultViewComplete, ease: Strong.easeInOut } );
+				TweenLite.to( this, 1, { offsetY: -60, zoomScale: targetScale, onUpdate:update,onComplete: onZoomToDefaultViewComplete, ease: Strong.easeInOut } );
 				TweenLite.to( renderer, 1, { backgroundAlpha: 1 });
 			}
 			else {
-				TweenLite.to( this, 1, { zoomScale: targetScale, onUpdate: onZoomUpdate, onComplete: onZoomToDefaultViewComplete, ease: Strong.easeInOut } );
+				TweenLite.to( this, 1, {  zoomScale: targetScale, onUpdate:update,onComplete: onZoomToDefaultViewComplete, ease: Strong.easeOut } );
 				_firstTimeZooming = false;
 			}
 		}
 
-		/*private function zoomToFullView():void
-		{
-//			trace( this, "zoomToFullView" );
-			updateEaselRect();
-			updateCanvasRect( _easelRectFromHomeView );
-			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomToDefaultViewComplete, ease: Strong.easeInOut } );
-		} */
 
 		private function onZoomToDefaultViewComplete():void {
+			requestChangeRenderRectSignal.dispatch(_canvasRect);
 			notifyCanvasZoomedToDefaultViewSignal.dispatch();
 		}
 
 		private function zoomToEaselView():void {
-			offsetY = 0;
+			//offsetY = 0;
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete: onZoomToEaselViewComplete, ease: Strong.easeInOut } );
+			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: update, onComplete: onZoomToEaselViewComplete, ease: Strong.easeOut } );
 		}
 
 		private function onZoomToEaselViewComplete():void {
+			requestChangeRenderRectSignal.dispatch(_canvasRect);
 			notifyCanvasZoomedToEaselViewSignal.dispatch();
 		}
 
-		private function onZoomUpdate():void {
-			var ratio : Number = (zoomScale - _minZoomScale)/(1 - _minZoomScale);
-			_canvasRect.x = (1-ratio)*_easelRectFromHomeView.x;	// linearly interpolate to 0 from zoomed out position
-			_canvasRect.y = (1-ratio)*_easelRectFromHomeView.y + offsetY;
-
-			_canvasRect.width = canvasModel.width * zoomScale;
-			_canvasRect.height = canvasModel.height * zoomScale;
-			// do not constrain
-			requestChangeRenderRectSignal.dispatch(_canvasRect);
-		}
 
 
 		// -----------------------
@@ -357,20 +395,14 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		// used for manual zooming
 		private function updateAndConstrainCanvasRect(requestedScaleFactor:Number):void {
-			constrainCanvasRect(requestedScaleFactor);
+			_ratio = requestedScaleFactor;
+			update();
 			requestChangeRenderRectSignal.dispatch(_canvasRect);
 		}
 
-		private function constrainCanvasRect(requestedScaleFactor:Number):void {
+		private function update():void {
 			
-			if ( requestedScaleFactor != 1 )
-			{
-				if ( ( requestedScaleFactor < 1 ? -1 : 1 ) != lastZoomDirection )
-				{
-					snapped = false;
-				}
-				lastZoomDirection = ( requestedScaleFactor < 1 ? -1 : 1 );
-			}
+		//	trace(this,"ratio = "+ratio);
 			
 			
 			zoomScale = _canvasRect.height / canvasModel.height;
@@ -384,11 +416,18 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				_canvasRect.height *= ( MAX_ZOOM_SCALE / zoomScale );
 				zoomScale = MAX_ZOOM_SCALE;
 			}
-
-			
+			//MANAGE SNAPPING
+			if ( ratio != 1 )
+			{
+				if ( ( ratio < 1 ? -1 : 1 ) != lastZoomDirection )
+				{
+					snapped = false;
+				}
+				lastZoomDirection = ( ratio < 1 ? -1 : 1 );
+			}
 			if (!snapped )
 			{
-				if ( zoomScale > 0.9 && zoomScale < 1.1 )
+				if ( zoomScale > 0.95 && zoomScale < 1.05 )
 				{
 					_canvasRect.width = canvasModel.width;
 					_canvasRect.height = canvasModel.height;
@@ -402,22 +441,25 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					_canvasRect.width = canvasModel.width;
 					_canvasRect.height = canvasModel.height;
 					zoomScale = 1;
-				} else if (  zoomScale <= 0.9 || zoomScale > 1.1 )
+				} else if (  zoomScale <= 0.95 || zoomScale > 1.05 )
 				{
 					snapped = false;
-				}
-				
+				}	
 			}
+			//trace(this,"offsetY = "+offsetY);
 			
-			var ratio : Number = 0;
+			
+			//var ratio : Number = 0;
 			var minPanX : Number, minPanY : Number, maxPanX : Number, maxPanY : Number;
+			//ON SMALLER THAN FULLSCREEN ZOOM
 			if( zoomScale < 1 )
 			{
-				ratio = (zoomScale - _minZoomScale)/(1 - _minZoomScale);
-				minPanX = (1-ratio)*_easelRectFromHomeView.x;
-				minPanY = (1-ratio)*_easelRectFromHomeView.y + offsetY;
-				// cause a steep ramp up for the margins
-				var powRatio : Number = Math.pow(ratio, 14);
+				_ratio = (zoomScale - _minZoomScale)/(1 - _minZoomScale);
+				minPanX = (1-_ratio)*_easelRectFromHomeView.x;
+				//IF WE SHOW THE INTERFACE BAR WE MAKE SURE IT STAYS CENTERED
+				minPanY = (1-_ratio)*_easelRectFromHomeView.y + offsetY;
+				
+				var powRatio : Number = Math.pow(_ratio, 14);
 				maxPanX = minPanX - ZOOM_MARGIN*powRatio;
 				maxPanY = minPanY - ZOOM_MARGIN*powRatio;
 				minPanX += ZOOM_MARGIN*powRatio;
@@ -426,9 +468,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			else if( zoomScale > 1 ){
 				// clamp to painting edges with margin
 				minPanX = ZOOM_MARGIN;
-				minPanY = ZOOM_MARGIN + offsetY;
+				minPanY = ZOOM_MARGIN;
 				maxPanX = canvasModel.width - _canvasRect.width - ZOOM_MARGIN;
-				maxPanY = canvasModel.height - _canvasRect.height - ZOOM_MARGIN + offsetY;
+				maxPanY = canvasModel.height - _canvasRect.height - ZOOM_MARGIN;
 			} else {
 				minPanX = 0;
 				minPanY = offsetY;

@@ -721,7 +721,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				
 				if(i==0){
 					
-					if(Math.random()<0.1){
+					if(Math.random()<0.03){
 						//the way you stored the persistent points creates a memory leak.
 						//you should use always use PathManager.recycleSamplePoint() before you overwrite
 						//and old point, like this:
