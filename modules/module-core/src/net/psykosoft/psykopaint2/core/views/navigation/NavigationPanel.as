@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 {
 
 	import com.greensock.TweenLite;
+	import com.greensock.easing.Linear;
 	import com.greensock.easing.Strong;
 	
 	import flash.display.DisplayObject;
@@ -123,10 +124,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			TweenLite.killTweensOf( this );
 			if ( !skipTween )
 			{
-				TweenLite.to( this, 0.2, {
+				TweenLite.to( this, 0.1, {
 					y:  _positionManager.getSnapPointAtIndex( 0 ) + 768,
 					onComplete:function():void{_positionManager.position = y - 768;_shown = visible = true;shownSignal.dispatch();},
-					ease: Strong.easeOut } );
+					ease: Linear.easeOut } );
 			} else {
 				y = _positionManager.getSnapPointAtIndex( 0 ) + 768;
 				_positionManager.position = y - 768;
@@ -145,10 +146,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			if ( !skipTween )
 			{
 				
-				TweenLite.to( this, 0.2, {
+				TweenLite.to( this, 0.1, {
 					y:  _positionManager.getSnapPointAtIndex( 1 ) + 768,
 					onComplete:function():void{_positionManager.position = y - 768;_shown = visible = false;hiddenSignal.dispatch();},
-					ease: Strong.easeOut } );
+					ease: Linear.easeOut } );
 			} else {
 				y = _positionManager.getSnapPointAtIndex( 1 ) + 768;
 				_positionManager.position = y - 768;
