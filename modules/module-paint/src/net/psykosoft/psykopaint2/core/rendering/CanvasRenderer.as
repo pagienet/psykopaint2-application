@@ -105,7 +105,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		[PostConstruct]
 		public function postConstruct() : void
 		{
-			_lightingRenderer = new LightingRenderer(lightingModel, stage3D.context3D);
+			_lightingRenderer = new LightingRenderer(lightingModel, stage3D);
 //			requestSaveCPUForUISignal.add(freezeRendering);
 			requestResumeCPUUsageForUISignal.add(resumeRendering);
 			requestChangeRenderRect.add(onChangeRenderRect);

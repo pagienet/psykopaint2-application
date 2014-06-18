@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	{
 		public static const ID_SAVE:String = "Save";
 		public static const ID_DISCARD:String = "Discard";
-		public static const ID_CLEAR:String = "Reload";
+		//public static const ID_CLEAR:String = "Reload";
 		public static const ID_DOWNLOAD:String = "Download";
 		public static const ID_PUBLISH:String = "Publish";
 
@@ -34,8 +34,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			createCenterButton( ID_DISCARD,  "Discard " + (isContinuedPainting ? "Changes" : ""), ButtonIconType.DISCARD );
 			createCenterButton( ID_SAVE, ID_SAVE, ButtonIconType.SAVE );
 			createCenterButton( ID_PUBLISH, ID_PUBLISH, ButtonIconType.PUBLISH );
-			//createCenterButton( ID_DOWNLOAD, ID_DOWNLOAD, ButtonIconType.DOWNLOAD );
-			createCenterButton( ID_CLEAR, ID_CLEAR, ButtonIconType.CLEAR );
+			createCenterButton( ID_DOWNLOAD, ID_DOWNLOAD, ButtonIconType.DOWNLOAD );
+			//createCenterButton( ID_CLEAR, ID_CLEAR, ButtonIconType.CLEAR );
 			validateCenterButtons();
 		}
 	}
