@@ -26,15 +26,18 @@ package net.psykosoft.psykopaint2.core.debug
 
 		public function add(object : Object) : void
 		{
-			//trace("Undisposed object::add "+object);
-			_collection.push(new UndisposedData(object));
+			var id:uint=0
+			id = _collection.push(new UndisposedData(object));
+			trace("Undisposed object::add "+object+" index:"+id);
 		}
 
 		public function remove(object : Object) : void
 		{
+			trace("Undisposed object::remove "+object);
 			for (var i : int = 0; i < _collection.length; ++i) {
 				var data : UndisposedData = _collection[i];
 				if (data.object == object) {
+					trace("REMOVING INDEX "+i+" || Remains "+_collection.length);
 					_collection.splice(i, 1);
 					return;
 				}

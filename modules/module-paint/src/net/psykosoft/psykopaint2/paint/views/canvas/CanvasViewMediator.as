@@ -360,9 +360,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			var targetScale : Number = (canvasModel.height - 200*CoreSettings.GLOBAL_SCALING)/canvasModel.height;
 			//var targetRatio:Number  = (targetScale - _minZoomScale)/(1 - _minZoomScale);
 			if (_firstTimeZooming) {
-				renderer.backgroundAlpha = 0;
+				//MATHIEU: NO FADE IN
+				//renderer.backgroundAlpha = 1;
 				TweenLite.to( this, 1, { offsetY: -60, zoomScale: targetScale, onUpdate:update,onComplete: onZoomToDefaultViewComplete, ease: Strong.easeInOut } );
-				TweenLite.to( renderer, 1, { backgroundAlpha: 1 });
+				//TweenLite.to( renderer, 1, { backgroundAlpha: 1 });
 			}
 			else {
 				TweenLite.to( this, 1, {  zoomScale: targetScale, onUpdate:update,onComplete: onZoomToDefaultViewComplete, ease: Strong.easeOut } );

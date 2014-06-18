@@ -272,11 +272,14 @@ package net.psykosoft.psykopaint2.home.views.home
 			
 			removeChild(_roomView);
 			
+			//MATHIEU: I THINK WE COULD DISPOSE OF THE GALLERY ALREADY IF WE'RE IN PAINT VIEW
 			_galleryView.dispose();
 			removeChild(_galleryView);
 			
+			//THE BOOK IS NOT DISPOSED HERE: 
 			//_bookView.dispose();
 			//removeChild(_bookView);
+			
 			
 			_easelView = null;
 			_roomView = null;

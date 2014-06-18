@@ -288,7 +288,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					//colorDecorator.param_colorMatrixChance.numberValue = 0.00;
 					colorDecorator.param_brightnessAdjustment.lowerRangeValue = -0.01;
 					colorDecorator.param_brightnessAdjustment.upperRangeValue= 0.01;
-					colorDecorator.param_applyColorMatrix.booleanValue=true;
+					colorDecorator.param_applyColorMatrix.booleanValue=false;
 					
 					
 					

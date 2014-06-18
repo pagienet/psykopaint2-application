@@ -25,10 +25,10 @@ package net.psykosoft.psykopaint2.core.io
 				//Not required since it gets already disposed in setSourceBitmapData
 				//sourceBmd.dispose();
 			}
-			else
+			else{
 			// doing this to force creation of PyramidMap
 			// TODO: Simply do not do this by allowing pyramid map not to exist
-				canvas.setSourceBitmapData(null);
+				canvas.setSourceBitmapData(null);}
 
 			if (paintingData.colorBackgroundOriginal) {
 			}
