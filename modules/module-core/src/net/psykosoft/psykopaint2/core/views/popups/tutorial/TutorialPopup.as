@@ -5,14 +5,15 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 	import flash.display.Stage3D;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.filesystem.File;
-	import flash.filesystem.FileMode;
-	import flash.filesystem.FileStream;
+	import flash.events.StageVideoAvailabilityEvent;
 	import flash.geom.Rectangle;
-	import flash.media.StageWebView;
+	import flash.media.StageVideo;
+	import flash.net.NetConnection;
+	import flash.net.NetStream;
 	
 	import net.psykosoft.psykopaint2.base.utils.events.EventStopper;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.views.components.SimpleVideoPlayer;
 	
 	import org.osflash.signals.Signal;
 	
@@ -22,14 +23,12 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 		public var bg:Sprite;
 		public var dragArea:Sprite;
 		
-		public var onTutorialPopupCloseSignal:Signal = new Signal();
+		public var onTutorialPopupCloseSignal:Signal = new Signal();;
 
 		
 		//private var videoPlayer:SimpleVideoPlayer;
 		private var duration:Number=0;
-		//private var ns:NetStream;
-		//private var _stagevisibilities:Array;
-		private var webView:StageWebView;
+		private var ns:NetStream;
 		
 		
 		
@@ -50,9 +49,9 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 			initializeIntroVideo();
 			EventStopper.stop(bg);
 			
-			//dragArea.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
+			dragArea.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
 		}
-		/*
+		
 		protected function onMouseDown(event:MouseEvent):void
 		{
 			play();
@@ -73,9 +72,25 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 			this.removeEventListener(MouseEvent.MOUSE_MOVE,onMouseMove);
 			this.removeEventListener(MouseEvent.MOUSE_UP,onMouseUp);
 		}
-	
+		
 		private function initializeIntroVideo():void {
+			/*videoPlayer = new SimpleVideoPlayer();
+			videoPlayer.source = "core-packaged/video/GettingStarted.flv";
+			videoPlayer.loop = false;
+			videoPlayer.removeOnComplete = true;
+			videoPlayer.width = 640;
+			videoPlayer.height = 480;
+			addChildAt( videoPlayer.container,0 );
+			videoPlayer.container.x = (1024-videoPlayer.width)/2;
+			videoPlayer.container.y = (768-videoPlayer.height)/2;
 			
+			
+			
+			var client:Object = new Object(); //Create an Object that represents the client
+			client.onMetaData = onMetaData; //reference the function that catches the MetaData of the Video
+			//Once MetaData is available, it'll call onMetaData with all of the information
+			videoPlayer.ns.client = client;   
+			*/
 			function onMetaData(metaData:Object):void
 			{
 				duration = metaData.duration;   //duration is the variable that is supposed to total length of the video
@@ -118,11 +133,9 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 				
 				//HIDE ALL STAGE3d INSTANCES:
 				var stage3ds:Vector.<Stage3D> = stage.stage3Ds;
-				//trace(stage3ds);
-				_stagevisibilities = [];
+				trace(stage3ds);
 				for (var i:int = 0; i < stage3ds.length; i++) 
 				{
-					_stagevisibilities.push(stage3ds[i].visible);
 					stage3ds[i].visible=false;
 				}
 			}else {
@@ -137,7 +150,7 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 			//videoPlayer.play();
 		}
 		
-		*/
+		
 		
 		protected function onMouseDownCloseBtn(event:MouseEvent):void
 		{
@@ -148,55 +161,36 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 		
 		protected function onMouseUpCloseBtn(event:MouseEvent):void
 		{
+			//SHOW BACK ALL STAGE3d INSTANCES:
+			var stage3ds:Vector.<Stage3D> = stage.stage3Ds;
+			trace(stage3ds);
+			for (var i:int = 0; i < stage3ds.length; i++) 
+			{
+				stage3ds[i].visible=true;
+			}
+			
 			dispose();
 		}
 		
 		public function dispose():void{
 			
-		//	dragArea.removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
+			dragArea.removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
 			closeBtn.removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDownCloseBtn);
 			closeBtn.removeEventListener(MouseEvent.MOUSE_UP,onMouseUpCloseBtn);
 			
 			//videoPlayer.stop();
 			//videoPlayer.dispose();
 			//videoPlayer = null;
-			//ns.close();
-			//stage.stageVideos[0].attachNetStream(null);
+			ns.close();
+			stage.stageVideos[0].attachNetStream(null);
 			EventStopper.removeStop(bg);
-			webView.viewPort = null;
-			webView.dispose();
+			
 			this.parent.removeChild(this);
 			
 			
 			
 			onTutorialPopupCloseSignal.dispatch();
 			
-		}
-		
-		private function initializeIntroVideo():void
-		{
-			
-			webView = new StageWebView();
-			webView.stage = stage;
-			var viewPort:Rectangle;
-			webView.viewPort =viewPort = new Rectangle ( (1024-640)/2*CoreSettings.GLOBAL_SCALING , (768-480)/2*CoreSettings.GLOBAL_SCALING , 640*CoreSettings.GLOBAL_SCALING , 480*CoreSettings.GLOBAL_SCALING ) ;
-			
-			var ftarget:File = File.applicationStorageDirectory.resolvePath("GettingStartedSoftware.mp4");
-			if ( !ftarget.exists )
-			{
-				var f:File = File.applicationDirectory.resolvePath("core-packaged/video/GettingStartedSoftware.mp4");
-				f.copyTo(ftarget);
-			}
-			f = File.applicationStorageDirectory.resolvePath("tutorial.html");
-			//TODO: video size might need a little tweaking still:
-			//if ( !f.exists )
-			//{
-				var fs:FileStream = new FileStream();
-				fs.open(f,FileMode.WRITE);
-				fs.writeUTFBytes('<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0px;padding:0px;background-color:#000;"><video src="GettingStartedSoftware.mp4" controls autoplay width="100%" height="100%"></video></body></html>');
-				fs.close();
-			//}
-			webView.loadURL(  "file://"+f.nativePath );
 		}
 	}
 	

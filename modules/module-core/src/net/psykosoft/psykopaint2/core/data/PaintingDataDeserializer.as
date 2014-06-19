@@ -2,11 +2,7 @@ package net.psykosoft.psykopaint2.core.data
 {
 
 	import flash.display.BitmapData;
-	import flash.geom.Rectangle;
-	import flash.net.ObjectEncoding;
-	import flash.net.registerClassAlias;
-	import flash.utils.ByteArray;
-	
+
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 
 	public class PaintingDataDeserializer
@@ -15,102 +11,50 @@ package net.psykosoft.psykopaint2.core.data
 		{
 		}
 
-		public function deserializeDPP(bytes : TrackedByteArray) : PaintingDataVO
+		public function deserialize(bytes : TrackedByteArray) : PaintingDataVO
 		{
-			var paintingDataVO : PaintingDataVO = new PaintingDataVO();
-			
+			var vo : PaintingDataVO = new PaintingDataVO();
+
 			if (bytes.readUTF() != "DPP2")
 				throw "Incorrect file type";
-			
+
 			// TODO: Make backwards compatible
 			if (bytes.readUTF() != PaintingFileUtils.PAINTING_FILE_VERSION)
 				throw "Incorrect file version";
-			
+
 			// Read dimensions.
-			paintingDataVO.width = bytes.readInt();
-			paintingDataVO.height = bytes.readInt();
-			
-			trace( this, "width: " + paintingDataVO.width + ", height: " + paintingDataVO.height );
-			
+			vo.width = bytes.readInt();
+			vo.height = bytes.readInt();
+
+			trace( this, "width: " + vo.width + ", height: " + vo.height );
+
 			var isPhotoPainting : Boolean = bytes.readBoolean();
 			trace( this, "isPhotoPainting",isPhotoPainting );
 			var hasColorBackgroundOriginal : Boolean = bytes.readBoolean();
 			trace( this, "hasColorBackgroundOriginal",hasColorBackgroundOriginal );
 			
-			paintingDataVO.colorPalettes = PaintingFileUtils.readColorPalettes(bytes);
+			vo.colorPalettes = PaintingFileUtils.readColorPalettes(bytes);
 			
 			// Read painting surfaces.
-			paintingDataVO.colorData = PaintingFileUtils.decodeImage(bytes, paintingDataVO.width, paintingDataVO.height);
-			paintingDataVO.normalSpecularData = PaintingFileUtils.decodeImage(bytes, paintingDataVO.width, paintingDataVO.height);
-			var surfaceNormalSpecularDataBytes : TrackedByteArray = PaintingFileUtils.decodeImage(bytes, paintingDataVO.width, paintingDataVO.height);
-			
-			//MATHIEU: THIS IS WHERE WE NEED TO FETCH THE ID OF THE SURFACE INSTEAD OF THE BITMAPDATA
-			//TODO
-			paintingDataVO.surfaceNormalSpecularData = new BitmapData(paintingDataVO.width, paintingDataVO.height, false);
-			paintingDataVO.surfaceNormalSpecularData.setPixels(paintingDataVO.surfaceNormalSpecularData.rect, surfaceNormalSpecularDataBytes);
-			surfaceNormalSpecularDataBytes.clear();
-			
+			vo.colorData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
+			vo.normalSpecularData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
+			var temp : TrackedByteArray = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
+			vo.normalSpecularOriginal = new BitmapData(vo.width, vo.height, false);
+			vo.normalSpecularOriginal.setPixels(vo.normalSpecularOriginal.rect, temp);
+			temp.clear();
+
 			if (isPhotoPainting)
 			{
-				paintingDataVO.sourceImageData = PaintingFileUtils.decodeImage(bytes, paintingDataVO.width, paintingDataVO.height);
+				vo.sourceImageData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
 			}
-			if (hasColorBackgroundOriginal)
-			{
-				paintingDataVO.colorBackgroundOriginal = PaintingFileUtils.decodeImage(bytes, paintingDataVO.width, paintingDataVO.height);
+			if (hasColorBackgroundOriginal){
+				vo.colorBackgroundOriginal = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
 			}
 			
 			//Hopefully this is okay to do here:
 			bytes.clear();
 			
-			return paintingDataVO;
-		}
-		
-		
-		public function deserializePPP(bytes : TrackedByteArray) : PaintingDataVO
-		{
-			var pppfileData : PPPFileData = new PPPFileData();
-			
-		
-			var fileBytes : ByteArray = bytes;
-			//fileBytes.uncompress(CompressionAlgorithm.DEFLATE);
-			fileBytes.objectEncoding = ObjectEncoding.AMF3;
-			registerClassAlias("net.psykosoft.psykopaint2.core.data.PPPFileData", PPPFileData);
-			pppfileData = PPPFileData(fileBytes.readObject()) ;
-			
-			//CONVERT PPP FILE TO PAINTING DATA VO
-			var paintingDataVO : PaintingDataVO = new PaintingDataVO();
-			// NO NEEDED paintingDataVO.version= pppfileData.version;
-			paintingDataVO.colorData = pppfileData.colorData;
-			paintingDataVO.normalSpecularData = pppfileData.normalSpecularData;
-			paintingDataVO.sourceImageData = pppfileData.sourceImageData;
-			
-			paintingDataVO.surfaceID = pppfileData.surfaceID;
-			var newBmd:BitmapData = new BitmapData(pppfileData.width,pppfileData.height,true,0xFFFFFFFF);
-			newBmd.setPixels(new Rectangle(0,0,pppfileData.width,pppfileData.height), pppfileData.surfaceNormalSpecularData);
-			paintingDataVO.surfaceNormalSpecularData = newBmd;
-			paintingDataVO.colorBackgroundOriginal = pppfileData.colorBackgroundOriginal;
-			
-			paintingDataVO.width= pppfileData.width;
-			paintingDataVO.height= pppfileData.height;
-			paintingDataVO.loadedFileName= pppfileData.loadedFileName;
-			
-			//AMF3 doesn't undertand vectors. So we have to convert from array to vector
-			paintingDataVO.colorPalettes =new Vector.<Vector.<uint>>();
-			for (var i:int = 0; i < pppfileData.colorPalettes.length; i++) 
-			{
-				paintingDataVO.colorPalettes[i] = new Vector.<uint>();
-				for (var j:int = 0; j < pppfileData.colorPalettes[i].length; j++) 
-				{
-					paintingDataVO.colorPalettes[i][j] = pppfileData.colorPalettes[i][j];
-				}
-			}
-			
-			paintingDataVO.isPhotoPainting = pppfileData.isPhotoPainting;
-			
-			//NO NEED FOR YOU ANYMORE LITTLE GUY, GO GET GARBAGE COLLECTED:
-			pppfileData = null;
-			
-			return paintingDataVO;
+			return vo;
 		}
 
 	}

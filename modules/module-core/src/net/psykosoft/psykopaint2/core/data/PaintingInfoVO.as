@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.core.data
 	{
 		public static const DEFAULT_VO_ID:String = "new";
 
-		public var thumbnailBmd:BitmapData;
+		public var thumbnail:BitmapData;
 		public var colorPreviewData:ByteArray;
 		public var colorPreviewBitmap:BitmapData;
 		public var normalSpecularPreviewData:ByteArray;
@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.core.data
 		public function clone() : PaintingInfoVO
 		{
 			var clone : PaintingInfoVO = new PaintingInfoVO();
-			if (thumbnailBmd) clone.thumbnailBmd = thumbnailBmd.clone();
+			if (thumbnail) clone.thumbnail = thumbnail.clone();
 			if (colorPreviewData) {
 				clone.colorPreviewData = new TrackedByteArray();
 				clone.colorPreviewData.writeBytes(colorPreviewData);
@@ -115,12 +115,12 @@ package net.psykosoft.psykopaint2.core.data
 			if (normalSpecularPreviewBitmap)
 				normalSpecularPreviewBitmap.dispose();
 
-			if (thumbnailBmd) thumbnailBmd.dispose();
+			if (thumbnail) thumbnail.dispose();
 			colorPreviewData = null;
 			colorPreviewBitmap = null;
 			normalSpecularPreviewData = null;
 			normalSpecularPreviewBitmap = null;
-			thumbnailBmd = null;
+			thumbnail = null;
 		}
 	}
 }

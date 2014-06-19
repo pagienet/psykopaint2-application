@@ -4,9 +4,10 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.display.PNGEncoderOptions;
 	import flash.geom.Matrix;
 	import flash.utils.ByteArray;
-	
+
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.base.utils.images.ImageDataUtils;
+
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
@@ -29,30 +30,9 @@ package net.psykosoft.psykopaint2.core.io
 			_copyColorAndSourceToBitmapData ||= new CopyColorAndSourceToBitmapDataUtil();
 		}
 
-		public function serialize(paintingID : String, lastSavedOnDateMs : Number, canvas : CanvasModel, canvasRenderer : CanvasRenderer, paintSettings : UserPaintSettingsModel,dpp:ByteArray) : ByteArray
+		public function serialize(paintingID : String, lastSavedOnDateMs : Number, canvas : CanvasModel, canvasRenderer : CanvasRenderer, paintSettings : UserPaintSettingsModel, dpp : ByteArray) : ByteArray
 		{
 			_output = new ByteArray();
-			
-			
-			//MATHIEU:
-			//NOW USING PPP:
-			
-			var width : int = canvas.width;
-			var height : int = canvas.height;
-			
-			writeHeader(paintingID, lastSavedOnDateMs, width, height);
-			writeThumbnail(canvasRenderer);
-			
-			mergeColor(canvas);
-			
-			//THIS I NEED TO FIX. BREAKS SOMETIMES BECAUSE OF CANVAS RENDERER
-			var surfaceBytes:ByteArray = new ByteArray();
-			var normalSpecularBmd: BitmapData= canvas.getNormalSpecularOriginal();
-			normalSpecularBmd.copyPixelsToByteArray(normalSpecularBmd.rect, surfaceBytes);
-			reduceSurface(surfaceBytes, width, height, 0);	// normal specular data
-			
-			
-			/*
 			dpp.position = 0;
 			dpp.readUTF();	// skip DPP2
 			dpp.readUTF();	// skip version
@@ -69,15 +49,11 @@ package net.psykosoft.psykopaint2.core.io
 			mergeColor(canvas);
 			reduceSurface(dpp, width, height, position + len);	// normal specular data
 
-			dpp.position = 0;*/
+			dpp.position = 0;
 			_output.position = 0;
 
 			return cleanUpAndReturn();
 		}
-		
-		
-		
-		
 
 		private function mergeColor(canvas:CanvasModel):void
 		{
@@ -92,10 +68,6 @@ package net.psykosoft.psykopaint2.core.io
 
 			_output.position = _output.length;
 		}
-		
-		
-		
-		
 
 		private function writeHeader(paintingID : String, lastSavedOnDateMs : Number, width : int, height : int) : void
 		{
@@ -132,7 +104,7 @@ package net.psykosoft.psykopaint2.core.io
 			thumbnail.dispose();
 			return scaledThumbnail;
 		}
-		
+
 		private function reduceSurface(sourceData : ByteArray, sourceWidth : uint, sourceHeight : uint, offset : uint) : void
 		{
 			var outputWidth : uint = sourceWidth / SURFACE_PREVIEW_SHRINK_FACTOR;

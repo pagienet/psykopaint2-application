@@ -96,7 +96,7 @@ package net.psykosoft.psykopaint2.paint
 			paintingDataVO.sourceImageData =  tempData.getPixels(tempData.rect); //ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0xffffffff);
 			//paintingDataVO.sourceImageData = null;
 			paintingDataVO.normalSpecularData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x80808080);
-			paintingDataVO.surfaceNormalSpecularData = new BitmapData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, false, 0x808080);
+			paintingDataVO.normalSpecularOriginal = new BitmapData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, false, 0x808080);
 			tempData.dispose();
 
 			_coreModule.injector.getInstance(NotifyPaintModuleSetUpSignal).addOnce(onPaintingModuleSetUp);

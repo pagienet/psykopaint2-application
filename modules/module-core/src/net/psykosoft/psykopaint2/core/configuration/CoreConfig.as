@@ -219,7 +219,7 @@ public class CoreConfig
 			// -----------------------
 
 			// Pick one.
-			_injector.map(LoggedInUserProxy ).toSingleton(AMFLoggedInUserProxy);
+			_injector.map( LoggedInUserProxy ).toSingleton(AMFLoggedInUserProxy);
 			_injector.map(GalleryService).toSingleton(AMFGalleryService);
 			_injector.map(CameraRollService).toSingleton(ANECameraRollService);
 			_injector.map(SampleImageService).toSingleton(XMLSampleImageService);

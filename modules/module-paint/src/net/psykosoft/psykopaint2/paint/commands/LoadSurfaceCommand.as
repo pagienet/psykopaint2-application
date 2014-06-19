@@ -52,7 +52,6 @@ package net.psykosoft.psykopaint2.paint.commands
 			context.detain( this );
 
 			_surfaceData = new SurfaceDataVO();
-			_surfaceData.id = canvasSurfaceSettingsModel.surfaceID;
 			_assetSize = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? "2048" : "1024";
 
 			if (paintMode == PaintMode.COLOR_MODE)

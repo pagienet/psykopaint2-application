@@ -68,16 +68,6 @@ package net.psykosoft.psykopaint2.core.rendering
 			_copySubTexture = new CopySubTexture(true);
 		}
 
-		public function get backgroundAlpha():Number
-		{
-			return _copySubTexture.alpha;
-		}
-
-		public function set backgroundAlpha(value:Number):void
-		{
-			_copySubTexture.alpha = value;
-		}
-
 		public function init() : void
 		{
 			_lightingRenderer.init();
@@ -191,9 +181,8 @@ package net.psykosoft.psykopaint2.core.rendering
 				var backgroundRect : Rectangle = createBackgroundRect();
 				_context3D.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP);
 				_context3D.setStencilReferenceValue(0);
-				_context3D.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
-				_copySubTexture.copy(_background.texture, unitRect, backgroundRect, _context3D);
 				_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+				_copySubTexture.copy(_background.texture, unitRect, backgroundRect, _context3D);
 			}
 		}
 

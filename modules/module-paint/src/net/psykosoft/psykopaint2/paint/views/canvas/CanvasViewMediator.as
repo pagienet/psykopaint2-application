@@ -98,8 +98,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		public var zoomScale:Number = _minZoomScale;
 		private var snapDelay:int;
-		private var snapped:Boolean;
-		private var lastZoomDirection:int = 0;
+		private var lastSnapDirection:int;
 		
 		override public function initialize():void {
 
@@ -306,9 +305,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			TweenLite.killTweensOf( this );
 			var targetScale : Number = (canvasModel.height - 200*CoreSettings.GLOBAL_SCALING)/canvasModel.height;
 			if (_firstTimeZooming) {
-				renderer.backgroundAlpha = 0;
 				TweenLite.to( this, 1, { offsetY: -175 * CoreSettings.GLOBAL_SCALING * .75 * .4, zoomScale: targetScale, onUpdate: onZoomUpdate, onComplete: onZoomToDefaultViewComplete, ease: Strong.easeInOut } );
-				TweenLite.to( renderer, 1, { backgroundAlpha: 1 });
 			}
 			else {
 				TweenLite.to( this, 1, { zoomScale: targetScale, onUpdate: onZoomUpdate, onComplete: onZoomToDefaultViewComplete, ease: Strong.easeInOut } );
@@ -363,16 +360,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function constrainCanvasRect(requestedScaleFactor:Number):void {
 			
-			if ( requestedScaleFactor != 1 )
-			{
-				if ( ( requestedScaleFactor < 1 ? -1 : 1 ) != lastZoomDirection )
-				{
-					snapped = false;
-				}
-				lastZoomDirection = ( requestedScaleFactor < 1 ? -1 : 1 );
-			}
-			
-			
 			zoomScale = _canvasRect.height / canvasModel.height;
 			
 			if( zoomScale < _minZoomScale ) {
@@ -385,28 +372,18 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				zoomScale = MAX_ZOOM_SCALE;
 			}
 
-			
-			if (!snapped )
+			if ( requestedScaleFactor == 0 )
 			{
-				if ( zoomScale > 0.9 && zoomScale < 1.1 )
+				snapDelay = getTimer();
+				lastSnapDirection = 0;
+			} else if ( (getTimer()- snapDelay)<200 ||
+				 ( zoomScale > 0.9 && zoomScale < 1.1 && (lastSnapDirection != (requestedScaleFactor<1? -1 : requestedScaleFactor>1?1:0) )) )
 				{
-					_canvasRect.width = canvasModel.width;
-					_canvasRect.height = canvasModel.height;
-					if ((getTimer()- snapDelay) >= 200 ) snapDelay = getTimer();
-					zoomScale = 1;
-					snapped = true;
-				} 
-			} else {
-				if (  (getTimer()- snapDelay)<400 )
-				{
-					_canvasRect.width = canvasModel.width;
-					_canvasRect.height = canvasModel.height;
-					zoomScale = 1;
-				} else if (  zoomScale <= 0.9 || zoomScale > 1.1 )
-				{
-					snapped = false;
-				}
-				
+				_canvasRect.width = canvasModel.width;
+				_canvasRect.height = canvasModel.height;
+				if ((getTimer()- snapDelay) >= 200 ) snapDelay = getTimer();
+				lastSnapDirection = (requestedScaleFactor<1? -1 : requestedScaleFactor>1?1:0);
+				zoomScale = 1;
 			}
 			
 			var ratio : Number = 0;

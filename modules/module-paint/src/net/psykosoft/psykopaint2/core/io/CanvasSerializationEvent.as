@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.events.Event;
 	import flash.utils.ByteArray;
 
+	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
+
 	public class CanvasSerializationEvent extends Event
 	{
 		public static const COMPLETE : String = "SerializationComplete";

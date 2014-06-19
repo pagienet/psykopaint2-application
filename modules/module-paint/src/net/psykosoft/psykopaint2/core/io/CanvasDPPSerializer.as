@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.textures.RectangleTexture;
+	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.geom.Rectangle;
@@ -15,6 +16,7 @@ package net.psykosoft.psykopaint2.core.io
 	import avm2.intrinsics.memory.si8;
 	
 	import net.psykosoft.psykopaint2.base.utils.images.ImageDataUtils;
+
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
@@ -60,7 +62,9 @@ package net.psykosoft.psykopaint2.core.io
 				saveColorRGB,
 				saveColorAlpha,
 				mergeColorData,
+
 				copyNormalSpecular,
+
 				writeNormalSpecularOriginal
 			];
 
@@ -191,8 +195,6 @@ package net.psykosoft.psykopaint2.core.io
 
 		private function writeNormalSpecularOriginal() : void
 		{
-			//INSTEAD OF WRITING NORMAL WE JUST STORE THE ID OF THE SURFACE. THAT'S IT
-			//THAT WE RETRIEVE IN THE 
 			var original : BitmapData = _canvas.getNormalSpecularOriginal();
 			original.copyPixelsToByteArray(original.rect, _output);
 		}

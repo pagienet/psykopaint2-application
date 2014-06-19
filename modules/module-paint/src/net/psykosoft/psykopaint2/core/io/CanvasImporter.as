@@ -1,10 +1,13 @@
 package net.psykosoft.psykopaint2.core.io
 {
 	import flash.display.BitmapData;
-	
+	import flash.utils.ByteArray;
+
+	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
+
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
+
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
-	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 
 	public class CanvasImporter
@@ -35,19 +38,12 @@ package net.psykosoft.psykopaint2.core.io
 				canvas.normalSpecularMap.uploadFromByteArray(paintingData.normalSpecularData, 0);
 			else
 				// new painting:
-				canvas.normalSpecularMap.uploadFromBitmapData(paintingData.surfaceNormalSpecularData);
-				
-			var newSurfacedataVO:SurfaceDataVO = new SurfaceDataVO();
-			newSurfacedataVO.color = paintingData.colorBackgroundOriginal;
-			newSurfacedataVO.id = paintingData.surfaceID;
-			//HERE NEED TO GET THE SURFACE FROM SOMEWHERE
-			newSurfacedataVO.normalSpecular = paintingData.surfaceNormalSpecularData;
-			
-			
-			canvas.setSurfaceDataVO(newSurfacedataVO);
-			
+				canvas.normalSpecularMap.uploadFromBitmapData(paintingData.normalSpecularOriginal);
 
-			paintingData.surfaceNormalSpecularData = null;
+			canvas.setNormalSpecularOriginal(paintingData.normalSpecularOriginal);
+			canvas.setColorBackgroundOriginal(paintingData.colorBackgroundOriginal);
+
+			paintingData.normalSpecularOriginal = null;
 			paintingData.colorBackgroundOriginal = null;
 		}
 	}
