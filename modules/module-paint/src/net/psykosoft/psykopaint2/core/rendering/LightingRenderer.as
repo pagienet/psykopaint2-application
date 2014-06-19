@@ -1,7 +1,8 @@
 package net.psykosoft.psykopaint2.core.rendering
 {
 	import com.adobe.utils.AGALMiniAssembler;
-
+	
+	import flash.display.Stage3D;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.Context3DProgramType;
@@ -10,9 +11,7 @@ package net.psykosoft.psykopaint2.core.rendering
 	import flash.display3D.Program3D;
 	import flash.display3D.VertexBuffer3D;
 	import flash.geom.Rectangle;
-
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
+	
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 
@@ -28,7 +27,7 @@ package net.psykosoft.psykopaint2.core.rendering
 //		private var _shadowModel : BDRFModel;
 
 		private var _program : Program3D;
-		private var _context3d : Context3D;
+		//private var _context3d : Context3D;
 
 		private var _quadVertices : VertexBuffer3D;
 		private var _quadIndices : IndexBuffer3D;
@@ -44,12 +43,15 @@ package net.psykosoft.psykopaint2.core.rendering
 		private var _offsetY : Number;
 		private var unitRect:Rectangle = new Rectangle(0, 0, 1, 1);
 
-		public function LightingRenderer(lightingModel : LightingModel, context3d : Context3D)
+		private var _stage3D:Stage3D;
+
+		public function LightingRenderer(lightingModel : LightingModel, stage3D : Stage3D)
 		{
+			_stage3D = stage3D; 
 			_lightingModel = lightingModel;
 			_lightingModel.onChange.add(onLightingModelChanged);
 			_globalVertexData = new Vector.<Number>();
-			_context3d = context3d;
+			//_context3d = _stage3D.context3D;
 			_globalVertexData = new <Number>[0, 0, 0, 1, -1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 			_globalFragmentData = new <Number>[.5, 0, 1, 0, 0, -1, 0, 0];
 			_scale = 1;
@@ -65,6 +67,11 @@ package net.psykosoft.psykopaint2.core.rendering
 			initBuffers();
 		}
 
+		public function get context3D() : Context3D
+		{
+			return  _stage3D.context3D;
+		}
+		
 		public function get renderRect() : Rectangle
 		{
 			return _renderRect;
@@ -126,13 +133,13 @@ package net.psykosoft.psykopaint2.core.rendering
 		private function renderToBaked(canvas : CanvasModel) : void
 		{
 			// as long as there's no rendering, we assume noone is using the canvas back buffer
-			_context3d.setRenderToTexture(canvas.fullSizeBackBuffer);
-			_context3d.clear(0, 0, 0, 0);
+			context3D.setRenderToTexture(canvas.fullSizeBackBuffer);
+			context3D.clear(0, 0, 0, 0);
 
 			renderLighting(0, 0, 1, 1, canvas);
 
-			_context3d.setRenderToBackBuffer();
-			_context3d.clear(0, 0, 0, 0);
+			context3D.setRenderToBackBuffer();
+			context3D.clear(0, 0, 0, 0);
 
 			_needBake = false;
 		}
@@ -142,7 +149,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			var scale : Number = _renderRect.height / canvas.height;
 			var offsetX : Number = (1 - scale) * .5;
 			var destRect : Rectangle = new Rectangle(offsetX, 0, scale, scale);
-			CopySubTexture.copy(canvas.fullSizeBackBuffer, unitRect, destRect, _context3d);
+			CopySubTexture.copy(canvas.fullSizeBackBuffer, unitRect, destRect, context3D);
 		}
 
 		private function renderLighting(offsetX : Number, offsetY : Number, widthRatio : Number, heightRatio : Number, canvas : CanvasModel) : void
@@ -150,32 +157,32 @@ package net.psykosoft.psykopaint2.core.rendering
 			updateGlobalVertexData(offsetX, offsetY, widthRatio, heightRatio, canvas);
 			updateGlobalFragmentData(canvas);
 
-			_diffuseModel.setRenderState(_context3d);
-			_ambientModel.setRenderState(_context3d);
-			_specularModel.setRenderState(_context3d);
+			_diffuseModel.setRenderState(context3D);
+			_ambientModel.setRenderState(context3D);
+			_specularModel.setRenderState(context3D);
 //			if (_shadowModel) _shadowModel.setRenderState(_context3d);
 
-			_context3d.setDepthTest(false, Context3DCompareMode.ALWAYS);
-			_context3d.setProgram(_program);
-			_context3d.setTextureAt(0, canvas.colorTexture);
+			context3D.setDepthTest(false, Context3DCompareMode.ALWAYS);
+			context3D.setProgram(_program);
+			context3D.setTextureAt(0, canvas.colorTexture);
 			if (_sourceTextureAlpha > 0)
-				_context3d.setTextureAt(1, canvas.sourceTexture);
-			_context3d.setTextureAt(2, canvas.normalSpecularMap);
-			_context3d.setVertexBufferAt(0, _quadVertices, 0, Context3DVertexBufferFormat.FLOAT_2); // vertices
-			_context3d.setVertexBufferAt(1, _quadVertices, 2, Context3DVertexBufferFormat.FLOAT_2);	// uvs
-			_context3d.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _globalVertexData, 6);
-			_context3d.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _globalFragmentData, 2);
-			_context3d.drawTriangles(_quadIndices, 0, 2);
-			_context3d.setTextureAt(0, null);
-			_context3d.setTextureAt(1, null);
-			_context3d.setTextureAt(2, null);
-			_context3d.setVertexBufferAt(0, null);
-			_context3d.setVertexBufferAt(1, null);
+				context3D.setTextureAt(1, canvas.sourceTexture);
+			context3D.setTextureAt(2, canvas.normalSpecularMap);
+			context3D.setVertexBufferAt(0, _quadVertices, 0, Context3DVertexBufferFormat.FLOAT_2); // vertices
+			context3D.setVertexBufferAt(1, _quadVertices, 2, Context3DVertexBufferFormat.FLOAT_2);	// uvs
+			context3D.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _globalVertexData, 6);
+			context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _globalFragmentData, 2);
+			context3D.drawTriangles(_quadIndices, 0, 2);
+			context3D.setTextureAt(0, null);
+			context3D.setTextureAt(1, null);
+			context3D.setTextureAt(2, null);
+			context3D.setVertexBufferAt(0, null);
+			context3D.setVertexBufferAt(1, null);
 
-			_diffuseModel.clearRenderState(_context3d);
-			_ambientModel.clearRenderState(_context3d);
-			_specularModel.clearRenderState(_context3d);
-//			if (_shadowModel) _shadowModel.clearRenderState(_context3d);
+			_diffuseModel.clearRenderState(context3D);
+			_ambientModel.clearRenderState(context3D);
+			_specularModel.clearRenderState(context3D);
+//			if (_shadowModel) _shadowModel.clearRenderState(context3D);
 		}
 
 		private function updateGlobalVertexData(offsetX : Number, offsetY : Number, widthRatio : Number, heightRatio : Number, canvas : CanvasModel) : void
@@ -209,7 +216,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		{
 			var vertexCode : String = getVertexShader();
 			var fragmentCode : String = getFragmentShader();
-			_program = _context3d.createProgram();
+			_program = context3D.createProgram();
 			_program.upload(new AGALMiniAssembler().assemble(Context3DProgramType.VERTEX, vertexCode),
 					new AGALMiniAssembler().assemble(Context3DProgramType.FRAGMENT, fragmentCode));
 		}
@@ -400,8 +407,8 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function initBuffers() : void
 		{
-			_quadVertices = _context3d.createVertexBuffer(4, 4);
-			_quadIndices = _context3d.createIndexBuffer(6);
+			_quadVertices = context3D.createVertexBuffer(4, 4);
+			_quadIndices = context3D.createIndexBuffer(6);
 			_quadVertices.uploadFromVector(new <Number>[    0.0, -1.0, 0.0, 1.0,
 				1.0, -1.0, 1.0, 1.0,
 				1.0, 0.0, 1.0, 0.0,

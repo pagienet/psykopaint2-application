@@ -1,13 +1,7 @@
 package net.psykosoft.psykopaint2.paint.commands
 {
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Sine;
-	
-	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
-	import flash.display3D.Context3DTextureFormat;
-	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
@@ -24,7 +18,6 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.views.base.ViewLayerOrdering;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
@@ -89,7 +82,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			lightController.enabled = true;
 
 			canvasModel.createPaintTextures();
-			
+			 
 			importPaintingData();
 			
 			brushKitManager.activate();

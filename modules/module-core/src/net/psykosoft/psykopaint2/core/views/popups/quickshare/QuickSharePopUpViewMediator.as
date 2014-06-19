@@ -7,7 +7,10 @@ import net.psykosoft.psykopaint2.core.managers.social.sharers.CompositeSharer;
 import net.psykosoft.psykopaint2.core.managers.social.sharers.FacebookSharer;
 import net.psykosoft.psykopaint2.core.managers.social.sharers.TwitterSharer;
 import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
+import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
+import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 
 public class QuickSharePopUpViewMediator extends MediatorBase
 {
@@ -16,6 +19,12 @@ public class QuickSharePopUpViewMediator extends MediatorBase
 
 	[Inject]
 	public var requestHidePopUpSignal:RequestHidePopUpSignal;
+	
+	[Inject]
+	public var requestShowPopUpSignal:RequestShowPopUpSignal;
+	
+	[Inject]
+	public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
 
 	[Inject]
 	public var socialSharingManager:SocialSharingManager;
@@ -30,38 +39,56 @@ public class QuickSharePopUpViewMediator extends MediatorBase
 		manageMemoryWarnings = false;
 
 		_sharer = new CompositeSharer(socialSharingManager);
-		_sharer.completedSignal.add(onUtilCompleted);
 
 		// From app.
 		// ...
 
 		// From view.
-		view.popUpWantsToCloseSignal.add( onPopUpWantsToClose );
-		view.popUpWantsToShareSignal.add( onPopUpWantsToShare );
+		view.popUpWantsToCloseSignal.addOnce( onPopUpWantsToClose );
+		view.popUpWantsToShareSignal.addOnce( onPopUpWantsToShare );
 	}
 
 	override public function destroy():void {
 		super.destroy();
 		if(view.bmd) view.bmd.dispose();
-		_sharer.completedSignal.remove(onUtilCompleted);
-		_sharer.dispose();
-		view.popUpWantsToCloseSignal.remove( onPopUpWantsToClose );
+		//_sharer.completedSignal.remove(onUtilCompleted);
+		//_sharer.dispose();
+		
 	}
 
 	private function onPopUpWantsToShare():void {
-		//EXIT FIRST
-		requestHidePopUpSignal.dispatch();
+		
 		
 		if(view.facebookChk.selected) _sharer.addSharer(new FacebookSharer(socialSharingManager));
 		if(view.twitterChk.selected) _sharer.addSharer(new TwitterSharer(socialSharingManager));
-	
+		
+		_sharer.completedSignal.add(onSharingCompleted);
+
+		
 		// Nothing to wait for, close.
 		if(_sharer.numSharers == 0) exitPopUp();
-		else _sharer.share([view.tf.text, view.bmd]);
+		else _sharer.share([view.tf.text, view.bmd.clone()]);
+		
+		//WE ANIMATE THE BUTTONS OUT
+		view.animateSideBtnsOut();
+		
+		//REMOVE THE SIGNAL TO LISTEN FOR THE CLOSING EVENT. WE WILL CLOSE WHEN FINISH SHARE 
+		view.popUpWantsToCloseSignal.remove( onPopUpWantsToClose );
+		view.popUpWantsToShareSignal.remove( onPopUpWantsToShare );
+		
+		if(_sharer.numSharers>0){
+			requestShowPopUpSignal.dispatch(PopUpType.MESSAGE);
+			requestUpdateMessagePopUpSignal.dispatch( "Sharing..." ,(view.facebookChk.selected)?"Throwing the painting on the Facebook Wall...":"Flying your painting to Twitter...");
+		}
 	}
 
-	private function onUtilCompleted():void {
+	private function onSharingCompleted():void {
+		//DISPOSE OF THE SHARER
+		_sharer.completedSignal.remove(onSharingCompleted);
+		_sharer.dispose();
+		
 		exitPopUp();
+	
 	}
 
 	private function exitPopUp():void {
@@ -76,12 +103,18 @@ public class QuickSharePopUpViewMediator extends MediatorBase
 				Alert.show( "Oops! We couldn't post to the services " + failedStr + ", but the rest worked." );
 			} // No alert if everything went ok.
 		}
-
 		
+		//REGULAR CLOSE THE POPUP POSITION, NOW WE CLOSE THE POPUP WHEN SHARING ON FACEBOOK
+		requestHidePopUpSignal.dispatch();
 	}
 
 	private function onPopUpWantsToClose():void {
+		//REMOVE THE SIGNAL AND SIMPLY CLOSE THE POPUP
+		view.popUpWantsToCloseSignal.remove( onPopUpWantsToClose );
+		view.popUpWantsToShareSignal.remove( onPopUpWantsToShare );
+		
 		requestHidePopUpSignal.dispatch();
+		
 	}
 }
 }

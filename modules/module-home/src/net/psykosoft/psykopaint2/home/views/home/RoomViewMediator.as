@@ -1,9 +1,8 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.home.model.WallpaperModel;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
-
+	
 	import robotlegs.bender.bundles.mvcs.Mediator;
 
 	public class RoomViewMediator extends Mediator
@@ -42,9 +41,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function changeWallpaperFromId(id : String) : void
 		{
-			var rootUrl : String = CoreSettings.RUNNING_ON_iPAD ? "/home-packaged-ios/" : "/home-packaged-desktop/";
-			var extra : String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
-			var url : String = rootUrl + "away3d/wallpapers/" + id + extra + ".atf";
+			//var rootUrl : String = CoreSettings.RUNNING_ON_iPAD ? "/home-packaged-ios/" : "/home-packaged-desktop/";
+			//var extra : String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
+			var url : String = "/home-packaged/away3d/wallpapers/" + id  + ".atf";
 			// todo: provide RoomView/RoomViewMediator	
 			view.changeWallpaper(url);
 		}

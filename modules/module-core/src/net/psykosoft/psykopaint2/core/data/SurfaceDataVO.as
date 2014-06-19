@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.data
 	public class SurfaceDataVO
 	{
 		public var normalSpecular : BitmapData;
-		public var color : ByteArray;
+		public var color : BitmapData;
+		public var id:int;
 	}
 }

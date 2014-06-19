@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.base.utils.misc
 		public function TrackedTexture(texture : Texture)
 		{
 			_texture = texture;
-			trace("TrackedTexture::create"+this);
+			trace("TrackedTexture::create"+this+" ");
 			
 			if (CoreSettings.TRACK_NON_GCED_OBJECTS)
 				UndisposedObjects.getInstance().add(this);

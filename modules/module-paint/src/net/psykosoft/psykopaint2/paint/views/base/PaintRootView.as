@@ -6,8 +6,6 @@ package net.psykosoft.psykopaint2.paint.views.base
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.EmptySubNavView;
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;
-	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
-	import net.psykosoft.psykopaint2.paint.views.alpha.AlphaSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.UpgradeSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavView;

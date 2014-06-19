@@ -1,6 +1,10 @@
 package net.psykosoft.psykopaint2.home.commands
 {
+	import flash.display.BitmapData;
+	import flash.geom.Matrix;
+
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
+	import net.psykosoft.psykopaint2.base.utils.images.ImageDataUtils;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
@@ -27,20 +31,30 @@ package net.psykosoft.psykopaint2.home.commands
 		}
 
 		private function onSurfaceLoaded(surface : SurfaceDataVO):void {
-			var vo : PaintingDataVO = new PaintingDataVO();
-			vo.width = CoreSettings.STAGE_WIDTH;
-			vo.height = CoreSettings.STAGE_HEIGHT;
+			var paintingDataVO : PaintingDataVO = new PaintingDataVO();
+			paintingDataVO.width = CoreSettings.STAGE_WIDTH;
+			paintingDataVO.height = CoreSettings.STAGE_HEIGHT;
 
 			if (surface.color) {
-				vo.colorData = surface.color;
-				vo.colorBackgroundOriginal = surface.color;
+				if (surface.color.width == paintingDataVO.width && surface.color.height == paintingDataVO.height)
+					paintingDataVO.colorData = surface.color.getPixels(surface.color.rect);
+				else {
+					var scaled : BitmapData = new BitmapData(paintingDataVO.width, paintingDataVO.height, true, 0)
+					scaled.draw(surface.color, new Matrix(paintingDataVO.width / surface.color.width, 0, 0, paintingDataVO.height / surface.color.height), null, null, null, true);
+					paintingDataVO.colorData = scaled.getPixels(scaled.rect);
+					scaled.dispose();
+				}
+				ImageDataUtils.ARGBtoBGRA(paintingDataVO.colorData, paintingDataVO.colorData.length, 0);
+				paintingDataVO.colorBackgroundOriginal = surface.color;
 			}
-			else
-				vo.colorData = ByteArrayUtil.createBlankColorData(vo.width, vo.height, 0xffffffff);
+			else {
+				paintingDataVO.colorData = ByteArrayUtil.createBlankColorData(paintingDataVO.width, paintingDataVO.height, 0xffffffff);
+			}
 
-			vo.normalSpecularOriginal = surface.normalSpecular;
+			paintingDataVO.surfaceNormalSpecularData = surface.normalSpecular;
+			paintingDataVO.surfaceID = surface.id;
 
-			requestOpenPaintingDataVOSignal.dispatch(vo);
+			requestOpenPaintingDataVOSignal.dispatch(paintingDataVO);
 		}
 	}
 }

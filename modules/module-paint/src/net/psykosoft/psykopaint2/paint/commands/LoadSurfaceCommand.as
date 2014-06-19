@@ -52,6 +52,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			context.detain( this );
 
 			_surfaceData = new SurfaceDataVO();
+			_surfaceData.id = canvasSurfaceSettingsModel.surfaceID;
 			_assetSize = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? "2048" : "1024";
 
 			if (paintMode == PaintMode.COLOR_MODE)
@@ -62,7 +63,8 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function loadColorAndNormalData():void
 		{
-			loadImage("/core-packaged/images/surfaces/canvas_color_" + canvasSurfaceSettingsModel.surfaceID + "_" + _assetSize + ".jpg", onColorLoaded, onColorError);
+			// the color data is always 1024x768
+			loadImage("/core-packaged/images/surfaces/canvas_color_" + canvasSurfaceSettingsModel.surfaceID + "_1024.jpg", onColorLoaded, onColorError);
 		}
 
 		private function onColorLoaded(event : Event) : void
@@ -71,9 +73,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			_loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, onColorError);
 
 			var bitmapData : BitmapData = Bitmap(_loader.content).bitmapData;
-			_surfaceData.color = bitmapData.getPixels(bitmapData.rect);
-			ImageDataUtils.ARGBtoBGRA(_surfaceData.color, bitmapData.width * bitmapData.height * 4, 0);
-			bitmapData.dispose();
+			_surfaceData.color = bitmapData;
 
 			loadNormalSpecular();
 		}

@@ -185,9 +185,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 					_pathManager.addPointDecorator(PointDecoratorFactory.fromXML(data.children()[i]));
 				}
 			}
-
 		}
-
+		
+		/** 
+		 * This sets the PathManager which is responsible for handling all 
+		 * SamplePoint related tasks. In particular it adds all the callback
+		 * methods that allow the PathManager to notify the brush wether
+		 * a new path has begun (onPathStart) or ended (onPathEnd) and to
+		 * to pass the SamplePoints accumulated during a stroke to the brush (onPathPoints)
+		 * as well as query color data from the Brush (onPickColor)
+		 * 
+		 * @param value PathManager. 
+		 */ 
 		public function set pathManager(value:PathManager):void
 		{
 			_pathManager = value;
@@ -204,6 +213,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			return _brushShape;
 		}
 
+		/** 
+		 * This changes the currently used BrushShape
+		 * A BrushShape contains the textures that are used
+		 * for the color and the specular layer.
+		 * Brush Shape textures can be split up into columns and rows
+		 * and thus contain multiple different sub-shapes
+		 * 
+		 * @param brushShape AbstractBrushShape. 
+		 */ 
 		protected function set brushShape(brushShape:AbstractBrushShape):void
 		{
 			if (_brushShape == brushShape) return;

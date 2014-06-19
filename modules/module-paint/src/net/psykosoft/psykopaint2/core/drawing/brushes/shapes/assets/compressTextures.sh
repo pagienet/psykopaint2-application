@@ -12,7 +12,10 @@
 #./png2atf -c p —q 10 -f 0  -i png/logo.png -o atf/ios/logo.atf
 #./png2atf -c d —q 10 -f 0  -i png/logo.png -o atf/desktop/logo.atf
 
-./png2atf —q 0 -i png/basic_circle2_hsp.png -o atf/basic_circle2_hsp.atf
+#./png2atf —q 0 -i png/basic_circle2_hsp.png -o atf/basic_circle2_hsp.atf
+# For height map you need uncompressed texture:
+./png2atf  —q 0 -i png/brushset8_hsp5.png -o atf/brushset8_hsp5.atf
+
 
 : '#for entry in png
 do

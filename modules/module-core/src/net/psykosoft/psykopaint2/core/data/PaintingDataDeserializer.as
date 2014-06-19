@@ -2,7 +2,11 @@ package net.psykosoft.psykopaint2.core.data
 {
 
 	import flash.display.BitmapData;
-
+	import flash.geom.Rectangle;
+	import flash.net.ObjectEncoding;
+	import flash.net.registerClassAlias;
+	import flash.utils.ByteArray;
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 
 	public class PaintingDataDeserializer
@@ -11,50 +15,51 @@ package net.psykosoft.psykopaint2.core.data
 		{
 		}
 
-		public function deserialize(bytes : TrackedByteArray) : PaintingDataVO
+		public function deserializePPP(bytes : TrackedByteArray) : PaintingDataVO
 		{
-			var vo : PaintingDataVO = new PaintingDataVO();
-
-			if (bytes.readUTF() != "DPP2")
-				throw "Incorrect file type";
-
-			// TODO: Make backwards compatible
-			if (bytes.readUTF() != PaintingFileUtils.PAINTING_FILE_VERSION)
-				throw "Incorrect file version";
-
-			// Read dimensions.
-			vo.width = bytes.readInt();
-			vo.height = bytes.readInt();
-
-			trace( this, "width: " + vo.width + ", height: " + vo.height );
-
-			var isPhotoPainting : Boolean = bytes.readBoolean();
-			trace( this, "isPhotoPainting",isPhotoPainting );
-			var hasColorBackgroundOriginal : Boolean = bytes.readBoolean();
-			trace( this, "hasColorBackgroundOriginal",hasColorBackgroundOriginal );
+			var fileBytes : ByteArray = bytes;
+			//fileBytes.uncompress(CompressionAlgorithm.DEFLATE);
+			fileBytes.objectEncoding = ObjectEncoding.AMF3;
+			registerClassAlias("net.psykosoft.psykopaint2.core.data.PPPFileData", PPPFileData);
+			var pppfileData : PPPFileData = PPPFileData(fileBytes.readObject()) ;
 			
-			vo.colorPalettes = PaintingFileUtils.readColorPalettes(bytes);
+			//CONVERT PPP FILE TO PAINTING DATA VO
+			var paintingDataVO : PaintingDataVO = new PaintingDataVO();
+			// NO NEEDED paintingDataVO.version= pppfileData.version;
+			paintingDataVO.colorData = pppfileData.colorData;
+			paintingDataVO.normalSpecularData = pppfileData.normalSpecularData;
+			paintingDataVO.sourceImageData = pppfileData.sourceImageData;
 			
-			// Read painting surfaces.
-			vo.colorData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
-			vo.normalSpecularData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
-			var temp : TrackedByteArray = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
-			vo.normalSpecularOriginal = new BitmapData(vo.width, vo.height, false);
-			vo.normalSpecularOriginal.setPixels(vo.normalSpecularOriginal.rect, temp);
-			temp.clear();
+			paintingDataVO.surfaceID = pppfileData.surfaceID;
+			paintingDataVO.surfaceNormalSpecularData = new BitmapData(pppfileData.width,pppfileData.height,false);
+			paintingDataVO.surfaceNormalSpecularData.setPixels(paintingDataVO.surfaceNormalSpecularData.rect, pppfileData.surfaceNormalSpecularData);
 
-			if (isPhotoPainting)
+			if (pppfileData.colorBackgroundOriginal) {
+				paintingDataVO.colorBackgroundOriginal = new BitmapData(1024, 768, false);
+				paintingDataVO.colorBackgroundOriginal.setPixels(paintingDataVO.colorBackgroundOriginal.rect, pppfileData.colorBackgroundOriginal);
+			}
+			
+			paintingDataVO.width= pppfileData.width;
+			paintingDataVO.height= pppfileData.height;
+			paintingDataVO.loadedFileName= pppfileData.loadedFileName;
+			
+			//AMF3 doesn't undertand vectors. So we have to convert from array to vector
+			paintingDataVO.colorPalettes =new Vector.<Vector.<uint>>();
+			for (var i:int = 0; i < pppfileData.colorPalettes.length; i++) 
 			{
-				vo.sourceImageData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
-			}
-			if (hasColorBackgroundOriginal){
-				vo.colorBackgroundOriginal = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
+				paintingDataVO.colorPalettes[i] = new Vector.<uint>();
+				for (var j:int = 0; j < pppfileData.colorPalettes[i].length; j++) 
+				{
+					paintingDataVO.colorPalettes[i][j] = pppfileData.colorPalettes[i][j];
+				}
 			}
 			
-			//Hopefully this is okay to do here:
-			bytes.clear();
+			paintingDataVO.isPhotoPainting = pppfileData.isPhotoPainting;
 			
-			return vo;
+			//NO NEED FOR YOU ANYMORE LITTLE GUY, GO GET GARBAGE COLLECTED:
+			pppfileData = null;
+			
+			return paintingDataVO;
 		}
 
 	}

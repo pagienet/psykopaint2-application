@@ -11,6 +11,10 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyProductPriceSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
+	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 
 	public class InAppPurchaseManager
 	{
@@ -179,6 +183,8 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		/** Example of how to purchase a product */
 		public function purchaseProduct( productID:String ):void
 		{
+			
+			
 			if (!StoreKit.isSupported())
 			{
 				notifyPurchaseStatusSignal.dispatch(productID,STATUS_STORE_UNAVAILABLE);
@@ -198,11 +204,13 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			}
 			
 			StoreKit.storeKit.purchaseProduct(productID);
+			
 		}
 		
 		/** Example of how to restore transactions */
 		public function restoreTransactions():void
 		{
+			
 			// apple reccommends you provide a button in your ui to restore purchases,
 			// for users who mightve uninstalled then reinstalled your application, etc.
 			trace("InAppPurchaseManager: requesting transaction restore...");
@@ -271,7 +279,7 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			
 			notifyPurchaseStatusSignal.dispatch(e.productId,STATUS_PURCHASE_COMPLETE);
 			
-				
+			
 		}
 		
 		/** A purchase has failed */
@@ -279,13 +287,16 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		{
 			trace("InAppPurchaseManager: FAILED purchase="+e.productId+",t="+e.transactionId+",o="+e.originalTransactionId);
 			notifyPurchaseStatusSignal.dispatch(e.productId,STATUS_PURCHASE_FAILED);
+			
 		}
 		
 		/** A purchase was cancelled */
 		private function onPurchaseUserCancelled(e:StoreKitEvent):void
 		{
+			
 			trace("InAppPurchaseManager: CANCELLED purchase="+e.productId+","+e.transactionId);
 			notifyPurchaseStatusSignal.dispatch(e.productId,STATUS_PURCHASE_CANCELLED);
+			
 		}
 		
 		/** All transactions have been restored */
@@ -294,6 +305,7 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			trace("InAppPurchaseManager: All previous transactions restored!");
 		//	updateInventoryMessage();
 			notifyPurchaseStatusSignal.dispatch(null,STATUS_PURCHASE_RESTORED);
+			
 		}
 		
 		/** Transaction restore has failed */
@@ -301,6 +313,7 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		{
 			trace("InAppPurchaseManager: an error occurred in restore purchases:"+e.text);	
 			notifyPurchaseStatusSignal.dispatch(null,STATUS_PURCHASE_RESTORE_FAILED);
+			
 		}
 		
 		
