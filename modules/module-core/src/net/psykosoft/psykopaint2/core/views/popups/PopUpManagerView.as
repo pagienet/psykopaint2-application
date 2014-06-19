@@ -106,7 +106,7 @@ package net.psykosoft.psykopaint2.core.views.popups
 			_popUp.onGoingToAnimateOut();
 			TweenLite.killTweensOf( popUp );
 			popUp.x = 0;
-			TweenLite.to( popUp, 0.0, { x: 1024, delay: 0.0, ease: Strong.easeIn, onComplete: onHidePopUpComplete } );
+			TweenLite.to( popUp, 0.5, { x: 1024, delay: 0.0, ease: Strong.easeIn, onComplete: onHidePopUpComplete } );
 		}
 
 		private function onHidePopUpComplete():void {

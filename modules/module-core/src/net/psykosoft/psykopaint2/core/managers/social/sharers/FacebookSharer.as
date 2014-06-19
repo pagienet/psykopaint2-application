@@ -77,12 +77,5 @@ public class FacebookSharer extends SharerBase
 		_manager.goViral.removeEventListener(GVFacebookEvent.FB_REQUEST_FAILED, onFaceBookRequestFailedEvent);
 		completedSignal.dispatch();
 	}
-	
-	override public function dispose():void{
-		super.dispose();
-		_shareMsg = null;
-		_shareBmd.dispose();
-		_shareBmd = null;
-	}
 }
 }

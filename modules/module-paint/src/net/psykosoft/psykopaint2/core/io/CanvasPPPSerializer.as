@@ -115,7 +115,7 @@ package net.psykosoft.psykopaint2.core.io
 			var surfacebytes:ByteArray = new ByteArray();
 			var bitmapData : BitmapData = _canvas.getNormalSpecularOriginal();
 			bitmapData.copyPixelsToByteArray(bitmapData.rect, surfacebytes);
-			_PPPFileData.surfaceNormalSpecularData = surfacebytes;
+			_PPPFileData.surfaceNormalSpecularData =surfacebytes ;
 			
 				
 			//	.setPixels(paintingDataVO.surfaceNormalSpecularData.rect, surfaceNormalSpecularDataBytes);
@@ -126,10 +126,10 @@ package net.psykosoft.psykopaint2.core.io
 			}
 			if ((_canvas.getColorBackgroundOriginal() != null))
 			{
-				var bitmapData : BitmapData = _canvas.getColorBackgroundOriginal();
-				_PPPFileData.colorBackgroundOriginal = bitmapData.getPixels(bitmapData.rect);
+				_PPPFileData.colorBackgroundOriginal = _canvas.getColorBackgroundOriginal();
 			}
-
+			
+			
 			_stage = null;
 			_canvas = null;
 			_context3D = null;
@@ -168,7 +168,7 @@ package net.psykosoft.psykopaint2.core.io
 				size += canvasBytes;
 			
 			if (_canvas.getColorBackgroundOriginal() != null)
-				size += 1024 * 768 * 4;	// color background original is always 1024x768 for now
+				size += canvasBytes;
 			
 			//TODO: calculate length of color palettes here
 			

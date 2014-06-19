@@ -138,9 +138,6 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 				requestHidePopUpSignal.dispatch();
 				notifyPopUpRemovedSignal.addOnce(onPublishPopUpRemoved);
 				notifySaveToServerSucceededSignal.dispatch();
-				
-				
-				
 			}
 		}
 

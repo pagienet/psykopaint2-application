@@ -13,32 +13,13 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PARAMETER_A_ANGLE_STEP:String = "Angle Step";
 		public static const PARAMETER_A_ANGLE_OFFSET:String = "Angle Offset";
 		
-		/**
-		 * The Grid Decorator allows to snap the points to a given grid
-		 * and/or snap the rotations to limited angles
-		 */
-		//"Cell Width" - NumberValue
+		
 		public var param_stepX:PsykoParameter;
-		
-		//"Cell Height" - NumberValue
 		public var param_stepY:PsykoParameter;
-		
-		//"Column Offset" - NumberValue
-		//allows to shift the columns about a value for each subsequent row
 		public var param_offsetCol:PsykoParameter;
-		
-		//"Row Offset" - NumberValue
-		//allows to shift the rows about a value for each subsequent column
 		public var param_offsetRow:PsykoParameter;
-		
-		//"Angle Step" - AngleValue
-		//limits the rotation of the SamplePoints to given steps
 		public var param_angleStep:PsykoParameter;
-		
-		//"Angle Offset" - AngleValue
-		//allows to add a rotation that is applied after the limiting
 		public var param_angleOffset:PsykoParameter;
-		
 		
 		public function GridDecorator( stepX:Number = 64, stepY:Number = 64, angleStep:Number = -1, angleOffset:Number = 0,  offsetCol:Number = 0, offsetRow:Number = 0)
 		{

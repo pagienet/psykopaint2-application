@@ -10,7 +10,6 @@ package net.psykosoft.psykopaint2.app.states.transitions
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestRemoveHomeModuleDisplaySignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
@@ -44,10 +43,6 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		[Inject]
 		public var requestDestroyHomeModuleSignal : RequestDestroyHomeModuleSignal;
 
-		[Inject]
-		public var requestRemoveHomeModuleDisplaySignal : RequestRemoveHomeModuleDisplaySignal;
-		
-		
 		[Inject]
 		public var notifyCanvasZoomedToDefaultViewSignal:NotifyCanvasZoomedToDefaultViewSignal;
 		
@@ -88,9 +83,6 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		private function onZoomComplete() : void
 		{
 			requestDestroyHomeModuleSignal.dispatch();
-			//REMOVE DISPLAY OF HOME HERE
-			requestRemoveHomeModuleDisplaySignal.dispatch();
-			
 			stateMachine.setActiveState(paintState);
 			notifyToggleLoadingMessageSignal.dispatch(false);
 		}

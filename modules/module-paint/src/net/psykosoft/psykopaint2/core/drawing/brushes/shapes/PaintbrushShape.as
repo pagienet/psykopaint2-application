@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		[Embed(source="assets/atf/brushset6.atf", mimeType="application/octet-stream")]
 		protected var SourceMap:Class;
 		
-		[Embed(source="assets/atf/brushset6_hsp.atf", mimeType="application/octet-stream")]
+		[Embed(source="assets/atf/brushset6.atf", mimeType="application/octet-stream")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function PaintbrushShape(context3D : Context3D)

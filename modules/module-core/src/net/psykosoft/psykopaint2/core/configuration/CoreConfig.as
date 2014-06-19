@@ -96,8 +96,7 @@ import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestUpdateErrorPopUpSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
-	import net.psykosoft.psykopaint2.core.signals.ToggleDepthOfFieldSignal;
-	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
+import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
 import net.psykosoft.psykopaint2.core.views.blocker.BlockerView;
 import net.psykosoft.psykopaint2.core.views.blocker.BlockerViewMediator;
@@ -285,7 +284,6 @@ public class CoreConfig
 			_injector.map( NotifyHomeDistanceToSectionChangedSignal ).asSingleton();
 			// services
 			_injector.map( NotifyAMFConnectionFailed ).asSingleton();
-			_injector.map( ToggleDepthOfFieldSignal ).asSingleton();
 		}
 
 		// -----------------------

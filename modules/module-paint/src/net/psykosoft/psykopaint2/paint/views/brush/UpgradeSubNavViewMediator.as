@@ -12,11 +12,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyTogglePaintingEnableSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateErrorPopUpSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 
@@ -48,15 +46,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		
 		[Inject]
 		public var requestUpdateErrorPopUpSignal:RequestUpdateErrorPopUpSignal;
-		
-		
-		[Inject]
-		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
-		
-		[Inject]
-		public var requestHidePopUpSignal:RequestHidePopUpSignal;
-		
-		
 		
 		[Inject]
 		public var brushKitManager : BrushKitManager;
@@ -129,21 +118,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					break;
 
 				case UpgradeSubNavView.ID_BUY_PACKAGE:
-					//SHOW WAITING POPUP
-					requestShowPopUpSignal.dispatch(PopUpType.MESSAGE);
-					requestUpdateMessagePopUpSignal.dispatch( "Contacting Apple's store" ,"We're getting the product in stock. Back in a sec...");
-					
 					purchaseManager.purchaseProduct(packageProductID);
-					
 					
 					break;
 				case UpgradeSubNavView.ID_BUY_SINGLE:
-					//SHOW WAITING POPUP
-					requestShowPopUpSignal.dispatch(PopUpType.MESSAGE);
-					requestUpdateMessagePopUpSignal.dispatch( "Contacting Apple's store" ,"We're getting the product in stock. Back in a sec...");
-					
 					purchaseManager.purchaseProduct(singleProductID);
-					
 					
 					break;
 			}
@@ -154,15 +133,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			switch ( status )
 			{
 				case InAppPurchaseManager.STATUS_PURCHASE_CANCELLED:
-					requestHidePopUpSignal.dispatch();
 					requestUndoSignal.dispatch();
 					canvasHistoryModel.clearHistory();	// make sure there is no trickery possible
-					
-
 				break;
 				
 				case InAppPurchaseManager.STATUS_PURCHASE_FAILED:
-					requestHidePopUpSignal.dispatch();
 					requestUndoSignal.dispatch();
 					canvasHistoryModel.clearHistory();	// make sure there is no trickery possible
 					
@@ -172,10 +147,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				
 				case InAppPurchaseManager.STATUS_PURCHASE_COMPLETE:
 				case InAppPurchaseManager.STATUS_PURCHASE_NOT_REQUIRED:
-					requestHidePopUpSignal.dispatch();
 					//as long as we have a single buy in product this is okayish:
 					userConfig.userConfig.markProductAsPurchased(purchaseObjectID);
-					
 					break;
 				
 				case InAppPurchaseManager.STATUS_STORE_UNAVAILABLE:
@@ -183,7 +156,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					//for testing on desktop you always get the brushes:
 					if ( !CoreSettings.RUNNING_ON_iPAD)  
 					{
-						requestHidePopUpSignal.dispatch();
 						userConfig.userConfig.markProductAsPurchased(purchaseObjectID);
 					} else {
 						requestUndoSignal.dispatch();

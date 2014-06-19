@@ -13,7 +13,6 @@ package net.psykosoft.psykopaint2.core.io
 		{
 		}
 
-		// TODO: ALL THE COLOR BACKGROUND AND NORMAL SPECULAR ORIGINAL STUFF SHOULD BE REMOVED, JUST PASS AN ID AND LET CANVASMODEL HANDLE IT
 		public function importPainting(canvas : CanvasModel, paintingData : PaintingDataVO) : void
 		{
 			if (canvas.width != paintingData.width || canvas.height != paintingData.height)
@@ -25,13 +24,10 @@ package net.psykosoft.psykopaint2.core.io
 				//Not required since it gets already disposed in setSourceBitmapData
 				//sourceBmd.dispose();
 			}
-			else{
+			else
 			// doing this to force creation of PyramidMap
 			// TODO: Simply do not do this by allowing pyramid map not to exist
-				canvas.setSourceBitmapData(null);}
-
-			if (paintingData.colorBackgroundOriginal) {
-			}
+				canvas.setSourceBitmapData(null);
 
 			canvas.colorTexture.uploadFromByteArray(paintingData.colorData, 0);
 
@@ -42,14 +38,15 @@ package net.psykosoft.psykopaint2.core.io
 				canvas.normalSpecularMap.uploadFromBitmapData(paintingData.surfaceNormalSpecularData);
 				
 			var newSurfacedataVO:SurfaceDataVO = new SurfaceDataVO();
-			// THIS WILL EVENTUALLY DISAPPEAR, ONLY ID WILL BE PASSED TO CANVAS
 			newSurfacedataVO.color = paintingData.colorBackgroundOriginal;
 			newSurfacedataVO.id = paintingData.surfaceID;
+			//HERE NEED TO GET THE SURFACE FROM SOMEWHERE
 			newSurfacedataVO.normalSpecular = paintingData.surfaceNormalSpecularData;
 			
+			
 			canvas.setSurfaceDataVO(newSurfacedataVO);
+			
 
-			// prevent these from being disposed since they're now owned by canvas
 			paintingData.surfaceNormalSpecularData = null;
 			paintingData.colorBackgroundOriginal = null;
 		}

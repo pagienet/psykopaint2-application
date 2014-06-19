@@ -205,9 +205,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.scene.addChild(_canvas);
 		}
 
-		public function get canvasScenePosition() : Vector3D
+		public function get canvasPosition() : Vector3D
 		{
-			return _canvas.scenePosition;
+			return _canvas.position;
 		}
 
 		private function initMaterial() : void

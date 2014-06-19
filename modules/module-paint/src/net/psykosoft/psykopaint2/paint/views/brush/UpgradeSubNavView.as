@@ -73,7 +73,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			btn.removeEventListener(Event.ADDED_TO_STAGE, onSingleBtnAddedToStage);
 			var upgradeSpr:Sprite = btn.icon.getChildByName("upgrade") as Sprite;
 			var lbl:TextField = upgradeSpr.getChildByName("upgradePrice_txt") as TextField;
-			lbl.text = _singlePrice;
+			lbl.text = _packagePrice;
 		}
 		
 		public function get singlePrice():String

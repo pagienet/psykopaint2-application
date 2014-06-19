@@ -386,9 +386,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				PsykoSocket.sendString( '<msg src="PaintModule.activate" />' );
 			}
 			
-			if ( !_activeBrushKit ) {activeBrushKitName = _availableBrushKitNames[0];}
-			//else {
-			//activateBrushKit();}
+			if ( !_activeBrushKit ) activeBrushKitName = _availableBrushKitNames[0];
+			activateBrushKit();
 			paintSettingsModel.setDefaultValues();
 			//notifyToggleLoadingMessageSignal.dispatch(false);
 		}
@@ -536,6 +535,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			return _availableBrushKitNames;
 		}
 
+		//TODO: find out why this is called twice at initialization
 		public function getCurrentBrushParameters( uiOnlyParameters:Boolean = true):ParameterSetVO {
 			trace( this, "getCurrentBrushParameters() - active brush kit name: " + _activeBrushKitName  );
 			return _activeBrushKit.getParameterSet( uiOnlyParameters );

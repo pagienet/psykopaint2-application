@@ -3,11 +3,25 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
+	import flash.display3D.Context3DTextureFormat;
+	import flash.display3D.textures.RectangleTexture;
+	import flash.display3D.textures.Texture;
 	import flash.display3D.textures.TextureBase;
-	
+	import flash.geom.Rectangle;
+	import flash.geom.Rectangle;
+
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedRectTexture;
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
+
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
+	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
+	import net.psykosoft.psykopaint2.core.resources.TextureProxy;
+	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 
 	public class CanvasSnapShot
 	{

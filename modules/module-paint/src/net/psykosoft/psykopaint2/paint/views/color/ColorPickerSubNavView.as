@@ -37,7 +37,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public var colorPalette:ColorPalette;
 		public var photoStyleUI:StyleUI;
 		public var undoBtn:UndoBtn;
-		public var clearBtn:ClearBtn;
 		
 		public var notifyChangePipetteColorSignal:NotifyChangePipetteColorSignal;
 		public var renderer:CanvasRenderer;
@@ -82,7 +81,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 			//photoStyleUI.y = brushStyleUI.y;
 			photoStyleUI.setup(3,4);
 		//	addChild(photoStyleUI);
-			clearBtn.visible=false;
 			
 			//colorStyleParameter = new PsykoParameter( PsykoParameter.IconListParameter,"Color Style",0,["No Style","Contrast Style","Black and White Style","Supersaturated Style","Mona Lisa Style","William Turner Style","Miro Style","Picasso Style"]);
 			
@@ -174,7 +172,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public function updateContextUI():void
 		{
 			colorPalette.autoColor = ( _userPaintSettings.colorMode == PaintMode.PHOTO_MODE);
-			clearBtn.visible=false;
 			if ( _userPaintSettings.colorMode == PaintMode.COLOR_MODE )
 			{
 				hslSliders.visible = true;
@@ -198,7 +195,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 				photoStyleUI.showStyleUI(false,false,true);
 				colorPalette.visible = true;
 				brushStyleUI.showStyleUI( false,true,true );
-				clearBtn.visible=true;
 			}
 		}
 		

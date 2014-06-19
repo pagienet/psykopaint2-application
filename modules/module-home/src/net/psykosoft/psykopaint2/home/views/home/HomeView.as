@@ -1,9 +1,5 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
-	import away3d.events.Object3DEvent;
-	import away3d.filters.DepthOfFieldFilter3D;
-	import away3d.filters.SmartDepthOfFieldFilter3D;
-
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
 	
@@ -13,14 +9,15 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.geom.Matrix3D;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
-
+	import flash.net.SharedObject;
+	
 	import away3d.Away3D;
 	import away3d.cameras.Camera3D;
 	import away3d.cameras.lenses.PerspectiveLens;
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.lights.PointLight;
-
+	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.home.views.book.BookView;
@@ -57,7 +54,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _camera : Camera3D;
 		private var _scrollingEnabled : Boolean = true;
 		private var _animateToTarget : Boolean = false;
-		private var _depthOfFieldFilter : SmartDepthOfFieldFilter3D;
+		
+		
 
 		public function HomeView()
 		{
@@ -164,6 +162,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			addChild(_roomView);
 			addChild(_galleryView);
 			addChild(_bookView);
+			
 		}
 
 		private function initView() : void
@@ -174,13 +173,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.rethrowEvents = false;
 			_view.width = stage.stageWidth;
 			_view.height = stage.stageHeight;
-
-			_depthOfFieldFilter = new SmartDepthOfFieldFilter3D(10 * CoreSettings.GLOBAL_SCALING, 10 * CoreSettings.GLOBAL_SCALING, CoreSettings.GLOBAL_SCALING);
-			_depthOfFieldFilter.smartRange = 220;
-			_depthOfFieldFilter.range = 100;
-
+			
 			stage.addChildAt( _view, 0 );
-
+			
 		}
 
 		private function initCamera() : void
@@ -188,7 +183,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			_camera = _view.camera;
 			_camera.lens.near = 10;
 			_camera.lens.far = 1000;
-			_camera.addEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraMoved);
 			PerspectiveLens( _view.camera.lens ).fieldOfView = 60;
 			initCameraIntroPosition();
 
@@ -199,16 +193,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			_cameraController.registerTargetPosition(EASEL, EaselView.CAMERA_POSITION);
 			_cameraController.registerTargetPosition(HOME, new Vector3D(-271, -1.14, 450));
 			_cameraController.registerTargetPosition(GALLERY, GalleryView.CAMERA_FAR_POSITION);
-			//_cameraController.registerTargetPosition(CROP, new Vector3D(271, -40, 170));
-			_cameraController.registerTargetPosition(CROP, EaselView.CAMERA_POSITION);
+			_cameraController.registerTargetPosition(CROP, new Vector3D(271, -40, 170));
 			//_cameraController.start();
 			_cameraController.interactionRect = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight - 150*CoreSettings.GLOBAL_SCALING);
-		}
-
-		private function onCameraMoved(event:Object3DEvent):void
-		{
-			if (_depthOfFieldFilter && _easelView)
-				_depthOfFieldFilter.focusDistance = Math.abs(_easelView.canvasScenePosition.z - _camera.scenePosition.z) + 50;
 		}
 
 		private function initCameraIntroPosition():void
@@ -220,6 +207,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			_camera.lookAt(new Vector3D(-266.82, -1.14, -353.10));
 		}
 
+		
+		
 		private function onActivePositionChanged() : void
 		{
 			activeSectionChanged.dispatch(_cameraController.activeTargetPositionID);
@@ -248,7 +237,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function destroyScene() : void
 		{
 			_view.scene.removeChild(_atelier);
-			_camera.removeEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraMoved);
 			_atelier.dispose();
 			_light.dispose();
 			_view.dispose();
@@ -261,8 +249,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view = null;
 			_lightController = null;
 			_cameraController = null;
-
-			_depthOfFieldFilter.dispose();
 		}
 
 		private function destroySubViews() : void
@@ -272,14 +258,11 @@ package net.psykosoft.psykopaint2.home.views.home
 			
 			removeChild(_roomView);
 			
-			//MATHIEU: I THINK WE COULD DISPOSE OF THE GALLERY ALREADY IF WE'RE IN PAINT VIEW
 			_galleryView.dispose();
 			removeChild(_galleryView);
 			
-			//THE BOOK IS NOT DISPOSED HERE: 
 			//_bookView.dispose();
 			//removeChild(_bookView);
-			
 			
 			_easelView = null;
 			_roomView = null;
@@ -321,11 +304,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function activateCameraControl():void
 		{
 			_cameraController.start();
-		}
-
-		public function setDepthOfFieldEnabled(state : Boolean):void
-		{
-			_view.filters3d = state? [ _depthOfFieldFilter ] : [];
+			
 		}
 	}
 }

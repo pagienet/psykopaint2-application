@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSavePaintingToServerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
@@ -23,8 +24,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var view:CanvasSubNavView;
 
-		//[Inject]
-		//public var requestClearCanvasSignal:RequestClearCanvasSignal;
+		[Inject]
+		public var requestClearCanvasSignal:RequestClearCanvasSignal;
 
 		[Inject]
 		public var requestCanvasExportSignal:RequestCanvasExportSignal;
@@ -82,9 +83,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					requestClosePaintViewSignal.dispatch(false);
 					break;
 
-				/*case CanvasSubNavView.ID_CLEAR:
+				case CanvasSubNavView.ID_CLEAR:
 					requestClearCanvasSignal.dispatch();
-					break;*/
+					break;
 
 				case CanvasSubNavView.ID_DOWNLOAD:
 					requestCanvasExportSignal.dispatch();

@@ -46,63 +46,24 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		
 		private const _applyArray:Array = [0,0,1,1];
 		
-		//"Glossiness" - NumberValue
 		public var param_glossiness:PsykoParameter;
-		
-		//"Bumpiness" - NumberValue
 		public var param_bumpiness:PsykoParameter;
-		
-		//"Bumpiness Range" - NumberValue
-		//sets a range of how the bumpiness will change based on the param_mappingMode
 		public var param_bumpinessRange:PsykoParameter;
-		
-		//"Bump Influence" - NumberValue
 		public var param_bumpInfluence:PsykoParameter;
-		
-		//"Mode" - StringListValue
-	    //Sets which factor influences the bumpiness, the following indices are available:
-		//0 - "Fixed" - uses a fixed value of 0.5
-		//1 - "Speed" - painting speed
-		//2 - "Pressure" - pen pressure
-		//3 - "Automatic" - if pressure is available it will be used, if not speed will be used
-		//4 - "Multiply" - the incoming bump value will be mutiplied with a random value within the range
-		//5 - "Add" - the incoming bump value will be added to a random value within the range
-		//6 - "Random" - a random value within the range
 		public var param_mappingMode:PsykoParameter;
-		
-		//"Factor" - NumberRangeValue
-		//brings the incoming bumpiness value into a given range
 		public var param_mappingFactor:PsykoParameter;
-		
-		//"Mapping" - StringListValue
-		//applies a tweening mapping function on the incoming bump values to shape 
 		public var param_mappingFunction:PsykoParameter;
-		
-		//"Invert Mapping" - Boolean Value
-		//if true inverts the mapping function big values -> small result, small values -> big result
 		public var param_invertMapping:PsykoParameter;
-		
-		//"No Bump Probability" - NumberValue
-		//sets a chance that a given point will cause no bump at all
 		public var param_noBumpProbability:PsykoParameter;
-		
-		//"Maximum Speed" - NumberValue
-		//sets the maximum expected drawing speed, used to tweak speed based results to the right range
 		public var param_maxSpeed:PsykoParameter;
-		
-		// "Min Bump value" - NumberValue
-		//used to clamp the final bump value to a limited range
 		private var param_minBump:PsykoParameter;
-		
-		// "Max Bump value" - NumberValue
-		//used to clamp the final bump value to a limited range
 		private var param_maxBump:PsykoParameter;
 		
 		public function BumpDecorator()
 		{
 			super();
 			
-			param_mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Fixed","Speed","Pressure","Automatic","Multiply","Add","Random"]);
+			param_mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Fixed","Speed","Pressure","Automatic","Multiply","Add","Random","Random 2"]);
 			param_mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_FACTOR,0,1,0,1);
 			param_mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MAPPING,0,mappingFunctionLabels);
 			param_invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_INVERT_MAPPING,0);

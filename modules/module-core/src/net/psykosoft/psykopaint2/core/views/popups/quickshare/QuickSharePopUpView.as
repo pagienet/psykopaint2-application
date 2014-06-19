@@ -107,7 +107,7 @@ public class QuickSharePopUpView extends PopUpViewBase
 		TweenLite.to( rightSide, 0.15, { x: 1024, y: 790, ease: Strong.easeOut } );
 	}
 
-	public function animateSideBtnsOut():void {
+	private function animateSideBtnsOut():void {
 		TweenLite.to( rightSide, 0.15, { x: 1024 + rightSide.width, y: 768 + rightSide.height, ease: Strong.easeIn, onComplete: onAnimateOutComplete, onCompleteParams: [ rightSide ] } );
 	}
 

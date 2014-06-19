@@ -102,8 +102,9 @@ package net.psykosoft.psykopaint2.app.states
 			ConsoleView.instance.logMemory();
 			
 			
-			//THIS BLOB IS SAVING TO CAMERA ROLL
-			/*var bitmapData:BitmapData = canvasRenderer.renderToBitmapData();
+			//MATHIEU: WE SAVE THE OUTPUT OF THE IMAGE AS WE SAVE FOR NOW
+			var bitmapData:BitmapData = canvasRenderer.renderToBitmapData();
+			
 			
 			// Write bmd
 			if( CoreSettings.RUNNING_ON_iPAD ) {
@@ -113,7 +114,7 @@ package net.psykosoft.psykopaint2.app.states
 			else {
 				var desktopImageSaveUtil:DesktopImageSaveUtil = new DesktopImageSaveUtil();
 				desktopImageSaveUtil.saveImageToDesktop( bitmapData, onWriteComplete );
-			}*/
+			}
 			
 			
 			notifyPaintingSavedSignal.addOnce( onPaintingSaved );

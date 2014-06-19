@@ -15,13 +15,67 @@ package net.psykosoft.psykopaint2.core.data
 		{
 		}
 
+		public function deserializeDPP(bytes : TrackedByteArray) : PaintingDataVO
+		{
+			var paintingDataVO : PaintingDataVO = new PaintingDataVO();
+			
+			if (bytes.readUTF() != "DPP2")
+				throw "Incorrect file type";
+			
+			// TODO: Make backwards compatible
+			if (bytes.readUTF() != PaintingFileUtils.PAINTING_FILE_VERSION)
+				throw "Incorrect file version";
+			
+			// Read dimensions.
+			paintingDataVO.width = bytes.readInt();
+			paintingDataVO.height = bytes.readInt();
+			
+			trace( this, "width: " + paintingDataVO.width + ", height: " + paintingDataVO.height );
+			
+			var isPhotoPainting : Boolean = bytes.readBoolean();
+			trace( this, "isPhotoPainting",isPhotoPainting );
+			var hasColorBackgroundOriginal : Boolean = bytes.readBoolean();
+			trace( this, "hasColorBackgroundOriginal",hasColorBackgroundOriginal );
+			
+			paintingDataVO.colorPalettes = PaintingFileUtils.readColorPalettes(bytes);
+			
+			// Read painting surfaces.
+			paintingDataVO.colorData = PaintingFileUtils.decodeImage(bytes, paintingDataVO.width, paintingDataVO.height);
+			paintingDataVO.normalSpecularData = PaintingFileUtils.decodeImage(bytes, paintingDataVO.width, paintingDataVO.height);
+			var surfaceNormalSpecularDataBytes : TrackedByteArray = PaintingFileUtils.decodeImage(bytes, paintingDataVO.width, paintingDataVO.height);
+			
+			//MATHIEU: THIS IS WHERE WE NEED TO FETCH THE ID OF THE SURFACE INSTEAD OF THE BITMAPDATA
+			//TODO
+			paintingDataVO.surfaceNormalSpecularData = new BitmapData(paintingDataVO.width, paintingDataVO.height, false);
+			paintingDataVO.surfaceNormalSpecularData.setPixels(paintingDataVO.surfaceNormalSpecularData.rect, surfaceNormalSpecularDataBytes);
+			surfaceNormalSpecularDataBytes.clear();
+			
+			if (isPhotoPainting)
+			{
+				paintingDataVO.sourceImageData = PaintingFileUtils.decodeImage(bytes, paintingDataVO.width, paintingDataVO.height);
+			}
+			if (hasColorBackgroundOriginal)
+			{
+				paintingDataVO.colorBackgroundOriginal = PaintingFileUtils.decodeImage(bytes, paintingDataVO.width, paintingDataVO.height);
+			}
+			
+			//Hopefully this is okay to do here:
+			bytes.clear();
+			
+			return paintingDataVO;
+		}
+		
+		
 		public function deserializePPP(bytes : TrackedByteArray) : PaintingDataVO
 		{
+			var pppfileData : PPPFileData = new PPPFileData();
+			
+		
 			var fileBytes : ByteArray = bytes;
 			//fileBytes.uncompress(CompressionAlgorithm.DEFLATE);
 			fileBytes.objectEncoding = ObjectEncoding.AMF3;
 			registerClassAlias("net.psykosoft.psykopaint2.core.data.PPPFileData", PPPFileData);
-			var pppfileData : PPPFileData = PPPFileData(fileBytes.readObject()) ;
+			pppfileData = PPPFileData(fileBytes.readObject()) ;
 			
 			//CONVERT PPP FILE TO PAINTING DATA VO
 			var paintingDataVO : PaintingDataVO = new PaintingDataVO();
@@ -31,13 +85,10 @@ package net.psykosoft.psykopaint2.core.data
 			paintingDataVO.sourceImageData = pppfileData.sourceImageData;
 			
 			paintingDataVO.surfaceID = pppfileData.surfaceID;
-			paintingDataVO.surfaceNormalSpecularData = new BitmapData(pppfileData.width,pppfileData.height,false);
-			paintingDataVO.surfaceNormalSpecularData.setPixels(paintingDataVO.surfaceNormalSpecularData.rect, pppfileData.surfaceNormalSpecularData);
-
-			if (pppfileData.colorBackgroundOriginal) {
-				paintingDataVO.colorBackgroundOriginal = new BitmapData(1024, 768, false);
-				paintingDataVO.colorBackgroundOriginal.setPixels(paintingDataVO.colorBackgroundOriginal.rect, pppfileData.colorBackgroundOriginal);
-			}
+			var newBmd:BitmapData = new BitmapData(pppfileData.width,pppfileData.height,true,0xFFFFFFFF);
+			newBmd.setPixels(new Rectangle(0,0,pppfileData.width,pppfileData.height), pppfileData.surfaceNormalSpecularData);
+			paintingDataVO.surfaceNormalSpecularData = newBmd;
+			paintingDataVO.colorBackgroundOriginal = pppfileData.colorBackgroundOriginal;
 			
 			paintingDataVO.width= pppfileData.width;
 			paintingDataVO.height= pppfileData.height;

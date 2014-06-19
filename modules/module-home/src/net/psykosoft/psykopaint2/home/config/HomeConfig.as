@@ -1,18 +1,14 @@
 package net.psykosoft.psykopaint2.home.config
 {
 
-	import net.psykosoft.psykopaint2.core.commands.DisposePaintingDataCommand;
-	import net.psykosoft.psykopaint2.core.models.CanvasSurfaceSettingsModel;
 	import net.psykosoft.psykopaint2.home.commands.LoadPaintingDataFileCommand;
 	import net.psykosoft.psykopaint2.home.commands.LoadSurfacePreviewCommand;
 	import net.psykosoft.psykopaint2.home.commands.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.home.commands.StartNewColorPaintingCommand;
 	import net.psykosoft.psykopaint2.home.commands.load.SetUpHomeModuleCommand;
-	import net.psykosoft.psykopaint2.home.commands.unload.DestroyBookCommand;
 	import net.psykosoft.psykopaint2.home.commands.unload.DestroyHomeModuleCommand;
-	import net.psykosoft.psykopaint2.home.commands.unload.DisconnectHomeModuleShakeAndBakeCommand;
-	import net.psykosoft.psykopaint2.home.commands.unload.RemoveHomeModuleDisplayCommand;
 	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
+	import net.psykosoft.psykopaint2.core.models.CanvasSurfaceSettingsModel;
 	import net.psykosoft.psykopaint2.home.model.WallpaperModel;
 	import net.psykosoft.psykopaint2.home.signals.NotifyCameraFlipRequest;
 	import net.psykosoft.psykopaint2.home.signals.NotifyCameraSnapshotRequest;
@@ -21,15 +17,11 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewDeleteModeChangedSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewIntroZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestDestroyBookSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestDisconnectHomeModuleShakeAndBakeSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestDisposePaintingDataSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestRemoveHomeModuleDisplaySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
@@ -154,14 +146,8 @@ package net.psykosoft.psykopaint2.home.config
 			_commandMap.map( RequestLoadSurfacePreviewSignal ).toCommand( LoadSurfacePreviewCommand );
 			_commandMap.map( RequestSetupHomeModuleSignal ).toCommand( SetUpHomeModuleCommand );
 			_commandMap.map( RequestDestroyHomeModuleSignal ).toCommand( DestroyHomeModuleCommand );
-			//RequestDestroyHomeModuleSignal DOES ALL THOSE 4 THINGS:
-			_commandMap.map( RequestDisposePaintingDataSignal ).toCommand( DisposePaintingDataCommand );
-			_commandMap.map( RequestRemoveHomeModuleDisplaySignal ).toCommand( RemoveHomeModuleDisplayCommand );
-			_commandMap.map( RequestDisconnectHomeModuleShakeAndBakeSignal ).toCommand( DisconnectHomeModuleShakeAndBakeCommand );
-			_commandMap.map( RequestDestroyBookSignal ).toCommand( DestroyBookCommand );
 			_commandMap.map( RequestLoadPaintingDataFileSignal ).toCommand( LoadPaintingDataFileCommand );
 			_commandMap.map( RequestStartNewColorPaintingSignal ).toCommand( StartNewColorPaintingCommand );
-			
 		}
 
 		// -----------------------

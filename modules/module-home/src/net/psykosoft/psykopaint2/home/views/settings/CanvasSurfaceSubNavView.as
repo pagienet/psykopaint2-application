@@ -18,12 +18,12 @@ package net.psykosoft.psykopaint2.home.views.settings
 		public static const ID_WOOD:String = "Wood";
 		public static const ID_PAPER:String = "Paper";
 
-		//private var _loader : Loader;
+		private var _loader : Loader;
 		private var _selectedButtonID:String;
 
 		private var _surfaceIDS : Vector.<String> = Vector.<String>([ ID_CANVAS, ID_WOOD, ID_PAPER ]);
 		private var _loadingIndex : int = 0;
-		//private var _icons:Vector.<Bitmap>;
+		private var _icons:Vector.<Bitmap>;
 
 		public function CanvasSurfaceSubNavView()
 		{
@@ -40,14 +40,14 @@ package net.psykosoft.psykopaint2.home.views.settings
 		override public function dispose():void
 		{
 			super.dispose();
-			/*for (var i : uint = 0; i < _icons.length; ++i) {
+			for (var i : uint = 0; i < _icons.length; ++i) {
 				if (_icons[i])
 					_icons[i].bitmapData.dispose();
 			}
 
-			_icons = null;*/
+			_icons = null;
 
-			/*if (_loader) {
+			if (_loader) {
 				_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onIconLoadComplete);
 				try {
 					_loader.close();
@@ -56,7 +56,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 					// catch is nasty, but this error is SERIOUSLY irrelevant
 				}
 				_loader = null;
-			}*/
+			}
 		}
 
 		override protected function onSetup():void
@@ -68,12 +68,11 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 		private function startLoadingIcons():void
 		{
-			//_loadingIndex = 0;
-			//_icons = new Vector.<Bitmap>();
-			//loadNextIcon();
-			onIconsLoaded();
+			_loadingIndex = 0;
+			_icons = new Vector.<Bitmap>();
+			loadNextIcon();
 		}
-		/*
+
 		private function loadNextIcon():void
 		{
 			var filename : String = "/core-packaged/images/surfaces/canvas_normal_specular_" + _loadingIndex + "_icon.jpg";
@@ -92,14 +91,14 @@ package net.psykosoft.psykopaint2.home.views.settings
 				onIconsLoaded();
 			else
 				loadNextIcon();
-		}*/
+		}
 
 		private function onIconsLoaded():void
 		{
-			//_loader = null;
-			
+			_loader = null;
+
 			for (var i : int = 0; i < _surfaceIDS.length; ++i) {
-				createCenterButton(_surfaceIDS[i], _surfaceIDS[i], _surfaceIDS[i], null, null, true);
+				createCenterButton(_surfaceIDS[i], _surfaceIDS[i], null, null, _icons[i], true);
 			}
 
 			validateCenterButtons();
@@ -110,13 +109,13 @@ package net.psykosoft.psykopaint2.home.views.settings
 		{
 			_selectedButtonID = id;
 
-			//if (areAllIconsLoaded())
+			if (areAllIconsLoaded())
 				selectButtonWithLabel(id);
 		}
 
-		/*private function areAllIconsLoaded():Boolean
+		private function areAllIconsLoaded():Boolean
 		{
 			return _icons && _icons.length == _surfaceIDS.length;
-		}*/
+		}
 	}
 }

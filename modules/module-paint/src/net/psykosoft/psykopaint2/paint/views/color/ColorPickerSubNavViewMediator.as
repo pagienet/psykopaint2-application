@@ -13,7 +13,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
@@ -23,6 +22,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import net.psykosoft.psykopaint2.paint.signals.NotifyShowPipetteSignal;
 	
 	import org.gestouch.events.GestureEvent;
+	import org.osflash.signals.Signal;
 
 	public class ColorPickerSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -40,9 +40,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		[Inject]
 		public var notifyHistoryStackChanged : NotifyHistoryStackChangedSignal;
-		
-		[Inject]
-		public var requestClearCanvasSignal:RequestClearCanvasSignal;
 		
 		[Inject]
 		public var notifyPickedColorChangedSignal:NotifyPickedColorChangedSignal;
@@ -89,8 +86,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 			view.enabledSignal.add( onViewEnabled );
 			view.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
 			view.undoBtn.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDownUndo);
-			view.clearBtn.addEventListener(MouseEvent.MOUSE_UP,onMouseDownClear);
-
 			// From view.
 			//view.colorChangedSignal.add( onColorChanged );
 
@@ -103,11 +98,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			_stage = view.stage;
 			view.setParameters( paintModule.getCurrentBrushParameters() );
-		}
-		
-		protected function onMouseDownClear(event:MouseEvent):void
-		{
-			requestClearCanvasSignal.dispatch();
 		}
 		
 		private function onHistoryChanged(hasHistory:Boolean):void
@@ -127,7 +117,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 			super.destroy();
 			view.removeEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
 			view.undoBtn.removeEventListener(MouseEvent.MOUSE_DOWN,onMouseDownUndo);
-			view.clearBtn.removeEventListener(MouseEvent.MOUSE_UP,onMouseDownClear);
 			view.enabledSignal.remove(onViewEnabled);
 			
 			notifyPickedColorChangedSignal.remove( onColorChanged );

@@ -180,18 +180,11 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 			webView.stage = stage;
 			var viewPort:Rectangle;
 			webView.viewPort =viewPort = new Rectangle ( (1024-640)/2*CoreSettings.GLOBAL_SCALING , (768-480)/2*CoreSettings.GLOBAL_SCALING , 640*CoreSettings.GLOBAL_SCALING , 480*CoreSettings.GLOBAL_SCALING ) ;
-			//webView.viewPort =viewPort = new Rectangle ( (1024-640)/2 , (768-480)/2 ,2* 640 , 2*480 ) ;
 			
-			var ftarget:File = File.applicationStorageDirectory.resolvePath("GettingStarted.mp4");
+			var ftarget:File = File.applicationStorageDirectory.resolvePath("GettingStartedSoftware.mp4");
 			if ( !ftarget.exists )
 			{
-				var f:File = File.applicationDirectory.resolvePath("core-packaged/video/GettingStarted.mp4");
-				f.copyTo(ftarget);
-			}
-			ftarget = File.applicationStorageDirectory.resolvePath("GettingStarted.jpg");
-			if ( !ftarget.exists )
-			{
-				var f:File = File.applicationDirectory.resolvePath("core-packaged/video/GettingStarted.jpg");
+				var f:File = File.applicationDirectory.resolvePath("core-packaged/video/GettingStartedSoftware.mp4");
 				f.copyTo(ftarget);
 			}
 			f = File.applicationStorageDirectory.resolvePath("tutorial.html");
@@ -200,7 +193,7 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 			//{
 				var fs:FileStream = new FileStream();
 				fs.open(f,FileMode.WRITE);
-				fs.writeUTFBytes('<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0px;padding:0px;background-color:#000;width:100%;height:100%"><video src="GettingStarted.mp4" poster="GettingStarted.jpg"  width="100%" height="100%" controls autoplay></video></body></html>');
+				fs.writeUTFBytes('<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0px;padding:0px;background-color:#000;"><video src="GettingStartedSoftware.mp4" controls autoplay width="100%" height="100%"></video></body></html>');
 				fs.close();
 			//}
 			webView.loadURL(  "file://"+f.nativePath );

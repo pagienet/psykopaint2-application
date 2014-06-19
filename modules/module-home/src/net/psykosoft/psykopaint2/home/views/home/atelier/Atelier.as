@@ -45,7 +45,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		private var _defaultUserIconTexture:BitmapTexture;
 		private var _userIconTexture:BitmapRectTexture;
 		private var _wallTexture:ATFTexture;
-		private var _elementsTextureMaterial:TextureMaterial;
+		private var _elementsTexture:ATFTexture;
 
 		private var _meshes:Vector.<Mesh>;
 		private var _pendingWallTexture : ByteArray;
@@ -145,23 +145,20 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		{
 			var currentPlatform:String =CoreSettings.RUNNING_ON_iPAD ? "ios":"desktop";
 			
-			///var atfURL : String =  "/home-packaged-"+currentPlatform+"/away3d/atelier/atfs/"
-			var atfURL : String =  "/home-packaged/away3d/atelier/atfs/"
+			var atfURL : String =  "/home-packaged-"+currentPlatform+"/away3d/atelier/atfs/"
 			var imgURL : String = "/home-packaged/away3d/atelier/";
 
 			var titlesData:TitlesData = new TitlesData();
 			var titles_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,4.273069858551025,249.8874969482422,-4.537360191345215,1]);
 			var titles:Mesh = new Mesh(titlesData.geometryData, null);
 			applyTransform(titles_rd, titles, "titles");
-			loadATFMaterial(titles, atfURL + "elements.atf", 0);
- 			
-			var elementsData:ElementsData = new ElementsData();
-			var elements_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,376.53948974609375,10.186001777648926,-17.01059913635254,1]);
-			var elements:Mesh = new Mesh(elementsData.geometryData, null);
-			applyTransform(elements_rd, elements, "elements");
-			loadATFMaterial(elements, atfURL + "elements.atf", 1);
-
-			
+			loadATFMaterial(titles, atfURL + "titles.atf", 0);
+ 
+			var logoData:LogoData = new LogoData();
+			var logo_rd:Vector.<Number> = Vector.<Number>([1.02,0,0,0,0,1.02,0,0,0,0,1,0,-266.8269958496094,-1.1448999643325806,-344.1099853515625,1]);
+			var logo:Mesh = new Mesh(logoData.geometryData, null);
+			applyTransform(logo_rd, logo, "logo");
+			loadATFMaterial(logo, atfURL + "logo.atf", 1);
 
 			var iconuserData:IconuserData = new IconuserData();
 			var iconuser_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,983.533203125,67.34795379638672,-1.5569911003112793,1]);
@@ -183,12 +180,12 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			loadBitmapMaterial(lights, imgURL + "pngs/lights.png", 5);
 			//loadATFMaterial(lights, atfURL + "lights.atf", 5);
 
-			var logoData:LogoData = new LogoData();
-			var logo_rd:Vector.<Number> = Vector.<Number>([1.02,0,0,0,0,1.02,0,0,0,0,1,0,-266.8269958496094,-1.1448999643325806,-344.1099853515625,1]);
-			var logo:Mesh = new Mesh(logoData.geometryData, null);
-			applyTransform(logo_rd, logo, "logo");
-			loadATFMaterial(logo, atfURL + "logo.atf", 6);
-			
+			var elementsData:ElementsData = new ElementsData();
+			var elements_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,376.53948974609375,10.186001777648926,-17.01059913635254,1]);
+			var elements:Mesh = new Mesh(elementsData.geometryData, null);
+			applyTransform(elements_rd, elements, "elements");
+			loadATFMaterial(elements, atfURL + "elements.atf", 6);
+
 			var elements2Data:Elements2Data = new Elements2Data();
 			var elements2_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-353.1919860839844,20.652700424194336,-18.818300247192383,1]);
 			var elements2:Mesh = new Mesh(elements2Data.geometryData, null);
@@ -257,17 +254,9 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 				//logo, titles, elements
 				case 0:
 				case 1:
-					//mesh.material = buildATFMaterial(ByteArray(e.data));
-					if(id == 0) _elementsTextureMaterial = buildATFMaterial(ByteArray(e.data));
-					//mesh.material = _elementsTexture
-					//REUSE MATERIAL FOR ID = 1
-					mesh.material = _elementsTextureMaterial
-					
-					//HACK TO REMOVE:
-					//dispatchEvent(new Event(Event.COMPLETE));
-					
+					mesh.material = buildATFMaterial(ByteArray(e.data));
+					if(id == 0) _elementsTexture = ATFTexture(TextureMaterial(mesh.material).texture);
 					break;
-				
 				
 				//default icon user
 				case 2:
@@ -297,7 +286,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 					break;
 				//elements
 				case 6:
-					mesh.material = buildATFMaterial(ByteArray(e.data));
+					mesh.material = new TextureMaterial(_elementsTexture);
 					break;
 
 				//elements2

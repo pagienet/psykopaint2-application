@@ -20,6 +20,8 @@ package net.psykosoft.psykopaint2.core.model
 		[Inject]
 		public var canvas : CanvasModel;
 
+		private var _context : Context3D;
+
 		private var _hasHistory : Boolean;
 
 		private var _snapShot : CanvasSnapShot;	// contains the current state
@@ -27,15 +29,11 @@ package net.psykosoft.psykopaint2.core.model
 		public function CanvasHistoryModel()
 		{
 		}
-		
-		public function get context():Context3D{
-			return stage3d.context3D;
-		}
 
 		[PostConstruct]
 		public function init() : void
 		{
-			//_context = stage3d.context3D;
+			_context = stage3d.context3D;
 		}
 
 		public function get hasHistory() : Boolean
@@ -58,7 +56,7 @@ package net.psykosoft.psykopaint2.core.model
 		public function takeSnapshot() : CanvasSnapShot
 		{
 			if (!_snapShot)
-				_snapShot = new CanvasSnapShot(context, canvas);
+				_snapShot = new CanvasSnapShot(_context, canvas);
 			_snapShot.updateSnapshot();
 			_hasHistory = true;
 			notifyStackChange();
