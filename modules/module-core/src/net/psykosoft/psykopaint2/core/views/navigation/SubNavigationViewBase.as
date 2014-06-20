@@ -252,7 +252,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		protected function createCenterButton( id:String, label:String, iconType:String = ButtonIconType.DEFAULT,
 											   rendererClass:Class = null, icon:Bitmap = null, selectable:Boolean = false, enabled:Boolean = true,
-											   disableMouseInteractivityWhenSelected:Boolean = true, clickType:String = MouseEvent.MOUSE_UP,
+											   disableMouseInteractivityWhenSelected:Boolean = true, clickType:String = MouseEvent.MOUSE_DOWN,
 												readyCallbackObject:Object= null, readyCallbackMethod:Function = null):ButtonData {
 			if( !_centerButtonData ) _centerButtonData = new Vector.<ISnapListData>();
 			var btnData:ButtonData = new ButtonData();
@@ -297,8 +297,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onButtonClicked( event:MouseEvent ):void {
 
+			//THE NAVIGATION BUTTONS TAKE PRECEDENCE AND REMOVE THE PROPAGATIONS
+			event.stopImmediatePropagation();
+			
 			if( _scroller.isActive ) return; // Reject clicks while the scroller is moving.
-
+			
 			var clickedButton:NavigationButton = event.target as NavigationButton;
 			if( !clickedButton ) clickedButton = event.target.parent as NavigationButton;
 			if( !clickedButton ) clickedButton = event.target.parent.parent as NavigationButton;

@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
 	import flash.utils.getTimer;
+	import flash.utils.setTimeout;
 	
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
@@ -11,6 +12,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSavePaintingToServerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateErrorPopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
@@ -55,6 +58,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var showPopUpSignal:RequestShowPopUpSignal;
+		
+		[Inject]
+		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
+		
+		
+		
 
 		private var _time:uint;
 
@@ -75,11 +84,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			switch( id ) {
 
 				case CanvasSubNavView.ID_SAVE:
-					requestClosePaintViewSignal.dispatch(true);
+					showPopUpSignal.dispatch(PopUpType.MESSAGE);
+					requestUpdateMessagePopUpSignal.dispatch("SAVING","");
+					setTimeout(function(){requestClosePaintViewSignal.dispatch(true)},200);
 					break;
 
 				case CanvasSubNavView.ID_DISCARD:
-					requestClosePaintViewSignal.dispatch(false);
+					showPopUpSignal.dispatch(PopUpType.MESSAGE);
+					requestUpdateMessagePopUpSignal.dispatch("BINNING YOUR PAINTING","");
+					setTimeout(function(){requestClosePaintViewSignal.dispatch(false)},200);
 					break;
 
 				/*case CanvasSubNavView.ID_CLEAR:

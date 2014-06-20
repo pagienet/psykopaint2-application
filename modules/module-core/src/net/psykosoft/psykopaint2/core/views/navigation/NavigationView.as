@@ -51,8 +51,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		override protected function onSetup():void {
-			_leftButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
-			_rightButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
+			_leftButton.addEventListener( MouseEvent.MOUSE_DOWN, onButtonClicked );
+			_rightButton.addEventListener( MouseEvent.MOUSE_DOWN, onButtonClicked );
 			visible = false;
 			loadingView.visible=false;
 		}

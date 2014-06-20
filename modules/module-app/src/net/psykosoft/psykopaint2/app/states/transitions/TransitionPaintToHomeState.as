@@ -69,19 +69,16 @@ package net.psykosoft.psykopaint2.app.states.transitions
 
 		private function onHomeModuleSetUp() : void
 		{
-			hideSavingPopUp();
+			stateMachine.setActiveState(homeState);
+			
 		}
 
 		private function hideSavingPopUp():void {
-			notifyPopUpRemovedSignal.addOnce( onPopUpRemoved );
+			//notifyPopUpRemovedSignal.addOnce( onPopUpRemoved );
 			requestHidePopUpSignal.dispatch();
 		}
 
-		private function onPopUpRemoved() : void
-		{
-			stateMachine.setActiveState(homeState);
-		}
-
+		
 		override ns_state_machine function deactivate() : void
 		{
 			use namespace ns_state_machine;
@@ -92,7 +89,9 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		}
 
 		private function onPaintModuleDestroyed():void {
+			
 			requestStateChangeSignal.dispatch(NavigationStateType.HOME_ON_EASEL);
+			hideSavingPopUp();
 		}
 	}
 }

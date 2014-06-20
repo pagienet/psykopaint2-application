@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.core
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
 	import net.psykosoft.psykopaint2.core.configuration.CoreConfig;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -16,7 +16,8 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-
+	import net.psykosoft.psykopaint2.core.views.splash.SplashView;
+	
 	import robotlegs.bender.framework.api.IInjector;
 
 	public class CoreModule extends ModuleBase
@@ -24,9 +25,13 @@ package net.psykosoft.psykopaint2.core
 		private var _coreConfig:CoreConfig;
 		private var _injector:IInjector;
 		private var _requestFrameUpdateSignal:RequestFrameUpdateSignal;
-
+		private var _splashView:SplashView
+		
 		public function CoreModule( injector:IInjector = null ) {
-
+			
+			_splashView=new SplashView() 
+			addChild( _splashView);
+			
 			super();
 			_injector = injector;
 			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "CoreModule";
@@ -98,6 +103,11 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		public function startEnterFrame():void {
+			//KILL SPLASH SCREEN
+			_splashView.parent.removeChild(_splashView);
+			_splashView.dispose();
+			
+			
 			addEventListener( Event.ENTER_FRAME, onEnterFrame );
 		}
 

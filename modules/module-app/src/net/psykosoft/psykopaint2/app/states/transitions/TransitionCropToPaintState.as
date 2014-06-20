@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 	import net.psykosoft.psykopaint2.base.utils.images.ImageDataUtils;
+	import net.psykosoft.psykopaint2.core.commands.DisposePaintingDataCommand;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
@@ -23,6 +24,8 @@ package net.psykosoft.psykopaint2.app.states.transitions
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
+	import net.psykosoft.psykopaint2.home.commands.unload.DestroyBookCommand;
+	import net.psykosoft.psykopaint2.home.commands.unload.DisconnectHomeModuleShakeAndBakeCommand;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestRemoveHomeModuleDisplaySignal;
@@ -66,29 +69,18 @@ package net.psykosoft.psykopaint2.app.states.transitions
 
 		[Inject]
 		public var notifyCanvasZoomedToDefaultViewSignal:NotifyCanvasZoomedToDefaultViewSignal;
-
-		[Inject]
-		public var requestDestroyHomeModuleSignal : RequestDestroyHomeModuleSignal;
-
+	
 		[Inject]
 		public var notifyHomeModuleDestroyedSignal:NotifyHomeModuleDestroyedSignal;
 
 		[Inject]
 		public var requestRemoveHomeModuleDisplaySignal : RequestRemoveHomeModuleDisplaySignal;
 		
-		
-		
-		
-		/*[Inject]
-		public var requestDisposePaintingDataSignal : RequestDisposePaintingDataSignal;
+		[Inject]
+		public var requestDestroyHomeModuleSignal : RequestDestroyHomeModuleSignal;
+
 		
 	
-		[Inject]
-		public var requestDisconnectHomeModuleShakeAndBakeSignal : RequestDisconnectHomeModuleShakeAndBakeSignal;
-		
-		[Inject]
-		public var requestDestroyBookSignal : RequestDestroyBookSignal;*/
-		
 		[Inject]
 		public var notifyCanvasBackgroundSetSignal : NotifyFrozenBackgroundCreatedSignal;
 
@@ -117,7 +109,6 @@ package net.psykosoft.psykopaint2.app.states.transitions
 
 		private var _croppedBitmapData : BitmapData;
 		private var _background : RefCountedRectTexture;
-		private var _paintingVO:PaintingDataVO;
 
 		use namespace ns_state_machine;
 
@@ -140,21 +131,45 @@ package net.psykosoft.psykopaint2.app.states.transitions
 			//GET THE CROPPED BITMAP DATA TO GIVE TO THE CANVAS MODEL LATER ON
 			_croppedBitmapData = BitmapData(data.bitmapData);
 			
-			
+			//DO THAT: 
+			//add( DisposePaintingDataCommand 	         );
+			//add( DisconnectHomeModuleShakeAndBakeCommand );
+			//add( DestroyBookCommand );
+			notifyHomeModuleDestroyedSignal.addOnce(onHomeModuleDestroyed);
 			requestDestroyHomeModuleSignal.dispatch();
 			
+		}
+		
+		private function onHomeModuleDestroyed():void
+		{
 			// force position focused on easel in case we're going to quick for tweens to finish
-			//notifyBackgroundSetSignal.addOnce(onBackgroundSet);
-			//requestCreatePaintingBackgroundSignal.dispatch();
+			notifyBackgroundSetSignal.addOnce(onBackgroundSet);
+			requestCreatePaintingBackgroundSignal.dispatch();
+		}
+		
+		private function onBackgroundSet(background : RefCountedRectTexture) : void
+		{
+			if (_background) _background.dispose();
+			_background = background.newReference();
+			
+			//SET THE BG OF CANVAS VIEW
+			requestSetCanvasBackgroundSignal.dispatch(_background.newReference(), easelRectModel.absoluteScreenRect);
+			
+			
+			
+			
+			//THEN LOAD THE SURFACE
 			notifySurfaceLoadedSignal.addOnce(onSurfaceLoaded);
 			requestLoadSurfaceSignal.dispatch(PaintMode.PHOTO_MODE);
+			
 			
 		}
 		
 		
 		private function onSurfaceLoaded(data : SurfaceDataVO) : void
 		{
-
+			
+			
 			notifyPaintModuleSetUp.addOnce(onPaintingModuleSetUp);
 			requestSetupPaintModuleSignal.dispatch(createPaintingVO(data));
 			
@@ -170,8 +185,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		
 		private function onCanvasBackgroundSet(background : RefCountedRectTexture) : void
 		{
-			//REMOVE DISPLAY OF HOME HERE
-			requestRemoveHomeModuleDisplaySignal.dispatch();
+			
 			
 			notifyCanvasZoomedToDefaultViewSignal.addOnce( onZoomComplete );
 			requestZoomCanvasToDefaultViewSignal.dispatch();
@@ -188,26 +202,16 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		
 		override ns_state_machine function deactivate() : void
 		{
+			//REMOVE DISPLAY OF HOME HERE
+			requestRemoveHomeModuleDisplaySignal.dispatch();
+			
+			
 			use namespace ns_state_machine;
 			super.deactivate();
 		}
 		
 	/*
-		private function onBackgroundSet(background : RefCountedRectTexture) : void
-		{
-			if (_background) _background.dispose();
-			_background = background.newReference();
-			
-			//SET THE BG OF CANVAS VIEW
-			requestSetCanvasBackgroundSignal.dispatch(_background.newReference(), easelRectModel.absoluteScreenRect);
-			
-			//THEN LOAD THE SURFACE
-			notifySurfaceLoadedSignal.addOnce(onSurfaceLoaded);
-			requestLoadSurfaceSignal.dispatch(PaintMode.PHOTO_MODE);
-			
-			
-			
-		}
+		
 		
 		private function onSurfaceLoaded(data : SurfaceDataVO) : void
 		{

@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.crop.views.crop
 {
 
+	import flash.utils.setTimeout;
+	
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFinalizeCropSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
@@ -30,14 +32,22 @@ package net.psykosoft.psykopaint2.crop.views.crop
 				case CropSubNavView.ID_PICK_AN_IMAGE:
 					view.showLeftButton(false);
 					view.showRightButton(false);
-					requestCancelCropSignal.dispatch();
+					//GIVE A LITTLE DELAY TO NOT BLOCK THE DISPLAY
+					setTimeout(function(){
+						requestCancelCropSignal.dispatch();
+					},100);
+					
 					break;
 				case CropSubNavView.ID_CONFIRM_CROP:
 					//TODO: blocker activation
 					view.showLeftButton(false);
 					view.showRightButton(false);
 					notifyToggleLoadingMessageSignal.dispatch(true);
-					requestFinalizeCropSignal.dispatch();
+					//GIVE A LITTLE DELAY TO NOT BLOCK THE DISPLAY
+					setTimeout(function(){
+						requestFinalizeCropSignal.dispatch();
+					},200);
+					
 				    break;
 			}
 		}

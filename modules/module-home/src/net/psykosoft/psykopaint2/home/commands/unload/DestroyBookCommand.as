@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.home.commands.unload
 			// this is kind of silly to put it here, but it's probably easier to find if there's some symmetry
 			HomeMaterialsCache.dispose();
 			HomeGeometryCache.dispose();
+			
 		}
 	}
 }

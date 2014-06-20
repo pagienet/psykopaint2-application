@@ -151,6 +151,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		// -----------------------
 
 		private function loadPhoto():void {
+
 			_rollUtil = new CameraRollUtil();
 			_rollUtil.imageRetrievedSignal.add( onPhotoRetrieved );
 			_rollUtil.selectionCancelledSignal.add( onSelectionCancelled );
@@ -167,6 +168,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		}
 
 		private function onPhotoRetrieved( bmd:BitmapData, orientation:int ):void {
+
 			trace( this, "photo retrieved: " + bmd.width + "x" + bmd.height );
 			requestCropSourceImageSignal.dispatch( bmd, orientation );
 		}

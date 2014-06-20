@@ -1,17 +1,12 @@
 package net.psykosoft.psykopaint2.core.views.splash
 {
 
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Strong;
-
 	import flash.display.Bitmap;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.geom.ColorTransform;
-
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
-	import org.osflash.signals.Signal;
 
 	public class SplashView extends Sprite
 	{
@@ -51,7 +46,7 @@ package net.psykosoft.psykopaint2.core.views.splash
 			_splashScreen.addChild( _quotes );
 		}
 
-		public function removeSplashScreen():void {
+		public function dispose():void {
 			trace( this, "removing splash ---------------" );
 			removeChild( _splashScreen );
 			_splashScreenBM.bitmapData.dispose();

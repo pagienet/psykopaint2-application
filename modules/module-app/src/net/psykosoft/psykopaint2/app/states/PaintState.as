@@ -1,14 +1,9 @@
 package net.psykosoft.psykopaint2.app.states
 {
 
-	import flash.display.BitmapData;
-	
 	import net.psykosoft.psykopaint2.app.states.transitions.TransitionPaintToHomeState;
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
-	import net.psykosoft.psykopaint2.base.utils.io.DesktopImageSaveUtil;
-	import net.psykosoft.psykopaint2.base.utils.io.IosImageSaveUtil;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
@@ -83,6 +78,8 @@ package net.psykosoft.psykopaint2.app.states
 		private function onClosePaintView( save:Boolean ):void {
 			ConsoleView.instance.log( this, "closing painting view..." );
 			ConsoleView.instance.logMemory();
+			
+			
 			if ( save ) savePainting();
 			else discardPainting();
 		}

@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.home.views.home
 {
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
 	public class HomeSubNavViewMediator extends SubNavigationMediatorBase

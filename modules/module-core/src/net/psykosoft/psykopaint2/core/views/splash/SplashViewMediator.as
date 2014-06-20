@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.core.views.splash
 		}
 
 		private function onSplashScreenRemovalRequest():void {
-			view.removeSplashScreen();
+			view.dispose();
 			view.parent.removeChild( view );
 		}
 	}

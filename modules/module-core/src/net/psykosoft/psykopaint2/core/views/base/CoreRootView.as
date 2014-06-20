@@ -8,7 +8,6 @@ import flash.display.Sprite;
 import flash.events.MouseEvent;
 import flash.system.System;
 
-import net.psykosoft.psykopaint2.base.utils.alert.Alert;
 import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 import net.psykosoft.psykopaint2.core.views.debug.DebugView;

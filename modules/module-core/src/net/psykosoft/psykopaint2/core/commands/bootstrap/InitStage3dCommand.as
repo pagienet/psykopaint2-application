@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 
 	import flash.display.Stage;
 	import flash.display.Stage3D;
+	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProfile;
 	import flash.events.Event;
 	
@@ -45,10 +46,13 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 		}
 
 		private function onContext3dCreated( event:Event ):void {
-
+			
 			trace( this, "context3d created: " + _stage3dProxy.context3D );
-			_stage3dProxy.removeEventListener( Event.CONTEXT3D_CREATE, onContext3dCreated );
-
+			//_stage3dProxy.removeEventListener( Event.CONTEXT3D_CREATE, onContext3dCreated );
+			
+			//var oldContext:Context3D = context;
+			//context = stage3D.context3D;
+			
 			CopyTexture.init( _stage3d.context3D );
 			CopyTextureWithAlpha.init( _stage3d.context3D );
 
