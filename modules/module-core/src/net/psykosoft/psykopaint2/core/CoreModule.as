@@ -1,11 +1,14 @@
 package net.psykosoft.psykopaint2.core
 {
 
+	import com.bit101.MinimalComps;
+	
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
+	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreConfig;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
@@ -29,7 +32,18 @@ package net.psykosoft.psykopaint2.core
 		
 		public function CoreModule( injector:IInjector = null ) {
 			
-			_splashView=new SplashView() 
+			
+			//SHOW SPLASH VIEW BEFORE LOADING ALL STUFF. 
+			// AND WE NEED TO GET THOSE coreSettings right otherwise the image won't show correctly
+			CoreSettings.RUNNING_ON_iPAD = PlatformUtil.isRunningOnIPad();
+			CoreSettings.RUNNING_ON_RETINA_DISPLAY = PlatformUtil.isRunningOnDisplayWithDpi( CoreSettings.RESOLUTION_DPI_RETINA );
+			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
+				CoreSettings.GLOBAL_SCALING = 2;
+				// TODO: remove ( temporary )
+				MinimalComps.globalScaling = 2;
+			}
+			
+			_splashView = new SplashView() ;
 			addChild( _splashView);
 			
 			super();

@@ -48,7 +48,6 @@ import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteS
 import net.psykosoft.psykopaint2.core.signals.NotifyDataForPopUpSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
-import net.psykosoft.psykopaint2.core.signals.NotifyProductPriceSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifyGalleryZoomRatioSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
@@ -65,6 +64,7 @@ import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
+import net.psykosoft.psykopaint2.core.signals.NotifyProductPriceSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifyProfilePictureUpdatedSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
@@ -90,14 +90,15 @@ import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestPaintingDeletionSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestPaintingInfoFileReadSignal;
+import net.psykosoft.psykopaint2.core.signals.RequestRemoveBookSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
 import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
 import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestUpdateErrorPopUpSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
-	import net.psykosoft.psykopaint2.core.signals.ToggleDepthOfFieldSignal;
-	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
+import net.psykosoft.psykopaint2.core.signals.ToggleDepthOfFieldSignal;
+import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
 import net.psykosoft.psykopaint2.core.views.blocker.BlockerView;
 import net.psykosoft.psykopaint2.core.views.blocker.BlockerViewMediator;
@@ -240,34 +241,19 @@ public class CoreConfig
 			_injector.map( NotifyNavigationToggledSignal ).asSingleton();
 			_injector.map( NotifyMemoryWarningSignal ).asSingleton();
 			_injector.map( NotifyBlockingGestureSignal ).asSingleton();
-			_injector.map( RequestNavigationToggleSignal ).asSingleton();
 			_injector.map( NotifyNavigationPositionChangedSignal ).asSingleton();
 			_injector.map( NotifyPaintingDataSetSignal ).asSingleton();
-			_injector.map( RequestDrawingCoreResetSignal ).asSingleton();
-			_injector.map( RequestEaselUpdateSignal ).asSingleton();
 			_injector.map( NotifyPopUpRemovedSignal ).asSingleton();
 			_injector.map( NotifyEaselRectUpdateSignal ).asSingleton();
 			_injector.map( NotifyPopUpShownSignal ).asSingleton();
-			_injector.map( RequestUpdateMessagePopUpSignal ).asSingleton();
-			_injector.map( RequestUpdateErrorPopUpSignal ).asSingleton();
-			_injector.map( RequestLoadSurfaceSignal ).asSingleton();
 			_injector.map( NotifySurfacePreviewLoadedSignal ).asSingleton();
 			_injector.map( NotifySurfaceLoadedSignal ).asSingleton();
-			_injector.map( RequestCropSourceImageSignal ).asSingleton();
-			_injector.map( RequestHideSplashScreenSignal ).asSingleton();
 			_injector.map( NotifyPaintingInfoSavedSignal ).asSingleton();
 			_injector.map( NotifyPaintingDataSavedSignal ).asSingleton();
 			_injector.map( NotifyPaintingSavingStartedSignal ).asSingleton();
 			_injector.map( NotifyCanvasExportStartedSignal ).asSingleton();
 			_injector.map( NotifyCanvasExportEndedSignal ).asSingleton();
 			_injector.map( NotifyCoreModuleBootstrapCompleteSignal ).asSingleton();
-			_injector.map( RequestAddViewToMainLayerSignal ).asSingleton();
-			_injector.map( RequestSaveCPUForUISignal ).asSingleton();
-			_injector.map( RequestResumeCPUUsageForUISignal ).asSingleton();
-			_injector.map( RequestChangeRenderRectSignal ).asSingleton();
-			_injector.map( RequestShowPopUpSignal ).asSingleton();
-			_injector.map( NotifyDataForPopUpSignal ).asSingleton();
-			_injector.map( RequestHidePopUpSignal ).asSingleton();
 			_injector.map( NotifyGalleryZoomRatioSignal ).asSingleton();
 			_injector.map( NotifyPaintingInfoFileReadSignal ).asSingleton();
 			_injector.map( NotifyGyroscopeUpdateSignal ).asSingleton();
@@ -275,16 +261,35 @@ public class CoreConfig
 			_injector.map( NotifyToggleTransformGestureSignal ).asSingleton();
 			_injector.map( NotifyToggleSwipeGestureSignal ).asSingleton();
 			_injector.map( NotifyToggleLoadingMessageSignal ).asSingleton();
-			_injector.map( NavigationCanHideWithGesturesSignal ).asSingleton();
 			_injector.map( NotifyEaselTappedSignal ).asSingleton();
-			_injector.map( RequestUpdateCropImageSignal ).asSingleton();
-			_injector.map( RequestOpenCroppedBitmapDataSignal ).asSingleton();
 			_injector.map( NotifyPurchaseStatusSignal ).asSingleton();
 			_injector.map( NotifyProductPriceSignal ).asSingleton();
 			_injector.map( NotifyProfilePictureUpdatedSignal ).asSingleton();
 			_injector.map( NotifyHomeDistanceToSectionChangedSignal ).asSingleton();
-			// services
 			_injector.map( NotifyAMFConnectionFailed ).asSingleton();
+			_injector.map( NotifyDataForPopUpSignal ).asSingleton();
+
+			
+			_injector.map( RequestNavigationToggleSignal ).asSingleton();
+			_injector.map( RequestDrawingCoreResetSignal ).asSingleton();
+			_injector.map( RequestEaselUpdateSignal ).asSingleton();
+			_injector.map( RequestUpdateMessagePopUpSignal ).asSingleton();
+			_injector.map( RequestUpdateErrorPopUpSignal ).asSingleton();
+			_injector.map( RequestLoadSurfaceSignal ).asSingleton();
+			_injector.map( RequestCropSourceImageSignal ).asSingleton();
+			_injector.map( RequestHideSplashScreenSignal ).asSingleton();
+			_injector.map( RequestAddViewToMainLayerSignal ).asSingleton();
+			_injector.map( RequestSaveCPUForUISignal ).asSingleton();
+			_injector.map( RequestResumeCPUUsageForUISignal ).asSingleton();
+			_injector.map( RequestChangeRenderRectSignal ).asSingleton();
+			_injector.map( RequestShowPopUpSignal ).asSingleton();
+			_injector.map( RequestHidePopUpSignal ).asSingleton();
+			_injector.map( RequestRemoveBookSignal ).asSingleton();
+			
+		
+			_injector.map( RequestUpdateCropImageSignal ).asSingleton();
+			_injector.map( RequestOpenCroppedBitmapDataSignal ).asSingleton();
+			_injector.map( NavigationCanHideWithGesturesSignal ).asSingleton();
 			_injector.map( ToggleDepthOfFieldSignal ).asSingleton();
 		}
 

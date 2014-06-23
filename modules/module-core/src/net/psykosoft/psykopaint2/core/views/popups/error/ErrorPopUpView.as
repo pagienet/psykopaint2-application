@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.core.views.popups.error
 			_backButton = leftSide.getChildByName("btn") as IconButtonAlt;
 			_backButton.labelText = "OK";
 			_backButton.label.visible = false;
-			_backButton.iconType = ButtonIconType.BACK;
+			_backButton.iconType = ButtonIconType.OK;
 		}
 
 		private function onBackButtonClicked(event:MouseEvent):void

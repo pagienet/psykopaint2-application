@@ -84,15 +84,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			switch( id ) {
 
 				case CanvasSubNavView.ID_SAVE:
-					showPopUpSignal.dispatch(PopUpType.MESSAGE);
-					requestUpdateMessagePopUpSignal.dispatch("SAVING","");
-					setTimeout(function(){requestClosePaintViewSignal.dispatch(true)},200);
+					requestClosePaintViewSignal.dispatch(true);
 					break;
 
 				case CanvasSubNavView.ID_DISCARD:
-					showPopUpSignal.dispatch(PopUpType.MESSAGE);
-					requestUpdateMessagePopUpSignal.dispatch("BINNING YOUR PAINTING","");
-					setTimeout(function(){requestClosePaintViewSignal.dispatch(false)},200);
+					requestClosePaintViewSignal.dispatch(false);
 					break;
 
 				/*case CanvasSubNavView.ID_CLEAR:

@@ -76,7 +76,7 @@ import com.greensock.TweenLite;
 			if ( !_grabThrowController.hasEventListener(GrabThrowEvent.DRAG_STARTED) )
 			{
 				_grabThrowController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
-				_grabThrowController.start();
+				_grabThrowController.start(1000);
 			}
 		}
 

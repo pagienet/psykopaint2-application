@@ -45,7 +45,7 @@ package net.psykosoft.psykopaint2.home.commands
 					scaled.dispose();
 				}
 				ImageDataUtils.ARGBtoBGRA(paintingDataVO.colorData, paintingDataVO.colorData.length, 0);
-				paintingDataVO.colorBackgroundOriginal = surface.color;
+				//paintingDataVO.colorBackgroundOriginal = surface.color;
 			}
 			else {
 				paintingDataVO.colorData = ByteArrayUtil.createBlankColorData(paintingDataVO.width, paintingDataVO.height, 0xffffffff);

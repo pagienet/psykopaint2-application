@@ -34,6 +34,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewIntroZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestRemoveBookSignal;
 
 	public class HomeViewMediator extends MediatorBase
 	{
@@ -57,6 +58,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var requestHomeIntroSignal : RequestHomeIntroSignal;
+		
+		[Inject]
+		public var requestRemoveBookSignal : RequestRemoveBookSignal;
 
 		[Inject]
 		public var notifyHomeViewSceneReadySignal : NotifyHomeViewSceneReadySignal;
@@ -103,6 +107,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestShowPopUpSignal.add(onShowPopUp);
 			requestHidePopUpSignal.add(onHidePopUp);
 			requestHomeIntroSignal.add(onIntroRequested);
+			requestRemoveBookSignal.add(onRequestRemoveBook)
 			notifyGyroscopeUpdateSignal.add(onGyroscopeUpdate);
 			notifyProfilePictureUpdatedSignal.add(onProfilePictureUpdate);
 			toggleDepthOfFieldSignal.add(view.setDepthOfFieldEnabled);
@@ -134,7 +139,14 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 			
 		}
-
+		
+		private function onRequestRemoveBook():void
+		{
+			//REMOVING BOOK FROM DISPLAY LIST WILL ALSO DISPOSE IT AUTOMATICALLY
+			if(view.bookView&&view.bookView.parent) view.bookView.parent.removeChild(view.bookView);
+			
+		}
+		
 		override public function destroy() : void
 		{
 			view.disable();

@@ -10,7 +10,6 @@ package net.psykosoft.psykopaint2.app.states.transitions
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 	import net.psykosoft.psykopaint2.base.utils.images.ImageDataUtils;
-	import net.psykosoft.psykopaint2.core.commands.DisposePaintingDataCommand;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
@@ -24,10 +23,9 @@ package net.psykosoft.psykopaint2.app.states.transitions
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
-	import net.psykosoft.psykopaint2.home.commands.unload.DestroyBookCommand;
-	import net.psykosoft.psykopaint2.home.commands.unload.DisconnectHomeModuleShakeAndBakeCommand;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestRemoveBookSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestRemoveHomeModuleDisplaySignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
@@ -104,6 +102,10 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		
 		
 		[Inject]
+		public var requestRemoveBookSignal : RequestRemoveBookSignal;
+
+		
+		[Inject]
 		public var requestGpuRenderingSignal:RequestGpuRenderingSignal;
 
 
@@ -130,6 +132,9 @@ package net.psykosoft.psykopaint2.app.states.transitions
 			super.activate(data);
 			//GET THE CROPPED BITMAP DATA TO GIVE TO THE CANVAS MODEL LATER ON
 			_croppedBitmapData = BitmapData(data.bitmapData);
+			
+			//REMOVE THE BOOK HERE TO MAKE SOME MEMORY SPACE
+			requestRemoveBookSignal.dispatch();
 			
 			//DO THAT: 
 			//add( DisposePaintingDataCommand 	         );
@@ -169,6 +174,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		private function onSurfaceLoaded(data : SurfaceDataVO) : void
 		{
 			
+		
 			
 			notifyPaintModuleSetUp.addOnce(onPaintingModuleSetUp);
 			requestSetupPaintModuleSignal.dispatch(createPaintingVO(data));
@@ -185,7 +191,6 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		
 		private function onCanvasBackgroundSet(background : RefCountedRectTexture) : void
 		{
-			
 			
 			notifyCanvasZoomedToDefaultViewSignal.addOnce( onZoomComplete );
 			requestZoomCanvasToDefaultViewSignal.dispatch();
@@ -204,6 +209,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		{
 			//REMOVE DISPLAY OF HOME HERE
 			requestRemoveHomeModuleDisplaySignal.dispatch();
+			 
 			
 			
 			use namespace ns_state_machine;
@@ -320,8 +326,9 @@ package net.psykosoft.psykopaint2.app.states.transitions
 			_croppedBitmapData = null;
 			
 			if (surface.color) {
-				if (surface.color.width == paintingDataVO.width && surface.color.height == paintingDataVO.height)
+				if (surface.color.width == paintingDataVO.width && surface.color.height == paintingDataVO.height){
 					paintingDataVO.colorData = surface.color.getPixels(surface.color.rect);
+				}
 				else {
 					var scaled : BitmapData = new BitmapData(paintingDataVO.width, paintingDataVO.height, true, 0)
 					scaled.draw(surface.color, new Matrix(paintingDataVO.width / surface.color.width, 0, 0, paintingDataVO.height / surface.color.height), null, null, null, true);
@@ -329,13 +336,18 @@ package net.psykosoft.psykopaint2.app.states.transitions
 					scaled.dispose();
 				}
 				ImageDataUtils.ARGBtoBGRA(paintingDataVO.colorData, paintingDataVO.colorData.length, 0);
-				paintingDataVO.colorBackgroundOriginal = surface.color;
+				//paintingDataVO.colorBackgroundOriginal = surface.color;
+				surface.color.dispose();
+				surface.color = null;
 			}
 			else{
-				paintingDataVO.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);}
+				paintingDataVO.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);
+			}
 			paintingDataVO.surfaceID = surface.id;
 			paintingDataVO.normalSpecularData = null;
 			paintingDataVO.surfaceNormalSpecularData = surface.normalSpecular;
+			surface.normalSpecular= null;
+			
 			return paintingDataVO;
 		}
 		

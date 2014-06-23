@@ -297,8 +297,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onButtonClicked( event:MouseEvent ):void {
 
-			//THE NAVIGATION BUTTONS TAKE PRECEDENCE AND REMOVE THE PROPAGATIONS
-			event.stopImmediatePropagation();
 			
 			if( _scroller.isActive ) return; // Reject clicks while the scroller is moving.
 			
@@ -315,8 +313,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			if( clickedButton.selectable ) {
 				selectButtonWithLabel( clickedButton.labelText );
 			}
-
+			
 			scrollerButtonClickedSignal.dispatch( event );
+			
+			
+			
 		}
 
 		private function unSelectAllButtons():void {

@@ -29,7 +29,8 @@ package net.psykosoft.psykopaint2.core.io
 			// doing this to force creation of PyramidMap
 			// TODO: Simply do not do this by allowing pyramid map not to exist
 				canvas.setSourceBitmapData(null);}
-
+			
+			//Mathieu: WE're not even using that??
 			if (paintingData.colorBackgroundOriginal) {
 			}
 

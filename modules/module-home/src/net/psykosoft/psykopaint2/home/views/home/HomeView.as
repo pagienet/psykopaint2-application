@@ -1,9 +1,5 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
-	import away3d.events.Object3DEvent;
-	import away3d.filters.DepthOfFieldFilter3D;
-	import away3d.filters.SmartDepthOfFieldFilter3D;
-
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
 	
@@ -13,14 +9,16 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.geom.Matrix3D;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
-
+	
 	import away3d.Away3D;
 	import away3d.cameras.Camera3D;
 	import away3d.cameras.lenses.PerspectiveLens;
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
+	import away3d.events.Object3DEvent;
+	import away3d.filters.SmartDepthOfFieldFilter3D;
 	import away3d.lights.PointLight;
-
+	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.home.views.book.BookView;
@@ -62,6 +60,11 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function HomeView()
 		{
 
+		}
+
+		public function get bookView():BookView
+		{
+			return _bookView;
 		}
 
 		public function get scrollingEnabled() : Boolean
@@ -276,8 +279,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			_galleryView.dispose();
 			removeChild(_galleryView);
 			
-			//THE BOOK IS NOT DISPOSED HERE: 
-			//_bookView.dispose();
+			
+			//THE BOOK IS AUTOMATICALLY DISPOSED WHEN REMOVED FROM STAGE:
 			//removeChild(_bookView);
 			
 			

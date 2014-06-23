@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			createCenterButton( ID_DISCARD,  "Discard " + (isContinuedPainting ? "Changes" : ""), ButtonIconType.DISCARD );
 			createCenterButton( ID_SAVE, ID_SAVE, ButtonIconType.SAVE );
 			createCenterButton( ID_PUBLISH, ID_PUBLISH, ButtonIconType.PUBLISH );
-			createCenterButton( ID_DOWNLOAD, ID_DOWNLOAD, ButtonIconType.DOWNLOAD );
+			createCenterButton( ID_DOWNLOAD, "Snapshot", ButtonIconType.DOWNLOAD );
 			//createCenterButton( ID_CLEAR, ID_CLEAR, ButtonIconType.CLEAR );
 			validateCenterButtons();
 		}
