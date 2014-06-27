@@ -69,5 +69,18 @@ package net.psykosoft.psykopaint2.base.utils.images
 			var ratio:Number = Math.max( wRatio, hRatio );
 			return BitmapDataUtils.scaleBitmapData( sourceBmd, ratio );
 		}
+		
+		static public function resizeAndCrop( sourceBmd:BitmapData, width:Number,height:Number ):BitmapData {
+			var wRatio:Number = width / sourceBmd.width;
+			var hRatio:Number = height / sourceBmd.height;
+			var ratio:Number = Math.max( wRatio, hRatio );
+			var matrix:Matrix = new Matrix();
+			matrix.scale(ratio,ratio);
+			var croppedBmd:BitmapData = new BitmapData(width,height,sourceBmd.transparent);
+			croppedBmd.draw(sourceBmd,matrix);
+			//var scaledBmd:BitmapData =  BitmapDataUtils.scaleBitmapData( sourceBmd, ratio )
+			
+			return croppedBmd;
+		}
 	}
 }

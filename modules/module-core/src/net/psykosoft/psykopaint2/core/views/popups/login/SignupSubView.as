@@ -2,16 +2,20 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 {
 
 	import com.greensock.TweenLite;
-
+	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
-	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.media.Camera;
+	import flash.media.Video;
 	import flash.utils.setTimeout;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
+	import net.psykosoft.psykopaint2.base.utils.io.CameraRollUtil;
 	import net.psykosoft.psykopaint2.base.utils.misc.MathUtil;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -19,9 +23,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import net.psykosoft.psykopaint2.core.views.components.input.PsykoInput;
 	import net.psykosoft.psykopaint2.core.views.components.input.PsykoInputValidationUtil;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
-
+	
 	import org.osflash.signals.Signal;
-	import net.psykosoft.psykopaint2.base.utils.io.CameraRollUtil;
 
 	public class SignupSubView extends Sprite
 	{
@@ -35,6 +38,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		public var folderHit:Sprite;
 		public var photoHolder:Sprite;
 		public var photoContour:Sprite;
+		public var videoView:Sprite;
+		
 
 		public var viewWantsToRegisterSignal:Signal;
 
@@ -45,9 +50,12 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		private var _photoSmall:BitmapData;
 		private var _photoRetrieved:Boolean;
 		private var _satelliteMessages:Vector.<LoginMessageLabel>;
-
-		private const LARGE_PHOTO_SIZE:int = 200;
-		private const SMALL_PHOTO_SIZE:int = 200;
+		private var _video:Video;
+		private var _camera:Camera = new Camera();
+		private var _videoViewContainer:Sprite;
+		
+		private const LARGE_PHOTO_SIZE:int = 256;
+		private const SMALL_PHOTO_SIZE:int = 128;
 
 		public var canRequestSignUp:Boolean = true;
 
@@ -62,6 +70,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			passwordTf.defaultText = "password";
 			firstNameTf.defaultText = "first name";
 			lastNameTf.defaultText = "last name";
+			
+			passwordTf.behavesAsPassword( true );
 
 			emailTf.setChainedTextField(passwordTf);
 			passwordTf.setChainedTextField(firstNameTf);
@@ -76,6 +86,16 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			cameraHit.alpha = 0;
 			folderHit.alpha = 0;
 			photoContour.visible = false;
+			
+			//CREATE A CONTAINER FOR THE VIDEO VIEW TO TAKE THE SNAPSHOT WITH THE SCALING
+			_videoViewContainer = new Sprite();
+			var index:int= this.getChildIndex(videoView)
+			this.addChildAt(_videoViewContainer,index);
+			_videoViewContainer.x = videoView.x;
+			_videoViewContainer.y = videoView.y;
+			videoView.x=0;
+			videoView.y=0;
+			_videoViewContainer.addChild(videoView);
 
 			_photoBitmap = new Bitmap();
 			_photoBitmap.visible = false;
@@ -86,6 +106,28 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			folderHit.addEventListener( MouseEvent.CLICK, onFolderHitClick );
 			signupBtn.addEventListener( MouseEvent.CLICK, onSignupBtnClick );
 		}
+		
+		
+		public function init():void
+		{
+			if(!_video){
+				//SETUP CAMERA
+				_video = new Video();
+				videoView['videoContainer'].addChild(_video);
+				//IF WE'RE ON IPAD WE TAKE THE FRONT WEBCAM : 1 OR 0 OTHERWISE
+				_camera = Camera.getCamera( CoreSettings.RUNNING_ON_iPAD?"1":"0" );
+				//NEED TO TAKE THE FRONT CAMERA ON IPAD FIRST
+				if( _camera ) {
+					_camera.setMode(   512 * CoreSettings.GLOBAL_SCALING, 384 * CoreSettings.GLOBAL_SCALING, 30, true );
+					trace( "camera set, dims: " + _camera.width, _camera.height );
+					_video.attachCamera( _camera );
+					_video.height = 256;
+					_video.width = _video.height*3/2;
+					
+				}
+			}
+		}
+		
 
 		public function dispose():void {
 
@@ -105,10 +147,13 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			passwordTf.dispose();
 			firstNameTf.dispose();
 			lastNameTf.dispose();
-
+			
+			if(_camera) _camera = null;
+			if(_video){_video.attachCamera(null);
+				_video=null;
+			}
 			if( _cameraUtil ) _cameraUtil.dispose();
 			if( _rollUtil ) _rollUtil.dispose();
-			if( _photoSmall ) _photoSmall.dispose();
 			if( _photoSmall ) _photoSmall.dispose();
 			if( _photoLarge ) _photoLarge.dispose();
 
@@ -250,30 +295,47 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		private function takePhoto():void {
 			photoContour.visible = false;
-			if( !CoreSettings.RUNNING_ON_iPAD ) return;
+			//if( !CoreSettings.RUNNING_ON_iPAD ) return;
 			ConsoleView.instance.log( this, "taking photo..." );
-			_cameraUtil = new DeviceCameraUtil( stage );
+			/*_cameraUtil = new DeviceCameraUtil( stage );
 			_cameraUtil.imageRetrievedSignal.add( onPhotoRetrieved );
-			_cameraUtil.launch();
+			_cameraUtil.launch();*/
+			
+			//var videoViewPosition:Point = new Point(videoView.x,videoView.y);
+			
+			var snapshotBmd:BitmapData = new BitmapData(256,256,false,0);
+			//SCALE UP THE VIDEO VIEW TEMPORARILY
+			videoView.height=256;
+			videoView.scaleX = videoView.scaleY;
+			snapshotBmd.draw(_videoViewContainer);
+			videoView.height = 115;
+			videoView.scaleX = videoView.scaleY;
+		
+			onPhotoRetrieved(snapshotBmd,0);
+			
 		}
 
 		private function onPhotoRetrieved( bmd:BitmapData, orientation:int ):void {
 
 			trace( this, "photo retrieved: " + bmd.width + "x" + bmd.height );
 
-			_photoLarge = BitmapDataUtils.scaleToFit( bmd, LARGE_PHOTO_SIZE );
-			_photoSmall = BitmapDataUtils.scaleToFit( bmd, SMALL_PHOTO_SIZE );
+			_photoLarge = BitmapDataUtils.resizeAndCrop( bmd, LARGE_PHOTO_SIZE,LARGE_PHOTO_SIZE );
+			_photoSmall = BitmapDataUtils.resizeAndCrop( bmd, SMALL_PHOTO_SIZE,SMALL_PHOTO_SIZE );
 
 			_photoBitmap.bitmapData = _photoLarge;
-			_photoBitmap.x = 115 / 2 - _photoBitmap.width / 2;
-			_photoBitmap.y = 115 / 2 - _photoBitmap.height / 2;
-
+			_photoBitmap.width=115;
+			_photoBitmap.height=115;
+			
 			_photoRetrieved = true;
 
 			_photoBitmap.visible = true;
 			photoContour.visible = false;
+			//_videoViewContainer.visible=false;
+			_videoViewContainer.alpha = 0.3;
+			
+			bmd.dispose();
 
-			_cameraUtil.dispose();
+			//_cameraUtil.dispose();
 		}
 
 		// -----------------------
@@ -303,5 +365,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		private function hueContour( clip:Sprite, hue:Number, saturation:Number = 1 ):void {
 			TweenLite.to( clip, 0, { colorMatrixFilter: { hue: hue, saturation: saturation } } );
 		}
+		
 	}
 }

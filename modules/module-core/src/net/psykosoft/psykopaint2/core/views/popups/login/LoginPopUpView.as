@@ -184,6 +184,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		private function onSelectLoginSubViewSignupBtnClicked():void {
 			selectLoginSubView.visible = false;
 			signupSubView.visible = true;
+			signupSubView.init();
 		}
 
 		private function onSelectLoginSubViewLoginBtnClicked():void {

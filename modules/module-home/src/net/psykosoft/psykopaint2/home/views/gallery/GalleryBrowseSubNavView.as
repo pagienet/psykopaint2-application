@@ -35,7 +35,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			createCenterButton( ID_MOST_RECENT, ID_MOST_RECENT, ButtonIconType.MOST_RECENT, null, null, true );
 			createCenterButton( ID_MOST_LOVED, ID_MOST_LOVED, ButtonIconType.MOST_LOVED, null, null, true );
 			validateCenterButtons();
-			selectButtonWithLabel(_startWithSelectedId);
+			if (_startWithSelectedId) selectButtonWithLabel(_startWithSelectedId);
 			_buttonsCreated = true;
 		}
 	}

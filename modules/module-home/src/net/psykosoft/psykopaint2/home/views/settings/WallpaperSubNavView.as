@@ -2,7 +2,8 @@ package net.psykosoft.psykopaint2.home.views.settings
 {
 
 	import flash.display.Bitmap;
-
+	import flash.events.MouseEvent;
+	
 	import net.psykosoft.psykopaint2.base.utils.data.BitmapAtlas;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.PolaroidButton;
@@ -34,7 +35,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 			var names:Vector.<String> = atlas.names;
 			for( var i:uint; i < names.length; i++ ) {
 				var name:String = names[ i ];
-				createCenterButton( name, name, null, PolaroidButton, new Bitmap( atlas.getSubTextureForId( name ) ), true );
+				createCenterButton( name, name, null, PolaroidButton, new Bitmap( atlas.getSubTextureForId( name ) ), true ,true,true,MouseEvent.MOUSE_UP);
 			}
 
 			validateCenterButtons();
