@@ -29,13 +29,15 @@ package  net.psykosoft.psykopaint2.core.commands {
 			//identify file names
 			var dataFileName:String = CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION;
 			var infoFileName:String = CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION;
-
+			
+			
 			//delete files
 			var dataFile:File;
 			var infoFile:File;
 			if( CoreSettings.RUNNING_ON_iPAD ) {
-				dataFile = File.applicationStorageDirectory.resolvePath( dataFileName );
-				infoFile = File.applicationStorageDirectory.resolvePath( infoFileName );
+				//File.applicationStorageDirectory doesn't work. 
+				dataFile = File.documentsDirectory.resolvePath( paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION );
+				infoFile = File.documentsDirectory.resolvePath( paintingId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION );
 			}
 			else {
 				dataFile = File.desktopDirectory.resolvePath( dataFileName );

@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.core.models
 		
 		private function onPaintingDeleted( id:String ):void
 		{
-			PaintingInfoVO(_paintingData[id]).dispose()
+			PaintingInfoVO(_paintingData[id]).dispose();
 			delete _paintingData[id];
 		}
 		
