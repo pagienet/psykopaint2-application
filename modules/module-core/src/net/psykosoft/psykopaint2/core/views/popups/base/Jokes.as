@@ -24,5 +24,9 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 			'"Why are pirates so mean? I don’t know, they just arrrrrrrrrr"' ,
 			'"How does Jesus make tea???? Hebrews it."'
 			];
+		
+		public static function getRandomJoke():String{
+			return JOKES[Math.floor( JOKES.length * Math.random() )];
+		}
 	}
 }

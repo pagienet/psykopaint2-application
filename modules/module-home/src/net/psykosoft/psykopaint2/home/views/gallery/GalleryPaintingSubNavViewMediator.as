@@ -1,11 +1,9 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
 
-import com.milkmangames.nativeextensions.GoViral;
-
 import flash.display.BitmapData;
+import flash.events.MouseEvent;
 
-import net.psykosoft.psykopaint2.base.utils.alert.Alert;
 import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 import net.psykosoft.psykopaint2.core.managers.social.SocialSharingManager;
 import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
@@ -13,8 +11,10 @@ import net.psykosoft.psykopaint2.core.models.GalleryType;
 import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 import net.psykosoft.psykopaint2.core.services.GalleryService;
+import net.psykosoft.psykopaint2.core.signals.RequestGalleryReconnectSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
+import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
 import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
@@ -26,6 +26,10 @@ import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 
 		[Inject]
 		public var requestShowPopUpSignal:RequestShowPopUpSignal;
+		
+		[Inject]
+		public var requestGalleryReconnectSignal : RequestGalleryReconnectSignal;
+
 
 		[Inject]
 		public var activePaintingModel : ActiveGalleryPaintingModel;
@@ -82,25 +86,37 @@ import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 //			trace("LOOKING AT NEW PAINTING, user: " + activePaintingModel.painting.userID);
 //			trace("BEING: " + loggedInUser.userID);
 
-			if (!activePaintingModel.painting || activePaintingModel.painting.collectionType == GalleryType.NONE)
+			if (!activePaintingModel.painting || activePaintingModel.painting.collectionType == GalleryType.NONE){
 				showButtons(false);
-			else {
+			}else {
 				showButtons(true);
 				updateLoveButton();
 				updateShareButton();
 				updateUserProfileButton();
 
-				var showLove:Boolean = activePaintingModel.painting.userID != loggedInUser.userID;
+				//LOVE BUTTON VISIBILITY: NO LOVE BUTTON WHEN USER OWN THE PAINTING
+				var isUserOwner:Boolean = activePaintingModel.painting.userID == loggedInUser.userID;
+				if (isUserOwner){
+					//SHOW DELETE BUTTON
+					view.updateButtons(true);			
+					//MATHIEU HACK TO CENTER SHARE BUTTO UNTIL WE FIX THE WHOLE NAV SYSTEM.
+					if(isUserOwner==true){
+						view.x = -60;
+					}else {
+						view.x = 0;
+					}
+				}else {
+					
+					//HIDE DELETE BUTTON
+					view.updateButtons(false);
+				}
+				//IF USER IS ADMIN WE SHOW THE DELETE BUTTON TOO
+				if(loggedInUser.admin){
+					view.updateButtons(true);
+				}
+				
 //				trace("show love button: " + showLove);
 				
-				view.setButtonVisibilityWithID(GalleryPaintingSubNavView.ID_LOVE, showLove);
-				
-				//MATHIEU HACK TO CENTER SHARE BUTTO UNTIL WE FIX THE WHOLE NAV SYSTEM.
-				if(showLove==false){
-					view.x = -60;
-				}else {
-					view.x = 0;
-				}
 			}
 		}
 
@@ -158,11 +174,14 @@ import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 					else
 						showLogIn();
 					break;
-				case GalleryPaintingSubNavView.ID_SHARE:
+				case GalleryPaintingSubNavView.ID_DELETE:
 					if (loggedInUser.isLoggedIn())
-						sharePainting();
+						deletePainting();
 					else
 						showLogIn();
+					break;
+				case GalleryPaintingSubNavView.ID_SHARE:
+						sharePainting();
 					break;
 				case GalleryPaintingSubNavView.ID_COMMENT:
 					if (loggedInUser.isLoggedIn())
@@ -176,31 +195,38 @@ import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 					break;
 			}
 		}
-
+		
+		
+		
 		private function showLogIn():void
 		{
 			requestShowPopUpSignal.dispatch(PopUpType.LOGIN);
 		}
-
-		private function sharePainting() : void
+		
+		private function deletePainting():void
 		{
-			// Trigger native sharing pop up.
-			if(GoViral.isSupported()) {
-				if(socialSharingManager.goViral.isGenericShareAvailable()) {
-					// Get the image for sharing...
-					activePaintingModel.painting.loadFullSizedComposite(onBmdRetrieved, onBmdError);
-				}
-				else {
-					Alert.show("Psykopaint requires iOS 7 for sharing. Sorry buddy");
-				}
-			}
-			else {
-				Alert.show("Oups. Seems like Sharing is not available on this iPad. Try updating iOS.");
-				trace("Go Viral is not available");
-			}
+			var painting : GalleryImageProxy = activePaintingModel.painting;
 
-			// TODO: THIS NEEDS TO BE CLEANED UP AND TOTALLY REMOVED FROM THE APP, CODE + ASSETS
-//			requestNavigationStateChange(NavigationStateType.GALLERY_SHARE);
+			galleryService.removePainting(painting.id, onDeletePaintingSucceeded, onDeletePaintingFailed);
+		}
+		
+		private function onDeletePaintingFailed():void
+		{
+			//SHOW ERROR MESSAGE			
+		}
+		
+		private function onDeletePaintingSucceeded():void
+		{
+			
+			//UPDATE VIEW
+			//RESET GALLERY VIEW
+			requestGalleryReconnectSignal.dispatch();
+		}
+		
+		private function sharePainting() : void
+		{			
+				
+			requestNavigationStateChange(NavigationStateType.GALLERY_SHARE);
 		}
 
 		private function onBmdError():void {

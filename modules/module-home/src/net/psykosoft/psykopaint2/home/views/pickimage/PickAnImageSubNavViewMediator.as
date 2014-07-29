@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
 	
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.base.utils.io.CameraRollUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
@@ -168,8 +169,14 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		}
 
 		private function onPhotoRetrieved( bmd:BitmapData, orientation:int ):void {
-
+			
 			trace( this, "photo retrieved: " + bmd.width + "x" + bmd.height );
+			//CROP LARGE BITMAPDATAS
+			if(bmd.width>1024*CoreSettings.GLOBAL_SCALING){
+				bmd = BitmapDataUtils.scaleToFit(bmd,1024*CoreSettings.GLOBAL_SCALING);
+				trace( this, "photo retrieved croped: " + bmd.width + "x" + bmd.height );
+			}
+			
 			requestCropSourceImageSignal.dispatch( bmd, orientation );
 		}
 		

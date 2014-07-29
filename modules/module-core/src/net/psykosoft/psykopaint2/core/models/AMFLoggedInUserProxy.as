@@ -10,11 +10,11 @@ package net.psykosoft.psykopaint2.core.models
 	import flash.net.SharedObject;
 	import flash.net.URLRequest;
 	import flash.utils.ByteArray;
-
+	
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
 	import net.psykosoft.psykopaint2.core.signals.NotifyProfilePictureUpdatedSignal;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class AMFLoggedInUserProxy implements LoggedInUserProxy
@@ -35,10 +35,12 @@ package net.psykosoft.psykopaint2.core.models
 		private var _numFollowers : uint;
 		private var _active : Boolean;
 		private var _banned : Boolean;
+		private var _admin : Boolean=false;
 		private var _passwordReminderEmail : String;
 
 		private var _onChange : Signal = new Signal();
 		private var _onSubscriptionsChange : Signal = new Signal();
+
 
 		private var _onFail : Function;
 		private var _onSuccess : Function;
@@ -62,8 +64,10 @@ package net.psykosoft.psykopaint2.core.models
 		private function retrieveCachedUser() : void
 		{
 			_sessionID = _localCache.data["session_id"];
+			trace(this+"::sessionID="+_sessionID);
 
 			if (_sessionID) {
+				trace(this+"::sessionID = "+_sessionID);
 				extractProfileData(_localCache.data);
 				loadUserImage();
 			}
@@ -149,6 +153,7 @@ package net.psykosoft.psykopaint2.core.models
 			_banned = false;
 			_firstName = null;
 			_lastName = null;
+			_admin = false;
 			_numComments = 0;
 			_numFollowers = 0;
 
@@ -245,6 +250,7 @@ package net.psykosoft.psykopaint2.core.models
 			_localCache.data["num_followers"] = _numFollowers;
 			_localCache.data["num_comments"] = _numComments;
 			_localCache.data["active"] = _active;
+			_localCache.data["admin"] = _admin;
 			_localCache.data["banned"] = _banned;
 			_localCache.data["notifications"] = _subscriptions;
 			_localCache.data["thumbnail_url"] = _thumbnailURL;
@@ -259,8 +265,9 @@ package net.psykosoft.psykopaint2.core.models
 			_facebookID = userData["facebook_id"];
 			_numFollowers = userData["num_followers"];
 			_numComments = userData["num_comments"];
-			_active = userData["active"];
-			_banned = userData["banned"];
+			_active = userData["active"]=="1"?true:false;
+			_admin = userData["admin"]=="1"?true:false;
+			_banned = userData["banned"]=="1"?true:false;
 			_subscriptions = userData["notifications"];
 			_thumbnailURL = userData["thumbnail_url"];
 
@@ -314,6 +321,12 @@ package net.psykosoft.psykopaint2.core.models
 		public function get banned() : Boolean
 		{
 			return _banned;
+		}
+		
+		
+		public function get admin():Boolean
+		{
+			return _admin;
 		}
 
 		public function get onChange() : Signal

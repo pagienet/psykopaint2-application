@@ -11,10 +11,6 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyProductPriceSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
-	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 
 	public class InAppPurchaseManager
 	{

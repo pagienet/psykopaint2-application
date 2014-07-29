@@ -146,7 +146,8 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			var currentPlatform:String =CoreSettings.RUNNING_ON_iPAD ? "ios":"desktop";
 			
 			///var atfURL : String =  "/home-packaged-"+currentPlatform+"/away3d/atelier/atfs/"
-			var atfURL : String =  "/home-packaged/away3d/atelier/atfs/"
+			var atfURL : String =  "/home-packaged/away3d/atelier/atfs/"+((CoreSettings.RUNNING_ON_RETINA_DISPLAY==true)?"retina/":"regular/");
+			//var atfURL : String =  "/home-packaged/away3d/atelier/atfs/retina/";
 			var imgURL : String = "/home-packaged/away3d/atelier/";
 
 			var titlesData:TitlesData = new TitlesData();
@@ -212,6 +213,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 
 			var wallsData:Walls_editmaterial1Data = new Walls_editmaterial1Data();
 			var walls_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-1.5399999618530273,159.82000732421875,-1.4199999570846558,1]);
+			
 			var walls:Mesh = new Mesh(wallsData.geometryData, null);
 			applyTransform(walls_rd, walls, "walls");
 //			loadBitmapMaterial(walls, imgURL + "jpgs/stucco.jpg", 11);
@@ -261,7 +263,8 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 					if(id == 0) _elementsTextureMaterial = buildATFMaterial(ByteArray(e.data));
 					//mesh.material = _elementsTexture
 					//REUSE MATERIAL FOR ID = 1
-					mesh.material = _elementsTextureMaterial
+					mesh.material = _elementsTextureMaterial;
+					
 					
 					//HACK TO REMOVE:
 					//dispatchEvent(new Event(Event.COMPLETE));
@@ -328,9 +331,10 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 					buildWalls(mesh, ByteArray(e.data));
 					clearLoader();
 					return;
-
+				
 			}
-
+			
+			
 			if (_meshes.indexOf(mesh) == -1) {
 				_meshes.push(mesh);
 				addChild(mesh);

@@ -612,9 +612,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 					createPainting(i);
 			}
 			//REMOVE INVISIBLE ONES ON THE RIGHT
-			for (i = visibleEnd; i < _visibleEndIndex; ++i) {
-				if (_paintings[i])
+			for (i = Math.min(_visibleEndIndex,_paintings.length-1) ; i >=visibleEnd ; --i) {
+				//if (_paintings.length>0&&_paintings[i])
+				if(_paintings.length>i-1 && _paintings[i]){
 					destroyPainting(i);
+				}
 			}
 
 			_visibleStartIndex = visibleStart;

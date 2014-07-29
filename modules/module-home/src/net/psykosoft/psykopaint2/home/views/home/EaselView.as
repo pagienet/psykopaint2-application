@@ -372,6 +372,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function dispose() : void
 		{
+			//MATHIEU TESTING TO NOT DISPOSE IT AGAIN
+			if(_canvas!=null){
 			stage3dProxy.removeEventListener(Stage3DEvent.CONTEXT3D_RECREATED, onContextRecreated );
 			
 			_view.camera.removeEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraTransformChanged);
@@ -388,6 +390,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_diffuseTexture = null;
 			_normalSpecularTexture = null;
 			_material = null;
+			}
 		}
 
 		public function get paintingID() : String
@@ -534,6 +537,10 @@ package net.psykosoft.psykopaint2.home.views.home
 			break;
 			}
 			*/
+			
+			//MATHIEU: KILL ORIGINAL CROP BITMAP HERE
+			bitmapData.dispose();
+			bitmapData=null;
 			
 			//cropModeIsActive = true;
 			//temporary to test on desktop
@@ -739,10 +746,14 @@ package net.psykosoft.psykopaint2.home.views.home
 		
 		public function getCroppedImage():BitmapData
 		{
+			
 			var util:CopyMeshToBitmapDataUtil = new CopyMeshToBitmapDataUtil();
 			var result:BitmapData = new BitmapData( CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT,false );
 			
 			result = util.execute( _canvas, _diffuseTexture.texture, result, _context3D );
+			
+			//MATHIEU: We dispose of easel view at that moment
+			//dispose();
 			return result;
 		}
 	}

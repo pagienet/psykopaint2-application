@@ -9,7 +9,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.text.TextField;
-
+	
+	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
@@ -21,6 +22,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		public static const ID_COMMENT:String = "Comment";
 		public static const ID_SHARE:String = "Share";
 		public static const PROFILE:String = "profile";
+		public static const ID_DELETE:String = "delete";
 
 		private var _userThumbnailURL:String;
 		private var _userBitmapLoader:Loader;
@@ -128,10 +130,22 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			super.onSetup();
 			createCenterButton(ID_LOVE, ID_LOVE, ButtonIconType.LOVE, IconButton, null, false, true, true, MouseEvent.MOUSE_UP);
 			createCenterButton(ID_SHARE, ID_SHARE, ButtonIconType.SHARE);
-
+			
+			
 			validateCenterButtons();
 
 			getRightButton().addChild(_container);
+		}
+		
+		public function updateButtons(showDelete:Boolean):void{
+			
+			invalidateCenterButtons()
+			createCenterButton(ID_SHARE, ID_SHARE, ButtonIconType.SHARE);
+			createCenterButton(ID_LOVE, ID_LOVE, ButtonIconType.LOVE, IconButton, null, false, true, true, MouseEvent.MOUSE_UP);
+			if(showDelete)createCenterButton(ID_DELETE, ID_DELETE, ButtonIconType.DISCARD);
+			
+			validateCenterButtons();
+			
 		}
 
 		public function setLoveCount(count:int):void

@@ -25,8 +25,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 			super.execute();
 
 			requestShowPopUpSignal.dispatch( PopUpType.MESSAGE );
-			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
-			requestUpdateMessagePopUpSignal.dispatch( "Saving...", randomJoke );
+			requestUpdateMessagePopUpSignal.dispatch( "Saving...", Jokes.getRandomJoke() );
 			notifyPopUpShownSignal.addOnce( onSavingPopUpShown );
 		}
 

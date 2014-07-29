@@ -17,6 +17,8 @@ package net.psykosoft.psykopaint2.base.utils.io
 	import flash.utils.ByteArray;
 	import flash.utils.IDataInput;
 	
+	import away3d.bounds.NullBounds;
+	
 	import jp.shichiseki.exif.ExifInfo;
 	import jp.shichiseki.exif.IFD;
 	
@@ -32,6 +34,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 		private var exifData:Array;
 		private var mediaPromise:MediaPromise;
 		private var imageBytes:ByteArray;
+		private var i:int=0;
 
 		public function CameraRollUtil() {
 			super();
@@ -41,17 +44,32 @@ package net.psykosoft.psykopaint2.base.utils.io
 			_cameraRoll = new CameraRoll();
 			_cameraRoll.addEventListener( MediaEvent.SELECT, onPhotoComplete );
 			_cameraRoll.addEventListener( Event.CANCEL, browseCanceled );
+			_cameraRoll.addEventListener( ErrorEvent.ERROR, mediaError );
+
 		}
 		
+		protected function mediaError(event:ErrorEvent):void
+		{
+			trace("error:"+event.errorID+"=>"+event.text);
+			
+		}		
 		
 		private function onPhotoComplete(e:MediaEvent):void
 		{
 			_cameraRoll.removeEventListener(Event.SELECT, onPhotoComplete);
+			
 			mediaPromise = e.data;
+			
+			/*_imageLoader = new Loader();
+			_imageLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, asyncImageLoaded );
+			_imageLoader.loadFilePromise(mediaPromise);*/
+			
+			
 			imageBytes = new ByteArray();
 			if (this.mediaPromise.isAsync)
 			{
 				var mediaDispatcher:IEventDispatcher = this.mediaPromise.open() as IEventDispatcher;
+				
 				mediaDispatcher.addEventListener(ProgressEvent.PROGRESS, onMediaPromiseProgress);
 				mediaDispatcher.addEventListener(Event.COMPLETE, onMediaPromiseComplete);
 			}
@@ -70,6 +88,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 		{
 			var input:IDataInput = e.target as IDataInput;
 			input.readBytes(imageBytes, imageBytes.length, input.bytesAvailable);
+			input = null;
 		}
 		
 		private function onMediaPromiseComplete(e:Event):void
@@ -107,6 +126,8 @@ package net.psykosoft.psykopaint2.base.utils.io
 
 			parse(imageBytes);
 			
+			
+			
 			trace( this, "media selected..." );
 			_imageLoader = new Loader();
 			_imageLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, asyncImageLoaded );
@@ -126,6 +147,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 				reportImage();
 			}
 			*/
+			
 		}
 
 		private function asyncImageLoaded( event:Event ):void {
@@ -143,16 +165,20 @@ package net.psykosoft.psykopaint2.base.utils.io
 			_imageLoader.contentLoaderInfo.removeEventListener( Event.COMPLETE, asyncImageLoaded );
 			_imageLoader.removeEventListener( IOErrorEvent.IO_ERROR, loadError );
 
-			//var bmd:BitmapData = new TrackedBitmapData( _imageLoader.width, _imageLoader.height, false, 0 );
-			//bmd.draw( _imageLoader );
-
 			imageBytes.clear();
 			imageBytes = null;
 			
-			imageRetrievedSignal.dispatch( ((_imageLoader.content) as Bitmap).bitmapData,parseInt(exifData[0].split(": ")[1]));
+			
+			//imageRetrievedSignal.dispatch( ((_imageLoader.content) as Bitmap).bitmapData,parseInt(exifData[0].split(": ")[1]));
+			imageRetrievedSignal.dispatch( ((_imageLoader.content) as Bitmap).bitmapData,1);
 		}
 
 		public function dispose():void {
+			//CLEAR IMAGE LOADER:
+			if(_imageLoader){
+				_imageLoader.unload();
+				_imageLoader = null;
+			}
 			_cameraRoll.removeEventListener( MediaEvent.SELECT, imageSelected );
 			_cameraRoll.removeEventListener( Event.CANCEL, browseCanceled );
 		}
@@ -163,6 +189,13 @@ package net.psykosoft.psykopaint2.base.utils.io
 		}
 
 		public function launch( launcherRect:Rectangle, width:Number, height:Number ):void {
+			
+			//CLEAR IMAGE LOADER:
+			if(_imageLoader){
+				_imageLoader.unload();
+				_imageLoader = null;
+			}
+			
 			var options:CameraRollBrowseOptions = new CameraRollBrowseOptions();
 			options.origin = launcherRect;
 			//options.width = width;

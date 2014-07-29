@@ -92,6 +92,9 @@ package net.psykosoft.psykopaint2.core.services
 		{
 			if (hasSubscriptions)
 				subscribe();
+			
+			stage.removeEventListener(Event.ACTIVATE, onActivate);
+
 		}
 
 		public function get supportsNotifications():Boolean
@@ -111,6 +114,7 @@ package net.psykosoft.psykopaint2.core.services
 
 		public function subscribe():void
 		{
+			trace(this,"subscribe _supportsNotifications = "+_supportsNotifications);
 			if (_supportsNotifications)
 				_remoteNotifier.subscribe(_subsribeOptions);
 		}

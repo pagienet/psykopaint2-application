@@ -155,17 +155,22 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			{
 				case InAppPurchaseManager.STATUS_PURCHASE_CANCELLED:
 					requestHidePopUpSignal.dispatch();
-					requestUndoSignal.dispatch();
-					canvasHistoryModel.clearHistory();	// make sure there is no trickery possible
-					
-
+					//SOMETIMES THERE ARE ERRORS OF STAGE 3D CAUSE OF SOME PROCESSING IN BG
+					try{
+						requestUndoSignal.dispatch();
+						//canvasHistoryModel.clearHistory();	// make sure there is no trickery possible
+					}catch(e:Error){
+						trace("ERROR:"+e.message);
+					}
 				break;
-				
 				case InAppPurchaseManager.STATUS_PURCHASE_FAILED:
 					requestHidePopUpSignal.dispatch();
-					requestUndoSignal.dispatch();
-					canvasHistoryModel.clearHistory();	// make sure there is no trickery possible
-					
+					try{
+						requestUndoSignal.dispatch();
+						//canvasHistoryModel.clearHistory();	// make sure there is no trickery possible
+					}catch(e:Error){
+						trace("ERROR:"+e.message);
+					}
 					requestShowPopUpSignal.dispatch( PopUpType.ERROR )
 					requestUpdateErrorPopUpSignal.dispatch("Upgrade Failed","Oops - something went wrong with your purchase.  Please check your internet connection and try again.");
 					break;

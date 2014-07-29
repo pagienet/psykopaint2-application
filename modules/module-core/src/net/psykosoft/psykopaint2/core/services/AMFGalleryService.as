@@ -145,16 +145,25 @@ import net.psykosoft.psykopaint2.core.models.*;
 
 		public function addComment(paintingID : int, text : String, onSuccess : Function, onFailure : Function) : void
 		{
+			trace(this+"paintingID:"+paintingID+" text:"+text);
 			amfBridge.addCommentToPainting(userProxy.sessionID, paintingID, text, emptyCallBack(onSuccess), onFailure);
 		}
 
 		public function favorite(paintingID : int, onSuccess : Function, onFailure : Function) : void
 		{
+			trace(this+"favorite "+paintingID);
 			amfBridge.favoritePainting(userProxy.sessionID, paintingID, emptyCallBack(onSuccess), onFailure);
+		}
+		
+		public function removePainting(paintingID : int, onSuccess : Function, onFailure : Function) : void
+		{
+			trace(this+"removePainting "+paintingID);
+			amfBridge.removePainting(userProxy.sessionID, paintingID, emptyCallBack(onSuccess), onFailure);
 		}
 
 		public function unfavorite(paintingID : int, onSuccess : Function, onFailure : Function) : void
 		{
+			trace(this+"unfavorite "+paintingID);
 			amfBridge.unfavoritePainting(userProxy.sessionID, paintingID, emptyCallBack(onSuccess), onFailure);
 		}
 

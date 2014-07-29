@@ -20,12 +20,17 @@ package net.psykosoft.psykopaint2.app.states.transitions
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestRemoveBookSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
+	import net.psykosoft.psykopaint2.core.views.popups.base.Jokes;
+	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestRemoveBookSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestRemoveHomeModuleDisplaySignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
@@ -108,6 +113,15 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		[Inject]
 		public var requestGpuRenderingSignal:RequestGpuRenderingSignal;
 
+		[Inject]
+		public var requestShowPopUpSignal:RequestShowPopUpSignal;
+		
+		[Inject]
+		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal; 
+		
+		[Inject]
+		public var requestHidePopUpSignal : RequestHidePopUpSignal;
+		
 
 		private var _croppedBitmapData : BitmapData;
 		private var _background : RefCountedRectTexture;
@@ -143,6 +157,11 @@ package net.psykosoft.psykopaint2.app.states.transitions
 			notifyHomeModuleDestroyedSignal.addOnce(onHomeModuleDestroyed);
 			requestDestroyHomeModuleSignal.dispatch();
 			
+			//WE HAVE TO SHOW THE POPUP TO HIDE THE TRANSITION
+			requestShowPopUpSignal.dispatch(PopUpType.MESSAGE);
+			requestUpdateMessagePopUpSignal.dispatch("COMPUTING COMPLEX THINGS",Jokes.getRandomJoke());
+
+			
 		}
 		
 		private function onHomeModuleDestroyed():void
@@ -161,8 +180,6 @@ package net.psykosoft.psykopaint2.app.states.transitions
 			requestSetCanvasBackgroundSignal.dispatch(_background.newReference(), easelRectModel.absoluteScreenRect);
 			
 			
-			
-			
 			//THEN LOAD THE SURFACE
 			notifySurfaceLoadedSignal.addOnce(onSurfaceLoaded);
 			requestLoadSurfaceSignal.dispatch(PaintMode.PHOTO_MODE);
@@ -174,7 +191,7 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		private function onSurfaceLoaded(data : SurfaceDataVO) : void
 		{
 			
-		
+			
 			
 			notifyPaintModuleSetUp.addOnce(onPaintingModuleSetUp);
 			requestSetupPaintModuleSignal.dispatch(createPaintingVO(data));
@@ -191,6 +208,8 @@ package net.psykosoft.psykopaint2.app.states.transitions
 		
 		private function onCanvasBackgroundSet(background : RefCountedRectTexture) : void
 		{
+			//HIDE POPUP
+			requestHidePopUpSignal.dispatch();
 			
 			notifyCanvasZoomedToDefaultViewSignal.addOnce( onZoomComplete );
 			requestZoomCanvasToDefaultViewSignal.dispatch();

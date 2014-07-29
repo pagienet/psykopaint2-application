@@ -105,7 +105,10 @@ public class QuickSharePopUpViewMediator extends MediatorBase
 		}
 		
 		//REGULAR CLOSE THE POPUP POSITION, NOW WE CLOSE THE POPUP WHEN SHARING ON FACEBOOK
-		requestHidePopUpSignal.dispatch();
+		//requestHidePopUpSignal.dispatch();
+		
+		requestShowPopUpSignal.dispatch(PopUpType.ERROR);
+		requestUpdateMessagePopUpSignal.dispatch( "PUBLISHED" ,"The painting have been published already.");
 	}
 
 	private function onPopUpWantsToClose():void {

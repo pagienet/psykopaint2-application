@@ -81,6 +81,7 @@ import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestFinalizeCropSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestFrameUpdateSignal;
+import net.psykosoft.psykopaint2.core.signals.RequestGalleryReconnectSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
@@ -281,6 +282,7 @@ public class CoreConfig
 			_injector.map( RequestAddViewToMainLayerSignal ).asSingleton();
 			_injector.map( RequestSaveCPUForUISignal ).asSingleton();
 			_injector.map( RequestResumeCPUUsageForUISignal ).asSingleton();
+			_injector.map( RequestGalleryReconnectSignal ).asSingleton();
 			_injector.map( RequestChangeRenderRectSignal ).asSingleton();
 			_injector.map( RequestShowPopUpSignal ).asSingleton();
 			_injector.map( RequestHidePopUpSignal ).asSingleton();

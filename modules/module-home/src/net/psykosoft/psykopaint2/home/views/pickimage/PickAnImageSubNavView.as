@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		public static const ID_USER:String = "Your Photos";
 		public static const ID_SAMPLES:String = "Ready-To";
 		public static const ID_CAMERA:String = "Take a photo";
-		public static const ID_SCRATCH:String = "Blank Canvas";
+		public static const ID_SCRATCH:String = "Regular Painting";
 //		public static const ID_FACEBOOK:String = "[Facebook]";
 
 		public function PickAnImageSubNavView() {

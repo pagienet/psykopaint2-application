@@ -4,16 +4,12 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 	
 	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
-	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
 	import flash.display3D.IndexBuffer3D;
 	import flash.display3D.Program3D;
 	import flash.display3D.VertexBuffer3D;
-	import flash.display3D.textures.Texture;
 	import flash.display3D.textures.TextureBase;
-	import flash.geom.Matrix3D;
-	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	
 	import away3d.core.base.ISubGeometry;
@@ -35,6 +31,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 			//context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			copy(mesh, sourceTexture, context3D);
 			context3D.drawToBitmapData(target);
+			dispose();
 			
 			return target;
 		}

@@ -38,6 +38,8 @@ package net.psykosoft.psykopaint2.core.models
 		function get active() : Boolean;
 
 		function get banned() : Boolean;
+		
+		function get admin() : Boolean;
 
 		function get onChange():Signal;
 		function get onSubscriptionsChanged():Signal;

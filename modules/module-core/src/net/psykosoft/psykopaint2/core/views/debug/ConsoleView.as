@@ -55,7 +55,10 @@ package net.psykosoft.psykopaint2.core.views.debug
 		}
 
 		public function logMemory():void {
+			
 			log( "Private memory: " + uint( System.privateMemory / 1024 ) / 1024 + "MB" );
+			log( "Total memory: " + uint( System.totalMemory / 1024 ) / 1024 + "MB" );
+			log( "CPU Usage: " + uint( System.processCPUUsage  ) );
 		}
 	}
 }

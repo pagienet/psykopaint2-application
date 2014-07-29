@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core
 
 	import com.bit101.MinimalComps;
 	
+	import flash.desktop.NativeApplication;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
@@ -63,6 +64,10 @@ package net.psykosoft.psykopaint2.core
 			stage.addEventListener( Event.RESIZE, onStageResize );
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
+			
+			//ALLOW PROCESSING IN THE BG
+			NativeApplication.nativeApplication.executeInBackground = true;
+			
 		}
 
 		private function onStageResize( event:Event ):void {

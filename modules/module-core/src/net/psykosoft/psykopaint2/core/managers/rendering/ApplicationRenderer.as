@@ -57,10 +57,16 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 			var context : Context3D = stage3DProxy.context3D;
 
 			if (!context ) return;
-
-			if ( context.driverInfo == "Disposed" )
-			{
-				trace("###################### WARNING: context loss! ###################### ");
+			
+			try{
+			
+				if ( context.driverInfo == "Disposed" )
+				{
+					trace("###################### WARNING: context loss! ###################### ");
+					return;
+				}
+			}catch(e:Error){
+				trace("ERROR:error:"+e.message);
 				return;
 			}
 			

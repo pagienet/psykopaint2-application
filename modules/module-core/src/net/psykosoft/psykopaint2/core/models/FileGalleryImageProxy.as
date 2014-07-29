@@ -26,6 +26,11 @@ package net.psykosoft.psykopaint2.core.models
 		public var mediumSizeURL:String;
 		public var fullsizeURL : String;
 
+		public function get paintingGalleryVO():PaintingGalleryVO
+		{
+			return _paintingGalleryVO;
+		}
+
 		private var _onColorComplete : Function;
 		private var _onComplete : Function;
 		private var _onError : Function;

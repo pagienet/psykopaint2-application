@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.core.services
 {
 	import com.adobe.crypto.MD5;
-
+	
 	import flash.events.AsyncErrorEvent;
 	import flash.events.IOErrorEvent;
 	import flash.events.NetStatusEvent;
@@ -9,10 +9,9 @@ package net.psykosoft.psykopaint2.core.services
 	import flash.net.NetConnection;
 	import flash.net.Responder;
 	import flash.utils.ByteArray;
-
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
-	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.models.UserRegistrationVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
 
@@ -143,9 +142,15 @@ package net.psykosoft.psykopaint2.core.services
 		{
 			_connection.call("Main/addCommentToPainting", new Responder(onSuccess, onFail), sessionID, paintingID, text);
 		}
+		
+		public function removePainting(sessionID : String, paintingID : int, onSuccess : Function, onFail : Function) : void
+		{
+			_connection.call("Main/removePainting", new Responder(onSuccess, onFail), sessionID, paintingID);
+		}
 
 		public function favoritePainting(sessionID : String, paintingID : int, onSuccess : Function, onFail : Function) : void
 		{
+			trace(this+""+arguments.callee);
 			_connection.call("Main/addUserFavoritePainting", new Responder(onSuccess, onFail), sessionID, paintingID);
 		}
 

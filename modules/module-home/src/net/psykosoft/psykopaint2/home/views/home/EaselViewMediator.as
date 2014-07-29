@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleLoadingMessageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFinalizeCropSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
@@ -63,7 +64,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyToggleLoadingMessageSignal:NotifyToggleLoadingMessageSignal;
 		
-
+		
 		private var canOpenImageOnEasel:Boolean;
 
 		public function EaselViewMediator()
@@ -89,8 +90,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestUpdateCropImageSignal.add( updateCropSourceImage );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyCropConfirmSignal.add( onRequestFinalizeCrop );
+			
+			
 		}
-
+		
+	
+		
 		private function onRequestNavigationStateChange(newState : String) : void
 		{
 			if (newState == NavigationStateType.HOME_ON_EASEL)
@@ -134,6 +139,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function updateCropSourceImage( bitmapData:BitmapData, orientation:int ):void 
 		{
 			view.setCropContent( bitmapData, orientation );
+			
 		}
 		
 		private function onPaintingDataRetrieved(data : Vector.<PaintingInfoVO>) : void
@@ -171,6 +177,10 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function onRequestFinalizeCrop():void {
 			requestOpenCroppedBitmapDataSignal.dispatch( view.getCroppedImage() );
+			
+			//DISPOSING VIEW AS SOON AS BITMAPDATA HAVE BEEN SENT
+			view.dispose();
+			
 		}
 	}
 }

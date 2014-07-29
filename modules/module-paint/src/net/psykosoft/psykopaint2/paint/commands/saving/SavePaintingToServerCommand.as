@@ -90,8 +90,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 		{
 			notifySaveToServerStartedSignal.dispatch();
 			requestShowPopUpSignal.dispatch( PopUpType.MESSAGE );
-			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
-			requestUpdateMessagePopUpSignal.dispatch( "Publishing...", randomJoke );
+			requestUpdateMessagePopUpSignal.dispatch( "Publishing...", Jokes.getRandomJoke() );
 			
 			//HACK TO MAKE SURE THE POPUP APPEARS BEFORE PROCESSING THE SHIT OUT OF THE BITMAPS
 			TweenLite.to(new Object(),0.3,{onComplete:function(){
