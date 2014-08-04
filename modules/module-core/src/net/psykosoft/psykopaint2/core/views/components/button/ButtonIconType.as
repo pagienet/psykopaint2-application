@@ -49,6 +49,9 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const LOGOUT:String = "logout";
 		public static const WALLPAPER:String = "wallpaper";
 		public static const NOTIFICATIONS:String = "notifications";
+		public static const HELP:String = "help";
+		public static const VIDEO:String = "video";
+		public static const FAQ:String = "faq";
 
 		
 		//BRUSHES

@@ -20,8 +20,6 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 	{
 		public var closeBtn:MovieClip;
 		public var bg:Sprite;
-		public var dragArea:Sprite;
-		
 		public var onTutorialPopupCloseSignal:Signal = new Signal();
 
 		
@@ -49,6 +47,7 @@ package net.psykosoft.psykopaint2.core.views.popups.tutorial
 			
 			initializeIntroVideo();
 			EventStopper.stop(bg);
+			
 			
 			//dragArea.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
 		}

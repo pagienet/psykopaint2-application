@@ -37,7 +37,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 		override protected function onViewSetup():void
 		{
 			super.onViewSetup();
-			view.setLoginBtn( loggedInUserProxy.isLoggedIn() ? SettingsSubNavView.ID_LOGOUT : SettingsSubNavView.ID_LOGIN );
+			view.setLoginBtn( !loggedInUserProxy.isLoggedIn() );
 		}
 
 		override public function destroy():void {
@@ -57,6 +57,9 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 				case SettingsSubNavView.ID_WALLPAPER:
 					requestNavigationStateChange( NavigationStateType.SETTINGS_WALLPAPER );
+					break;
+				case SettingsSubNavView.ID_HELP:
+					requestNavigationStateChange( NavigationStateType.SETTINGS_HELP );
 					break;
 
 				case SettingsSubNavView.ID_LOGIN:
@@ -105,12 +108,9 @@ package net.psykosoft.psykopaint2.home.views.settings
 		}
 
 		private function onLoggedInUserChange():void {
-			if (loggedInUserProxy.isLoggedIn()) {
-				view.setLoginBtn(SettingsSubNavView.ID_LOGOUT);
-			}
-			else {
-				view.setLoginBtn(SettingsSubNavView.ID_LOGIN);
-			}
+		
+			view.setLoginBtn(!loggedInUserProxy.isLoggedIn());
+			
 			view.enableButtonWithId( SettingsSubNavView.ID_LOGIN, true );
 		}
 	}

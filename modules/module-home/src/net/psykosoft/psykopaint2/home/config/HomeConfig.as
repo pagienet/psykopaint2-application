@@ -67,6 +67,8 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.views.pickimage.PickAnImageSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.settings.CanvasSurfaceSubNavView;
 	import net.psykosoft.psykopaint2.home.views.settings.CanvasSurfaceSubNavViewMediator;
+	import net.psykosoft.psykopaint2.home.views.settings.SettingsHelpSubNavView;
+	import net.psykosoft.psykopaint2.home.views.settings.SettingsHelpSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavView;
 	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavView;
@@ -177,6 +179,7 @@ package net.psykosoft.psykopaint2.home.config
 			_mediatorMap.map( NewPaintingSubNavView ).toMediator( NewPaintingSubNavViewMediator );
 			_mediatorMap.map( SettingsSubNavView ).toMediator( SettingsSubNavViewMediator );
 			_mediatorMap.map( WallpaperSubNavView ).toMediator( WallpaperSubNavViewMediator );
+			_mediatorMap.map( SettingsHelpSubNavView ).toMediator( SettingsHelpSubNavViewMediator );
 			_mediatorMap.map( CanvasSurfaceSubNavView ).toMediator( CanvasSurfaceSubNavViewMediator );
 //			_mediatorMap.map( PickSurfaceSubNavView ).toMediator( PickSurfaceSubNavViewMediator );
 			_mediatorMap.map( PickAnImageSubNavView ).toMediator( PickAnImageSubNavViewMediator );

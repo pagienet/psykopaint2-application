@@ -8,6 +8,7 @@ import net.psykosoft.psykopaint2.core.managers.social.sharers.FacebookSharer;
 import net.psykosoft.psykopaint2.core.managers.social.sharers.TwitterSharer;
 import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
+import net.psykosoft.psykopaint2.core.signals.RequestUpdateErrorPopUpSignal;
 import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
@@ -25,6 +26,9 @@ public class QuickSharePopUpViewMediator extends MediatorBase
 	
 	[Inject]
 	public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
+	
+	[Inject]
+	public var requestUpdateErrorPopUpSignal:RequestUpdateErrorPopUpSignal;
 
 	[Inject]
 	public var socialSharingManager:SocialSharingManager;
@@ -106,9 +110,10 @@ public class QuickSharePopUpViewMediator extends MediatorBase
 		
 		//REGULAR CLOSE THE POPUP POSITION, NOW WE CLOSE THE POPUP WHEN SHARING ON FACEBOOK
 		//requestHidePopUpSignal.dispatch();
-		
+		requestHidePopUpSignal.dispatch();
+
 		requestShowPopUpSignal.dispatch(PopUpType.ERROR);
-		requestUpdateMessagePopUpSignal.dispatch( "PUBLISHED" ,"The painting have been published already.");
+		requestUpdateErrorPopUpSignal.dispatch( "PUBLISHED" ,"The painting have been published in the gallery");
 	}
 
 	private function onPopUpWantsToClose():void {

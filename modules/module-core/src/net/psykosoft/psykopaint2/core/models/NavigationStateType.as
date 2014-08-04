@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.models
 		public static const SETTINGS:String = "state/home/settings";
 
 		public static const SETTINGS_WALLPAPER:String = "state/settings/wallpaper";
+		public static const SETTINGS_HELP:String = "state/settings/help";
 		public static const SETTINGS_CANVAS_SURFACE:String = "state/settings/canvas_surface";
 
 		public static const CROP:String = "state/crop";
