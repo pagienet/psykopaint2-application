@@ -26,6 +26,9 @@ modules/module-book/.flexLibProperties
 
 modules/module-core/.flexLibProperties
 
+*.p12
+*.mobileprovision
+
 modules/module-home/.flexLibProperties
 
 certificates/
